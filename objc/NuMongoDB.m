@@ -8,9 +8,9 @@
         }\
     }while(0)
 
-
 #define TEST_SERVER "127.0.0.1"
 
+#include "bson.h"
 #include "mongo.h"
 #include <stdio.h>
 #include <string.h>
@@ -18,10 +18,59 @@
 
 #import <Foundation/Foundation.h>
 
+@interface NuMongoDBCursor : NSObject {
+	mongo_cursor *cursor;
+}
+
+- (BOOL) next;
+- (bson) current;
+
+@end
+
+@implementation NuMongoDBCursor 
+
+- (NuMongoDBCursor *) initWithCursor:(mongo_cursor *) c {
+	if (self = [super init]) {
+		cursor = c;
+	}
+	return self;
+}
+
+- (mongo_cursor *) cursor {
+	return cursor;
+}
+
+- (BOOL) next {
+	return mongo_cursor_next(cursor);	
+}
+
+- (bson) current {
+	return cursor->current;
+}
+
+- (void) dealloc {
+	NSLog(@"NuMongoDBCursor dealloc");
+	mongo_cursor_destroy(cursor);
+	[super dealloc];
+}
+
+@end
+
+@interface NuBSON : NSObject {
+	bson b;
+}
+@end
+
+@implementation NuBSON
+
+@end
+
 @interface NuMongoDB : NSObject {
 	mongo_connection conn[1];
     mongo_connection_options opts;
 
+    bson_buffer bb;
+    bson b;
 }
 @end
 
@@ -39,10 +88,18 @@
 	return YES;
 }
 
+- (NuMongoDBCursor *) find {
+	const char * col = "c.simple";
+    const char * ns = "test.c.simple";
+	
+	
+	mongo_cursor *cursor = mongo_find( conn , ns , bson_empty(&b) , 0 , 0 , 0 , 0 );
+	return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];	
+}
+
 - (int) main {
-    bson_buffer bb;
-    bson b;
-    mongo_cursor * cursor;
+
+
     int i;
     char hex_oid[25];
     const char * col = "c.simple";
@@ -80,11 +137,13 @@
         bson_destroy(&b);
     }
     
-    cursor = mongo_find( conn , ns , bson_empty(&b) , 0 , 0 , 0 , 0 );
-
-    while (mongo_cursor_next(cursor)){
+	NuMongoDBCursor *cursor = [self find];
+	
+    while ([cursor next]){
+	
         bson_iterator it;
-        bson_iterator_init(&it, cursor->current.data);
+        bson_iterator_init(&it, [cursor current].data);
+
         while(bson_iterator_next(&it)){
             fprintf(stderr, "  %s: ", bson_iterator_key(&it));
 
@@ -115,7 +174,6 @@
         }
         fprintf(stderr, "\n");
     }
-    mongo_cursor_destroy(cursor);
 }
 
 - (void) close {
