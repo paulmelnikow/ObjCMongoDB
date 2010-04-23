@@ -1,0 +1,19 @@
+
+Information and utilities for running MongoDB with Nu.
+
+BUILDING MongoDB o
+
+Debian Linux
+1. git clone 
+2. sudo apt-get install scons
+3. sudo apt-get install libboost-dev
+4. sudo apt-get 
+
+For Debian 5:
+1. edit /etc/apt/sources.list, adding:
+deb http://downloads.mongodb.org/distros/debian 5.0 10gen
+2. sudo aptitude update
+3. sudo apt-get install mongodb-stable
+
+
+
