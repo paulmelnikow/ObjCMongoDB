@@ -8,15 +8,6 @@
         }\
     }while(0)
 
-#ifdef _WIN32
-#define INIT_SOCKETS_FOR_WINDOWS \
-    do{ \
-        WSADATA out; \
-        WSAStartup(MAKEWORD(2,2), &out); \
-    } while(0)
-#else
-#define INIT_SOCKETS_FOR_WINDOWS do {} while(0)
-#endif
 
 #define TEST_SERVER "127.0.0.1"
 
@@ -28,36 +19,35 @@
 #import <Foundation/Foundation.h>
 
 @interface NuMongoDB : NSObject {
-	
+	mongo_connection conn[1];
+    mongo_connection_options opts;
+
 }
 @end
 
 @implementation NuMongoDB
 
-
-+ (int) main {
-    mongo_connection conn[1];
-    mongo_connection_options opts;
-    bson_buffer bb;
-    bson b;
-    mongo_cursor * cursor;
-    int i;
-    char hex_oid[25];
-
-    const char * col = "c.simple";
-    const char * ns = "test.c.simple";
-
-    INIT_SOCKETS_FOR_WINDOWS;
-    
-    strncpy(opts.host, TEST_SERVER, 255);
+- (BOOL) connect {
+	strncpy(opts.host, TEST_SERVER, 255);
     opts.host[254] = '\0';
     opts.port = 27017;
 
     if (mongo_connect( conn , &opts )){
         printf("failed to connect\n");
-        exit(1);
+       	return NO;
     }
+	return YES;
+}
 
+- (int) main {
+    bson_buffer bb;
+    bson b;
+    mongo_cursor * cursor;
+    int i;
+    char hex_oid[25];
+    const char * col = "c.simple";
+    const char * ns = "test.c.simple";
+   
     /* if the collection doesn't exist dropping it will fail */
     if (!mongo_cmd_drop_collection(conn, "test", col, NULL)
           && mongo_find_one(conn, ns, bson_empty(&b), bson_empty(&b), NULL)){
@@ -125,8 +115,10 @@
         }
         fprintf(stderr, "\n");
     }
-
     mongo_cursor_destroy(cursor);
+}
+
+- (void) close {
     mongo_destroy( conn );
     return 0;
 }

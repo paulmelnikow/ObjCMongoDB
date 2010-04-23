@@ -7,7 +7,7 @@
 (case SYSTEM
       ("Darwin"
                (set @arch (list "x86_64"))
-               (set @cflags "-g -std=gnu99 -fobjc-gc -DDARWIN")
+               (set @cflags "-I ./src -g -std=gnu99 -fobjc-gc -DDARWIN")
                (set @ldflags  "-framework Foundation -framework Nu"))
       ("Linux"
               (set @arch (list "i386"))
