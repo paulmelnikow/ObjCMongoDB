@@ -19,6 +19,7 @@ const char * ns = "test.c.simple";
     @public
     bson b;
 }
+
 - (NuBSON *) initWithBSON:(bson) bb;
 @end
 
@@ -57,8 +58,9 @@ const char * ns = "test.c.simple";
     return cursor->current;
 }
 
-- (NuBSON *) currentBSON {
-	return [[[NuBSON alloc] initWithBSON:cursor->current] autorelease];
+- (NuBSON *) currentBSON
+{
+    return [[[NuBSON alloc] initWithBSON:cursor->current] autorelease];
 }
 
 - (void) dealloc
@@ -68,8 +70,6 @@ const char * ns = "test.c.simple";
 }
 
 @end
-
-
 
 @implementation NuBSON
 
@@ -121,19 +121,26 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     }
 }
 
-- (NuBSON *) initWithObject:(id) object
+- (NuBSON *) initWithObject:(id) object name:(id) name
 {
     bson b;
     bson_buffer bb;
     bson_buffer_init(& bb );
 
-    bson_append_new_oid(&bb, "_id" );
-
-    add_object_to_bson_buffer(&bb, @"top", object);
+    if (name == nil) {
+        bson_append_new_oid(&bb, "_id" );
+        add_object_to_bson_buffer(&bb, @"top", object);
+    } else
+    add_object_to_bson_buffer(&bb,name, object);
 
     bson_from_buffer(&b, &bb);
 
     return [self initWithBSON:b];
+}
+
+- (NuBSON *) initWithObject:(id) object
+{
+    return [self initWithObject:object name:nil];
 }
 
 void dump_bson_iterator(bson_iterator it, const char *indent)
@@ -198,7 +205,7 @@ void add_bson_to_object(bson_iterator it, id object)
 
         NSString *key = [[[NSString alloc] initWithCString:bson_iterator_key(&it) encoding:NSUTF8StringEncoding] autorelease];
 
-		id value = nil;
+        id value = nil;
 
         char hex_oid[25];
 
@@ -232,15 +239,17 @@ void add_bson_to_object(bson_iterator it, id object)
                 fprintf(stderr, "(type %d)\n", bson_iterator_type(&it));
                 break;
         }
-		if (value) {
-			if ([object isKindOfClass:[NSDictionary class]]) {
-				[object setObject:value forKey:key];
-			} else if ([object isKindOfClass:[NSArray class]]) {
-				[object addObject:value];
-			} else {
-				NSLog(@"we don't know how to add to %@", object);
-			}
-		}
+        if (value) {
+            if ([object isKindOfClass:[NSDictionary class]]) {
+                [object setObject:value forKey:key];
+            }
+            else if ([object isKindOfClass:[NSArray class]]) {
+                [object addObject:value];
+            }
+            else {
+                NSLog(@"we don't know how to add to %@", object);
+            }
+        }
     }
 }
 
@@ -279,18 +288,28 @@ void add_bson_to_object(bson_iterator it, id object)
     return YES;
 }
 
-- (NuMongoDBCursor *) find
+- (NuMongoDBCursor *) find:(id) query
 {
     const char *col = "c.simple";
     const char *ns = "test.c.simple";
-    bson b;
 
-    mongo_cursor *cursor = mongo_find(conn, ns, bson_empty(&b), 0, 0, 0, 0 );
-    return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+    if (query) {
+        NuBSON *queryBSON = [[[NuBSON alloc] initWithObject:[query objectForKey:@"$where"] name:@"$where"] autorelease];
+        [queryBSON dump];
+
+        mongo_cursor *cursor = mongo_find(conn, ns, &(queryBSON->b), 0, 0, 0, 0 );
+        return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+    }
+    else {
+        bson b;
+        mongo_cursor *cursor = mongo_find(conn, ns, bson_empty(&b), 0, 0, 0, 0 );
+        return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+    }
 }
 
-- (void) insert:(NuBSON *) bson {
-	 mongo_insert(conn, ns, &(bson->b));
+- (void) insert:(NuBSON *) bson
+{
+    mongo_insert(conn, ns, &(bson->b));
 }
 
 - (BOOL) resetDatabase
@@ -350,20 +369,20 @@ void add_bson_to_object(bson_iterator it, id object)
     NuBSON *bson = [[[NuBSON alloc] initWithObject:object] autorelease];
     [bson dump];
 
-	[self insert:bson];
+    [self insert:bson];
 }
 
 - (void) readDB
 {
     // read them out of the database
-    NuMongoDBCursor *cursor = [self find];
+    NuMongoDBCursor *cursor = [self find:nil];
 
     while ([cursor next]) {
         NuBSON *bson = [[[NuBSON alloc] initWithBSON:[cursor current]] autorelease];
         [bson dump];
 
-		id object = [bson objectValue];
-		NSLog(@"%@", object);
+        id object = [bson objectValue];
+        NSLog(@"%@", object);
     }
 }
 

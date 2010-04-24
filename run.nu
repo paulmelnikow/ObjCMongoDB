@@ -21,10 +21,12 @@
         (set bson ((NuBSON alloc) initWithObject:object))
         (mongo insert:bson)))
 
-(set cursor (mongo find))
+(set cursor (mongo find:(dict $where:"this.top.i < 4")))
 
 (while (cursor next)
        (set bson (cursor currentBSON))
        (set object (bson objectValue))
        (puts (object description)))
+
+(puts "ok")
 
