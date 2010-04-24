@@ -1,15 +1,8 @@
-#include <stdlib.h>
-
-#define TEST_SERVER "127.0.0.1"
-
-// temporary
-//const char * ns = "test.c.simple";
-
-#include "bson.h"
-#include "mongo.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "bson.h"
+#include "mongo.h"
 
 #import <Foundation/Foundation.h>
 
@@ -61,6 +54,11 @@
 - (NuBSON *) currentBSON
 {
     return [[[NuBSON alloc] initWithBSON:cursor->current] autorelease];
+}
+
+- (NSDictionary *) currentDictionary
+{
+    return [[self currentBSON] dictionaryValue];
 }
 
 - (void) dealloc
@@ -267,25 +265,31 @@ void add_bson_to_object(bson_iterator it, id object)
 
 @implementation NuMongoDB
 
-- (BOOL) connect
+- (BOOL) connectWithOptions:(NSDictionary *) options
 {
-    strncpy(opts.host, TEST_SERVER, 255);
-    opts.host[254] = '\0';
-    opts.port = 27017;
-
-    if (mongo_connect(conn, &opts )) {
-        printf("failed to connect\n");
-        return NO;
+    id host = options ? [options objectForKey:@"host"] : nil;
+    if (host) {
+        strncpy(opts.host, [host cStringUsingEncoding:NSUTF8StringEncoding], 255);
+        opts.host[254] = '\0';
     }
-    return YES;
+    else {
+        strncpy(opts.host, "127.0.0.1", 255);
+        opts.host[254] = '\0';
+    }
+    id port = options ? [options objectForKey:@"port"] : nil;
+    if (port) {
+        opts.port = [port intValue];
+    }
+    else {
+        opts.port = 27017;
+    }
+    return mongo_connect(conn, &opts);
 }
 
 - (NuMongoDBCursor *) find:(NSDictionary *) query inCollection:(NSString *) collection
 {
     if (query) {
         NuBSON *queryBSON = [[[NuBSON alloc] initWithDictionary:query] autorelease];
-        [queryBSON dump];
-
         mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(queryBSON->bsonValue), 0, 0, 0, 0 );
         return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
     }
@@ -313,18 +317,18 @@ void add_bson_to_object(bson_iterator it, id object)
 - (void) update:(NuBSON *) bsonObject inCollection:(NSString *) collection withCondition:(NuBSON *) condition
 insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
 {
-    bson b;
-
-    // static const int MONGO_UPDATE_UPSERT = 0x1;
-    // static const int MONGO_UPDATE_MULTI = 0x2;
-    // void mongo_update(mongo_connection* conn, const char* ns, const bson* cond, const bson* op, int flags);
-    mongo_update(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(condition->bsonValue), &(bsonObject->bsonValue),
+    mongo_update(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding],
+        &(condition->bsonValue),
+        &(bsonObject->bsonValue),
         (insertIfNecessary ? MONGO_UPDATE_UPSERT : 0) + (updateMultipleEntries ? MONGO_UPDATE_MULTI : 0));
 }
 
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
 {
-    return mongo_cmd_drop_collection(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], NULL);
+    return mongo_cmd_drop_collection(conn,
+        [database cStringUsingEncoding:NSUTF8StringEncoding],
+        [collection cStringUsingEncoding:NSUTF8StringEncoding],
+        NULL);
 }
 
 - (void) close

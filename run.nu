@@ -4,7 +4,7 @@
 
 (set mongo (NuMongoDB new))
 
-(mongo connect)
+(mongo connectWithOptions:nil)
 
 (mongo dropCollection:"sample" inDatabase:"test")
 
@@ -17,26 +17,28 @@
 
 (mongo insert:bson intoCollection:collection)
 
-(1000 times:
-      (do (i)
-          (set object (dict i:i name:(+ "mongo-" i) (+ "key-" i) sample))
-          (set bson ((NuBSON alloc) initWithDictionary:object))
-          (mongo insert:bson intoCollection:collection)))
+(10 times:
+    (do (i)
+        (10 times:
+            (do (j)
+                (set object (dict i:i j:j name:(+ "mongo-" i "-" j) (+ "key-" i "-" j) sample))
+                (set bson ((NuBSON alloc) initWithDictionary:object))
+                (mongo insert:bson intoCollection:collection)))))
 
-(set cursor (mongo find:(dict $where:"this.i == 401") inCollection:collection))
+(set cursor (mongo find:(dict $where:"this.i == 3") inCollection:collection))
 (while (cursor next)
        (set bson (cursor currentBSON))
        (set object (bson dictionaryValue))
        (puts (object description)))
 
 (puts "updating")
-(mongo update:((NuBSON alloc) initWithDictionary:(dict i:401 j:123 k:"456"))
+(mongo update:((NuBSON alloc) initWithDictionary:(dict "$set" (dict k:456)))
        inCollection:collection
-       withCondition:((NuBSON alloc) initWithDictionary:(dict i:401))
+       withCondition:((NuBSON alloc) initWithDictionary:(dict i:3))
        insertIfNecessary:YES
-       updateMultipleEntries:NO)
+       updateMultipleEntries:YES)
 
-(set cursor (mongo find:(dict i:401) inCollection:collection))
+(set cursor (mongo find:(dict i:3) inCollection:collection))
 (while (cursor next)
        (puts "iterating")
        (set bson (cursor currentBSON))
