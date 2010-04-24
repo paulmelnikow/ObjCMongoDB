@@ -4,5 +4,8 @@
 
 (mongo connect)
 
+(mongo resetDatabase)
 
-(mongo main)
+(mongo loadDB)
+
+(mongo readDB)
