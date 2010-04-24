@@ -14,6 +14,14 @@ const char * ns = "test.c.simple";
 
 #import <Foundation/Foundation.h>
 
+@interface NuBSON : NSObject
+{
+    @public
+    bson b;
+}
+- (NuBSON *) initWithBSON:(bson) bb;
+@end
+
 @interface NuMongoDBCursor : NSObject
 {
     mongo_cursor *cursor;
@@ -49,6 +57,10 @@ const char * ns = "test.c.simple";
     return cursor->current;
 }
 
+- (NuBSON *) currentBSON {
+	return [[[NuBSON alloc] initWithBSON:cursor->current] autorelease];
+}
+
 - (void) dealloc
 {
     mongo_cursor_destroy(cursor);
@@ -57,13 +69,7 @@ const char * ns = "test.c.simple";
 
 @end
 
-@interface NuBSON : NSObject
-{
-    @public
-    bson b;
-}
 
-@end
 
 @implementation NuBSON
 
@@ -180,6 +186,7 @@ void dump_bson_iterator(bson_iterator it, const char *indent)
     bson_iterator it;
     bson_iterator_init(&it, b.data);
     dump_bson_iterator(it, "");
+    fprintf(stderr, "\n");
 }
 
 void add_bson_to_object(bson_iterator it, id object)
@@ -274,12 +281,16 @@ void add_bson_to_object(bson_iterator it, id object)
 
 - (NuMongoDBCursor *) find
 {
-    const char * col = "c.simple";
-    const char * ns = "test.c.simple";
+    const char *col = "c.simple";
+    const char *ns = "test.c.simple";
     bson b;
 
     mongo_cursor *cursor = mongo_find(conn, ns, bson_empty(&b), 0, 0, 0, 0 );
     return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+}
+
+- (void) insert:(NuBSON *) bson {
+	 mongo_insert(conn, ns, &(bson->b));
 }
 
 - (BOOL) resetDatabase
@@ -300,7 +311,7 @@ void add_bson_to_object(bson_iterator it, id object)
     bson b;
 
     // add some things to the database
-    for(int i=0; i< 5; i++) {
+    for (int i=0; i< 5; i++) {
 
         bson_buffer bb;
         bson_buffer_init(& bb );
@@ -311,13 +322,13 @@ void add_bson_to_object(bson_iterator it, id object)
         bson_append_string(&bb, "c", "17" );
 
         {
-            bson_buffer * sub = bson_append_start_object( &bb, "d" );
+            bson_buffer *sub = bson_append_start_object( &bb, "d" );
             bson_append_int(sub, "i", i*71 );
             bson_append_int(sub, "j", i*72 );
             bson_append_finish_object(sub);
         }
         {
-            bson_buffer * arr = bson_append_start_array( &bb, "e" );
+            bson_buffer *arr = bson_append_start_array( &bb, "e" );
             bson_append_int(arr, "0", i*71 );
             bson_append_string(arr, "1", "71" );
             bson_append_finish_object(arr);
@@ -339,21 +350,17 @@ void add_bson_to_object(bson_iterator it, id object)
     NuBSON *bson = [[[NuBSON alloc] initWithObject:object] autorelease];
     [bson dump];
 
-    mongo_insert(conn, ns, &(bson->b));
-
+	[self insert:bson];
 }
 
 - (void) readDB
 {
-    bson b;
-
     // read them out of the database
     NuMongoDBCursor *cursor = [self find];
 
     while ([cursor next]) {
         NuBSON *bson = [[[NuBSON alloc] initWithBSON:[cursor current]] autorelease];
         [bson dump];
-        fprintf(stderr, "\n");
 
 		id object = [bson objectValue];
 		NSLog(@"%@", object);
