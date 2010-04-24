@@ -3,8 +3,7 @@
 #define TEST_SERVER "127.0.0.1"
 
 // temporary
-const char * col = "c.simple";
-const char * ns = "test.c.simple";
+//const char * ns = "test.c.simple";
 
 #include "bson.h"
 #include "mongo.h"
@@ -281,7 +280,7 @@ void add_bson_to_object(bson_iterator it, id object)
     return YES;
 }
 
-- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection
+- (NuMongoDBCursor *) find:(NSDictionary *) query inCollection:(NSString *) collection
 {
     if (query) {
         NuBSON *queryBSON = [[[NuBSON alloc] initWithDictionary:query] autorelease];
@@ -297,83 +296,35 @@ void add_bson_to_object(bson_iterator it, id object)
     }
 }
 
-- (void) insert:(NuBSON *) bson intoCollection:(NSString *) collection
+- (void) insert:(id) insert intoCollection:(NSString *) collection
 {
-    mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(bson->bsonValue));
+    bson *b = 0;
+    if ([insert isKindOfClass:[NuBSON class]]) {
+        b = &(((NuBSON *)insert)->bsonValue);
+    }
+    else if ([insert isKindOfClass:[NSDictionary class]]) {
+        NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:insert] autorelease];
+        b = &(bsonObject->bsonValue);
+    }
+    if (b)
+        mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b);
+}
+
+- (void) update:(NuBSON *) bsonObject inCollection:(NSString *) collection withCondition:(NuBSON *) condition
+insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
+{
+    bson b;
+
+    // static const int MONGO_UPDATE_UPSERT = 0x1;
+    // static const int MONGO_UPDATE_MULTI = 0x2;
+    // void mongo_update(mongo_connection* conn, const char* ns, const bson* cond, const bson* op, int flags);
+    mongo_update(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(condition->bsonValue), &(bsonObject->bsonValue),
+        (insertIfNecessary ? MONGO_UPDATE_UPSERT : 0) + (updateMultipleEntries ? MONGO_UPDATE_MULTI : 0));
 }
 
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
 {
-    /* if the collection doesn't exist dropping it will fail */
-    bson b;
-
-    if (!mongo_cmd_drop_collection(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], NULL)
-    && mongo_find_one(conn, ns, bson_empty(&b), bson_empty(&b), NULL)) {
-        printf("failed to drop collection\n");
-        return NO;
-    }
-    return YES;
-}
-
-- (void) loadDB
-{
-    bson b;
-
-    // add some things to the database
-    for (int i=0; i< 5; i++) {
-
-        bson_buffer bb;
-        bson_buffer_init(& bb );
-
-        bson_append_new_oid(&bb, "_id" );
-        bson_append_double(&bb, "a", i*17 );
-        bson_append_int(&bb, "b", i*17 );
-        bson_append_string(&bb, "c", "17" );
-
-        {
-            bson_buffer *sub = bson_append_start_object( &bb, "d" );
-            bson_append_int(sub, "i", i*71 );
-            bson_append_int(sub, "j", i*72 );
-            bson_append_finish_object(sub);
-        }
-        {
-            bson_buffer *arr = bson_append_start_array( &bb, "e" );
-            bson_append_int(arr, "0", i*71 );
-            bson_append_string(arr, "1", "71" );
-            bson_append_finish_object(arr);
-        }
-
-        bson_from_buffer(&b, &bb);
-
-        mongo_insert(conn, ns, &b );
-
-        bson_destroy(&b);
-    }
-
-    id object = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:1], @"one",
-        [NSNumber numberWithFloat:2.0], @"two",
-        @"3", @"three",
-        [NSArray arrayWithObjects:@"zero", @"one", @"two", nil], @"four",
-        nil];
-
-    NuBSON *bson = [[[NuBSON alloc] initWithDictionary:object] autorelease];
-    [bson dump];
-
-    [self insert:bson];
-}
-
-- (void) readDB
-{
-    // read them out of the database
-    NuMongoDBCursor *cursor = [self find:nil];
-
-    while ([cursor next]) {
-        NuBSON *bson = [[[NuBSON alloc] initWithBSON:[cursor current]] autorelease];
-        [bson dump];
-
-        id object = [bson dictionaryValue];
-        NSLog(@"%@", object);
-    }
+    return mongo_cmd_drop_collection(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], NULL);
 }
 
 - (void) close

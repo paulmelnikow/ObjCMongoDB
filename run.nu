@@ -18,14 +18,27 @@
 (mongo insert:bson intoCollection:collection)
 
 (1000 times:
-    (do (i)
-        (set object (dict i:i name:(+ "mongo-" i) (+ "key-" i) sample))
-        (set bson ((NuBSON alloc) initWithDictionary:object))
-        (mongo insert:bson intoCollection:collection)))
+      (do (i)
+          (set object (dict i:i name:(+ "mongo-" i) (+ "key-" i) sample))
+          (set bson ((NuBSON alloc) initWithDictionary:object))
+          (mongo insert:bson intoCollection:collection)))
 
 (set cursor (mongo find:(dict $where:"this.i == 401") inCollection:collection))
-
 (while (cursor next)
+       (set bson (cursor currentBSON))
+       (set object (bson dictionaryValue))
+       (puts (object description)))
+
+(puts "updating")
+(mongo update:((NuBSON alloc) initWithDictionary:(dict i:401 j:123 k:"456"))
+       inCollection:collection
+       withCondition:((NuBSON alloc) initWithDictionary:(dict i:401))
+       insertIfNecessary:YES
+       updateMultipleEntries:NO)
+
+(set cursor (mongo find:(dict i:401) inCollection:collection))
+(while (cursor next)
+       (puts "iterating")
        (set bson (cursor currentBSON))
        (set object (bson dictionaryValue))
        (puts (object description)))
