@@ -17,10 +17,11 @@ const char * ns = "test.c.simple";
 @interface NuBSON : NSObject
 {
     @public
-    bson b;
+    bson bsonValue;
 }
 
 - (NuBSON *) initWithBSON:(bson) bb;
+- (NuBSON *) initWithDictionary:(NSDictionary *) dict;
 @end
 
 @interface NuMongoDBCursor : NSObject
@@ -73,10 +74,10 @@ const char * ns = "test.c.simple";
 
 @implementation NuBSON
 
-- (NuBSON *) initWithBSON:(bson) bb
+- (NuBSON *) initWithBSON:(bson) b
 {
     if (self = [super init]) {
-        b = bb;
+        bsonValue = b;
     }
     return self;
 }
@@ -121,26 +122,18 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     }
 }
 
-- (NuBSON *) initWithObject:(id) object name:(id) name
+- (NuBSON *) initWithDictionary:(NSDictionary *) dict
 {
     bson b;
     bson_buffer bb;
     bson_buffer_init(& bb );
-
-    if (name == nil) {
-        bson_append_new_oid(&bb, "_id" );
-        add_object_to_bson_buffer(&bb, @"top", object);
-    } else
-    add_object_to_bson_buffer(&bb,name, object);
-
+    id keys = [dict allKeys];
+    for (int i = 0; i < [keys count]; i++) {
+        id key = [keys objectAtIndex:i];
+        add_object_to_bson_buffer(&bb, key, [dict objectForKey:key]);
+    }
     bson_from_buffer(&b, &bb);
-
     return [self initWithBSON:b];
-}
-
-- (NuBSON *) initWithObject:(id) object
-{
-    return [self initWithObject:object name:nil];
 }
 
 void dump_bson_iterator(bson_iterator it, const char *indent)
@@ -191,7 +184,7 @@ void dump_bson_iterator(bson_iterator it, const char *indent)
 - (void) dump
 {
     bson_iterator it;
-    bson_iterator_init(&it, b.data);
+    bson_iterator_init(&it, bsonValue.data);
     dump_bson_iterator(it, "");
     fprintf(stderr, "\n");
 }
@@ -253,12 +246,12 @@ void add_bson_to_object(bson_iterator it, id object)
     }
 }
 
-- (id) objectValue
+- (id) dictionaryValue
 {
     id object = [NSMutableDictionary dictionary];
 
     bson_iterator it;
-    bson_iterator_init(&it, b.data);
+    bson_iterator_init(&it, bsonValue.data);
     add_bson_to_object(it, object);
     return object;
 }
@@ -288,36 +281,33 @@ void add_bson_to_object(bson_iterator it, id object)
     return YES;
 }
 
-- (NuMongoDBCursor *) find:(id) query
+- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection
 {
-    const char *col = "c.simple";
-    const char *ns = "test.c.simple";
-
     if (query) {
-        NuBSON *queryBSON = [[[NuBSON alloc] initWithObject:[query objectForKey:@"$where"] name:@"$where"] autorelease];
+        NuBSON *queryBSON = [[[NuBSON alloc] initWithDictionary:query] autorelease];
         [queryBSON dump];
 
-        mongo_cursor *cursor = mongo_find(conn, ns, &(queryBSON->b), 0, 0, 0, 0 );
+        mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(queryBSON->bsonValue), 0, 0, 0, 0 );
         return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
     }
     else {
         bson b;
-        mongo_cursor *cursor = mongo_find(conn, ns, bson_empty(&b), 0, 0, 0, 0 );
+        mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bson_empty(&b), 0, 0, 0, 0 );
         return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
     }
 }
 
-- (void) insert:(NuBSON *) bson
+- (void) insert:(NuBSON *) bson intoCollection:(NSString *) collection
 {
-    mongo_insert(conn, ns, &(bson->b));
+    mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(bson->bsonValue));
 }
 
-- (BOOL) resetDatabase
+- (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
 {
     /* if the collection doesn't exist dropping it will fail */
     bson b;
 
-    if (!mongo_cmd_drop_collection(conn, "test", col, NULL)
+    if (!mongo_cmd_drop_collection(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], NULL)
     && mongo_find_one(conn, ns, bson_empty(&b), bson_empty(&b), NULL)) {
         printf("failed to drop collection\n");
         return NO;
@@ -366,7 +356,7 @@ void add_bson_to_object(bson_iterator it, id object)
         [NSArray arrayWithObjects:@"zero", @"one", @"two", nil], @"four",
         nil];
 
-    NuBSON *bson = [[[NuBSON alloc] initWithObject:object] autorelease];
+    NuBSON *bson = [[[NuBSON alloc] initWithDictionary:object] autorelease];
     [bson dump];
 
     [self insert:bson];
@@ -381,7 +371,7 @@ void add_bson_to_object(bson_iterator it, id object)
         NuBSON *bson = [[[NuBSON alloc] initWithBSON:[cursor current]] autorelease];
         [bson dump];
 
-        id object = [bson objectValue];
+        id object = [bson dictionaryValue];
         NSLog(@"%@", object);
     }
 }
