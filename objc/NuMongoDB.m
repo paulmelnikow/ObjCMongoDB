@@ -56,7 +56,7 @@
     return [[[NuBSON alloc] initWithBSON:cursor->current] autorelease];
 }
 
-- (NSDictionary *) currentDictionary
+- (NSDictionary *) currentObject
 {
     return [[self currentBSON] dictionaryValue];
 }
@@ -286,6 +286,22 @@ void add_bson_to_object(bson_iterator it, id object)
     return mongo_connect(conn, &opts);
 }
 
+bson *bson_for_object(id object)
+{
+    bson *b = 0;
+    if ([object isKindOfClass:[NuBSON class]]) {
+        b = &(((NuBSON *)object)->bsonValue);
+    }
+    else if ([object isKindOfClass:[NSDictionary class]]) {
+        NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:object] autorelease];
+        b = &(bsonObject->bsonValue);
+    }
+    else {
+		NSLog(@"unable to convert objects of type %@ to BSON.", [object className]);
+    }
+    return b;
+}
+
 - (NuMongoDBCursor *) find:(NSDictionary *) query inCollection:(NSString *) collection
 {
     if (query) {
@@ -302,25 +318,29 @@ void add_bson_to_object(bson_iterator it, id object)
 
 - (void) insert:(id) insert intoCollection:(NSString *) collection
 {
-    bson *b = 0;
-    if ([insert isKindOfClass:[NuBSON class]]) {
-        b = &(((NuBSON *)insert)->bsonValue);
-    }
-    else if ([insert isKindOfClass:[NSDictionary class]]) {
-        NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:insert] autorelease];
-        b = &(bsonObject->bsonValue);
-    }
-    if (b)
+    bson *b = bson_for_object(insert);
+    if (b) {
         mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b);
+    }
+    else {
+        NSLog(@"incomplete insert: insert must not be nil.");
+    }
 }
 
-- (void) update:(NuBSON *) bsonObject inCollection:(NSString *) collection withCondition:(NuBSON *) condition
-insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
+- (void) update:(id) update inCollection:(NSString *) collection
+withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
 {
-    mongo_update(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding],
-        &(condition->bsonValue),
-        &(bsonObject->bsonValue),
-        (insertIfNecessary ? MONGO_UPDATE_UPSERT : 0) + (updateMultipleEntries ? MONGO_UPDATE_MULTI : 0));
+    bson *bupdate = bson_for_object(update);
+    bson *bcondition = bson_for_object(condition);
+    if (bupdate && bcondition) {
+        mongo_update(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding],
+            bcondition,
+            bupdate,
+            (insertIfNecessary ? MONGO_UPDATE_UPSERT : 0) + (updateMultipleEntries ? MONGO_UPDATE_MULTI : 0));
+    }
+    else {
+        NSLog(@"incomplete update: update and condition must not be nil.");
+    }
 }
 
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database

@@ -2,7 +2,7 @@
 ;;  tests for NuMongoDB database access.
 ;;
 ;;  Copyright (c) 2010 Tim Burks, Neon Design Technology, Inc.
-	
+
 (load "NuMongoDB")
 
 (class TestAccess is NuTestCase
@@ -32,31 +32,28 @@
                                             j:j
                                             name:(+ "mongo-" i "-" j)
                                             (+ "key-" i "-" j) sample))
-                          (set bson ((NuBSON alloc) initWithDictionary:object))
-                          (mongo insert:bson intoCollection:path)))))
+                          (mongo insert:object intoCollection:path)))))
             
             ;; test a query using the $where operator
             (set cursor (mongo find:(dict $where:"this.i == 3") inCollection:path))
             (set matches 0)
             (while (cursor next)
                    (set matches (+ matches 1))
-                   (set bson (cursor currentBSON))
-                   (set object (bson dictionaryValue))
+                   (set object (cursor currentObject))
                    (assert_equal 3 (object i:)))
             (assert_equal 5 matches)
             
             ;; test a qualified update
-            (mongo update:((NuBSON alloc) initWithDictionary:(dict "$set" (dict k:456)))
+            (mongo update:(dict "$set" (dict k:456))
                    inCollection:path
-                   withCondition:((NuBSON alloc) initWithDictionary:(dict i:3))
+                   withCondition:(dict i:3)
                    insertIfNecessary:YES
                    updateMultipleEntries:YES)
             
             ;; make sure we changed the entries we wanted to change
             (set cursor (mongo find:(dict i:3) inCollection:path))
             (while (cursor next)
-                   (set bson (cursor currentBSON))
-                   (set object (bson dictionaryValue))
+                   (set object (cursor currentObject))
                    (assert_equal 456 (object k:))
                    ;; while we're iterating, check some other inserted values
                    (assert_equal (+ "mongo-" (object i:) "-" (object j:)) (object name:))
@@ -64,27 +61,24 @@
             ;; and sanity-check that we didn't affect anything else
             (set cursor (mongo find:(dict i:2) inCollection:path))
             (while (cursor next)
-                   (set bson (cursor currentBSON))
-                   (set object (bson dictionaryValue))
+                   (set object (cursor currentObject))
                    (assert_equal nil (object k:)))
             
             ;; test update, this time we update with a condition on two keys
-            (mongo update:((NuBSON alloc) initWithDictionary:(dict "$set" (dict k:999)))
+            (mongo update:(dict "$set" (dict k:999))
                    inCollection:path
-                   withCondition:((NuBSON alloc) initWithDictionary:(dict i:2 j:2))
+                   withCondition:(dict i:2 j:2)
                    insertIfNecessary:YES
                    updateMultipleEntries:YES)
             ;; make sure we changed the entry we wanted to change
             (set cursor (mongo find:(dict i:2 j:2) inCollection:path))
             (while (cursor next)
-                   (set bson (cursor currentBSON))
-                   (set object (bson dictionaryValue))
+                   (set object (cursor currentObject))
                    (assert_equal 999 (object k:)))
             ;; and sanity-check that we didn't affect anything else
             (set cursor (mongo find:(dict i:1 j:2) inCollection:path))
             (while (cursor next)
-                   (set bson (cursor currentBSON))
-                   (set object (bson dictionaryValue))
+                   (set object (cursor currentObject))
                    (assert_equal nil (object k:)))
             
             ;; clean up
