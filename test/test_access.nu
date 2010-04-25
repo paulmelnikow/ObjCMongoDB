@@ -81,5 +81,11 @@
                    (set object (cursor currentObject))
                    (assert_equal nil (object k:)))
             
+            ;; findOne
+            (set one (mongo findOne:(dict i:1 j:2) inCollection:path))
+            (assert_equal nil (object k:))
+            (assert_equal 1 (object i:))
+            (assert_equal 2 (object j:))
+            
             ;; clean up
             (mongo dropCollection:collection inDatabase:database))))

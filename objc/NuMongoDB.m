@@ -243,7 +243,7 @@ void add_bson_to_object(bson_iterator it, id object)
     }
 }
 
-- (id) dictionaryValue
+- (NSMutableDictionary *) dictionaryValue
 {
     id object = [NSMutableDictionary dictionary];
 
@@ -289,6 +289,9 @@ void add_bson_to_object(bson_iterator it, id object)
 bson *bson_for_object(id object)
 {
     bson *b = 0;
+	if (!object) {
+		object = [NSDictionary dictionary];
+	}
     if ([object isKindOfClass:[NuBSON class]]) {
         b = &(((NuBSON *)object)->bsonValue);
     }
@@ -302,18 +305,24 @@ bson *bson_for_object(id object)
     return b;
 }
 
-- (NuMongoDBCursor *) find:(NSDictionary *) query inCollection:(NSString *) collection
+- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection
 {
-    if (query) {
-        NuBSON *queryBSON = [[[NuBSON alloc] initWithDictionary:query] autorelease];
-        mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], &(queryBSON->bsonValue), 0, 0, 0, 0 );
-        return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
-    }
-    else {
-        bson b;
-        mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bson_empty(&b), 0, 0, 0, 0 );
-        return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
-    }
+	bson *b = bson_for_object(query);
+    mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, 0, 0, 0, 0 );
+    return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+}
+
+- (NSMutableDictionary *) findOne:(id) query inCollection:(NSString *) collection
+{
+	bson *b = bson_for_object(query);
+	bson bsonResult;
+	bson_bool_t result = mongo_find_one(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, 0, &bsonResult);
+	
+	if (result) {
+		return [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue];
+	} else {
+		return nil;
+	}
 }
 
 - (void) insert:(id) insert intoCollection:(NSString *) collection
