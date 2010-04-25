@@ -44,6 +44,8 @@
             (set count ((mongo runCommand:(dict count:"sample") inDatabase:"test") n:))
             (assert_equal 25 count)
             (set count ((mongo runCommand:(dict count:"sample" query:(dict i:1)) inDatabase:"test") n:))
+	    ;; this test fails with MongoDB v1.4 (Debian) and works with v1.4.1 (Mac OS 10.6)
+	    ;; apparently because the query option is not supported in v1.4
             (assert_equal 5 count)
             
             ;; test a query using the $where operator
