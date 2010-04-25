@@ -17,9 +17,9 @@
 
 (mongo insert:bson intoCollection:collection)
 
-(10 times:
+(100 times:
     (do (i)
-        (10 times:
+        (100 times:
             (do (j)
                 (set object (dict i:i j:j name:(+ "mongo-" i "-" j) (+ "key-" i "-" j) sample))
                 (set bson ((NuBSON alloc) initWithDictionary:object))

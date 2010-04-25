@@ -34,6 +34,18 @@
                                             (+ "key-" i "-" j) sample))
                           (mongo insert:object intoCollection:path)))))
             
+            ;; test counts
+            (set count (mongo count:nil inCollection:collection inDatabase:database))
+            (assert_equal 25 count)
+            (set count (mongo count:(dict i:1) inCollection:collection inDatabase:database))
+            (assert_equal 5 count)
+            
+            ;; REPEAT: test counts using the run command
+            (set count ((mongo runCommand:(dict count:"sample") inDatabase:"test") n:))
+            (assert_equal 25 count)
+            (set count ((mongo runCommand:(dict count:"sample" query:(dict i:1)) inDatabase:"test") n:))
+            (assert_equal 5 count)
+            
             ;; test a query using the $where operator
             (set cursor (mongo find:(dict $where:"this.i == 3") inCollection:path))
             (set matches 0)
@@ -86,6 +98,21 @@
             (assert_equal nil (object k:))
             (assert_equal 1 (object i:))
             (assert_equal 2 (object j:))
+            
+            ;; remove one
+            (mongo remove:(dict i:1 j:2) fromCollection:path)
+            (set one (mongo findOne:(dict i:1 j:2) inCollection:path))
+            (assert_equal nil one)
+            
+            (set count (mongo count:nil inCollection:collection inDatabase:database))
+            (assert_equal 24 count)
+            
+            ;; remove everything, but first verify that we have some entries to delete
+            (set one (mongo findOne:nil inCollection:path))
+            (assert_not_equal nil one)
+            (mongo remove:nil fromCollection:path)
+            (set one (mongo findOne:nil inCollection:path))
+            (assert_equal nil one)
             
             ;; clean up
             (mongo dropCollection:collection inDatabase:database))))
