@@ -266,7 +266,7 @@ void add_bson_to_object(bson_iterator it, id object)
 
 @implementation NuMongoDB
 
-- (BOOL) connectWithOptions:(NSDictionary *) options
+- (int) connectWithOptions:(NSDictionary *) options
 {
     id host = options ? [options objectForKey:@"host"] : nil;
     if (host) {
@@ -285,6 +285,13 @@ void add_bson_to_object(bson_iterator it, id object)
         opts.port = 27017;
     }
     return mongo_connect(conn, &opts);
+}
+
+- (BOOL) authenticateUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database 
+{
+    return mongo_cmd_authenticate(conn, [database cStringUsingEncoding:NSUTF8StringEncoding],
+                                        [user cStringUsingEncoding:NSUTF8StringEncoding], 
+                                        [password cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 bson *bson_for_object(id object)
