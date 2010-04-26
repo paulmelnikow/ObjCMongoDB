@@ -44,8 +44,8 @@
             (set count ((mongo runCommand:(dict count:"sample") inDatabase:"test") n:))
             (assert_equal 25 count)
             (set count ((mongo runCommand:(dict count:"sample" query:(dict i:1)) inDatabase:"test") n:))
-	    ;; this test fails with MongoDB v1.4 (Debian) and works with v1.4.1 (Mac OS 10.6)
-	    ;; apparently because the query option is not supported in v1.4
+            ;; this test fails with MongoDB v1.4 (Debian) and works with v1.4.1 (Mac OS 10.6)
+            ;; apparently because the query option is not supported in v1.4
             (assert_equal 5 count)
             
             ;; test a query using the $where operator
@@ -117,4 +117,31 @@
             (assert_equal nil one)
             
             ;; clean up
+            (mongo dropCollection:collection inDatabase:database)))
+     
+     (- testFindArray is
+        (set database "test")
+        (set collection "sample")
+        (set path (+ database "." collection))
+        
+        (set mongo (NuMongoDB new))
+        (set connected (mongo connectWithOptions:nil))
+        (assert_equal 0 connected)
+        (unless (eq connected 0)
+                (puts "could not connect to database. Is mongod running?"))
+        
+        (if (eq connected 0)
+            
+            (mongo dropCollection:collection inDatabase:database)
+            
+            ;; insert some sample values
+            
+            (1000 times:
+                  (do (i)
+                      (set object (dict i:i i2:(* i i)))
+                      (mongo insert:object intoCollection:path)))
+            
+            (set result (mongo findArray:nil inCollection:path numberToReturn:10 numberToSkip:10))
+            (assert_equal 10 (result count))
+            
             (mongo dropCollection:collection inDatabase:database))))

@@ -24,6 +24,7 @@
 
 - (BOOL) next;
 - (bson) current;
+- (NSMutableArray *) arrayValue;
 
 @end
 
@@ -66,6 +67,26 @@
 {
     mongo_cursor_destroy(cursor);
     [super dealloc];
+}
+
+- (NSMutableArray *) arrayValue
+{
+    NSMutableArray *result = [NSMutableArray array];
+    while([self next]) {
+        [result addObject:[self currentObject]];
+    }
+    return result;
+}
+
+- (NSMutableArray *) arrayValueWithLimit:(int) limit
+{
+    int count = 0;
+    NSMutableArray *result = [NSMutableArray array];
+    while([self next] && (count < limit)) {
+        [result addObject:[self currentObject]];
+        count++;
+    }
+    return result;
 }
 
 @end
@@ -287,11 +308,11 @@ void add_bson_to_object(bson_iterator it, id object)
     return mongo_connect(conn, &opts);
 }
 
-- (BOOL) authenticateUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database 
+- (BOOL) authenticateUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database
 {
     return mongo_cmd_authenticate(conn, [database cStringUsingEncoding:NSUTF8StringEncoding],
-                                        [user cStringUsingEncoding:NSUTF8StringEncoding], 
-                                        [password cStringUsingEncoding:NSUTF8StringEncoding]);
+        [user cStringUsingEncoding:NSUTF8StringEncoding],
+        [password cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 bson *bson_for_object(id object)
@@ -320,12 +341,31 @@ bson *bson_for_object(id object)
     return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
 }
 
+- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
+{
+    bson *b = bson_for_object(query);
+    mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, 0, nToReturn, nToSkip, 0 );
+    return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
+}
+
+- (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection
+{
+    NuMongoDBCursor *cursor = [self find:query inCollection:collection];
+    return [cursor arrayValue];
+}
+
+- (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
+{
+    NuMongoDBCursor *cursor = [self find:query inCollection:collection numberToReturn:nToReturn numberToSkip:nToSkip];
+    return [cursor arrayValueWithLimit:nToReturn];
+}
+
 - (NSMutableDictionary *) findOne:(id) query inCollection:(NSString *) collection
 {
     bson *b = bson_for_object(query);
     bson bsonResult;
     bson_bool_t result = mongo_find_one(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, 0, &bsonResult);
-	return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;	
+    return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
 - (void) insert:(id) insert intoCollection:(NSString *) collection
@@ -357,21 +397,22 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
 
 - (void) remove:(id) condition fromCollection:(NSString *) collection
 {
-	bson *bcondition = bson_for_object(condition);
+    bson *bcondition = bson_for_object(condition);
     mongo_remove(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
 }
 
-- (int64_t) count:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database {
-	bson *bcondition = bson_for_object(condition);
- 	return mongo_count(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
+- (int64_t) count:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database
+{
+    bson *bcondition = bson_for_object(condition);
+    return mongo_count(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
 }
 
-- (id) runCommand:(id) command inDatabase:(NSString *) database 
+- (id) runCommand:(id) command inDatabase:(NSString *) database
 {
-	bson *bcommand = bson_for_object(command);
-	bson bsonResult;
-	bson_bool_t result = mongo_run_command(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], bcommand, &bsonResult);
-	return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;	
+    bson *bcommand = bson_for_object(command);
+    bson bsonResult;
+    bson_bool_t result = mongo_run_command(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], bcommand, &bsonResult);
+    return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
