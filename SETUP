@@ -1,6 +1,5 @@
 
-Information and utilities for running MongoDB with Nu.
-
+General information for running MongoDB with Nu.
 
 For Debian 5:
 1. edit /etc/apt/sources.list, adding:
@@ -13,5 +12,4 @@ For Mac OS X 10.6:
 2. Install in /usr/local
 3. Update path
 4. Create /data/db directory (default db location)
-
 
