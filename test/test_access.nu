@@ -141,7 +141,7 @@
                       (set object (dict i:i i2:(* i i)))
                       (mongo insert:object intoCollection:path)))
             
-            (set result (mongo findArray:nil inCollection:path numberToReturn:10 numberToSkip:10))
+            (set result (mongo findArray:nil inCollection:path returningFields:nil numberToReturn:10 numberToSkip:10))
             (assert_equal 10 (result count))
             
             (mongo dropCollection:collection inDatabase:database))))

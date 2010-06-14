@@ -117,7 +117,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
                 break;
         }
     }
-    else if ([object isKindOfClass:[NSString class]]) {
+    else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
         bson_append_string(bb, name,[object cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     else if ([object isKindOfClass:[NSDictionary class]]) {
@@ -135,6 +135,9 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             add_object_to_bson_buffer(arr, [[NSNumber numberWithInt:i] stringValue], [object objectAtIndex:i]);
         }
         bson_append_finish_object(arr);
+    }
+    else if ([object isKindOfClass:[NSNull class]]) {
+		// ignore nulls
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
@@ -329,7 +332,7 @@ bson *bson_for_object(id object)
         b = &(bsonObject->bsonValue);
     }
     else {
-        NSLog(@"unable to convert objects of type %@ to BSON.", [object className]);
+        NSLog(@"unable to convert objects of type %@ to BSON (%@).", [object className], object);
     }
     return b;
 }
@@ -341,10 +344,11 @@ bson *bson_for_object(id object)
     return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
 }
 
-- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
+- (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection returningFields:(id) fields numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
 {
     bson *b = bson_for_object(query);
-    mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, 0, nToReturn, nToSkip, 0 );
+	bson *f = bson_for_object(fields);
+    mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, f, nToReturn, nToSkip, 0 );
     return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
 }
 
@@ -354,9 +358,9 @@ bson *bson_for_object(id object)
     return [cursor arrayValue];
 }
 
-- (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
+- (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection returningFields:(id) fields numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
 {
-    NuMongoDBCursor *cursor = [self find:query inCollection:collection numberToReturn:nToReturn numberToSkip:nToSkip];
+    NuMongoDBCursor *cursor = [self find:query inCollection:collection returningFields:fields numberToReturn:nToReturn numberToSkip:nToSkip];
     return [cursor arrayValueWithLimit:nToReturn];
 }
 

@@ -4,9 +4,13 @@
 
 (set mongo (NuMongoDB new))
 
-(mongo connectWithOptions:nil)
+(puts "connecting")
+(mongo connectWithOptions:(dict host:"67.23.47.34"))
+(puts "connected")
 
 (mongo dropCollection:"sample" inDatabase:"test")
+
+(puts "ok")
 
 (set sample (dict one:1
                   two:2.0
@@ -16,10 +20,11 @@
 (set bson ((NuBSON alloc) initWithDictionary:sample))
 
 (mongo insert:bson intoCollection:collection)
+(puts "ok")
 
-(100 times:
+(10 times:
     (do (i)
-        (100 times:
+        (10 times:
             (do (j)
                 (set object (dict i:i j:j name:(+ "mongo-" i "-" j) (+ "key-" i "-" j) sample))
                 (set bson ((NuBSON alloc) initWithDictionary:object))
