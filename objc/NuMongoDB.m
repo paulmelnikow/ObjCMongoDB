@@ -137,7 +137,10 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         bson_append_finish_object(arr);
     }
     else if ([object isKindOfClass:[NSNull class]]) {
-		// ignore nulls
+        // ignore nulls
+    }
+    else if ([object isKindOfClass:[NSData class]]) {
+        bson_append_binary(bb, name, 0, [object bytes], [object length]);
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
@@ -250,6 +253,11 @@ void add_bson_to_object(bson_iterator it, id object)
                 bson_iterator_init(&it2, subobject.data);
                 add_bson_to_object(it2, value);
                 break;
+            case bson_bindata:
+                value = [NSData
+                    dataWithBytes:bson_iterator_bin_data(&it)
+                    length:bson_iterator_bin_len(&it)];
+                break;
             default:
                 fprintf(stderr, "(type %d)\n", bson_iterator_type(&it));
                 break;
@@ -347,7 +355,7 @@ bson *bson_for_object(id object)
 - (NuMongoDBCursor *) find:(id) query inCollection:(NSString *) collection returningFields:(id) fields numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip
 {
     bson *b = bson_for_object(query);
-	bson *f = bson_for_object(fields);
+    bson *f = bson_for_object(fields);
     mongo_cursor *cursor = mongo_find(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b, f, nToReturn, nToSkip, 0 );
     return [[[NuMongoDBCursor alloc] initWithCursor:cursor] autorelease];
 }

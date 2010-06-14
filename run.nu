@@ -5,7 +5,7 @@
 (set mongo (NuMongoDB new))
 
 (puts "connecting")
-(mongo connectWithOptions:(dict host:"67.23.47.34"))
+(mongo connectWithOptions:(dict host:"127.0.0.1"))
 (puts "connected")
 
 (mongo dropCollection:"sample" inDatabase:"test")
@@ -15,7 +15,8 @@
 (set sample (dict one:1
                   two:2.0
                   three:"3"
-                  four:(array "zero" "one" "two" "three")))
+                  four:(array "zero" "one" "two" "three")
+                  leaf:(NSData dataWithContentsOfFile:"mongoleaf.png")))
 
 (set bson ((NuBSON alloc) initWithDictionary:sample))
 
@@ -51,4 +52,13 @@
        (puts (object description)))
 
 (puts "ok")
+
+(set first (mongo findOne:(dict one:1) inCollection:collection))
+
+(puts (first description))
+
+(set leaf (first leaf:))
+
+
+(puts (eq leaf (NSData dataWithContentsOfFile:"mongoleaf.png")))
 
