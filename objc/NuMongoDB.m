@@ -435,6 +435,15 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
         NULL);
 }
 
+- (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options {
+	bson output;
+	return mongo_create_index(conn, 
+			[collection cStringUsingEncoding:NSUTF8StringEncoding],
+			bson_for_object(key),
+			options, 
+			&output);
+}
+
 - (void) close
 {
     mongo_destroy(conn );
