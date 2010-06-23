@@ -1,32 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "bson.h"
-#include "mongo.h"
-
-#import <Foundation/Foundation.h>
-
-@interface NuBSON : NSObject
-{
-    @public
-    bson bsonValue;
-}
-
-- (NuBSON *) initWithBSON:(bson) bb;
-- (NuBSON *) initWithDictionary:(NSDictionary *) dict;
-- (NSMutableDictionary *) dictionaryValue;
-@end
-
-@interface NuMongoDBCursor : NSObject
-{
-    mongo_cursor *cursor;
-}
-
-- (BOOL) next;
-- (bson) current;
-- (NSMutableArray *) arrayValue;
-
-@end
+#import "NuMongoDB.h"
 
 @implementation NuMongoDBCursor
 
@@ -288,14 +260,6 @@ void add_bson_to_object(bson_iterator it, id object)
 
 @end
 
-@interface NuMongoDB : NSObject
-{
-    mongo_connection conn[1];
-    mongo_connection_options opts;
-}
-
-@end
-
 @implementation NuMongoDB
 
 - (int) connectWithOptions:(NSDictionary *) options
@@ -380,7 +344,7 @@ bson *bson_for_object(id object)
     return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
-- (void) insert:(id) insert intoCollection:(NSString *) collection
+- (void) insertObject:(id) insert intoCollection:(NSString *) collection
 {
     bson *b = bson_for_object(insert);
     if (b) {
@@ -391,7 +355,7 @@ bson *bson_for_object(id object)
     }
 }
 
-- (void) update:(id) update inCollection:(NSString *) collection
+- (void) updateObject:(id) update inCollection:(NSString *) collection
 withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
 {
     bson *bupdate = bson_for_object(update);
@@ -407,13 +371,13 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
     }
 }
 
-- (void) remove:(id) condition fromCollection:(NSString *) collection
+- (void) removeWithCondition:(id) condition fromCollection:(NSString *) collection
 {
     bson *bcondition = bson_for_object(condition);
     mongo_remove(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
 }
 
-- (int64_t) count:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database
+- (int) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database
 {
     bson *bcondition = bson_for_object(condition);
     return mongo_count(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
@@ -435,13 +399,14 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
         NULL);
 }
 
-- (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options {
-	bson output;
-	return mongo_create_index(conn, 
-			[collection cStringUsingEncoding:NSUTF8StringEncoding],
-			bson_for_object(key),
-			options, 
-			&output);
+- (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options
+{
+    bson output;
+    return mongo_create_index(conn,
+        [collection cStringUsingEncoding:NSUTF8StringEncoding],
+        bson_for_object(key),
+        options,
+        &output);
 }
 
 - (void) close

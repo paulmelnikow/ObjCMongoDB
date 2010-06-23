@@ -32,12 +32,12 @@
                                             j:j
                                             name:(+ "mongo-" i "-" j)
                                             (+ "key-" i "-" j) sample))
-                          (mongo insert:object intoCollection:path)))))
+                          (mongo insertObject:object intoCollection:path)))))
             
             ;; test counts
-            (set count (mongo count:nil inCollection:collection inDatabase:database))
+            (set count (mongo countWithCondition:nil inCollection:collection inDatabase:database))
             (assert_equal 25 count)
-            (set count (mongo count:(dict i:1) inCollection:collection inDatabase:database))
+            (set count (mongo countWithCondition:(dict i:1) inCollection:collection inDatabase:database))
             (assert_equal 5 count)
             
             ;; REPEAT: test counts using the run command
@@ -58,7 +58,7 @@
             (assert_equal 5 matches)
             
             ;; test a qualified update
-            (mongo update:(dict "$set" (dict k:456))
+            (mongo updateObject:(dict "$set" (dict k:456))
                    inCollection:path
                    withCondition:(dict i:3)
                    insertIfNecessary:YES
@@ -79,7 +79,7 @@
                    (assert_equal nil (object k:)))
             
             ;; test update, this time we update with a condition on two keys
-            (mongo update:(dict "$set" (dict k:999))
+            (mongo updateObject:(dict "$set" (dict k:999))
                    inCollection:path
                    withCondition:(dict i:2 j:2)
                    insertIfNecessary:YES
@@ -102,17 +102,17 @@
             (assert_equal 2 (object j:))
             
             ;; remove one
-            (mongo remove:(dict i:1 j:2) fromCollection:path)
+            (mongo removeWithCondition:(dict i:1 j:2) fromCollection:path)
             (set one (mongo findOne:(dict i:1 j:2) inCollection:path))
             (assert_equal nil one)
             
-            (set count (mongo count:nil inCollection:collection inDatabase:database))
+            (set count (mongo countWithCondition:nil inCollection:collection inDatabase:database))
             (assert_equal 24 count)
             
             ;; remove everything, but first verify that we have some entries to delete
             (set one (mongo findOne:nil inCollection:path))
             (assert_not_equal nil one)
-            (mongo remove:nil fromCollection:path)
+            (mongo removeWithCondition:nil fromCollection:path)
             (set one (mongo findOne:nil inCollection:path))
             (assert_equal nil one)
             
@@ -139,7 +139,7 @@
             (1000 times:
                   (do (i)
                       (set object (dict i:i i2:(* i i)))
-                      (mongo insert:object intoCollection:path)))
+                      (mongo insertObject:object intoCollection:path)))
             
             (set result (mongo findArray:nil inCollection:path returningFields:nil numberToReturn:10 numberToSkip:10))
             (assert_equal 10 (result count))
