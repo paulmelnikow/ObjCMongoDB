@@ -91,7 +91,7 @@ limitations under the License.
 /*! Add an object to a collection. */
 - (void) insertObject:(id) insert intoCollection:(NSString *) collection;
 /*! Update an object in a collection. insertIfNecessary triggers an "upsert". */
-- (void) updateObject:(id) update inCollection:(NSString *) collection withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
+- (void) updateObject:(id) update inCollection:(NSString *) collection withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries;
 /*! Remove an object or objects matching a specified condition. */
 - (void) removeWithCondition:(id) condition fromCollection:(NSString *) collection;
 /*! Count objects with a specified condition. */

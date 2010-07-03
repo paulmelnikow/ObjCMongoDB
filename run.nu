@@ -18,9 +18,7 @@
                   four:(array "zero" "one" "two" "three")
                   leaf:(NSData dataWithContentsOfFile:"mongoleaf.png")))
 
-(set bson ((NuBSON alloc) initWithDictionary:sample))
-
-(mongo insert:bson intoCollection:collection)
+(mongo insertObject:sample intoCollection:collection)
 (puts "ok")
 
 (10 times:
