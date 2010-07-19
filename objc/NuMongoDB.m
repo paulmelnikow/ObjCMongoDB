@@ -1,5 +1,69 @@
 #import "NuMongoDB.h"
 
+@interface NuBSON (Private)
+- (NuBSON *) initWithBSON:(bson) b;
+@end
+
+@interface NuMongoDBObjectID : NSObject
+{
+    @public
+    bson_oid_t oid;
+}
+
+@end
+
+@implementation NuMongoDBObjectID
+- (id) initWithString:(NSString *) s
+{
+    if (self = [super init]) {
+        bson_oid_from_string(&oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+    return self;
+}
+
+- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
+{
+    if (self = [super init]) {
+        oid = *objectIDPointer;
+    }
+    return self;
+}
+
+- (const bson_oid_t *) objectIDPointer {return &oid;}
+
+- (NSString *) description
+{
+    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
+    bson_oid_to_string(&oid, buffer);
+    return [NSString stringWithFormat:@"(oid \"%s\")", buffer];
+}
+
+- (NSString *) stringValue
+{
+    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
+    bson_oid_to_string(&oid, buffer);
+    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+}
+
+- (NSComparisonResult)compare:(NuMongoDBObjectID *) other
+{
+    for (int i = 0; i < 3; i++) {
+        int diff = oid.ints[i] - other->oid.ints[i];
+        if (diff < 0)
+            return NSOrderedAscending;
+        else if (diff > 0)
+            return NSOrderedDescending;
+    }
+    return  NSOrderedSame;
+}
+
+- (BOOL)isEqual:(id)other
+{
+    return ([self compare:other] == 0);
+}
+
+@end
+
 @implementation NuMongoDBCursor
 
 - (NuMongoDBCursor *) initWithCursor:(mongo_cursor *) c
@@ -84,6 +148,19 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             case 'f':
                 bson_append_double(bb, name, [object doubleValue]);
                 break;
+            case 'l':
+            case 'L':
+                bson_append_long(bb, name, [object longValue]);
+                break;
+            case 'B':
+                bson_append_bool(bb, name, [object boolValue]);
+                break;
+            case 'c':
+            case 'C':
+            case 's':
+            case 'S':
+            case 'i':
+            case 'I':
             default:
                 bson_append_int(bb, name, [object intValue]);
                 break;
@@ -109,10 +186,17 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         bson_append_finish_object(arr);
     }
     else if ([object isKindOfClass:[NSNull class]]) {
-        // ignore nulls
+        bson_append_null(bb, name);
+    }
+    else if ([object isKindOfClass:[NSDate class]]) {
+        bson_date_t millis = (bson_date_t) ([object timeIntervalSince1970] * 1000.0);
+        bson_append_date(bb, name, millis);
     }
     else if ([object isKindOfClass:[NSData class]]) {
         bson_append_binary(bb, name, 0, [object bytes], [object length]);
+    }
+    else if ([object isKindOfClass:[NuMongoDBObjectID class]]) {
+        bson_append_oid(bb, name, [((NuMongoDBObjectID *) object) objectIDPointer]);
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
@@ -196,22 +280,15 @@ void add_bson_to_object(bson_iterator it, id object)
         NSString *key = [[[NSString alloc] initWithCString:bson_iterator_key(&it) encoding:NSUTF8StringEncoding] autorelease];
 
         id value = nil;
-
         char hex_oid[25];
-
         switch(bson_iterator_type(&it)) {
+            case bson_eoo:
+                break;
             case bson_double:
                 value = [NSNumber numberWithDouble:bson_iterator_double(&it)];
                 break;
-            case bson_int:
-                value = [NSNumber numberWithInt:bson_iterator_int(&it)];
-                break;
             case bson_string:
                 value = [[[NSString alloc] initWithCString:bson_iterator_string(&it) encoding:NSUTF8StringEncoding] autorelease];
-                break;
-            case bson_oid:
-                bson_oid_to_string(bson_iterator_oid(&it), hex_oid);
-                value = [[[NSString alloc] initWithCString:hex_oid encoding:NSUTF8StringEncoding] autorelease];
                 break;
             case bson_object:
                 value = [NSMutableDictionary dictionary];
@@ -230,8 +307,37 @@ void add_bson_to_object(bson_iterator it, id object)
                     dataWithBytes:bson_iterator_bin_data(&it)
                     length:bson_iterator_bin_len(&it)];
                 break;
+            case bson_undefined:
+                break;
+            case bson_oid:
+                value = [[[NuMongoDBObjectID alloc] initWithObjectIDPointer:bson_iterator_oid(&it)] autorelease];
+                break;
+            case bson_bool:
+                value = [NSNumber numberWithBool:bson_iterator_bool(&it)];
+                break;
+            case bson_date:
+                value = [NSDate dateWithTimeIntervalSince1970:(0.001 * bson_iterator_date(&it))];
+                break;
+            case bson_null:
+                value = [NSNull null];
+                break;
+            case bson_regex:
+                break;
+            case bson_code:
+                break;
+            case bson_symbol:
+                break;
+            case bson_codewscope:
+                break;
+            case bson_int:
+                value = [NSNumber numberWithInt:bson_iterator_int(&it)];
+                break;
+            case bson_timestamp:
+                break;
+            case bson_long:
+                value = [NSNumber numberWithLong:bson_iterator_long(&it)];
+                break;
             default:
-                fprintf(stderr, "(type %d)\n", bson_iterator_type(&it));
                 break;
         }
         if (value) {
@@ -242,6 +348,7 @@ void add_bson_to_object(bson_iterator it, id object)
                 [object addObject:value];
             }
             else {
+                fprintf(stderr, "(type %d)\n", bson_iterator_type(&it));
                 NSLog(@"we don't know how to add to %@", object);
             }
         }

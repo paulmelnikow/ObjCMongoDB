@@ -144,4 +144,33 @@
             (set result (mongo findArray:nil inCollection:path returningFields:nil numberToReturn:10 numberToSkip:10))
             (assert_equal 10 (result count))
             
+            (mongo dropCollection:collection inDatabase:database)))
+     
+     (- testTypes is
+        (set database "test")
+        (set collection "types")
+        (set path (+ database "." collection))
+        
+        (set mongo (NuMongoDB new))
+        (set connected (mongo connectWithOptions:nil))
+        (assert_equal 0 connected)
+        (unless (eq connected 0)
+                (puts "could not connect to database. Is mongod running?"))
+        
+        (if (eq connected 0)
+            (mongo dropCollection:collection inDatabase:database)
+            (set object (dict int:123
+                              float:123.456
+                              bool:(NSNumber numberWithBool:YES)
+                              date:(set now (NSDate date))
+                              array:(array 1 2 3)))            
+            (mongo insertObject:object intoCollection:path)
+            (set result (mongo findOne:nil inCollection:path))
+            (assert_equal ((result _id:) isKindOfClass:NuMongoDBObjectID) 1)
+            (assert_equal ((result int:) isKindOfClass:NSNumber) 1)
+            (assert_equal ((result float:) isKindOfClass:NSNumber) 1)
+            (assert_equal ((result bool:) isKindOfClass:NSNumber) 1)
+            (assert_equal ((result date:) isKindOfClass:NSDate) 1)
+            (assert_equal ((result array:) isKindOfClass:NSArray) 1)
+            (assert_in_delta (now timeIntervalSince1970) ((result date:) timeIntervalSince1970) 0.001)            
             (mongo dropCollection:collection inDatabase:database))))
