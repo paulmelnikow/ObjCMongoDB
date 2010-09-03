@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22739CE01231446B00909551 /* NuBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 22739CDE1231446B00909551 /* NuBSON.h */; };
+		22739CE11231446B00909551 /* NuBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 22739CDF1231446B00909551 /* NuBSON.m */; };
 		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		22ED5B4611DF1A7200410529 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B4711DF1A7200410529 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; };
@@ -30,7 +32,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* NuMongoDB */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = NuMongoDB;
 		};
 /* End PBXContainerItemProxy section */
@@ -38,6 +40,8 @@
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		089C1667FE841158C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		22739CDE1231446B00909551 /* NuBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NuBSON.h; sourceTree = "<group>"; };
+		22739CDF1231446B00909551 /* NuBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NuBSON.m; sourceTree = "<group>"; };
 		22ED5B3C11DF1A7200410529 /* bson.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bson.c; sourceTree = "<group>"; };
 		22ED5B3D11DF1A7200410529 /* bson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bson.h; sourceTree = "<group>"; };
 		22ED5B3E11DF1A7200410529 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
@@ -155,6 +159,8 @@
 		22ED5B4E11DF1A8600410529 /* objc */ = {
 			isa = PBXGroup;
 			children = (
+				22739CDE1231446B00909551 /* NuBSON.h */,
+				22739CDF1231446B00909551 /* NuBSON.m */,
 				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
 				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
 			);
@@ -183,6 +189,7 @@
 				22ED5B4B11DF1A7200410529 /* mongo_except.h in Headers */,
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
 				22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */,
+				22739CE01231446B00909551 /* NuBSON.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -273,6 +280,7 @@
 				22ED5B4911DF1A7200410529 /* mongo.c in Sources */,
 				22ED5B4C11DF1A7200410529 /* numbers.c in Sources */,
 				22ED5B5211DF1A8600410529 /* NuMongoDB.m in Sources */,
+				22739CE11231446B00909551 /* NuBSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
