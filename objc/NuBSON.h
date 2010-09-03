@@ -38,6 +38,8 @@ limitations under the License.
 - (NuBSON *) initWithDictionary:(NSDictionary *) dict;
 /*! Return a dictionary equivalent of a BSON object. */
 - (NSMutableDictionary *) dictionaryValue;
+/*! Return an NSData representation of the BSON object. */
+- (NSData *) data;
 @end
 
 @interface NuBSONObjectID : NSObject
@@ -49,4 +51,12 @@ limitations under the License.
 @end
 
 bson *bson_for_object(id object);
+
+@interface NSData (NuBSON) 
+- (NSMutableDictionary *) BSONValue;
+@end
+
+@interface NSDictionary (NuBSON)
+- (NSData *) BSONRepresentation;
+@end
 

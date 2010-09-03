@@ -1,4 +1,5 @@
-#import "NuMongoDB.h"
+#import "NuBSON.h"
+#include "bson.h"
 
 @interface NuBSON (Private)
 - (NuBSON *) initWithBSON:(bson) b;
@@ -64,6 +65,11 @@
         bsonValue = b;
     }
     return self;
+}
+
+- (NSData *) data
+{
+	return [[[NSData alloc] initWithBytes:(bsonValue.data) length:bson_size(&(bsonValue.data))] autorelease];
 }
 
 void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
@@ -314,3 +320,26 @@ bson *bson_for_object(id object)
     }
     return b;
 }
+
+@implementation NSData (NuBSON)
+
+- (NSMutableDictionary *) BSONValue
+{
+    bson bsonValue;
+    bsonValue.data = [self bytes];
+    bsonValue.owned = NO;
+    NuBSON *bsonObject = [[[NuBSON alloc] initWithBSON:bsonValue] autorelease];
+    return [bsonObject dictionaryValue];
+}
+
+@end
+
+@implementation NSDictionary (NuBSON)
+
+- (NSData *) BSONRepresentation
+{
+    NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:self] autorelease];
+    return [bsonObject data];
+}
+
+@end
