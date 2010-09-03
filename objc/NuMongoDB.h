@@ -24,22 +24,7 @@ limitations under the License.
 
 #import <Foundation/Foundation.h>
 
-/*!
-   @class NuBSON
-   @abstract A BSON serializer and deserializer.
-   @discussion BSON is the wire format used to communicate with MongoDB.
- */
-@interface NuBSON : NSObject
-{
-    @public
-    bson bsonValue;
-}
-
-/*! Create a BSON representation of a dictionary object. */
-- (NuBSON *) initWithDictionary:(NSDictionary *) dict;
-/*! Return a dictionary equivalent of a BSON object. */
-- (NSMutableDictionary *) dictionaryValue;
-@end
+#import "NuBSON.h"
 
 /*!
    @class NuMongoDBCursor

@@ -201,7 +201,7 @@
                           array:(array 1 2 3)))
         (mongo insertObject:object intoCollection:path)
         (set result (mongo findOne:nil inCollection:path))
-        (assert_equal ((result _id:) isKindOfClass:NuMongoDBObjectID) 1)
+        (assert_equal ((result _id:) isKindOfClass:NuBSONObjectID) 1)
         (assert_equal ((result int:) isKindOfClass:NSNumber) 1)
         (assert_equal ((result float:) isKindOfClass:NSNumber) 1)
         (assert_equal ((result bool:) isKindOfClass:NSNumber) 1)
