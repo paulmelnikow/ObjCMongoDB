@@ -147,6 +147,29 @@
         
         (mongo dropCollection:collection inDatabase:database))
      
+     (- testCollections is
+        (set database "sample")
+        (set mongo (NuMongoDB new))
+        (set connected (mongo connectWithOptions:connection))
+        (assert_equal 0 connected)
+        (unless (eq connected 0)
+                (puts "could not connect to database. Is mongod running?")
+                (return))
+        (mongo dropDatabase:database)
+        (set collectionNames (array "a" "b" "c" "d"))
+        (collectionNames each:
+             (do (collectionName)
+                 (mongo insertObject:(dict x:0) intoCollection:(+ database "." collectionName))))
+        (set actualCollectionNames (mongo getCollectionNamesInDatabase:database))
+        (collectionNames each:
+             (do (collectionName)
+                 (assert_true (actualCollectionNames containsObject:collectionName))))
+        (mongo dropDatabase:database)
+        (set actualCollectionNames (mongo getCollectionNamesInDatabase:database))
+        (collectionNames each:
+             (do (collectionName)
+                 (assert_false (actualCollectionNames containsObject:collectionName)))))
+     
      (- testUpdate is
         (set database "test")
         (set collection "update")

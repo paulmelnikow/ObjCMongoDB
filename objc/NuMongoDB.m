@@ -68,7 +68,6 @@
 
 @end
 
-
 @implementation NuMongoDB
 
 - (int) connectWithOptions:(NSDictionary *) options
@@ -181,12 +180,37 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
     return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
+- (BOOL) dropDatabase:(NSString *) database {
+	return mongo_cmd_drop_db(conn, [database cStringUsingEncoding:NSUTF8StringEncoding]);
+}
+
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
 {
     return mongo_cmd_drop_collection(conn,
         [database cStringUsingEncoding:NSUTF8StringEncoding],
         [collection cStringUsingEncoding:NSUTF8StringEncoding],
         NULL);
+}
+
+- (id) getCollectionNamesInDatabase:(NSString *) database
+{
+	NSArray *names = [self findArray:nil inCollection:[database stringByAppendingString:@".system.namespaces"]];
+	NSMutableArray *result = [NSMutableArray array];
+	for (int i = 0; i < [names count]; i++) {
+		id name = [[[names objectAtIndex:i] objectForKey:@"name"] 
+					stringByReplacingOccurrencesOfString:[database stringByAppendingString:@"."]
+					withString:@""];
+		NSRange match = [name rangeOfString:@".$_id_"];
+		if (match.location != NSNotFound) {
+			continue;
+		}
+		match = [name rangeOfString:@"system.indexes"];
+		if (match.location != NSNotFound) {
+			continue;
+		}
+		[result addObject:name];
+	}
+	return result;
 }
 
 - (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options
