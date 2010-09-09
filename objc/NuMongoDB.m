@@ -91,6 +91,13 @@
     return mongo_connect(conn, &opts);
 }
 
+- (void) addUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database
+{
+    mongo_cmd_add_user(conn, [database cStringUsingEncoding:NSUTF8StringEncoding],
+        [user cStringUsingEncoding:NSUTF8StringEncoding],
+        [password cStringUsingEncoding:NSUTF8StringEncoding]);
+}
+
 - (BOOL) authenticateUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database
 {
     return mongo_cmd_authenticate(conn, [database cStringUsingEncoding:NSUTF8StringEncoding],
@@ -180,8 +187,9 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
     return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
-- (BOOL) dropDatabase:(NSString *) database {
-	return mongo_cmd_drop_db(conn, [database cStringUsingEncoding:NSUTF8StringEncoding]);
+- (BOOL) dropDatabase:(NSString *) database
+{
+    return mongo_cmd_drop_db(conn, [database cStringUsingEncoding:NSUTF8StringEncoding]);
 }
 
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database
@@ -194,23 +202,23 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
 
 - (id) getCollectionNamesInDatabase:(NSString *) database
 {
-	NSArray *names = [self findArray:nil inCollection:[database stringByAppendingString:@".system.namespaces"]];
-	NSMutableArray *result = [NSMutableArray array];
-	for (int i = 0; i < [names count]; i++) {
-		id name = [[[names objectAtIndex:i] objectForKey:@"name"] 
-					stringByReplacingOccurrencesOfString:[database stringByAppendingString:@"."]
-					withString:@""];
-		NSRange match = [name rangeOfString:@".$_id_"];
-		if (match.location != NSNotFound) {
-			continue;
-		}
-		match = [name rangeOfString:@"system.indexes"];
-		if (match.location != NSNotFound) {
-			continue;
-		}
-		[result addObject:name];
-	}
-	return result;
+    NSArray *names = [self findArray:nil inCollection:[database stringByAppendingString:@".system.namespaces"]];
+    NSMutableArray *result = [NSMutableArray array];
+    for (int i = 0; i < [names count]; i++) {
+        id name = [[[names objectAtIndex:i] objectForKey:@"name"]
+            stringByReplacingOccurrencesOfString:[database stringByAppendingString:@"."]
+            withString:@""];
+        NSRange match = [name rangeOfString:@".$_id_"];
+        if (match.location != NSNotFound) {
+            continue;
+        }
+        match = [name rangeOfString:@"system.indexes"];
+        if (match.location != NSNotFound) {
+            continue;
+        }
+        [result addObject:name];
+    }
+    return result;
 }
 
 - (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options

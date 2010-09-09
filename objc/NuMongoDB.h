@@ -61,6 +61,8 @@ limitations under the License.
 
 /*! Connect to a MongoDB database. Options can include @"host" and @"port". */
 - (int) connectWithOptions:(NSDictionary *) options;
+/*! Add user to named database. */
+- (void) addUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database;
 /*! Authenticate to named database. */
 - (BOOL) authenticateUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database;
 /*! Convenience method for database searches. Query should be a dictionary. */

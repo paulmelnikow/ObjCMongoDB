@@ -7,6 +7,18 @@
 
 (set connection nil)
 
+;; the NuMongoDB unit tests now use (and test) authentication
+;; test username and password
+(set username "numongodb")
+(set password "numongodb")
+;;
+;; add these to the admin database with
+;; > use admin
+;; > db.addUser("numongodb", "numongodb")
+;; verify with
+;; > db.system.users.find()
+;;
+
 (class TestAccess is NuTestCase
      
      (- testSession is
@@ -21,6 +33,8 @@
         (unless (eq connected 0)
                 (puts "could not connect to database. Is mongod running?")
                 (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
+        
         
         ;; start clean
         (mongo dropCollection:collection inDatabase:database)
@@ -133,6 +147,7 @@
         (unless (eq connected 0)
                 (puts "could not connect to database. Is mongod running?")
                 (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
         
         (mongo dropCollection:collection inDatabase:database)
         
@@ -155,6 +170,8 @@
         (unless (eq connected 0)
                 (puts "could not connect to database. Is mongod running?")
                 (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
+        
         (mongo dropDatabase:database)
         (set collectionNames (array "a" "b" "c" "d"))
         (collectionNames each:
@@ -181,6 +198,8 @@
         (unless (eq connected 0)
                 (puts "could not connect to database. Is mongod running?")
                 (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
+        
         (mongo dropCollection:collection inDatabase:database)
         
         ;; insert an object, make sure that it's in the collection
@@ -204,6 +223,22 @@
         ;; clean up
         (mongo dropCollection:collection inDatabase:database))
      
+     (- testAuthentication is
+        (set database "protected")
+        (set mongo (NuMongoDB new))
+        (set connected (mongo connectWithOptions:connection))
+        (assert_equal 0 connected)
+        (unless (eq connected 0)
+                (puts "could not connect to database. Is mongod running?")
+                (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
+        (mongo dropDatabase:database)
+        (mongo insertObject:(dict foo:1) intoCollection:"protected.data")
+        (mongo addUser:"user" withPassword:"password" forDatabase:database)
+        (set result (mongo authenticateUser:"user" withPassword:"password" forDatabase:database))
+        (assert_equal 1 result)
+        (mongo dropDatabase:database))
+     
      (- testTypes is
         (set database "test")
         (set collection "types")
@@ -215,6 +250,8 @@
         (unless (eq connected 0)
                 (puts "could not connect to database. Is mongod running?")
                 (return))
+        (mongo authenticateUser:username withPassword:password forDatabase:"admin")
+        
         
         (mongo dropCollection:collection inDatabase:database)
         (set object (dict int:123
