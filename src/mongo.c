@@ -125,6 +125,7 @@ static int mongo_connect_helper( mongo_connection * conn ){
     }
 
     if ( connect( conn->sock , (struct sockaddr*)&conn->sa , conn->addressSize ) ){
+		printf("failed to connect %s %d\n", conn->left_opts->host, conn->left_opts->port);
         return mongo_conn_fail;
     }
 

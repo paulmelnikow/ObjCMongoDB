@@ -88,6 +88,7 @@
     else {
         opts.port = 27017;
     }
+    //NSLog(@"connecting to host %s port %d", opts.host, opts.port);
     return mongo_connect(conn, &opts);
 }
 
@@ -140,14 +141,19 @@
     return result ? [[[[NuBSON alloc] initWithBSON:bsonResult] autorelease] dictionaryValue] : nil;
 }
 
-- (void) insertObject:(id) insert intoCollection:(NSString *) collection
+- (id) insertObject:(id) insert intoCollection:(NSString *) collection
 {
+    if (![insert objectForKey:@"_id"]) {
+        [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
+    }
     bson *b = bson_for_object(insert);
     if (b) {
         mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b);
+        return [insert objectForKey:@"_id"];
     }
     else {
         NSLog(@"incomplete insert: insert must not be nil.");
+        return nil;
     }
 }
 

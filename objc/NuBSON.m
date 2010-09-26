@@ -6,6 +6,14 @@
 @end
 
 @implementation NuBSONObjectID
+
++ (NuBSONObjectID *) objectID
+{
+	bson_oid_t oid;
+	bson_oid_gen(&oid);	
+	return [[[NuBSONObjectID alloc] initWithObjectIDPointer:&oid] autorelease];
+}
+
 - (id) initWithString:(NSString *) s
 {
     if (self = [super init]) {
@@ -293,7 +301,6 @@ void add_bson_to_object(bson_iterator it, id object)
 - (NSMutableDictionary *) dictionaryValue
 {
     id object = [NSMutableDictionary dictionary];
-
     bson_iterator it;
     bson_iterator_init(&it, bsonValue.data);
     add_bson_to_object(it, object);

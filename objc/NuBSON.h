@@ -48,15 +48,17 @@ limitations under the License.
     bson_oid_t oid;
 }
 
+/*! Create a new and unique object ID. */
++ (NuBSONObjectID *) objectID;
+
 @end
 
 bson *bson_for_object(id object);
 
-@interface NSData (NuBSON) 
+@interface NSData (NuBSON)
 - (NSMutableDictionary *) BSONValue;
 @end
 
 @interface NSDictionary (NuBSON)
 - (NSData *) BSONRepresentation;
 @end
-

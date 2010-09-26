@@ -75,8 +75,8 @@ limitations under the License.
 - (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection returningFields:(id) fields numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip;
 /*! Convenience method that returns search results as a single object.  */
 - (NSMutableDictionary *) findOne:(id) query inCollection:(NSString *) collection;
-/*! Add an object to a collection. */
-- (void) insertObject:(id) insert intoCollection:(NSString *) collection;
+/*! Add an object to a collection, returning the _id of the new object. */
+- (id) insertObject:(id) insert intoCollection:(NSString *) collection;
 /*! Update an object in a collection. insertIfNecessary triggers an "upsert". */
 - (void) updateObject:(id) update inCollection:(NSString *) collection withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries;
 /*! Remove an object or objects matching a specified condition. */
