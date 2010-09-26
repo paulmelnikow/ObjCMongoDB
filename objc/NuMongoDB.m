@@ -206,7 +206,7 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
         NULL);
 }
 
-- (id) getCollectionNamesInDatabase:(NSString *) database
+- (id) collectionNamesInDatabase:(NSString *) database
 {
     NSArray *names = [self findArray:nil inCollection:[database stringByAppendingString:@".system.namespaces"]];
     NSMutableArray *result = [NSMutableArray array];

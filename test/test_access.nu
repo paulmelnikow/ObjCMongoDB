@@ -177,12 +177,12 @@
         (collectionNames each:
              (do (collectionName)
                  (mongo insertObject:(dict x:0) intoCollection:(+ database "." collectionName))))
-        (set actualCollectionNames (mongo getCollectionNamesInDatabase:database))
+        (set actualCollectionNames (mongo collectionNamesInDatabase:database))
         (collectionNames each:
              (do (collectionName)
                  (assert_true (actualCollectionNames containsObject:collectionName))))
         (mongo dropDatabase:database)
-        (set actualCollectionNames (mongo getCollectionNamesInDatabase:database))
+        (set actualCollectionNames (mongo collectionNamesInDatabase:database))
         (collectionNames each:
              (do (collectionName)
                  (assert_false (actualCollectionNames containsObject:collectionName)))))

@@ -85,6 +85,8 @@ limitations under the License.
 - (int) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database;
 /*! Run an arbitrary database command. */
 - (id) runCommand:(id) command inDatabase:(NSString *) database;
+/*! Get the names of the collections in a database. */
+- (id) collectionNamesInDatabase:(NSString *) database;
 /*! Remove a collection. */
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database;
 /*! Create a collection if it doesn't already exist. */
