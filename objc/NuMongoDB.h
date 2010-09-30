@@ -87,6 +87,8 @@ limitations under the License.
 - (id) runCommand:(id) command inDatabase:(NSString *) database;
 /*! Get the names of the collections in a database. */
 - (id) collectionNamesInDatabase:(NSString *) database;
+/*! Remove a database. */
+- (BOOL) dropDatabase:(NSString *) database;
 /*! Remove a collection. */
 - (BOOL) dropCollection:(NSString *) collection inDatabase:(NSString *) database;
 /*! Create a collection if it doesn't already exist. */
