@@ -9,9 +9,9 @@
 
 + (NuBSONObjectID *) objectID
 {
-	bson_oid_t oid;
-	bson_oid_gen(&oid);	
-	return [[[NuBSONObjectID alloc] initWithObjectIDPointer:&oid] autorelease];
+    bson_oid_t oid;
+    bson_oid_gen(&oid);
+    return [[[NuBSONObjectID alloc] initWithObjectIDPointer:&oid] autorelease];
 }
 
 - (id) initWithString:(NSString *) s
@@ -77,7 +77,7 @@
 
 - (NSData *) data
 {
-	return [[[NSData alloc] initWithBytes:(bsonValue.data) length:bson_size(&(bsonValue.data))] autorelease];
+    return [[[NSData alloc] initWithBytes:(bsonValue.data) length:bson_size(&(bsonValue.data))] autorelease];
 }
 
 void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
@@ -94,6 +94,10 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             case 'l':
             case 'L':
                 bson_append_long(bb, name, [object longValue]);
+                break;
+            case 'q':
+            case 'Q':
+                bson_append_long(bb, name, [object longLongValue]);
                 break;
             case 'B':
                 bson_append_bool(bb, name, [object boolValue]);
