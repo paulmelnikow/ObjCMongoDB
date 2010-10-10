@@ -92,6 +92,10 @@
     return mongo_connect(conn, &opts);
 }
 
+- (int) connect {
+	return [self connectWithOptions:nil];
+}
+
 - (void) addUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database
 {
     mongo_cmd_add_user(conn, [database cStringUsingEncoding:NSUTF8StringEncoding],

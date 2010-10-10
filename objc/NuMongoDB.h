@@ -61,6 +61,8 @@ limitations under the License.
 
 /*! Connect to a MongoDB database. Options can include @"host" and @"port". */
 - (int) connectWithOptions:(NSDictionary *) options;
+/*! Connect to a local MongoDB database on the default port (27017). */
+- (int) connect;
 /*! Add user to named database. */
 - (void) addUser:(NSString *) user withPassword:(NSString *) password forDatabase:(NSString *) database;
 /*! Authenticate to named database. */
