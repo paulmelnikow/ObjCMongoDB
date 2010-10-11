@@ -62,3 +62,14 @@ bson *bson_for_object(id object);
 @interface NSDictionary (NuBSON)
 - (NSData *) BSONRepresentation;
 @end
+
+@interface NuBSONBuffer : NSObject 
+{
+	bson_buffer bb;	
+}
+
+- (id) init;
+- (NuBSON *) bsonValue;
+- (void) addObject:(id) object withKey:(id) key;
+
+@end

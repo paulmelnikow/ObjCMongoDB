@@ -84,6 +84,9 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 {
     const char *name = [key cStringUsingEncoding:NSUTF8StringEncoding];
 
+    Class NuCell = NSClassFromString(@"NuCell");
+    Class NuSymbol = NSClassFromString(@"NuSymbol");
+
     if ([object isKindOfClass:[NSNumber class]]) {
         const char *objCType = [object objCType];
         switch (*objCType) {
@@ -145,6 +148,32 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     else if ([object isKindOfClass:[NuBSONObjectID class]]) {
         bson_append_oid(bb, name, [((NuBSONObjectID *) object) objectIDPointer]);
     }
+    else if (NuCell && [object isKindOfClass:[NuCell class]]) {
+        if ([[object car] isKindOfClass:[NuSymbol class]] && (([object length] % 2) == 0)) {
+            // assume we have an object
+            bson_buffer *sub = bson_append_start_object(bb, name);
+            id cursor = object;
+            while (cursor && (cursor != [NSNull null])) {
+                id key = [[cursor car] labelName];
+                id value = [[cursor cdr] car];
+                add_object_to_bson_buffer(sub, key, value);
+                cursor = [[cursor cdr] cdr];
+            }
+            bson_append_finish_object(sub);
+        }
+        else {
+            // assume we have an array
+            bson_buffer *arr = bson_append_start_array(bb, name);
+            id cursor = object;
+            int i = 0;
+            while (cursor && (cursor != [NSNull null])) {
+                add_object_to_bson_buffer(arr, [[NSNumber numberWithInt:i] stringValue], [cursor car]);
+                i++;
+                cursor = [cursor cdr];
+            }
+            bson_append_finish_object(arr);
+        }
+    }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
     }
@@ -159,6 +188,22 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     for (int i = 0; i < [keys count]; i++) {
         id key = [keys objectAtIndex:i];
         add_object_to_bson_buffer(&bb, key, [dict objectForKey:key]);
+    }
+    bson_from_buffer(&b, &bb);
+    return [self initWithBSON:b];
+}
+
+- (NuBSON *) initWithList:(id) cell
+{
+    bson b;
+    bson_buffer bb;
+    bson_buffer_init(& bb );
+    id cursor = cell;
+    while (cursor && (cursor != [NSNull null])) {
+        id key = [[cursor car] labelName];
+        id value = [[cursor cdr] car];
+        add_object_to_bson_buffer(&bb, key, value);
+        cursor = [[cursor cdr] cdr];
     }
     bson_from_buffer(&b, &bb);
     return [self initWithBSON:b];
@@ -224,7 +269,9 @@ void add_bson_to_object(bson_iterator it, id object)
 
     while(bson_iterator_next(&it)) {
 
-        NSString *key = [[[NSString alloc] initWithCString:bson_iterator_key(&it) encoding:NSUTF8StringEncoding] autorelease];
+        NSString *key = [[[NSString alloc]
+            initWithCString:bson_iterator_key(&it) encoding:NSUTF8StringEncoding]
+            autorelease];
 
         id value = nil;
         char hex_oid[25];
@@ -235,7 +282,9 @@ void add_bson_to_object(bson_iterator it, id object)
                 value = [NSNumber numberWithDouble:bson_iterator_double(&it)];
                 break;
             case bson_string:
-                value = [[[NSString alloc] initWithCString:bson_iterator_string(&it) encoding:NSUTF8StringEncoding] autorelease];
+                value = [[[NSString alloc]
+                    initWithCString:bson_iterator_string(&it) encoding:NSUTF8StringEncoding]
+                    autorelease];
                 break;
             case bson_object:
                 value = [NSMutableDictionary dictionary];
@@ -351,6 +400,30 @@ bson *bson_for_object(id object)
 {
     NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:self] autorelease];
     return [bsonObject data];
+}
+
+@end
+
+@implementation NuBSONBuffer
+
+- (id) init
+{
+    if (self = [super init]) {
+        bson_buffer_init(& bb );
+    }
+    return self;
+}
+
+- (NuBSON *) bsonValue
+{
+    bson b;
+    bson_from_buffer(&b, &bb);
+    return [[[NuBSON alloc] initWithBSON:b] autorelease];
+}
+
+- (void) addObject:(id) object withKey:(id) key
+{
+    add_object_to_bson_buffer(&bb, key, object);
 }
 
 @end
