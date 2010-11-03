@@ -21,6 +21,7 @@
 (set @framework "NuMongoDB")
 (set @framework_identifier "nu.programming.numongodb")
 (set @framework_creator_code "????")
+(set @public_headers (filelist "^headers/.*\.h$"))
 
 (compilation-tasks)
 (framework-tasks)
