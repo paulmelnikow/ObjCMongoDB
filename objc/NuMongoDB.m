@@ -148,6 +148,7 @@
 - (id) insertObject:(id) insert intoCollection:(NSString *) collection
 {
     if (![insert objectForKey:@"_id"]) {
+        insert = [[insert mutableCopy] autorelease];
         [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
     }
     bson *b = bson_for_object(insert);
