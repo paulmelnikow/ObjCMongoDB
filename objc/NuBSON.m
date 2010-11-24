@@ -1,8 +1,18 @@
 #import "NuBSON.h"
 #include "bson.h"
 
+@protocol NuCellProtocol
+- (id) car;
+- (id) cdr;
+@end
+
+@protocol NuSymbolProtocol
+- (NSString *) labelName;
+@end
+
 @interface NuBSON (Private)
 - (NuBSON *) initWithBSON:(bson) b;
+- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer;
 @end
 
 @implementation NuBSONObjectID
@@ -77,7 +87,7 @@
 
 - (NSData *) data
 {
-    return [[[NSData alloc] initWithBytes:(bsonValue.data) length:bson_size(&(bsonValue.data))] autorelease];
+    return [[[NSData alloc] initWithBytes:(bsonValue.data) length:bson_size(&(bsonValue))] autorelease];
 }
 
 void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
@@ -273,7 +283,6 @@ void add_bson_to_object(bson_iterator it, id object)
             autorelease];
 
         id value = nil;
-        char hex_oid[25];
         switch(bson_iterator_type(&it)) {
             case bson_eoo:
                 break;
@@ -375,7 +384,7 @@ bson *bson_for_object(id object)
         b = &(bsonObject->bsonValue);
     }
     else {
-        NSLog(@"unable to convert objects of type %@ to BSON (%@).", [object className], object);
+        NSLog(@"unable to convert objects of type %s to BSON (%@).", object_getClassName(object), object);
     }
     return b;
 }
@@ -385,7 +394,7 @@ bson *bson_for_object(id object)
 - (NSMutableDictionary *) BSONValue
 {
     bson bsonValue;
-    bsonValue.data = [self bytes];
+    bsonValue.data = (char *) [self bytes];
     bsonValue.owned = NO;
     NuBSON *bsonObject = [[[NuBSON alloc] initWithBSON:bsonValue] autorelease];
     return [bsonObject dictionaryValue];
