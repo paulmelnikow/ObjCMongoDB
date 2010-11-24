@@ -14,7 +14,8 @@
                      d:(NSDate date)
                      e:123.456
                      f:(dict a:(array 1 2 3))
-                     g:(NSData dataWithContentsOfFile:"mongoleaf.png")))
+                     g:(NSData dataWithContentsOfFile:"mongoleaf.png")
+                     h:nil))
         (set data (x BSONRepresentation))
         (set y (data BSONValue))
         (assert_equal (x a:) (y a:))
@@ -27,6 +28,7 @@
         (assert_equal (x e:) (y e:))
         (assert_equal (x f:) (y f:))
         (assert_equal (x g:) (y g:))
+        (assert_equal (x h:) (y h:))
         
         (set data (y BSONRepresentation))
         (set z (data BSONValue))
@@ -37,4 +39,5 @@
         (assert_equal (y d:) (z d:))
         (assert_equal (y e:) (z e:))
         (assert_equal (y f:) (z f:))
-        (assert_equal (y g:) (z g:))))
+        (assert_equal (y g:) (z g:))
+        (assert_equal (y h:) (z h:))))

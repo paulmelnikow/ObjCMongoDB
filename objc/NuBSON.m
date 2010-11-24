@@ -83,7 +83,6 @@
 void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 {
     const char *name = [key cStringUsingEncoding:NSUTF8StringEncoding];
-
     Class NuCell = NSClassFromString(@"NuCell");
     Class NuSymbol = NSClassFromString(@"NuSymbol");
 
@@ -115,9 +114,6 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
                 bson_append_int(bb, name, [object intValue]);
                 break;
         }
-    }
-    else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
-        bson_append_string(bb, name,[object cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     else if ([object isKindOfClass:[NSDictionary class]]) {
         bson_buffer *sub = bson_append_start_object(bb, name);
@@ -173,6 +169,9 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             }
             bson_append_finish_object(arr);
         }
+    }
+    else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
+        bson_append_string(bb, name,[object cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
