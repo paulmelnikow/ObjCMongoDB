@@ -180,6 +180,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             bson_append_finish_object(arr);
         }
     }
+    else if (NuSymbol && [object isKindOfClass:[NuSymbol class]]) {
+        if ([[object stringValue] isEqualToString:@"t"]) {
+            bson_append_bool(bb, name, YES);
+        }
+    }
     else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
         bson_append_string(bb, name,[object cStringUsingEncoding:NSUTF8StringEncoding]);
     }
