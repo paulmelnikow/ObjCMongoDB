@@ -98,3 +98,12 @@ limitations under the License.
 @end
 
 bson *bson_for_object(id object); // used in NuMongoDB
+
+// deprecated convenience categories
+@interface NSData (NuBSON)
+- (NSMutableDictionary *) BSONValue;
+@end
+
+@interface NSDictionary (NuBSON)
+- (NSData *) BSONRepresentation;
+@end

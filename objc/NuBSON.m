@@ -579,3 +579,17 @@ bson *bson_for_object(id object)
 }
 
 @end
+
+
+// deprecated convenience categories
+@implementation NSData (NuBSON)
+- (NSMutableDictionary *) BSONValue {
+	return [[NuBSON bsonWithData:self] dictionaryValue];
+}
+@end
+
+@implementation NSDictionary (NuBSON)
+- (NSData *) BSONRepresentation {
+	return [[NuBSON bsonWithDictionary:self] dataRepresentation];
+}
+@end
