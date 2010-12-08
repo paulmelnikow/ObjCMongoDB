@@ -129,6 +129,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return [[[NuBSONObjectID alloc] initWithObjectIDPointer:&oid] autorelease];
 }
 
++ (NuBSONObjectID *) objectIDWithData:(NSData *) data
+{
+    return [[[NuBSONObjectID alloc] initWithData:data] autorelease];
+}
+
 - (id) initWithString:(NSString *) s
 {
     if (self = [super init]) {
@@ -146,6 +151,21 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 }
 
 - (const bson_oid_t *) objectIDPointer {return &oid;}
+
+- (id) initWithData:(NSData *) data
+{
+    if (self = [super init]) {
+        if ([data length] == 12) {
+            memcpy(oid.bytes, [data bytes], 12);
+        }
+    }
+    return self;
+}
+
+- (NSData *) dataRepresentation
+{
+    return [[[NSData alloc] initWithBytes:oid.bytes length:12] autorelease];
+}
 
 - (NSString *) description
 {

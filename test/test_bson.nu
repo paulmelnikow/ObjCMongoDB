@@ -42,4 +42,12 @@
         ;; expand this one since (z f:) is a bson object
         (assert_equal ((y f:) a:) ((z f:) a:))
         (assert_equal (y g:) (z g:))
-        (assert_equal (y h:) (z h:))))
+        (assert_equal (y h:) (z h:)))
+     
+     (- testOIDs is
+        (10 times:
+            (do (i)
+                (set id ((NuBSONObjectID objectID)))
+                (set id2 ((NuBSONObjectID alloc)
+                          initWithData:(id dataRepresentation)))
+                (assert_equal id id2)))))
