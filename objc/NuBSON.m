@@ -224,9 +224,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 
 - (NuBSON *) initWithData:(NSData *) data
 {
+    bson bsonBuffer;
+    bsonBuffer.data = (char *) [data bytes];
+    bsonBuffer.owned = NO;
     bson bsonValue;
-    bsonValue.data = (char *) [data bytes];
-    bsonValue.owned = NO;
+    bson_copy(&bsonValue, &bsonBuffer);
     return [[NuBSON alloc] initWithBSON:bsonValue];
 }
 
