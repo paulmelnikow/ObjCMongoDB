@@ -20,7 +20,6 @@ limitations under the License.
 #include <string.h>
 #include <stdlib.h>
 #include "bson.h"
-
 #import <Foundation/Foundation.h>
 
 /*!
@@ -33,13 +32,35 @@ limitations under the License.
     @public
     bson bsonValue;
 }
+/*! Create a BSON representation from serialized NSData. */
++ (NuBSON *) bsonWithData:(NSData *) data;
+/*! Create an array of BSON objects from serialized NSData. */
++ (NSMutableArray *) bsonArrayWithData:(NSData *) data;
 
 /*! Create a BSON representation of a dictionary object. */
++ (NuBSON *) bsonWithDictionary:(NSDictionary *) dict;
+/*! Create a BSON representation from a Nu list. */
++ (NuBSON *) bsonWithList:(id) cell;
+
+/*! Create a BSON representation from serialized NSData. */
+- (NuBSON *) initWithData:(NSData *) data;
+/*! Create a BSON representation of a dictionary object. */
 - (NuBSON *) initWithDictionary:(NSDictionary *) dict;
+/*! Create a BSON representation from a Nu list. */
+- (NuBSON *) initWithList:(id) cell;
+
+/*! Return an NSData representation of the BSON object. */
+- (NSData *) dataRepresentation;
 /*! Return a dictionary equivalent of a BSON object. */
 - (NSMutableDictionary *) dictionaryValue;
-/*! Return an NSData representation of the BSON object. */
-- (NSData *) data;
+
+/*! Return an array containing all the top-level keys in the BSON object. */
+- (NSArray *) allKeys;
+
+/*! Return a named top-level element of the BSON object. */
+- (id) objectForKey:(NSString *) key;
+/*! Return a named element of the BSON object. */
+- (id) objectForKeyPath:(NSString *) keypath;
 @end
 
 @interface NuBSONObjectID : NSObject
@@ -50,17 +71,14 @@ limitations under the License.
 
 /*! Create a new and unique object ID. */
 + (NuBSONObjectID *) objectID;
-
-@end
-
-bson *bson_for_object(id object);
-
-@interface NSData (NuBSON)
-- (NSMutableDictionary *) BSONValue;
-@end
-
-@interface NSDictionary (NuBSON)
-- (NSData *) BSONRepresentation;
+/*! Create an object ID from a hex string. */
+- (id) initWithString:(NSString *) s;
+/*! Get the hex string value of an object ID. */
+- (NSString *) stringValue;
+/*! Compare two object ID values. */
+- (NSComparisonResult)compare:(NuBSONObjectID *) other;
+/*! Test for equality with another object ID. */
+- (BOOL)isEqual:(id)other;
 @end
 
 @interface NuBSONBuffer : NSObject 
@@ -71,5 +89,6 @@ bson *bson_for_object(id object);
 - (id) init;
 - (NuBSON *) bsonValue;
 - (void) addObject:(id) object withKey:(id) key;
-
 @end
+
+bson *bson_for_object(id object); // used in NuMongoDB

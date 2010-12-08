@@ -16,8 +16,10 @@
                      f:(dict a:(array 1 2 3))
                      g:(NSData dataWithContentsOfFile:"mongoleaf.png")
                      h:nil))
-        (set data (x BSONRepresentation))
-        (set y (data BSONValue))
+        (set bson (NuBSON bsonWithDictionary:x))
+        (set data (bson dataRepresentation))
+        (set bson2 (NuBSON bsonWithData:data))
+        (set y (bson2 dictionaryValue))
         (assert_equal (x a:) (y a:))
         (assert_equal (x b:) (y b:))
         (assert_equal (x c:) (y c:))
@@ -30,14 +32,14 @@
         (assert_equal (x g:) (y g:))
         (assert_equal (x h:) (y h:))
         
-        (set data (y BSONRepresentation))
-        (set z (data BSONValue))
-        
+        ;; now stay as bson
+        (set z (NuBSON bsonWithDictionary:y))
         (assert_equal (y a:) (z a:))
         (assert_equal (y b:) (z b:))
         (assert_equal (y c:) (z c:))
         (assert_equal (y d:) (z d:))
         (assert_equal (y e:) (z e:))
-        (assert_equal (y f:) (z f:))
+        ;; expand this one since (z f:) is a bson object
+        (assert_equal ((y f:) a:) ((z f:) a:))
         (assert_equal (y g:) (z g:))
         (assert_equal (y h:) (z h:))))
