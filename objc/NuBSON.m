@@ -190,7 +190,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         else if (diff > 0)
             return NSOrderedDescending;
     }
-    return  NSOrderedSame;
+    return NSOrderedSame;
 }
 
 - (BOOL)isEqual:(id)other
@@ -580,16 +580,62 @@ bson *bson_for_object(id object)
 
 @end
 
-
 // deprecated convenience categories
 @implementation NSData (NuBSON)
-- (NSMutableDictionary *) BSONValue {
-	return [[NuBSON bsonWithData:self] dictionaryValue];
+- (NSMutableDictionary *) BSONValue
+{
+    return [[NuBSON bsonWithData:self] dictionaryValue];
 }
+
 @end
 
 @implementation NSDictionary (NuBSON)
-- (NSData *) BSONRepresentation {
-	return [[NuBSON bsonWithDictionary:self] dataRepresentation];
+- (NSData *) BSONRepresentation
+{
+    return [[NuBSON bsonWithDictionary:self] dataRepresentation];
 }
+
+@end
+
+@implementation NuBSONComparator
+
++ (NuBSONComparator *) comparatorWithBSONSpecification:(NuBSON *) s
+{
+    NuBSONComparator *comparator = [[[NuBSONComparator alloc] init] autorelease];
+    comparator->specification = [s retain];
+    return comparator;
+}
+
+- (int) compareDataAtAddress:(const void *) aptr withSize:(int) asiz withDataAtAddress:(const void *) bptr withSize:(int) bsiz
+{
+    bson bsonA;
+    bsonA.data = aptr;
+    bsonA.owned = NO;
+    NuBSON *a = [[NuBSON alloc] initWithBSON:bsonA];
+
+    bson bsonB;
+    bsonB.data = bptr;
+    bsonB.owned = NO;
+    NuBSON *b = [[NuBSON alloc] initWithBSON:bsonB];
+
+    bson_iterator it;
+    bson_iterator_init(&it, specification->bsonValue.data);
+
+    int result = 0;
+    while(bson_iterator_next(&it)) {
+        NSString *key = [[[NSString alloc]
+            initWithCString:bson_iterator_key(&it) encoding:NSUTF8StringEncoding]
+            autorelease];
+        id value = object_for_bson_iterator(it, NO);
+        id a_value = [a objectForKey:key];
+        id b_value = [b objectForKey:key];
+        result = [a_value compare:b_value] * [value intValue];
+        if (result != 0)
+            break;
+    }
+    [a release];
+    [b release];
+    return result;
+}
+
 @end

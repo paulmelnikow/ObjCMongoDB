@@ -19,8 +19,8 @@ limitations under the License.
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "bson.h"
 #import <Foundation/Foundation.h>
+#import "bson.h"
 
 /*!
    @class NuBSON
@@ -98,6 +98,18 @@ limitations under the License.
 @end
 
 bson *bson_for_object(id object); // used in NuMongoDB
+
+@interface NuBSONComparator : NSObject
+{
+    NuBSON *specification;
+}
+/*! Create a new and comparator for the given BSON specification. */
++ (NuBSONComparator *) comparatorWithBSONSpecification:(NuBSON *) s;
+/*! Compare BSON data using the associated specification. */
+- (int) compareDataAtAddress:(const void *) aptr withSize:(int) asiz withDataAtAddress:(const void *) bptr withSize:(int) bsiz;
+
+@end
+
 
 // deprecated convenience categories
 @interface NSData (NuBSON)
