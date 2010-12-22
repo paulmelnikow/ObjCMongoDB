@@ -162,6 +162,15 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return self;
 }
 
+- (id) copyWithZone:(NSZone *) zone 
+{
+	return [[[self class] allocWithZone:zone] initWithObjectIDPointer:&oid];
+}
+
+- (NSInteger) hash {
+	oid.ints[0] + oid.ints[1] + oid.ints[2];
+}
+
 - (NSData *) dataRepresentation
 {
     return [[[NSData alloc] initWithBytes:oid.bytes length:12] autorelease];

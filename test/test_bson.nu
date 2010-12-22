@@ -47,7 +47,16 @@
      (- testOIDs is
         (10 times:
             (do (i)
-                (set id ((NuBSONObjectID objectID)))
+                (set id1 ((NuBSONObjectID objectID)))
                 (set id2 ((NuBSONObjectID alloc)
-                          initWithData:(id dataRepresentation)))
-                (assert_equal id id2)))))
+                          initWithData:(id1 dataRepresentation)))
+                (assert_equal id1 id2)
+                
+                (set id3 (NuBSONObjectID new))
+                (set id4 (NuBSONObjectID new))
+                
+                (set d (dict id1 123 id3 456))
+                (assert_equal 123 (d id1))
+                (assert_equal 123 (d id2))
+                (assert_equal 456 (d id3))
+                (assert_equal 456 (d id4))))))
