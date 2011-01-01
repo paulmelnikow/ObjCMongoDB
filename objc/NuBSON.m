@@ -179,7 +179,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 }
 
 - (NSInteger) hash {
-	oid.ints[0] + oid.ints[1] + oid.ints[2];
+	return oid.ints[0] + oid.ints[1] + oid.ints[2];
 }
 
 - (NSData *) dataRepresentation

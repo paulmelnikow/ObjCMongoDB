@@ -1,7 +1,7 @@
 /*!
 @header NuMongoDB.h
 @discussion Declarations for the NuMongoDB component.
-@copyright Copyright (c) 2010 Neon Design Technology, Inc.
+@copyright Copyright (c) 2010 Radtastical, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
