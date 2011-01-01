@@ -10,6 +10,10 @@
 - (NSString *) labelName;
 @end
 
+@interface NuBSONObjectID (Private) 
+- (const bson_oid_t *) objectIDPointer;
+@end
+
 @interface NuBSON (Private)
 - (NuBSON *) initWithBSON:(bson) b;
 - (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer;
@@ -113,7 +117,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         }
     }
     else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
-        bson_append_string(bb, name,[object cStringUsingEncoding:NSUTF8StringEncoding]);
+        bson_append_string(bb, name, [object cStringUsingEncoding:NSUTF8StringEncoding]);
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
@@ -134,6 +138,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return [[[NuBSONObjectID alloc] initWithData:data] autorelease];
 }
 
++ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer 
+{
+    return [[[NuBSONObjectID alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
+}
+
 - (id) initWithString:(NSString *) s
 {
     if (self = [super init]) {
@@ -151,6 +160,8 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 }
 
 - (const bson_oid_t *) objectIDPointer {return &oid;}
+
+- (bson_oid_t) oid {return oid;}
 
 - (id) initWithData:(NSData *) data
 {
@@ -229,6 +240,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         NuBSON *bsonObject = [[[NuBSON alloc] initWithBSON:bsonValue] autorelease];
         [results addObject:bsonObject];
     }
+    bson_destroy(&bsonBuffer); 
     return results;
 }
 
@@ -242,7 +254,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return [[[NuBSON alloc] initWithList:list] autorelease];
 }
 
-// internal
+// internal, takes ownership of argument
 - (NuBSON *) initWithBSON:(bson) b
 {
     if (self = [super init]) {
@@ -256,9 +268,9 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     bson bsonBuffer;
     bsonBuffer.data = (char *) [data bytes];
     bsonBuffer.owned = NO;
-    bson bsonValue;
     bson_copy(&bsonValue, &bsonBuffer);
-    return [[NuBSON alloc] initWithBSON:bsonValue];
+    bson_destroy(&bsonBuffer);
+    return self;
 }
 
 - (NSData *) dataRepresentation
@@ -296,6 +308,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     }
     bson_from_buffer(&b, &bb);
     return [self initWithBSON:b];
+}
+
+- (void) dealloc {
+    bson_destroy(&bsonValue);
+    [super dealloc];
 }
 
 void dump_bson_iterator(bson_iterator it, const char *indent)
@@ -504,7 +521,7 @@ void add_bson_to_object(bson_iterator it, id object, BOOL expandChildren)
 {
     bson_iterator it;
     bson_iterator_init(&it, bsonValue.data);
-    bson_type bt = bson_find(&it, &bsonValue, [key cStringUsingEncoding:NSUTF8StringEncoding]);
+    bson_find(&it, &bsonValue, [key cStringUsingEncoding:NSUTF8StringEncoding]);
     id value = object_for_bson_iterator(it, NO);
     return value;
 }
@@ -575,12 +592,12 @@ bson *bson_for_object(id object)
         if (NuSymbol && [key isKindOfClass:[NuSymbol class]] && [key isLabel]) {
             id evaluated_key = [key labelName];
             id evaluated_value = [value evalWithContext:context];
-            [self addObject:evaluated_value forKey:evaluated_key];
+            [self addObject:evaluated_value withKey:evaluated_key];
         }
         else {
             id evaluated_key = [key evalWithContext:context];
             id evaluated_value = [value evalWithContext:context];
-            [self addObject:evaluated_value forKey:evaluated_key];
+            [self addObject:evaluated_value withKey:evaluated_key];
         }
         cursor = [[cursor cdr] cdr];
     }
@@ -615,7 +632,7 @@ bson *bson_for_object(id object)
     return comparator;
 }
 
-- (int) compareDataAtAddress:(const void *) aptr withSize:(int) asiz withDataAtAddress:(const void *) bptr withSize:(int) bsiz
+- (int) compareDataAtAddress:(void *) aptr withSize:(int) asiz withDataAtAddress:(void *) bptr withSize:(int) bsiz
 {
     bson bsonA;
     bsonA.data = aptr;

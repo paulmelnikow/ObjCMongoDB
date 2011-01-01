@@ -1,7 +1,7 @@
 /*!
 @header NuBSON.h
 @discussion Declarations for the NuBSON component.
-@copyright Copyright (c) 2010 Neon Design Technology, Inc.
+@copyright Copyright (c) 2010 Radtastical, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -71,8 +71,10 @@ limitations under the License.
 
 /*! Create a new and unique object ID. */
 + (NuBSONObjectID *) objectID;
-/*! Create an object ID from a 12-byte data representation */
+/*! Create an object ID from a 12-byte data representation. */
 + (NuBSONObjectID *) objectIDWithData:(NSData *) data;
+/*! Create an object ID wrapper from a bson_oid_t native structure. */
++ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer;
 /*! Create an object ID from a hex string. */
 - (id) initWithString:(NSString *) s;
 /*! Get the hex string value of an object ID. */
@@ -85,6 +87,8 @@ limitations under the License.
 - (NSComparisonResult)compare:(NuBSONObjectID *) other;
 /*! Test for equality with another object ID. */
 - (BOOL)isEqual:(id)other;
+/*! Raw object id */
+- (bson_oid_t) oid;
 @end
 
 @interface NuBSONBuffer : NSObject 
