@@ -129,8 +129,8 @@ time_t bson_oid_generated_time(bson_oid_t* oid){
     time_t out;
     bson_big_endian32(&out, &oid->ints[0]);
     return out;
-}
 
+}
 void bson_print( bson * b ){
     bson_print_raw( b->data , 0 );
 }
@@ -353,14 +353,18 @@ time_t bson_iterator_time_t(const bson_iterator * i){
 }
 
 int bson_iterator_bin_len( const bson_iterator * i ){
-    return bson_iterator_int_raw( i );
+    return (bson_iterator_bin_type(i) == 2) 
+        ? bson_iterator_int_raw( i ) - 4
+        : bson_iterator_int_raw( i );
 }
 
 char bson_iterator_bin_type( const bson_iterator * i ){
     return bson_iterator_value(i)[4];
 }
 const char * bson_iterator_bin_data( const bson_iterator * i ){
-    return bson_iterator_value( i ) + 5;
+  return (bson_iterator_bin_type( i ) == 2) 
+    ? bson_iterator_value( i ) + 9
+    : bson_iterator_value( i ) + 5;
 }
 
 const char * bson_iterator_regex( const bson_iterator * i ){
@@ -520,10 +524,19 @@ bson_buffer * bson_append_code_w_scope( bson_buffer * b , const char * name , co
 }
 
 bson_buffer * bson_append_binary( bson_buffer * b, const char * name, char type, const char * str, int len ){
-    if ( ! bson_append_estart( b , bson_bindata , name , 4+1+len ) ) return 0;
-    bson_append32(b, &len);
-    bson_append_byte(b, type);
-    bson_append(b, str, len);
+    if ( type == 2 ){
+        int subtwolen = len + 4;
+        if ( ! bson_append_estart( b , bson_bindata , name , 4+1+4+len ) ) return 0;
+	bson_append32(b, &subtwolen);
+	bson_append_byte(b, type);
+	bson_append32(b, &len);
+	bson_append(b, str, len);  
+    }else{  
+        if ( ! bson_append_estart( b , bson_bindata , name , 4+1+len ) ) return 0;
+	bson_append32(b, &len);
+	bson_append_byte(b, type);
+	bson_append(b, str, len);
+    }
     return b;
 }
 bson_buffer * bson_append_oid( bson_buffer * b , const char * name , const bson_oid_t * oid ){
@@ -563,9 +576,8 @@ bson_buffer * bson_append_element( bson_buffer * b, const char * name_or_null, c
         bson_ensure_space(b, size);
         bson_append(b, elem->cur, size);
     }else{
-        int data_size = size - 1 - strlen(bson_iterator_key(elem));
+        int data_size = size - 2 - strlen(bson_iterator_key(elem));
         bson_append_estart(b, elem->cur[0], name_or_null, data_size);
-        bson_append(b, name_or_null, strlen(name_or_null));
         bson_append(b, bson_iterator_value(elem), data_size);
     }
 
