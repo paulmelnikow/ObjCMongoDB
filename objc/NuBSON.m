@@ -10,7 +10,7 @@
 - (NSString *) labelName;
 @end
 
-@interface NuBSONObjectID (Private) 
+@interface NuBSONObjectID (Private)
 - (const bson_oid_t *) objectIDPointer;
 @end
 
@@ -92,30 +92,9 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         bson_append_oid(bb, name, [((NuBSONObjectID *) object) objectIDPointer]);
     }
     else if (NuCell && [object isKindOfClass:[NuCell class]]) {
-        if ([[object car] isKindOfClass:[NuSymbol class]] && (([object length] % 2) == 0)) {
-            // assume we have an object
-            bson_buffer *sub = bson_append_start_object(bb, name);
-            id cursor = object;
-            while (cursor && (cursor != [NSNull null])) {
-                id key = [[cursor car] labelName];
-                id value = [[cursor cdr] car];
-                add_object_to_bson_buffer(sub, key, value);
-                cursor = [[cursor cdr] cdr];
-            }
-            bson_append_finish_object(sub);
-        }
-        else {
-            // assume we have an array
-            bson_buffer *arr = bson_append_start_array(bb, name);
-            id cursor = object;
-            int i = 0;
-            while (cursor && (cursor != [NSNull null])) {
-                add_object_to_bson_buffer(arr, [[NSNumber numberWithInt:i] stringValue], [cursor car]);
-                i++;
-                cursor = [cursor cdr];
-            }
-            bson_append_finish_object(arr);
-        }
+        // serialize Nu code as binary data of type 1
+        NSData *serialization = [NSKeyedArchiver archivedDataWithRootObject:object];
+        bson_append_binary(bb, name, 1, [serialization bytes], [serialization length]);
     }
     else if (NuSymbol && [object isKindOfClass:[NuSymbol class]]) {
         if ([[object stringValue] isEqualToString:@"t"]) {
@@ -163,7 +142,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return [[[NuBSONObjectID alloc] initWithData:data] autorelease];
 }
 
-+ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer 
++ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
 {
     return [[[NuBSONObjectID alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
 }
@@ -198,7 +177,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return self;
 }
 
-- (id) copyWithZone:(NSZone *) zone 
+- (id) copyWithZone:(NSZone *) zone
 {
 	return [[[self class] allocWithZone:zone] initWithObjectIDPointer:&oid];
 }
@@ -265,7 +244,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         NuBSON *bsonObject = [[[NuBSON alloc] initWithBSON:bsonValue] autorelease];
         [results addObject:bsonObject];
     }
-    bson_destroy(&bsonBuffer); 
+    bson_destroy(&bsonBuffer);
     return results;
 }
 
@@ -335,7 +314,8 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     return [self initWithBSON:b];
 }
 
-- (void) dealloc {
+- (void) dealloc
+{
     bson_destroy(&bsonValue);
     [super dealloc];
 }
@@ -430,6 +410,7 @@ id object_for_bson_iterator(bson_iterator it, BOOL expandChildren)
 
     bson_iterator it2;
     bson subobject;
+    char bintype;
     switch(bson_iterator_type(&it)) {
         case bson_eoo:
             break;
@@ -460,9 +441,13 @@ id object_for_bson_iterator(bson_iterator it, BOOL expandChildren)
             add_bson_to_object(it2, value, expandChildren);
             break;
         case bson_bindata:
+            bintype = bson_iterator_bin_type(&it);
             value = [NSData
                 dataWithBytes:bson_iterator_bin_data(&it)
                 length:bson_iterator_bin_len(&it)];
+            if (bintype == 1) {
+                value = [NSKeyedUnarchiver unarchiveObjectWithData:value];
+            }
             break;
         case bson_undefined:
             break;
@@ -549,6 +534,18 @@ void add_bson_to_object(bson_iterator it, id object, BOOL expandChildren)
     return result;
 }
 
+- (int) count
+{
+    int count = 0;
+    bson_iterator it;
+    bson_iterator_init(&it, bsonValue.data);
+    
+    while(bson_iterator_next(&it)) {
+        count++;
+    }
+    return count;
+}
+
 - (id) objectForKey:(NSString *) key
 {
     bson_iterator it;
@@ -566,6 +563,14 @@ void add_bson_to_object(bson_iterator it, id object, BOOL expandChildren)
         cursor = [cursor objectForKey:[parts objectAtIndex:i]];
     }
     return cursor;
+}
+
+- (id) valueForKey:(NSString *) key {
+    return [self objectForKey:key];
+}
+
+- (id) valueForKeyPath:(NSString *)keypath {
+    return [self objectForKeyPath:keypath];
 }
 
 @end

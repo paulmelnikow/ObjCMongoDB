@@ -59,4 +59,13 @@
                 (assert_equal 123 (d id1))
                 (assert_equal 123 (d id2))
                 (assert_equal 456 (d id3))
-                (assert_equal 456 (d id4))))))
+                (assert_equal 456 (d id4)))))
+     
+     (- testCode is
+        (set code '(do (x) (+ x 1)))
+        (set bson (NuBSON bsonWithDictionary:(dict code:code)))
+        (set code2 ((bson dictionaryValue) code:))
+        (assert_equal code code2)
+        (assert_equal 2 (eval (list code2 1)))))
+
+
