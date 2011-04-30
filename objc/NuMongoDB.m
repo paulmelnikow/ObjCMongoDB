@@ -46,6 +46,12 @@
     [super dealloc];
 }
 
+- (void) finalize
+{
+    mongo_cursor_destroy(cursor);
+    [super finalize];
+}
+
 - (NSMutableArray *) arrayValue
 {
     NSMutableArray *result = [NSMutableArray array];
@@ -162,6 +168,34 @@
     }
 }
 
+- (void) insertObjects:(NSArray *) array intoCollection:(NSString *) collection
+{
+    int count = [array count];
+    bson bArray[count];
+    bson *bpArray[count];
+    for (int i = 0; i < count; i++) {
+        bpArray[i] = &bArray[i];
+    }
+    
+    NSMutableArray *BSONObjects = [NSMutableArray  array];
+    for (int i = 0; i < count; i++) {
+        id insert = [array objectAtIndex:i];
+        if (![insert objectForKey:@"_id"]) {
+            insert = [[insert mutableCopy] autorelease];
+            [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
+        }
+        NuBSON *bsonObject = [NuBSON bsonWithDictionary:insert];
+        [BSONObjects addObject:bsonObject];
+        bson_copy(&bArray[i],&bsonObject->bsonValue);
+    }
+    
+    mongo_insert_batch(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bpArray, count);
+    // Free objects
+    for (int i = 0; i < count; i++) {
+        bson_destroy(&bArray[i]);
+    }
+}
+
 - (void) updateObject:(id) update inCollection:(NSString *) collection
 withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
 {
@@ -184,7 +218,7 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
     mongo_remove(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
 }
 
-- (int) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database
+- (long long) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database
 {
     bson *bcondition = bson_for_object(condition);
     return mongo_count(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], bcondition);
@@ -245,6 +279,77 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
 - (void) close
 {
     mongo_destroy(conn );
+}
+
+
+- (BOOL) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
+{
+    gridfs gfs[1];
+ 
+    gridfs_init(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], gfs);
+    gridfs_store_file(gfs, [filePath cStringUsingEncoding:NSUTF8StringEncoding], [filePath cStringUsingEncoding:NSUTF8StringEncoding], [type cStringUsingEncoding:NSUTF8StringEncoding]);
+    gridfs_destroy(gfs);
+    
+    return YES;
+    
+}
+
+- (BOOL) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
+{
+    gridfs gfs[1];
+    gridfile gfile[1];
+    char buffer[1024];
+    int n;
+    NSUInteger i = 0;
+    
+    gridfs_init(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], gfs);
+    gridfile_writer_init( gfile, gfs, [file cStringUsingEncoding:NSUTF8StringEncoding], [type cStringUsingEncoding:NSUTF8StringEncoding]);
+    while(data.length-i*1024 > 0) {
+        n = MIN(data.length-i*1024,1024);
+        [data getBytes:buffer range:NSMakeRange(i,n)];
+        gridfile_write_buffer(gfile, buffer, n);
+        i++;
+    }
+    gridfile_writer_done(gfile);
+    gridfs_destroy(gfs);
+    
+    return YES;
+    
+}
+
+
+- (NSData *) retrieveDataforGridFSFile:(NSString *) filePath inCollection:(NSString *) collection inDatabase:(NSString *) database
+{
+    gridfs gfs[1];
+    gridfile gfile[1];
+    NSUInteger chunkSize, numChunks, length, chunkLength;
+    
+    gridfs_init(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], gfs);
+    gridfs_find_filename(gfs, [filePath cStringUsingEncoding:NSUTF8StringEncoding], gfile);
+    length = gridfile_get_contentlength(gfile);
+    chunkSize = gridfile_get_chunksize(gfile);
+    numChunks = gridfile_get_numchunks(gfile);
+    NSMutableData *data = [NSMutableData dataWithCapacity:length];
+    
+    char buffer[chunkSize];
+    
+    for (NSUInteger i = 0; i < numChunks; i++) {
+        chunkLength = gridfile_read(gfile, chunkSize, buffer);
+        [data appendBytes:buffer length:chunkLength];
+    }
+    gridfs_destroy(gfs);
+    
+    return data;
+}
+
+-(BOOL) removeFile:(NSString *)filePath inCollection:(NSString *) collection inDatabase:(NSString *) database
+{
+    gridfs gfs[1];
+    gridfs_init(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], gfs);
+    gridfs_remove_filename(gfs, [filePath cStringUsingEncoding:NSUTF8StringEncoding]);
+    gridfs_destroy(gfs);
+
+    return YES;
 }
 
 @end

@@ -315,6 +315,11 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     [super dealloc];
 }
 
+- (void) finalize {
+    bson_destroy(&bsonValue);
+    [super finalize];
+}
+
 void dump_bson_iterator(bson_iterator it, const char *indent)
 {
     bson_iterator it2;
@@ -562,7 +567,7 @@ bson *bson_for_object(id object)
 
 - (id) init
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         bson_buffer_init(& bb );
     }
     return self;

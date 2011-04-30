@@ -21,6 +21,7 @@ limitations under the License.
 #include <stdlib.h>
 #include "bson.h"
 #include "mongo.h"
+#include "gridfs.h"
 
 #import <Foundation/Foundation.h>
 
@@ -79,12 +80,14 @@ limitations under the License.
 - (NSMutableDictionary *) findOne:(id) query inCollection:(NSString *) collection;
 /*! Add an object to a collection, returning the _id of the new object. */
 - (id) insertObject:(id) insert intoCollection:(NSString *) collection;
+/*! Add an array of objects to a collection */
+- (void) insertObjects:(NSArray *)array intoCollection:(NSString *) collection;
 /*! Update an object in a collection. insertIfNecessary triggers an "upsert". */
 - (void) updateObject:(id) update inCollection:(NSString *) collection withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries;
 /*! Remove an object or objects matching a specified condition. */
 - (void) removeWithCondition:(id) condition fromCollection:(NSString *) collection;
 /*! Count objects with a specified condition. */
-- (int) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database;
+- (long long) countWithCondition:(id) condition inCollection:(NSString *) collection inDatabase:(NSString *) database;
 /*! Run an arbitrary database command. */
 - (id) runCommand:(id) command inDatabase:(NSString *) database;
 /*! Get the names of the collections in a database. */
@@ -98,4 +101,9 @@ limitations under the License.
 /*! Close a database connection. */
 - (void) close;
 
+/*! GridFS write file */
+- (BOOL) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
+- (BOOL) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
+- (NSData *) retrieveDataforGridFSFile:(NSString *) filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
+-(BOOL) removeFile:(NSString *)filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
 @end
