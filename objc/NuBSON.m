@@ -40,10 +40,10 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             case 'Q':
                 bson_append_long(bb, name, [object longLongValue]);
                 break;
-            case 'B':
+            case 'B': // C++/C99 bool
+            case 'c': // ObjC BOOL
                 bson_append_bool(bb, name, [object boolValue]);
                 break;
-            case 'c':
             case 'C':
             case 's':
             case 'S':
@@ -82,6 +82,12 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     else if ([object isKindOfClass:[NSData class]]) {
         bson_append_binary(bb, name, 0, [object bytes], [object length]);
     }
+    else if ([object isKindOfClass:[NSImage class]]) {
+        NSData *data = [object TIFFRepresentationUsingCompression:NSTIFFCompressionLZW factor:1.0L];
+        if (data) {
+            bson_append_binary(bb, name, 0, [data bytes], [data length]);
+        }
+    }
     else if ([object isKindOfClass:[NuBSONObjectID class]]) {
         bson_append_oid(bb, name, [((NuBSONObjectID *) object) objectIDPointer]);
     }
@@ -117,7 +123,26 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
         }
     }
     else if ([object respondsToSelector:@selector(cStringUsingEncoding:)]) {
-        bson_append_string(bb, name, [object cStringUsingEncoding:NSUTF8StringEncoding]);
+        // Check if we are dealing with an regular expression in the form of "/<regex>/<options>"
+        char *stringData = (char *)[object cStringUsingEncoding:NSUTF8StringEncoding];
+        if (stringData[0] == '/') { // Quick check to see if we are dealing with a regex
+            NSArray *regexpComponents = [object componentsSeparatedByString:@"/"];
+            NSString *expression = nil;
+            NSString *options = nil;
+            if ([regexpComponents count] == 3) {
+                expression = [regexpComponents objectAtIndex:1];
+                options = [regexpComponents objectAtIndex:2];
+                if (expression != nil) {
+                    bson_append_regex(bb, name, [expression cStringUsingEncoding:NSUTF8StringEncoding],[options cStringUsingEncoding:NSUTF8StringEncoding]);
+                }
+            }
+            if (expression == nil) { // looks like we are dealing with a regular string
+                bson_append_string(bb, name, stringData);
+            }
+        }
+        else {
+            bson_append_string(bb, name, stringData);
+        }
     }
     else {
         NSLog(@"We have a problem. %@ cannot be serialized to bson", object);
@@ -165,7 +190,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 
 - (id) initWithData:(NSData *) data
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         if ([data length] == 12) {
             memcpy(oid.bytes, [data bytes], 12);
         }
@@ -178,7 +203,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 	return [[[self class] allocWithZone:zone] initWithObjectIDPointer:&oid];
 }
 
-- (NSInteger) hash {
+- (NSUInteger) hash {
 	return oid.ints[0] + oid.ints[1] + oid.ints[2];
 }
 
@@ -257,7 +282,7 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 // internal, takes ownership of argument
 - (NuBSON *) initWithBSON:(bson) b
 {
-    if (self = [super init]) {
+    if ((self = [super init])) {
         bsonValue = b;
     }
     return self;
@@ -340,7 +365,9 @@ void dump_bson_iterator(bson_iterator it, const char *indent)
                 fprintf(stderr, "(int) %d\n", bson_iterator_int(&it));
                 break;
             case bson_string:
+            {                    
                 fprintf(stderr, "(string) \"%s\"\n", bson_iterator_string(&it));
+            }
                 break;
             case bson_oid:
                 bson_oid_to_string(bson_iterator_oid(&it), hex_oid);
@@ -545,16 +572,16 @@ void add_bson_to_object(bson_iterator it, id object, BOOL expandChildren)
 
 bson *bson_for_object(id object)
 {
-    bson *b = 0;
+    bson *b = malloc(sizeof(bson));
     if (!object) {
         object = [NSDictionary dictionary];
     }
     if ([object isKindOfClass:[NuBSON class]]) {
-        b = &(((NuBSON *)object)->bsonValue);
+        bson_copy(b,&(((NuBSON *)object)->bsonValue));
     }
     else if ([object isKindOfClass:[NSDictionary class]]) {
         NuBSON *bsonObject = [[[NuBSON alloc] initWithDictionary:object] autorelease];
-        b = &(bsonObject->bsonValue);
+        bson_copy(b,&(bsonObject->bsonValue)); // Needed for GC
     }
     else {
         NSLog(@"unable to convert objects of type %s to BSON (%@).",

@@ -76,6 +76,8 @@ limitations under the License.
 - (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection;
 /*! Convenience method that returns search results as an array.  */
 - (NSMutableArray *) findArray:(id) query inCollection:(NSString *) collection returningFields:(id) fields numberToReturn:(int) nToReturn numberToSkip:(int) nToSkip;
+/*! Convenience method that can be used to atomically modify a document (at most one) and return it.  */
+- (NSMutableDictionary *) findAndModify:(id)collection options:(NSDictionary *)options inDatabase:(NSString *)database;
 /*! Convenience method that returns search results as a single object.  */
 - (NSMutableDictionary *) findOne:(id) query inCollection:(NSString *) collection;
 /*! Add an object to a collection, returning the _id of the new object. */
