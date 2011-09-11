@@ -104,8 +104,8 @@ limitations under the License.
 - (void) close;
 
 /*! GridFS write file */
-- (BOOL) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
-- (BOOL) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
+- (NSMutableDictionary *) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
+- (NSMutableDictionary *) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
 - (NSData *) retrieveDataforGridFSFile:(NSString *) filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
 -(BOOL) removeFile:(NSString *)filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
 @end

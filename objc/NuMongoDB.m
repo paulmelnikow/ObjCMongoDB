@@ -306,20 +306,21 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
 }
 
 
-- (BOOL) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
+- (NSMutableDictionary *) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
 {
+    bson output;
     gridfs gfs[1];
  
     gridfs_init(conn, [database cStringUsingEncoding:NSUTF8StringEncoding], [collection cStringUsingEncoding:NSUTF8StringEncoding], gfs);
-    gridfs_store_file(gfs, [filePath cStringUsingEncoding:NSUTF8StringEncoding], [filePath cStringUsingEncoding:NSUTF8StringEncoding], [type cStringUsingEncoding:NSUTF8StringEncoding]);
+    output = gridfs_store_file(gfs, [filePath cStringUsingEncoding:NSUTF8StringEncoding], [filePath cStringUsingEncoding:NSUTF8StringEncoding], [type cStringUsingEncoding:NSUTF8StringEncoding]);
     gridfs_destroy(gfs);
     
-    return YES;
-    
+    return [[[[NuBSON alloc] initWithBSON:output] autorelease] dictionaryValue]; 
 }
 
-- (BOOL) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
+- (NSMutableDictionary *) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database
 {
+    bson output;
     gridfs gfs[1];
     gridfile gfile[1];
     char buffer[1024];
@@ -334,11 +335,10 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
         gridfile_write_buffer(gfile, buffer, n);
         i += n;
     }
-    gridfile_writer_done(gfile);
+    output = gridfile_writer_done(gfile);
     gridfs_destroy(gfs);
     
-    return YES;
-    
+    return [[[[NuBSON alloc] initWithBSON:output] autorelease] dictionaryValue];    
 }
 
 
