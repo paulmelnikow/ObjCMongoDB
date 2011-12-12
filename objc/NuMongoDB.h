@@ -104,10 +104,11 @@ limitations under the License.
 - (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options;
 /*! Close a database connection. */
 - (void) close;
-
 /*! GridFS write file */
 - (NSMutableDictionary *) writeFile:(NSString *)filePath withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
 - (NSMutableDictionary *) writeData:(NSData *)data named:(NSString *)file withMIMEType:(NSString *)type inCollection:(NSString *) collection inDatabase:(NSString *) database;
 - (NSData *) retrieveDataforGridFSFile:(NSString *) filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
 -(BOOL) removeFile:(NSString *)filePath inCollection:(NSString *) collection inDatabase:(NSString *) database;
+/*! Automatically record update times by inserting an _up NSDate with each update. */
++ (void) setEnableUpdateTimestamps:(BOOL) enable;
 @end

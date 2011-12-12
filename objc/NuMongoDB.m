@@ -76,6 +76,12 @@
 
 @implementation NuMongoDB
 
+static BOOL enableUpdateTimestamps = NO;
+
++ (void) setEnableUpdateTimestamps:(BOOL) enable {
+	enableUpdateTimestamps = YES;
+}
+
 - (int) connectWithOptions:(NSDictionary *) options
 {
     id host = options ? [options objectForKey:@"host"] : nil;
@@ -176,6 +182,9 @@
         insert = [[insert mutableCopy] autorelease];
         [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
     }
+	if (enableUpdateTimestamps) {
+    	[insert setObject:[NSDate date] forKey:@"_up"];
+	}
     bson *b = bson_for_object(insert);
     if (b) {
         mongo_insert(conn, [collection cStringUsingEncoding:NSUTF8StringEncoding], b);
@@ -219,6 +228,9 @@
 - (void) updateObject:(id) update inCollection:(NSString *) collection
 withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMultipleEntries:(BOOL) updateMultipleEntries
 {
+	if (enableUpdateTimestamps) {
+    	[update setObject:[NSDate date] forKey:@"_up"];
+	}
     bson *bupdate = bson_for_object(update);
     bson *bcondition = bson_for_object(condition);
     if (bupdate && bcondition) {
