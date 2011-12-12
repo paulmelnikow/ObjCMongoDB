@@ -94,6 +94,8 @@ limitations under the License.
 - (id) runCommand:(id) command inDatabase:(NSString *) database;
 /*! Get the names of the collections in a database. */
 - (id) collectionNamesInDatabase:(NSString *) database;
+/*! Convenience method to list all the databases on the connected server. */
+- (id) listDatabases;
 /*! Remove a database. */
 - (BOOL) dropDatabase:(NSString *) database;
 /*! Remove a collection. */

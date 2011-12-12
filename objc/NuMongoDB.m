@@ -290,6 +290,11 @@ withCondition:(id) condition insertIfNecessary:(BOOL) insertIfNecessary updateMu
     return result;
 }
 
+- (id) listDatabases
+{
+    return [self runCommand:[NSDictionary dictionaryWithObject:@"1" forKey:@"listDatabases"] inDatabase:@"admin"];
+}
+
 - (BOOL) ensureCollection:(NSString *) collection hasIndex:(NSObject *) key withOptions:(int) options
 {
     bson output;
