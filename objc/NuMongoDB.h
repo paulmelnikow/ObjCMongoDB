@@ -16,16 +16,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include "bson.h"
-#include "mongo.h"
-#include "gridfs.h"
-
 #import <Foundation/Foundation.h>
+#include "mongo.h"
 
-#import "NuBSON.h"
+@class NuBSON;
 
 /*!
    @class NuMongoDBCursor

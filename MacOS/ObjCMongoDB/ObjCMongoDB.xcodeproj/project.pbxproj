@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22739CE01231446B00909551 /* NuBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 22739CDE1231446B00909551 /* NuBSON.h */; };
+		22739CE01231446B00909551 /* NuBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 22739CDE1231446B00909551 /* NuBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22739CE11231446B00909551 /* NuBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 22739CDF1231446B00909551 /* NuBSON.m */; };
 		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		22ED5B4611DF1A7200410529 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -98,7 +98,6 @@
 		0867D691FE84028FC02AAC07 /* NuMongoDB */ = {
 			isa = PBXGroup;
 			children = (
-				9EBE79B5150007C4000E767D /* AppKit.framework */,
 				22ED5B4E11DF1A8600410529 /* objc */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
@@ -131,6 +130,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9EBE79B5150007C4000E767D /* AppKit.framework */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 			);
 			name = "Linked Frameworks";
@@ -189,13 +189,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */,
+				22739CE01231446B00909551 /* NuBSON.h in Headers */,
 				22ED5B4611DF1A7200410529 /* bson.h in Headers */,
 				22ED5B4811DF1A7200410529 /* md5.h in Headers */,
 				22ED5B4A11DF1A7200410529 /* mongo.h in Headers */,
 				22ED5B4B11DF1A7200410529 /* mongo_except.h in Headers */,
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
-				22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */,
-				22739CE01231446B00909551 /* NuBSON.h in Headers */,
 				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

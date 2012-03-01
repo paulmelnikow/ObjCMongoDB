@@ -1,5 +1,6 @@
 #import "NuBSON.h"
-#include "bson.h"
+#import "bson.h"
+#import <AppKit/AppKit.h>
 
 @protocol NuCellProtocol
 - (id) car;

@@ -1,5 +1,6 @@
 #import "NuMongoDB.h"
 #import "NuBSON.h"
+#import "gridfs.h"
 
 @interface NuBSON (Private)
 - (NuBSON *) initWithBSON:(bson) b;
