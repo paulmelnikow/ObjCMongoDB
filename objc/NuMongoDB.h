@@ -17,7 +17,8 @@ limitations under the License.
 */
 
 #import <Foundation/Foundation.h>
-#include "mongo.h"
+#import "mongo.h"
+#import "BSONObjectID.h"
 
 @class NuBSON;
 

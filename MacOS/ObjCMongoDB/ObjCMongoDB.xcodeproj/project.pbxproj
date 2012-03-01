@@ -27,6 +27,8 @@
 		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
 		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
 		9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79B5150007C4000E767D /* AppKit.framework */; };
+		9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONObjectID.h */; };
+		9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONObjectID.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
 		9EBE79B2150006DF000E767D /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
 		9EBE79B5150007C4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		9EBE79B715000EA6000E767D /* BSONObjectID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONObjectID.h; sourceTree = "<group>"; };
+		9EBE79B815000EA6000E767D /* BSONObjectID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONObjectID.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -167,6 +171,8 @@
 			children = (
 				22739CDE1231446B00909551 /* NuBSON.h */,
 				22739CDF1231446B00909551 /* NuBSON.m */,
+				9EBE79B715000EA6000E767D /* BSONObjectID.h */,
+				9EBE79B815000EA6000E767D /* BSONObjectID.m */,
 				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
 				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
 			);
@@ -197,6 +203,7 @@
 				22ED5B4B11DF1A7200410529 /* mongo_except.h in Headers */,
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
 				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
+				9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +306,7 @@
 				22ED5B5211DF1A8600410529 /* NuMongoDB.m in Sources */,
 				22739CE11231446B00909551 /* NuBSON.m in Sources */,
 				9EBE79B3150006DF000E767D /* gridfs.c in Sources */,
+				9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

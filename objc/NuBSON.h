@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 #import <Foundation/Foundation.h>
+#import "BSONObjectID.h"
 #import "bson.h"
 
 /*!
@@ -58,34 +59,6 @@ limitations under the License.
 - (id) objectForKey:(NSString *) key;
 /*! Return a named element of the BSON object. */
 - (id) objectForKeyPath:(NSString *) keypath;
-@end
-
-@interface NuBSONObjectID : NSObject
-{
-    @public
-    bson_oid_t oid;
-}
-
-/*! Create a new and unique object ID. */
-+ (NuBSONObjectID *) objectID;
-/*! Create an object ID from a 12-byte data representation. */
-+ (NuBSONObjectID *) objectIDWithData:(NSData *) data;
-/*! Create an object ID wrapper from a bson_oid_t native structure. */
-+ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer;
-/*! Create an object ID from a hex string. */
-- (id) initWithString:(NSString *) s;
-/*! Get the hex string value of an object ID. */
-- (NSString *) stringValue;
-/*! Create an object ID from an NSData representation. */
-- (id) initWithData:(NSData *) data;
-/*! Get the NSData representation of an object ID. */
-- (NSData *) dataRepresentation;
-/*! Compare two object ID values. */
-- (NSComparisonResult)compare:(NuBSONObjectID *) other;
-/*! Test for equality with another object ID. */
-- (BOOL)isEqual:(id)other;
-/*! Raw object id */
-- (bson_oid_t) oid;
 @end
 
 @interface NuBSONBuffer : NSObject 

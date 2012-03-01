@@ -1,6 +1,6 @@
+#import <AppKit/AppKit.h>
 #import "NuBSON.h"
 #import "bson.h"
-#import <AppKit/AppKit.h>
 
 @protocol NuCellProtocol
 - (id) car;
@@ -9,10 +9,6 @@
 
 @protocol NuSymbolProtocol
 - (NSString *) labelName;
-@end
-
-@interface NuBSONObjectID (Private)
-- (const bson_oid_t *) objectIDPointer;
 @end
 
 @interface NuBSON (Private)
@@ -89,8 +85,8 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
             bson_append_binary(bb, name, 0, [data bytes], [data length]);
         }
     }
-    else if ([object isKindOfClass:[NuBSONObjectID class]]) {
-        bson_append_oid(bb, name, [((NuBSONObjectID *) object) objectIDPointer]);
+    else if ([object isKindOfClass:[BSONObjectID class]]) {
+        bson_append_oid(bb, name, [((BSONObjectID *) object) objectIDPointer]);
     }
     else if (NuCell && [object isKindOfClass:[NuCell class]]) {
         // serialize Nu code as binary data of type 1
@@ -129,101 +125,6 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
     }
 }
 
-@implementation NuBSONObjectID
-
-- (id) initWithString:(NSString *) s
-{
-    if (self = [super init]) {
-        bson_oid_from_string(&oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
-    }
-    return self;
-}
-
-- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
-{
-    if (self = [super init]) {
-        oid = *objectIDPointer;
-    }
-    return self;
-}
-
-+ (NuBSONObjectID *) objectID
-{
-    bson_oid_t oid;
-    bson_oid_gen(&oid);
-    return [[[NuBSONObjectID alloc] initWithObjectIDPointer:&oid] autorelease];
-}
-
-+ (NuBSONObjectID *) objectIDWithData:(NSData *) data
-{
-    return [[[NuBSONObjectID alloc] initWithData:data] autorelease];
-}
-
-+ (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
-{
-    return [[[NuBSONObjectID alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
-}
-
-- (const bson_oid_t *) objectIDPointer {return &oid;}
-
-- (bson_oid_t) oid {return oid;}
-
-- (id) initWithData:(NSData *) data
-{
-    if ((self = [super init])) {
-        if ([data length] == 12) {
-            memcpy(oid.bytes, [data bytes], 12);
-        }
-    }
-    return self;
-}
-
-- (id) copyWithZone:(NSZone *) zone
-{
-	return [[[self class] allocWithZone:zone] initWithObjectIDPointer:&oid];
-}
-
-- (NSUInteger) hash {
-	return oid.ints[0] + oid.ints[1] + oid.ints[2];
-}
-
-- (NSData *) dataRepresentation
-{
-    return [[[NSData alloc] initWithBytes:oid.bytes length:12] autorelease];
-}
-
-- (NSString *) description
-{
-    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
-    bson_oid_to_string(&oid, buffer);
-    return [NSString stringWithFormat:@"(oid \"%s\")", buffer];
-}
-
-- (NSString *) stringValue
-{
-    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
-    bson_oid_to_string(&oid, buffer);
-    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
-}
-
-- (NSComparisonResult)compare:(NuBSONObjectID *) other
-{
-    for (int i = 0; i < 3; i++) {
-        int diff = oid.ints[i] - other->oid.ints[i];
-        if (diff < 0)
-            return NSOrderedAscending;
-        else if (diff > 0)
-            return NSOrderedDescending;
-    }
-    return NSOrderedSame;
-}
-
-- (BOOL)isEqual:(id)other
-{
-    return ([self compare:other] == 0);
-}
-
-@end
 
 @implementation NuBSON
 
@@ -453,7 +354,7 @@ id object_for_bson_iterator(bson_iterator it, BOOL expandChildren)
         case bson_undefined:
             break;
         case bson_oid:
-            value = [[[NuBSONObjectID alloc]
+            value = [[[BSONObjectID alloc]
                 initWithObjectIDPointer:bson_iterator_oid(&it)]
                 autorelease];
             break;

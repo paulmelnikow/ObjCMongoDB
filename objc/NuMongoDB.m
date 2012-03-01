@@ -181,7 +181,7 @@ static BOOL enableUpdateTimestamps = NO;
 {
     if (![insert objectForKey:@"_id"]) {
         insert = [[insert mutableCopy] autorelease];
-        [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
+        [insert setObject:[BSONObjectID objectID] forKey:@"_id"];
     }
 	if (enableUpdateTimestamps) {
     	[insert setObject:[NSDate date] forKey:@"_up"];
@@ -212,7 +212,7 @@ static BOOL enableUpdateTimestamps = NO;
         id insert = [array objectAtIndex:i];
         if (![insert objectForKey:@"_id"]) {
             insert = [[insert mutableCopy] autorelease];
-            [insert setObject:[NuBSONObjectID objectID] forKey:@"_id"];
+            [insert setObject:[BSONObjectID objectID] forKey:@"_id"];
         }
         NuBSON *bsonObject = [NuBSON bsonWithDictionary:insert];
         [BSONObjects addObject:bsonObject];
