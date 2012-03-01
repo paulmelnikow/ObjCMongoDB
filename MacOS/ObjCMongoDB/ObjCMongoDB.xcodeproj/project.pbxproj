@@ -25,6 +25,9 @@
 		22ED5BF111DF1B3200410529 /* NuJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22ED5BF011DF1B3200410529 /* NuJSON.framework */; };
 		22ED5BF611DF1B5E00410529 /* sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5BF511DF1B5E00410529 /* sample.m */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
+		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
+		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
+		9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79B5150007C4000E767D /* AppKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,9 +59,12 @@
 		22ED5BE311DF1AE100410529 /* sample */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample; sourceTree = BUILT_PRODUCTS_DIR; };
 		22ED5BF011DF1B3200410529 /* NuJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NuJSON.framework; path = /Library/Frameworks/NuJSON.framework; sourceTree = "<absolute>"; };
 		22ED5BF511DF1B5E00410529 /* sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sample.m; sourceTree = "<group>"; };
-		32DBCF5E0370ADEE00C91783 /* NuMongoDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NuMongoDB_Prefix.pch; sourceTree = "<group>"; };
+		32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuMongoDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
+		9EBE79B2150006DF000E767D /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
+		9EBE79B5150007C4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */,
 				22ED5BDC11DF1AC400410529 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,6 +101,7 @@
 		0867D691FE84028FC02AAC07 /* NuMongoDB */ = {
 			isa = PBXGroup;
 			children = (
+				9EBE79B5150007C4000E767D /* AppKit.framework */,
 				22ED5B4E11DF1A8600410529 /* objc */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
@@ -144,6 +152,8 @@
 			children = (
 				22ED5B3C11DF1A7200410529 /* bson.c */,
 				22ED5B3D11DF1A7200410529 /* bson.h */,
+				9EBE79B1150006DF000E767D /* gridfs.c */,
+				9EBE79B2150006DF000E767D /* gridfs.h */,
 				22ED5B3E11DF1A7200410529 /* md5.c */,
 				22ED5B3F11DF1A7200410529 /* md5.h */,
 				22ED5B4011DF1A7200410529 /* mongo.c */,
@@ -171,7 +181,7 @@
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				32DBCF5E0370ADEE00C91783 /* NuMongoDB_Prefix.pch */,
+				32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */,
 			);
 			name = "Other Sources";
 			sourceTree = "<group>";
@@ -190,6 +200,7 @@
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
 				22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */,
 				22739CE01231446B00909551 /* NuBSON.h in Headers */,
+				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +251,7 @@
 			attributes = {
 				LastUpgradeCheck = 0420;
 			};
-			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "NuMongoDB" */;
+			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "ObjCMongoDB" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
@@ -291,6 +302,7 @@
 				22ED5B4C11DF1A7200410529 /* numbers.c in Sources */,
 				22ED5B5211DF1A8600410529 /* NuMongoDB.m in Sources */,
 				22739CE11231446B00909551 /* NuBSON.m in Sources */,
+				9EBE79B3150006DF000E767D /* gridfs.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -328,7 +340,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = NuMongoDB_Prefix.pch;
+				GCC_PREFIX_HEADER = ObjCMongoDB_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = NuMongoDB;
@@ -346,7 +358,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = NuMongoDB_Prefix.pch;
+				GCC_PREFIX_HEADER = ObjCMongoDB_Prefix.pch;
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = NuMongoDB;
@@ -432,7 +444,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "NuMongoDB" */ = {
+		1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "ObjCMongoDB" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1DEB91B208733DA50010E9CD /* Debug */,

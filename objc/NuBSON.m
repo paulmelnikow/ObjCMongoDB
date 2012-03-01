@@ -130,6 +130,22 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 
 @implementation NuBSONObjectID
 
+- (id) initWithString:(NSString *) s
+{
+    if (self = [super init]) {
+        bson_oid_from_string(&oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+    return self;
+}
+
+- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
+{
+    if (self = [super init]) {
+        oid = *objectIDPointer;
+    }
+    return self;
+}
+
 + (NuBSONObjectID *) objectID
 {
     bson_oid_t oid;
@@ -145,22 +161,6 @@ void add_object_to_bson_buffer(bson_buffer *bb, id key, id object)
 + (NuBSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
 {
     return [[[NuBSONObjectID alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
-}
-
-- (id) initWithString:(NSString *) s
-{
-    if (self = [super init]) {
-        bson_oid_from_string(&oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
-    }
-    return self;
-}
-
-- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer
-{
-    if (self = [super init]) {
-        oid = *objectIDPointer;
-    }
-    return self;
 }
 
 - (const bson_oid_t *) objectIDPointer {return &oid;}
