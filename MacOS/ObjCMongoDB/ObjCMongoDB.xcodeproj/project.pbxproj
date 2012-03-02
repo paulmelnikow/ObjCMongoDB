@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		22739CE01231446B00909551 /* NuBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 22739CDE1231446B00909551 /* NuBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22739CE11231446B00909551 /* NuBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 22739CDF1231446B00909551 /* NuBSON.m */; };
 		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		22ED5B4611DF1A7200410529 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B4711DF1A7200410529 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; };
@@ -19,7 +18,6 @@
 		22ED5B4C11DF1A7200410529 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
 		22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B4411DF1A7200410529 /* platform_hacks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B4F11DF1A8600410529 /* NuMongoDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22ED5B5211DF1A8600410529 /* NuMongoDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B5011DF1A8600410529 /* NuMongoDB.m */; };
 		22ED5BDC11DF1AC400410529 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		22ED5BE911DF1AED00410529 /* NuMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */; };
 		22ED5BF611DF1B5E00410529 /* sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5BF511DF1B5E00410529 /* sample.m */; };
@@ -29,6 +27,23 @@
 		9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79B5150007C4000E767D /* AppKit.framework */; };
 		9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONObjectID.h */; };
 		9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONObjectID.m */; };
+		9EBE79BF150013B6000E767D /* BSONArchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79BD150013B6000E767D /* BSONArchiver.h */; };
+		9EBE79C0150013B6000E767D /* BSONArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79BE150013B6000E767D /* BSONArchiver.m */; };
+		9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; };
+		9EBE79C4150028D1000E767D /* BSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79C2150028D1000E767D /* BSONDocument.m */; };
+		9EBE79CD15003CF2000E767D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79CC15003CF2000E767D /* Foundation.framework */; };
+		9EBE79D015003CF2000E767D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79CF15003CF2000E767D /* main.m */; };
+		9EBE79D415003CF2000E767D /* test2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9EBE79D315003CF2000E767D /* test2.1 */; };
+		9EBE79E015003F27000E767D /* NuMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */; };
+		9EBE79EA150040D4000E767D /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
+		9EBE79EC150040D4000E767D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
+		9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EBE79F4150040D5000E767D /* InfoPlist.strings */; };
+		9EBE79F9150040D5000E767D /* ObjCBSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79F8150040D5000E767D /* ObjCBSONTests.m */; };
+		9EBE79FF15004163000E767D /* NuMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */; };
+		9EBE7A0415004640000E767D /* BSONUnarchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A021500463F000E767D /* BSONUnarchiver.h */; };
+		9EBE7A0515004640000E767D /* BSONUnarchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONUnarchiver.m */; };
+		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; };
+		9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +54,34 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = NuMongoDB;
 		};
+		9EBE79E115003F30000E767D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = ObjCMongoDB;
+		};
+		9EBE7A0015004169000E767D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = ObjCMongoDB;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		9EBE79C715003CF2000E767D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				9EBE79D415003CF2000E767D /* test2.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -67,6 +109,30 @@
 		9EBE79B5150007C4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		9EBE79B715000EA6000E767D /* BSONObjectID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONObjectID.h; sourceTree = "<group>"; };
 		9EBE79B815000EA6000E767D /* BSONObjectID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONObjectID.m; sourceTree = "<group>"; };
+		9EBE79BD150013B6000E767D /* BSONArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONArchiver.h; sourceTree = "<group>"; };
+		9EBE79BE150013B6000E767D /* BSONArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONArchiver.m; sourceTree = "<group>"; };
+		9EBE79C1150028D1000E767D /* BSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDocument.h; sourceTree = "<group>"; };
+		9EBE79C2150028D1000E767D /* BSONDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDocument.m; sourceTree = "<group>"; };
+		9EBE79C915003CF2000E767D /* test2 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test2; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EBE79CC15003CF2000E767D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9EBE79CF15003CF2000E767D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		9EBE79D215003CF2000E767D /* test2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "test2-Prefix.pch"; sourceTree = "<group>"; };
+		9EBE79D315003CF2000E767D /* test2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = test2.1; sourceTree = "<group>"; };
+		9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjCBSONTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EBE79E9150040D4000E767D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		9EBE79EB150040D4000E767D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		9EBE79EE150040D4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		9EBE79EF150040D4000E767D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9EBE79F0150040D4000E767D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9EBE79F3150040D5000E767D /* ObjCBSONTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjCBSONTests-Info.plist"; sourceTree = "<group>"; };
+		9EBE79F5150040D5000E767D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9EBE79F7150040D5000E767D /* ObjCBSONTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCBSONTests.h; sourceTree = "<group>"; };
+		9EBE79F8150040D5000E767D /* ObjCBSONTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCBSONTests.m; sourceTree = "<group>"; };
+		9EBE79FA150040D5000E767D /* ObjCBSONTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjCBSONTests-Prefix.pch"; sourceTree = "<group>"; };
+		9EBE7A021500463F000E767D /* BSONUnarchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONUnarchiver.h; sourceTree = "<group>"; };
+		9EBE7A031500463F000E767D /* BSONUnarchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONUnarchiver.m; sourceTree = "<group>"; };
+		9EBE7A06150056FD000E767D /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
+		9EBE7A07150056FD000E767D /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +153,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EBE79C615003CF2000E767D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EBE79E015003F27000E767D /* NuMongoDB.framework in Frameworks */,
+				9EBE79CD15003CF2000E767D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EBE79E4150040D4000E767D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EBE79FF15004163000E767D /* NuMongoDB.framework in Frameworks */,
+				9EBE79EA150040D4000E767D /* SenTestingKit.framework in Frameworks */,
+				9EBE79EC150040D4000E767D /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -95,6 +180,8 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */,
 				22ED5BE311DF1AE100410529 /* sample */,
+				9EBE79C915003CF2000E767D /* test2 */,
+				9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -107,6 +194,9 @@
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
+				9EBE79CE15003CF2000E767D /* test2 */,
+				9EBE79F1150040D4000E767D /* ObjCBSONTests */,
+				9EBE79CB15003CF2000E767D /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				22ED5BF511DF1B5E00410529 /* sample.m */,
 			);
@@ -169,10 +259,18 @@
 		22ED5B4E11DF1A8600410529 /* objc */ = {
 			isa = PBXGroup;
 			children = (
-				22739CDE1231446B00909551 /* NuBSON.h */,
-				22739CDF1231446B00909551 /* NuBSON.m */,
 				9EBE79B715000EA6000E767D /* BSONObjectID.h */,
 				9EBE79B815000EA6000E767D /* BSONObjectID.m */,
+				9EBE79BD150013B6000E767D /* BSONArchiver.h */,
+				9EBE79BE150013B6000E767D /* BSONArchiver.m */,
+				22739CDE1231446B00909551 /* NuBSON.h */,
+				22739CDF1231446B00909551 /* NuBSON.m */,
+				9EBE79C1150028D1000E767D /* BSONDocument.h */,
+				9EBE79C2150028D1000E767D /* BSONDocument.m */,
+				9EBE7A021500463F000E767D /* BSONUnarchiver.h */,
+				9EBE7A031500463F000E767D /* BSONUnarchiver.m */,
+				9EBE7A06150056FD000E767D /* BSONIterator.h */,
+				9EBE7A07150056FD000E767D /* BSONIterator.m */,
 				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
 				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
 			);
@@ -186,6 +284,65 @@
 				32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		9EBE79CB15003CF2000E767D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79CC15003CF2000E767D /* Foundation.framework */,
+				9EBE79E9150040D4000E767D /* SenTestingKit.framework */,
+				9EBE79EB150040D4000E767D /* Cocoa.framework */,
+				9EBE79ED150040D4000E767D /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		9EBE79CE15003CF2000E767D /* test2 */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79CF15003CF2000E767D /* main.m */,
+				9EBE79D315003CF2000E767D /* test2.1 */,
+				9EBE79D115003CF2000E767D /* Supporting Files */,
+			);
+			path = test2;
+			sourceTree = "<group>";
+		};
+		9EBE79D115003CF2000E767D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79D215003CF2000E767D /* test2-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9EBE79ED150040D4000E767D /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79EE150040D4000E767D /* AppKit.framework */,
+				9EBE79EF150040D4000E767D /* CoreData.framework */,
+				9EBE79F0150040D4000E767D /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		9EBE79F1150040D4000E767D /* ObjCBSONTests */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79F7150040D5000E767D /* ObjCBSONTests.h */,
+				9EBE79F8150040D5000E767D /* ObjCBSONTests.m */,
+				9EBE79F2150040D5000E767D /* Supporting Files */,
+			);
+			path = ObjCBSONTests;
+			sourceTree = "<group>";
+		};
+		9EBE79F2150040D5000E767D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EBE79F3150040D5000E767D /* ObjCBSONTests-Info.plist */,
+				9EBE79F4150040D5000E767D /* InfoPlist.strings */,
+				9EBE79FA150040D5000E767D /* ObjCBSONTests-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -204,6 +361,10 @@
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
 				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
 				9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */,
+				9EBE79BF150013B6000E767D /* BSONArchiver.h in Headers */,
+				9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */,
+				9EBE7A0415004640000E767D /* BSONUnarchiver.h in Headers */,
+				9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -246,6 +407,43 @@
 			productReference = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		9EBE79C815003CF2000E767D /* test2 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EBE79D515003CF2000E767D /* Build configuration list for PBXNativeTarget "test2" */;
+			buildPhases = (
+				9EBE79C515003CF2000E767D /* Sources */,
+				9EBE79C615003CF2000E767D /* Frameworks */,
+				9EBE79C715003CF2000E767D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9EBE79E215003F30000E767D /* PBXTargetDependency */,
+			);
+			name = test2;
+			productName = test2;
+			productReference = 9EBE79C915003CF2000E767D /* test2 */;
+			productType = "com.apple.product-type.tool";
+		};
+		9EBE79E7150040D4000E767D /* ObjCBSONTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "ObjCBSONTests" */;
+			buildPhases = (
+				9EBE79E3150040D4000E767D /* Sources */,
+				9EBE79E4150040D4000E767D /* Frameworks */,
+				9EBE79E5150040D4000E767D /* Resources */,
+				9EBE79E6150040D4000E767D /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9EBE7A0115004169000E767D /* PBXTargetDependency */,
+			);
+			name = ObjCBSONTests;
+			productName = ObjCBSONTests;
+			productReference = 9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -263,6 +461,7 @@
 				Japanese,
 				French,
 				German,
+				en,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* NuMongoDB */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -271,6 +470,8 @@
 			targets = (
 				8DC2EF4F0486A6940098B216 /* ObjCMongoDB */,
 				22ED5BE211DF1AE100410529 /* sample */,
+				9EBE79C815003CF2000E767D /* test2 */,
+				9EBE79E7150040D4000E767D /* ObjCBSONTests */,
 			);
 		};
 /* End PBXProject section */
@@ -284,7 +485,31 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EBE79E5150040D4000E767D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		9EBE79E6150040D4000E767D /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		22ED5BE011DF1AE100410529 /* Sources */ = {
@@ -303,10 +528,28 @@
 				22ED5B4711DF1A7200410529 /* md5.c in Sources */,
 				22ED5B4911DF1A7200410529 /* mongo.c in Sources */,
 				22ED5B4C11DF1A7200410529 /* numbers.c in Sources */,
-				22ED5B5211DF1A8600410529 /* NuMongoDB.m in Sources */,
-				22739CE11231446B00909551 /* NuBSON.m in Sources */,
 				9EBE79B3150006DF000E767D /* gridfs.c in Sources */,
 				9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */,
+				9EBE79C0150013B6000E767D /* BSONArchiver.m in Sources */,
+				9EBE79C4150028D1000E767D /* BSONDocument.m in Sources */,
+				9EBE7A0515004640000E767D /* BSONUnarchiver.m in Sources */,
+				9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EBE79C515003CF2000E767D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EBE79D015003CF2000E767D /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EBE79E3150040D4000E767D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EBE79F9150040D5000E767D /* ObjCBSONTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +561,16 @@
 			target = 8DC2EF4F0486A6940098B216 /* ObjCMongoDB */;
 			targetProxy = 22ED5BE711DF1AE700410529 /* PBXContainerItemProxy */;
 		};
+		9EBE79E215003F30000E767D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* ObjCMongoDB */;
+			targetProxy = 9EBE79E115003F30000E767D /* PBXContainerItemProxy */;
+		};
+		9EBE7A0115004169000E767D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* ObjCMongoDB */;
+			targetProxy = 9EBE7A0015004169000E767D /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -325,6 +578,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				089C1667FE841158C02AAC07 /* English */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		9EBE79F4150040D5000E767D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9EBE79F5150040D5000E767D /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -440,6 +701,98 @@
 			};
 			name = Release;
 		};
+		9EBE79D615003CF2000E767D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "test2/test2-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		9EBE79D715003CF2000E767D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "test2/test2-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		9EBE79FC150040D5000E767D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjCBSONTests/ObjCBSONTests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "ObjCBSONTests/ObjCBSONTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Debug;
+		};
+		9EBE79FD150040D5000E767D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ObjCBSONTests/ObjCBSONTests-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "ObjCBSONTests/ObjCBSONTests-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -469,6 +822,22 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		9EBE79D515003CF2000E767D /* Build configuration list for PBXNativeTarget "test2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EBE79D615003CF2000E767D /* Debug */,
+				9EBE79D715003CF2000E767D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "ObjCBSONTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EBE79FC150040D5000E767D /* Debug */,
+				9EBE79FD150040D5000E767D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

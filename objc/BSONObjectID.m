@@ -8,12 +8,6 @@
 
 #import "BSONObjectID.h"
 
-@interface BSONObjectID (Private)
-
-- (const bson_oid_t *) objectIDPointer;
-
-@end
-
 @implementation BSONObjectID
 
 - (id) initWithString:(NSString *) s {
@@ -33,15 +27,28 @@
 + (BSONObjectID *) objectID {
     bson_oid_t oid;
     bson_oid_gen(&oid);
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithObjectIDPointer:&oid];
+#else
     return [[[self alloc] initWithObjectIDPointer:&oid] autorelease];
+#endif
+    
 }
 
 + (BSONObjectID *) objectIDWithData:(NSData *) data {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithData:data];
+#else
     return [[[self alloc] initWithData:data] autorelease];
+#endif
 }
 
 + (BSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithObjectIDPointer:objectIDPointer];
+#else
     return [[[self alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
+#endif
 }
 
 - (const bson_oid_t *) objectIDPointer { return &oid; }
@@ -65,8 +72,12 @@
 	return oid.ints[0] + oid.ints[1] + oid.ints[2];
 }
 
-- (NSData *) dataRepresentation {
+- (NSData *) dataValue {
+#if __has_feature(objc_arc)
+    return [[NSData alloc] initWithBytes:oid.bytes length:12];
+#else
     return [[[NSData alloc] initWithBytes:oid.bytes length:12] autorelease];
+#endif
 }
 
 - (NSString *) description {

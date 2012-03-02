@@ -27,11 +27,12 @@
 /*! Create an object ID from an NSData representation. */
 - (id) initWithData:(NSData *) data;
 /*! Get the NSData representation of an object ID. */
-- (NSData *) dataRepresentation;
+- (NSData *) dataValue;
 /*! Compare two object ID values. */
 - (NSComparisonResult)compare:(BSONObjectID *) other;
 /*! Test for equality with another object ID. */
 - (BOOL)isEqual:(id)other;
 /*! Raw object id */
 - (bson_oid_t) oid;
+- (const bson_oid_t *) objectIDPointer;
 @end
