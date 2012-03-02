@@ -20,6 +20,9 @@ limitations under the License.
 #import "mongo.h"
 #import "BSONObjectID.h"
 
+#define MongoDBObjectIDKey @"_id"
+#define MongoDBObjectIDUTF8Key "_id"
+
 @class NuBSON;
 
 /*!
