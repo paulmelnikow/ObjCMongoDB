@@ -10,6 +10,7 @@
 #import "NuMongoDB.h"
 
 @interface BSONArchiver (Private)
++ (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
 + (void) assertNonNil:(id)value withReason:(NSString *)reason;
 + (const char *) utf8ForString:(NSString *)key;
 @end
@@ -219,7 +220,24 @@
 // not implemented:
 //bson_buffer * bson_append_element( bson_buffer * b, const char * name_or_null, const bson_iterator* elem);
 
+#pragma mark - Unsupported unkeyed encoding methods
+
+- (void) encodeValueOfObjCType:(const char *)type at:(const void *)addr {
+    @throw [BSONArchiver unsupportedUnkeyedCodingSelector:_cmd];
+}
+- (void) encodeDataObject:(NSData *)data {
+    @throw [BSONArchiver unsupportedUnkeyedCodingSelector:_cmd];
+}
+
 #pragma mark - Helper methods
+
++ (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
+    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed encoding methods are not supported. Subclass if unkeyed coding is needed.",
+                        NSStringFromSelector(selector)];
+    return [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                   reason:reason
+                                 userInfo:nil];
+}
 
 + (void) assertNonNil:(id)value withReason:(NSString *)reason {
     if (value) return;

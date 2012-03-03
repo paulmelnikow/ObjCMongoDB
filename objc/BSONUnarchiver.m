@@ -9,6 +9,7 @@
 #import "BSONUnarchiver.h"
 
 @interface BSONUnarchiver (Private)
++ (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
 + (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector;
 @end
 
@@ -273,7 +274,24 @@
     }
 }
 
+#pragma mark - Unsupported unkeyed encoding methods
+
+- (void) decodeValueOfObjCType:(const char *)type at:(void *)data {
+    @throw [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
+}
+-(NSData *)decodeDataObject {
+    @throw [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
+}
+
 #pragma mark - Helper methods
+
++ (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
+    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
+                        NSStringFromSelector(selector)];
+    return [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                   reason:reason
+                                 userInfo:nil];
+}
 
 + (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"Can't %@ with type %@",
