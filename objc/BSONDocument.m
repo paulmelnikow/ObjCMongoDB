@@ -7,28 +7,69 @@
 //
 
 #import "BSONDocument.h"
-#import "bson.h"
 
 @implementation BSONDocument
 
 -(BSONDocument *)init {
     self = [super init];
     if (self) {
+        bson_empty(&_bson);
     }
     return self;
 }
 
 - (BSONDocument *) initWithData:(NSData *)data {
-    self = [super init];
-    if (self) {
+    if (!data) return [self init];
+    if ([data isKindOfClass:[NSMutableData class]])
+        data = [NSData dataWithData:data];
+    if (self = [super init]) {
+#if __has_feature(objc_arc)
         _source = data;
-        bson_init(&bsonValue, (char *) data.bytes, NO);
+#else
+        _source = [data retain];
+#endif
+        bson_init(&_bson, (char *)data.bytes, NO);
+    }
+    return self;
+}
+
+- (BSONDocument *) initWithArchiver:(BSONArchiver *)archiver {
+    return [self initWithNativeBuffer:[archiver bsonBufferValue]];
+}
+
+- (BSONDocument *) initWithNativeBuffer:(bson_buffer *)bb {
+    if (!bb) {
+        [self release];
+        return nil;
+    }
+    if (self = [super init]) {
+        bson_from_buffer(&_bson, bb);
     }
     return self;
 }
 
 - (void) dealloc {
-    bson_destroy(&bsonValue);
+    bson_destroy(&_bson);
+#if !__has_feature(objc_arc)
+    [_source release];
+#endif
+}
+
+- (bson *) bsonValue {
+    return &_bson;
+}
+
+- (NSData *) dataValue {
+    return [[NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson)] autorelease];
+}
+
+- (BOOL) isEqual:(id)object {
+    NSData *objectData = nil;
+    if ([object isKindOfClass:[NSData class]])
+        objectData = object;
+    else if ([object isKindOfClass:[BSONDocument class]])
+        objectData = [object dataValue];
+    return [objectData isEqualToData:[self dataValue]];
 }
 
 //+ (void) dumpBSONIterator:(bson_iterator)it indent:(const char *)indent {
@@ -83,20 +124,5 @@
 //    [BSONDocument dumpBSONIterator:it indent:""];
 //    fprintf(stderr, "\n");
 //}
-
-- (NSData *) dataValue {
-    return [[[NSData alloc]
-             initWithBytes:(bsonValue.data)
-             length:bson_size(&(bsonValue))] autorelease];
-}
-
-- (BOOL) isEqual:(id)object {
-    NSData *objectData = nil;
-    if ([object isKindOfClass:[NSData class]])
-        objectData = object;
-    else if ([object isKindOfClass:[BSONDocument class]])
-        objectData = [object dataValue];
-    return [objectData isEqualToData:[self dataValue]];
-}
 
 @end

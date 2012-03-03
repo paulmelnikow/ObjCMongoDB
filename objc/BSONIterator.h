@@ -46,11 +46,11 @@ NSString * NSStringFromBSONType(bson_type t);
 
 - (NSString *)stringValue;
 - (int)stringLength;
-- (id)symbolValue;
+- (NSString *)symbolValue;
 
-- (id) codeValue;
+- (NSString *) codeValue;
 - (BSONDocument *) codeScopeValue;
-- (id)codeWithScopeValue;
+- (NSDictionary *)codeWithScopeValue;
 
 - (NSDate *)dateValue;
 
@@ -60,13 +60,11 @@ NSString * NSStringFromBSONType(bson_type t);
 
 - (NSString *)regularExpressionPatternValue;
 - (NSString *)regularExpressionOptionsValue;
-- (id)regularExpressionValue;
+- (NSArray *)regularExpressionValue;
 
 - (bson_timestamp_t)nativeTimestampValue;
-- (id)timestampValue;
+- (NSDictionary *)timestampValue;
 
-@property (strong) id objectForNull;
 @property (strong) id objectForUndefined;
-@property (strong) id objectForEndOfObject;
 
 @end

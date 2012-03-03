@@ -6,11 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import <AppKit/AppKit.h>
 #import "BSONArchiver.h"
-#import "BSONObjectID.h"
-#import "BSONDocument.h"
-#import "bson.h"
 #import "NuMongoDB.h"
 
 @interface BSONArchiver (Private)
@@ -25,8 +21,7 @@
 #pragma mark - Initialization
 
 - (BSONArchiver *) init {
-    self = [super init];
-    if (self) {
+    if (self = [super init]) {
         _bb = malloc(sizeof(bson_buffer));
         bson_buffer_init(_bb);
     }
@@ -41,12 +36,16 @@
     free(_bb);
 }
 
+- (bson_buffer *)bsonBufferValue { return _bb; }
+
 #pragma mark - Finishing
 
 - (BSONDocument *) BSONDocument {
-    BSONDocument *document = [[BSONDocument alloc] init];
-    bson_from_buffer(&(document->bsonValue), _bb);
-    return document;
+#if __has_feature(objc_arc)
+    return [[BSONDocument alloc] initWithArchiver:self];
+#else
+    return [[[BSONDocument alloc] initWithArchiver:self] autorelease];
+#endif
 }
 
 #pragma mark - Basic encoding methods
@@ -190,7 +189,7 @@
     [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
     bson_append_bson(_bb,
                      [BSONArchiver utf8ForString:key],
-                     &(objv->bsonValue));
+                     [objv bsonValue]);
 }
 
 - (void) encodeData:(NSData *)objv forKey:(NSString *)key {
@@ -214,7 +213,7 @@
     bson_append_code_w_scope(_bb,
                              [BSONArchiver utf8ForString:key],
                              [BSONArchiver utf8ForString:code],
-                             &(scope->bsonValue));
+                             [scope bsonValue]);
 }
 
 // not implemented:

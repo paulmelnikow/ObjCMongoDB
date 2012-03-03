@@ -16,6 +16,7 @@
 @class BSONObjectID;
 
 @interface BSONArchiver : NSCoder {
+@private
     bson_buffer *_bb;
 }
 

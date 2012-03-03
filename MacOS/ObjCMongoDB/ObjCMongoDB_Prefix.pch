@@ -4,4 +4,25 @@
 
 #ifdef __OBJC__
 
+#import "bson.h"
+
+#import "BSONDocument.h"
+#import "BSONArchiver.h"
+#import "BSONObjectID.h"
+#import "BSONUnarchiver.h"
+#import "BSONIterator.h"
+
+@interface BSONDocument (Project)
+-(bson *)bsonValue;
+@end
+
+@interface BSONArchiver (Project)
+-(bson_buffer *)bsonBufferValue;
+@end
+
+@interface BSONObjectID (Project)
+- (bson_oid_t) oid;
+- (const bson_oid_t *) objectIDPointer;
+@end
+
 #endif

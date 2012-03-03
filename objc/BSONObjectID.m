@@ -10,29 +10,56 @@
 
 @implementation BSONObjectID
 
-- (id) initWithString:(NSString *) s {
+#pragma mark - Initialization
+
+- (id) init {
     if (self = [super init]) {
-        bson_oid_from_string(&oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
+        bson_oid_gen(&_oid);
     }
     return self;
 }
 
-- (id) initWithObjectIDPointer:(const bson_oid_t *) objectIDPointer {
+- (id) initWithString:(NSString *) s {
     if (self = [super init]) {
-        oid = *objectIDPointer;
+        bson_oid_from_string(&_oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
+    }
+    return self;
+}
+
+- (id) initWithData:(NSData *) data {
+    if ((self = [super init])) {
+        if ([data length] != 12) {
+#if !__has_feature(objc_arc)
+            [self release];
+#endif
+            return nil;
+        }
+        memcpy(_oid.bytes, [data bytes], 12);
+    }
+    return self;
+}
+
+- (id) initWithNativeOID:(const bson_oid_t *) objectIDPointer {
+    if (self = [super init]) {
+        _oid = *objectIDPointer;
     }
     return self;
 }
 
 + (BSONObjectID *) objectID {
-    bson_oid_t oid;
-    bson_oid_gen(&oid);
 #if __has_feature(objc_arc)
-    return [[self alloc] initWithObjectIDPointer:&oid];
+    return [[self alloc] init];
 #else
-    return [[[self alloc] initWithObjectIDPointer:&oid] autorelease];
+    return [[[self alloc] init] autorelease];
 #endif
-    
+}
+
++ (BSONObjectID *) objectIDWithString:(NSString *) s {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithString:s];
+#else
+    return [[[self alloc] initWithString:s] autorelease];
+#endif
 }
 
 + (BSONObjectID *) objectIDWithData:(NSData *) data {
@@ -43,58 +70,50 @@
 #endif
 }
 
-+ (BSONObjectID *) objectIDWithObjectIDPointer:(const bson_oid_t *) objectIDPointer {
++ (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer {
 #if __has_feature(objc_arc)
-    return [[self alloc] initWithObjectIDPointer:objectIDPointer];
+    return [[self alloc] initWithNativeOID:objectIDPointer];
 #else
-    return [[[self alloc] initWithObjectIDPointer:objectIDPointer] autorelease];
+    return [[[self alloc] initWithNativeOID:objectIDPointer] autorelease];
 #endif
-}
-
-- (const bson_oid_t *) objectIDPointer { return &oid; }
-
-- (bson_oid_t) oid { return oid; }
-
-- (id) initWithData:(NSData *) data {
-    if ((self = [super init])) {
-        if ([data length] == 12) {
-            memcpy(oid.bytes, [data bytes], 12);
-        }
-    }
-    return self;
 }
 
 - (id) copyWithZone:(NSZone *) zone {
-	return [[BSONObjectID allocWithZone:zone] initWithObjectIDPointer:&oid];
+	return [[BSONObjectID allocWithZone:zone] initWithNativeOID:&_oid];
 }
 
-- (NSUInteger) hash {
-	return oid.ints[0] + oid.ints[1] + oid.ints[2];
-}
+- (const bson_oid_t *) objectIDPointer { return &_oid; }
+
+- (bson_oid_t) oid { return _oid; }
+
 
 - (NSData *) dataValue {
 #if __has_feature(objc_arc)
-    return [[NSData alloc] initWithBytes:oid.bytes length:12];
+    return [[NSData alloc] initWithBytes:_oid.bytes length:12];
 #else
-    return [[[NSData alloc] initWithBytes:oid.bytes length:12] autorelease];
+    return [[[NSData alloc] initWithBytes:_oid.bytes length:12] autorelease];
 #endif
 }
 
+- (NSUInteger) hash {
+	return _oid.ints[0] + _oid.ints[1] + _oid.ints[2];
+}
+
 - (NSString *) description {
-    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
-    bson_oid_to_string(&oid, buffer);
-    return [NSString stringWithFormat:@"(oid \"%s\")", buffer];
+    return [NSString stringWithFormat:@"bson:ObjectID(\"%@\")", [self stringValue]];
 }
 
 - (NSString *) stringValue {
-    char buffer[25];                              /* str must be at least 24 hex chars + null byte */
-    bson_oid_to_string(&oid, buffer);
-    return [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+    if (_stringValue) return _stringValue;
+    // str must be at least 24 hex chars + null byte
+    char buffer[25];
+    bson_oid_to_string(&_oid, buffer);
+    return _stringValue = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
 }
 
 - (NSComparisonResult)compare:(BSONObjectID *) other {
     for (int i = 0; i < 3; i++) {
-        int diff = oid.ints[i] - other->oid.ints[i];
+        int diff = _oid.ints[i] - other->_oid.ints[i];
         if (diff < 0)
             return NSOrderedAscending;
         else if (diff > 0)
@@ -104,7 +123,7 @@
 }
 
 - (BOOL)isEqual:(id)other {
-    return ([self compare:other] == 0);
+    return [self compare:other] == NSOrderedSame;
 }
 
 @end

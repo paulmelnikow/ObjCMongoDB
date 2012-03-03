@@ -7,10 +7,6 @@
 //
 
 #import "BSONUnarchiver.h"
-#import "BSONDocument.h"
-#import "BSONArchiver.h"
-#import "BSONIterator.h"
-
 
 @interface BSONUnarchiver (Private)
 + (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector;

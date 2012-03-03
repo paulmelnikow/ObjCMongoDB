@@ -259,20 +259,17 @@
 		22ED5B4E11DF1A8600410529 /* objc */ = {
 			isa = PBXGroup;
 			children = (
+				9E10543F1501C73B00805F26 /* old */,
 				9EBE79B715000EA6000E767D /* BSONObjectID.h */,
 				9EBE79B815000EA6000E767D /* BSONObjectID.m */,
-				9EBE79BD150013B6000E767D /* BSONArchiver.h */,
-				9EBE79BE150013B6000E767D /* BSONArchiver.m */,
-				22739CDE1231446B00909551 /* NuBSON.h */,
-				22739CDF1231446B00909551 /* NuBSON.m */,
 				9EBE79C1150028D1000E767D /* BSONDocument.h */,
 				9EBE79C2150028D1000E767D /* BSONDocument.m */,
+				9EBE79BD150013B6000E767D /* BSONArchiver.h */,
+				9EBE79BE150013B6000E767D /* BSONArchiver.m */,
 				9EBE7A021500463F000E767D /* BSONUnarchiver.h */,
 				9EBE7A031500463F000E767D /* BSONUnarchiver.m */,
 				9EBE7A06150056FD000E767D /* BSONIterator.h */,
 				9EBE7A07150056FD000E767D /* BSONIterator.m */,
-				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
-				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
 			);
 			name = objc;
 			path = ../../objc;
@@ -284,6 +281,17 @@
 				32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		9E10543F1501C73B00805F26 /* old */ = {
+			isa = PBXGroup;
+			children = (
+				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
+				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
+				22739CDE1231446B00909551 /* NuBSON.h */,
+				22739CDF1231446B00909551 /* NuBSON.m */,
+			);
+			name = old;
 			sourceTree = "<group>";
 		};
 		9EBE79CB15003CF2000E767D /* Frameworks */ = {
@@ -830,6 +838,7 @@
 				9EBE79D715003CF2000E767D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "ObjCBSONTests" */ = {
 			isa = XCConfigurationList;
@@ -838,6 +847,7 @@
 				9EBE79FD150040D5000E767D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

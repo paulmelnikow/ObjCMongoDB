@@ -7,9 +7,6 @@
 //
 
 #import "BSONIterator.h"
-#import "BSONDocument.h"
-#import "BSONObjectID.h"
-#import "BSONArchiver.h"
 
 @interface BSONIterator (Private)
 + (NSString *) stringForUTF8:(const char *)cString;
@@ -20,23 +17,23 @@
 
 @implementation BSONIterator
 
-@synthesize objectForNull;
 @synthesize objectForUndefined;
-@synthesize objectForEndOfObject;
 
 #pragma mark - Initialization
 
 - (BSONIterator *)initWithDocument:(BSONDocument *)document {
     if (self = [super init]) {
+#if __has_feature(objc_arc)
         _document = document;
-        _b = &(document->bsonValue);
+#else
+        _document = [document retain];
+#endif
+        _b = [document bsonValue];
         _iter = malloc(sizeof(bson_iterator));
         bson_iterator_init(_iter, _b->data);
         _type = bson_iterator_type(_iter);
         
-        self.objectForNull = nil;
         self.objectForUndefined = nil;
-        self.objectForEndOfObject = nil;
     }
     return self;
 }
@@ -47,12 +44,16 @@
                                        iterator:(BSONIterator *)iterator
                                 newBsonIterator:(bson_iterator *)bsonIter {
     if (self = [super init]) {
+#if __has_feature(objc_arc)
         _document = document;
+        self.objectForUndefined = iterator.objectForUndefined;
+#else
+        _document = [document retain];
+        self.objectForUndefined = [iterator.objectForUndefined retain];
+#endif
         _iter = bsonIter;
         _type = bson_iterator_type(_iter);
         
-        self.objectForNull = iterator.objectForNull;
-        self.objectForUndefined = iterator.objectForUndefined;
     }
     return self;
 }
@@ -63,6 +64,10 @@
 
 - (void) dealloc {
     free(_iter);
+#if !__has_feature(objc_arc)
+    [_document release];
+    [self.objectForUndefined release];
+#endif
 }
 
 #pragma mark - Searching
@@ -76,21 +81,16 @@
 
 // Set objectForUndefined
 - (id) nextObject {
-    if (!self.objectForNull || !self.objectForUndefined)
+    if (!self.objectForUndefined)
         @throw [NSException exceptionWithName:NSInvalidArgumentException
                                        reason:@"To use the NSEnumerator interface, set objectForNull and objectForUndefined to non-nil (e.g. [NSNUll null])"
-                                     userInfo:nil];
-    if (self.objectForEndOfObject)
-        @throw [NSException exceptionWithName:NSInvalidArgumentException
-                                       reason:@"To use the NSEnumerator interface, set objectForEndOfObject to nil"
-                                     userInfo:nil];
-    
+                                     userInfo:nil];    
     [self next];
     return [self objectValue];
 }
 
 - (NSArray *) allObjects {
-    if (!self.objectForNull || !self.objectForUndefined)
+    if (!self.objectForUndefined)
         @throw [NSException exceptionWithName:NSInvalidArgumentException
                                        reason:@"To use the NSEnumerator interface, set objectForNull and objectForUndefined to non-nil (e.g. [NSNUll null])"
                                      userInfo:nil];
@@ -127,22 +127,31 @@
 
 - (BSONDocument *)subDocumentValue {
     BSONDocument *document = [[BSONDocument alloc] init];
-    bson_iterator_subobject(_iter, &(document->bsonValue));
+    bson_iterator_subobject(_iter, [document bsonValue]);
+#if __has_feature(objc_arc)
     return document;
+#else
+    return [document autorelease];
+#endif
 }
 
 - (BSONIterator *)subIteratorValue {
     bson_iterator *subIter = malloc(sizeof(bson_iterator));
     bson_iterator_subiterator(_iter, subIter);
-    return [[BSONIterator alloc] initAsSubIteratorWithDocument:_document
+    BSONIterator *iterator = [[BSONIterator alloc] initAsSubIteratorWithDocument:_document
                                                       iterator:self
                                                newBsonIterator:subIter];
+#if __has_feature(objc_arc)
+    return iterator;
+#else
+    return [iterator autorelease];
+#endif    
 }
 
 - (id)objectValue {
     switch([self type]) {
         case bson_eoo:
-            return [self objectForEndOfObject];
+            return nil;
         case bson_double:
             return [NSNumber numberWithDouble:[self doubleValue]];
         case bson_string:
@@ -162,7 +171,7 @@
         case bson_date:
             return [self dateValue];
         case bson_null:
-            return [self objectForNull];
+            return [NSNull null];
         case bson_regex:
             return [self regularExpressionValue];
         case bson_code:
@@ -190,36 +199,50 @@
 - (BOOL)boolValue { return bson_iterator_bool(_iter); }
 
 - (BSONObjectID *)objectIDValue {
-    BSONObjectID *objid = [BSONObjectID objectIDWithObjectIDPointer:bson_iterator_oid(_iter)];
+    BSONObjectID *objid = [BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)];
     return [objid autorelease];
 }
 
 - (NSString *)stringValue { return [BSONIterator stringForUTF8:bson_iterator_string(_iter)]; }
 - (int)stringLength { return bson_iterator_string_len(_iter); }
-- (id)symbolValue { return [self stringValue]; }
+- (NSString *)symbolValue { return [self stringValue]; }
 
-- (id) codeValue { return [BSONIterator stringForUTF8:bson_iterator_code(_iter)]; }
+- (NSString *) codeValue { return [BSONIterator stringForUTF8:bson_iterator_code(_iter)]; }
 - (BSONDocument *) codeScopeValue {
     BSONDocument *document = [[BSONDocument alloc] init];
-    bson_iterator_code_scope(_iter, &(document->bsonValue));
+    bson_iterator_code_scope(_iter, [document bsonValue]);
     return document;
 }
-- (id)codeWithScopeValue {
-    return [NSDictionary dictionaryWithObjectsAndKeys:
+- (NSDictionary *)codeWithScopeValue {
+    id value = [NSDictionary dictionaryWithObjectsAndKeys:
             [self codeValue], @"code",
             [self codeScopeValue], @"scope",
             nil];
+#if __has_feature(objc_arc)
+    return value;
+#else
+    return [value autorelease];
+#endif
 }
 
 - (NSDate *)dateValue {
+#if __has_feature(objc_arc)
     return [NSDate dateWithTimeIntervalSince1970:0.001 * bson_iterator_date(_iter)];
+#else
+    return [[NSDate dateWithTimeIntervalSince1970:0.001 * bson_iterator_date(_iter)] autorelease];
+#endif
 }
 
 - (char)dataLength { return bson_iterator_bin_len(_iter); }
 - (char)dataBinType { return bson_iterator_bin_type(_iter); }
 - (NSData *)dataValue {
-    return [NSData dataWithBytes:bson_iterator_bin_data(_iter)
+    id value = [NSData dataWithBytes:bson_iterator_bin_data(_iter)
                           length:bson_iterator_bin_len(_iter)];
+#if __has_feature(objc_arc)
+    return value;
+#else
+    return [value autorelease];
+#endif
 }
 
 - (NSString *)regularExpressionPatternValue { 
@@ -228,7 +251,7 @@
 - (NSString *)regularExpressionOptionsValue { 
     return [BSONIterator stringForUTF8:bson_iterator_regex_opts(_iter)];
 }
-- (id)regularExpressionValue {
+- (NSArray *)regularExpressionValue {
     return [NSArray arrayWithObjects:
             [self regularExpressionPatternValue],
             [self regularExpressionOptionsValue],
@@ -238,7 +261,7 @@
 - (bson_timestamp_t)nativeTimestampValue {
     return bson_iterator_timestamp(_iter);
 }
-- (id)timestampValue {
+- (NSDictionary *)timestampValue {
     bson_timestamp_t timeval = [self nativeTimestampValue];
     return [NSDictionary dictionaryWithObjectsAndKeys:
             [NSNumber numberWithInt:timeval.i], @"increment",
@@ -249,7 +272,11 @@
 #pragma mark - Helper methods
 
 + (NSString *) stringForUTF8:(const char *)cString {
+#if __has_feature(objc_arc)
     return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
+#else
+    return [[NSString stringWithCString:cString encoding:NSUTF8StringEncoding] autorelease];
+#endif
 }
 
 NSString * NSStringFromBSONType(bson_type t) {
@@ -294,7 +321,11 @@ NSString * NSStringFromBSONType(bson_type t) {
         default:
             name = @"???";
     }
+#if __has_feature(objc_arc)
     return name;
+#else
+    return [name autorelease];
+#endif
 }
 
 @end
