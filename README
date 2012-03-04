@@ -1,15 +1,9 @@
 
-This is an Objective-C wrapper around the MongoDB C driver.
+An Objective-C library for MongoDB.
 
-It is intended for use with Nu but may be useful in other 
-Objective-C programming applications.
+Objective-C source is based on NuMongoDB by Tim Burks, copyright 2010 Neon Design Technology, Inc.
 
-Tim Burks
-
-C source is taken verbatim from http://github.com/mongodb/mongo-c-driver
-and is copyright 2009, 2010 10gen Inc.
-
-Objective-C source is copyright 2010 Neon Design Technology, Inc.
+Sources copyright Paul Melnikow, Neon Design Technology, Inc., and other contributors.
 
 LICENSE
 
