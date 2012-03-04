@@ -1,0 +1,11 @@
+Based on NuMongoDB, by Tim Burks, copyright 2010 Neon Design Technology, Inc.
+https://github.com/timburks/NuMongoDB
+
+Includes enhancements by Diederik Hoogenboom:
+https://github.com/dhoogenb/NuMongoDB
+
+and by Rob Elkin:
+https://github.com/robelkin/NuMongoDB
+
+C source from the official MongoDB C driver, copyright 2009, 2010 10gen Inc.
+http://github.com/mongodb/mongo-c-driver

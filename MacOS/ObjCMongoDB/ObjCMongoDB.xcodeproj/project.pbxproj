@@ -104,6 +104,10 @@
 		32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NuMongoDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E1054411503EE5800805F26 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../../README; sourceTree = "<group>"; };
+		9E1054441503EEEA00805F26 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = "APACHE-2.0.txt"; path = "../../APACHE-2.0.txt"; sourceTree = "<group>"; };
+		9E1054451503EEEA00805F26 /* SETUP */ = {isa = PBXFileReference; lastKnownFileType = text; name = SETUP; path = ../../SETUP; sourceTree = "<group>"; };
+		9E1054461503F05000805F26 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NOTICE; path = ../../NOTICE; sourceTree = "<group>"; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
 		9EBE79B2150006DF000E767D /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
 		9EBE79B5150007C4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -192,6 +196,7 @@
 				22ED5B4E11DF1A8600410529 /* objc */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
+				9E1054431503EE6300805F26 /* Documentation */,
 				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				9EBE79CE15003CF2000E767D /* test2 */,
@@ -264,12 +269,12 @@
 				9EBE79B815000EA6000E767D /* BSONObjectID.m */,
 				9EBE79C1150028D1000E767D /* BSONDocument.h */,
 				9EBE79C2150028D1000E767D /* BSONDocument.m */,
+				9EBE7A06150056FD000E767D /* BSONIterator.h */,
+				9EBE7A07150056FD000E767D /* BSONIterator.m */,
 				9EBE79BD150013B6000E767D /* BSONArchiver.h */,
 				9EBE79BE150013B6000E767D /* BSONArchiver.m */,
 				9EBE7A021500463F000E767D /* BSONUnarchiver.h */,
 				9EBE7A031500463F000E767D /* BSONUnarchiver.m */,
-				9EBE7A06150056FD000E767D /* BSONIterator.h */,
-				9EBE7A07150056FD000E767D /* BSONIterator.m */,
 			);
 			name = objc;
 			path = ../../objc;
@@ -292,6 +297,17 @@
 				22739CDF1231446B00909551 /* NuBSON.m */,
 			);
 			name = old;
+			sourceTree = "<group>";
+		};
+		9E1054431503EE6300805F26 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				9E1054411503EE5800805F26 /* README */,
+				9E1054461503F05000805F26 /* NOTICE */,
+				9E1054441503EEEA00805F26 /* APACHE-2.0.txt */,
+				9E1054451503EEEA00805F26 /* SETUP */,
+			);
+			name = Documentation;
 			sourceTree = "<group>";
 		};
 		9EBE79CB15003CF2000E767D /* Frameworks */ = {
