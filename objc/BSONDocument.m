@@ -2,8 +2,19 @@
 //  BSONDocument.m
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 3/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 Paul Melnikow and other contributors
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 #import "BSONDocument.h"
@@ -61,6 +72,14 @@
 
 - (NSData *) dataValue {
     return [[NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson)] autorelease];
+}
+
+- (BSONIterator *) iterator {
+#if __has_feature(objc_arc)
+    return [[BSONIterator alloc] initWithDocument:self];
+#else
+    return [[[BSONIterator alloc] initWithDocument:self] autorelease];
+#endif
 }
 
 - (BOOL) isEqual:(id)object {

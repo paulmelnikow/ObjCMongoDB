@@ -2,11 +2,23 @@
 //  BSONDocument.h
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 3/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 Paul Melnikow and other contributors
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 #import <Foundation/Foundation.h>
+#import "BSONIterator.h"
 #import "bson.h"
 
 @class BSONArchiver;
@@ -65,6 +77,14 @@
  @returns An immutable <code>NSData</code> object pointing to the BSON data buffer.
  */
 - (NSData *) dataValue;
+
+/**
+ Returns a new BSON iterator initialized for the document.
+ 
+ The iterator retains the document.
+ @returns A new, autoreleased BSON iterator initialized for the document.
+ */
+- (BSONIterator *) iterator;
 
 /**
  Returns a Boolean value that indicates whether the receiver is equal to another BSON document.
