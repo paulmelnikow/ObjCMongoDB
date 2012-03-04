@@ -1,5 +1,5 @@
 //
-//  BSONObjectID.m
+//  BSONTypes.m
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors

@@ -1,5 +1,5 @@
 //
-//  BSONObjectID.h
+//  BSONTypes.h
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors

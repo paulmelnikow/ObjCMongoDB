@@ -77,7 +77,7 @@
             _iterator = [pushedIterator subIteratorValue];
             obj = [self decodeInternalArray];
             _iterator = pushedIterator;
-        } else if ([_iterator isSubDocument]) {
+        } else if ([_iterator isEmbeddedDocument]) {
             BSONIterator *pushedIterator = _iterator;
             _iterator = [pushedIterator subIteratorValue];
             obj = [self decodeDictionary];
@@ -98,7 +98,7 @@
             _iterator = [pushedIterator subIteratorValue];
             obj = [self decodeInternalArray];
             _iterator = pushedIterator;
-        } else if ([_iterator isSubDocument]) {
+        } else if ([_iterator isEmbeddedDocument]) {
             BSONIterator *pushedIterator = _iterator;
             _iterator = [pushedIterator subIteratorValue];
             obj = [self decodeDictionary];
@@ -247,7 +247,7 @@
 - (BSONDocument *) decodeBSONDocumentForKey:(NSString *)key {
     if (![_iterator containsValueForKey:key]) return nil;
     BSONAssertIteratorIsValueType(_iterator, bson_object);
-    return [_iterator subDocumentValue];
+    return [_iterator embeddedDocumentValue];
 }
 
 - (NSData *)decodeDataForKey:(NSString *)key {

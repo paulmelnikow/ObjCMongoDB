@@ -106,7 +106,7 @@
 #pragma mark - Information about the current key
 
 - (bson_type) nativeValueType { return _type; }
-- (BOOL) isSubDocument { return bson_object == _type; }
+- (BOOL) isEmbeddedDocument { return bson_object == _type; }
 - (BOOL) isArray { return bson_array == _type; }
 
 - (NSString *) key { return NSStringFromBSONString(bson_iterator_key(_iter)); }
@@ -129,7 +129,7 @@
 #endif    
 }
 
-- (BSONDocument *) subDocumentValue {
+- (BSONDocument *) embeddedDocumentValue {
     BSONDocument *document = [[BSONDocument alloc] init];
     bson_iterator_subobject(_iter, [document bsonValue]);
 #if __has_feature(objc_arc)
@@ -155,7 +155,7 @@
         case bson_string:
             return [self stringValue];
         case bson_object:
-            return [self subDocumentValue];
+            return [self embeddedDocumentValue];
         case bson_array:
             return [self subIteratorValue];
         case bson_bindata:
