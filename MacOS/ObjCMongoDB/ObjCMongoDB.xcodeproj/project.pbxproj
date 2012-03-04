@@ -22,11 +22,12 @@
 		22ED5BE911DF1AED00410529 /* NuMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */; };
 		22ED5BF611DF1B5E00410529 /* sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5BF511DF1B5E00410529 /* sample.m */; };
 		9E1054481503F42600805F26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
+		9E10544A1503F6ED00805F26 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E1054491503F6ED00805F26 /* Info.plist */; };
 		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
 		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
 		9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79B5150007C4000E767D /* AppKit.framework */; };
-		9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONObjectID.h */; };
-		9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONObjectID.m */; };
+		9EBE79B915000EA7000E767D /* BSONTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONTypes.h */; };
+		9EBE79BA15000EA7000E767D /* BSONTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONTypes.m */; };
 		9EBE79BF150013B6000E767D /* BSONArchiver.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79BD150013B6000E767D /* BSONArchiver.h */; };
 		9EBE79C0150013B6000E767D /* BSONArchiver.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79BE150013B6000E767D /* BSONArchiver.m */; };
 		9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; };
@@ -105,11 +106,12 @@
 		9E1054441503EEEA00805F26 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = "APACHE-2.0.txt"; path = "../../APACHE-2.0.txt"; sourceTree = "<group>"; };
 		9E1054451503EEEA00805F26 /* SETUP */ = {isa = PBXFileReference; lastKnownFileType = text; name = SETUP; path = ../../SETUP; sourceTree = "<group>"; };
 		9E1054461503F05000805F26 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NOTICE; path = ../../NOTICE; sourceTree = "<group>"; };
+		9E1054491503F6ED00805F26 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
 		9EBE79B2150006DF000E767D /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
 		9EBE79B5150007C4000E767D /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		9EBE79B715000EA6000E767D /* BSONObjectID.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONObjectID.h; sourceTree = "<group>"; };
-		9EBE79B815000EA6000E767D /* BSONObjectID.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONObjectID.m; sourceTree = "<group>"; };
+		9EBE79B715000EA6000E767D /* BSONTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONTypes.h; sourceTree = "<group>"; };
+		9EBE79B815000EA6000E767D /* BSONTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONTypes.m; sourceTree = "<group>"; };
 		9EBE79BD150013B6000E767D /* BSONArchiver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONArchiver.h; sourceTree = "<group>"; };
 		9EBE79BE150013B6000E767D /* BSONArchiver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONArchiver.m; sourceTree = "<group>"; };
 		9EBE79C1150028D1000E767D /* BSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDocument.h; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 				22ED5B4E11DF1A8600410529 /* objc */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				9E1054431503EE6300805F26 /* Documentation */,
+				9E10544E1503F70400805F26 /* Resources */,
 				9EBE79CE15003CF2000E767D /* test2 */,
 				9EBE79F1150040D4000E767D /* ObjCBSONTests */,
 				9EBE79CB15003CF2000E767D /* Frameworks */,
@@ -225,8 +228,8 @@
 			children = (
 				9E10543F1501C73B00805F26 /* old */,
 				32DBCF5E0370ADEE00C91783 /* ObjCMongoDB_Prefix.pch */,
-				9EBE79B715000EA6000E767D /* BSONObjectID.h */,
-				9EBE79B815000EA6000E767D /* BSONObjectID.m */,
+				9EBE79B715000EA6000E767D /* BSONTypes.h */,
+				9EBE79B815000EA6000E767D /* BSONTypes.m */,
 				9EBE79C1150028D1000E767D /* BSONDocument.h */,
 				9EBE79C2150028D1000E767D /* BSONDocument.m */,
 				9EBE7A06150056FD000E767D /* BSONIterator.h */,
@@ -260,6 +263,15 @@
 				9E1054451503EEEA00805F26 /* SETUP */,
 			);
 			name = Documentation;
+			sourceTree = "<group>";
+		};
+		9E10544E1503F70400805F26 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				9E1054491503F6ED00805F26 /* Info.plist */,
+			);
+			name = Resources;
+			path = ObjCBSONTests;
 			sourceTree = "<group>";
 		};
 		9EBE79CB15003CF2000E767D /* Frameworks */ = {
@@ -337,7 +349,7 @@
 				22ED5B4B11DF1A7200410529 /* mongo_except.h in Headers */,
 				22ED5B4D11DF1A7200410529 /* platform_hacks.h in Headers */,
 				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
-				9EBE79B915000EA7000E767D /* BSONObjectID.h in Headers */,
+				9EBE79B915000EA7000E767D /* BSONTypes.h in Headers */,
 				9EBE79BF150013B6000E767D /* BSONArchiver.h in Headers */,
 				9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */,
 				9EBE7A0415004640000E767D /* BSONUnarchiver.h in Headers */,
@@ -458,6 +470,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E10544A1503F6ED00805F26 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,7 +518,7 @@
 				22ED5B4911DF1A7200410529 /* mongo.c in Sources */,
 				22ED5B4C11DF1A7200410529 /* numbers.c in Sources */,
 				9EBE79B3150006DF000E767D /* gridfs.c in Sources */,
-				9EBE79BA15000EA7000E767D /* BSONObjectID.m in Sources */,
+				9EBE79BA15000EA7000E767D /* BSONTypes.m in Sources */,
 				9EBE79C0150013B6000E767D /* BSONArchiver.m in Sources */,
 				9EBE79C4150028D1000E767D /* BSONDocument.m in Sources */,
 				9EBE7A0515004640000E767D /* BSONUnarchiver.m in Sources */,
