@@ -20,6 +20,10 @@
 #import "BSONUnarchiver.h"
 
 @interface BSONUnarchiver (Private)
+- (NSArray *) decodeInternalArray;
+- (NSDictionary *) decodeInternalDictionary;
+- (id) decodeInternalObject;
++ (void) assertIterator:(BSONIterator *) iterator isValueType:(bson_type) type forSelector:(SEL)selector;
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
 + (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector;
 @end
@@ -58,6 +62,12 @@
 #pragma mark - Decoding collections
 
 - (NSDictionary *) decodeDictionary {
+    return [self decodeInternalDictionary];
+}
+
+#pragma mark - Internal methods for decoding objects and collections
+
+- (NSDictionary *) decodeInternalDictionary {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     while ([_iterator next]) {
         NSString *key = [_iterator key];
@@ -65,7 +75,7 @@
         if ([_iterator isArray]) {
             BSONIterator *pushedIterator = _iterator;
             _iterator = [pushedIterator subIteratorValue];
-            obj = [self decodeArray];
+            obj = [self decodeInternalArray];
             _iterator = pushedIterator;
         } else if ([_iterator isSubDocument]) {
             BSONIterator *pushedIterator = _iterator;
@@ -73,20 +83,20 @@
             obj = [self decodeDictionary];
             _iterator = pushedIterator;
         } else
-            obj = [_iterator objectValue];
+            obj = [self decodeInternalObject];
         [dictionary setObject:obj forKey:key];
     }
     return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
-- (NSArray *) decodeArray {
+- (NSArray *) decodeInternalArray {
     NSMutableArray *array = [NSMutableArray array];
     while ([_iterator next]) {
         id obj;
         if ([_iterator isArray]) {
             BSONIterator *pushedIterator = _iterator;
             _iterator = [pushedIterator subIteratorValue];
-            obj = [self decodeArray];
+            obj = [self decodeInternalArray];
             _iterator = pushedIterator;
         } else if ([_iterator isSubDocument]) {
             BSONIterator *pushedIterator = _iterator;
@@ -94,117 +104,113 @@
             obj = [self decodeDictionary];
             _iterator = pushedIterator;
         } else
-            obj = [_iterator objectValue];
+            obj = [self decodeInternalObject];
         [array addObject:obj];
     }
     return [NSArray arrayWithArray:array];
 }
 
+- (id) decodeInternalObject {
+    id obj = [_iterator objectValue];
+    if ([NSNull null] == obj)
+        return self.objectForNull;
+    else if ([BSONIterator objectForUndefinedValue] == obj)
+        return self.objectForUndefined;
+    else
+        return obj;
+}
+
+
 - (NSDictionary *)decodeDictionaryForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return nil;
-        case bson_object: break;
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_object);
+    
     BSONIterator *pushedIterator = _iterator;
+    
     _iterator = [pushedIterator subIteratorValue];
     NSDictionary *result = [self decodeDictionary];
+    
     _iterator = pushedIterator;
     return result;
 }
 
 - (NSArray *)decodeArrayForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return nil;
-        case bson_array: break;
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_array);
+
     BSONIterator *pushedIterator = _iterator;
+    
     _iterator = [pushedIterator subIteratorValue];
-    NSArray *result = [self decodeArray];
+    NSArray *result = [self decodeInternalArray];
+    
     _iterator = pushedIterator;
     return result;
 }
 
-- (id) decodeObjectForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    [_iterator findKey:key];
-    return [_iterator objectValue];
-}
-
 #pragma mark - Decoding basic types
 
+- (id) decodeObjectForKey:(NSString *)key {
+    if (![_iterator containsValueForKey:key]) return nil;
+    return [self decodeInternalObject];
+}
+
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return nil;
-        case bson_oid: return [_iterator objectIDValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_oid);
+    return [_iterator objectIDValue];
 }
 
 - (int) decodeIntForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_bool:
-        case bson_int:
-        case bson_long:
-        case bson_double: return [_iterator intValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return 0;
+    
+    bson_type allowedTypes[4];
+    allowedTypes[0] = bson_bool;
+    allowedTypes[1] = bson_int;
+    allowedTypes[2] = bson_long;
+    allowedTypes[2] = bson_double;
+
+    BSONAssertIteratorIsInValueTypeArray(_iterator, allowedTypes);
+    return [_iterator intValue];
 }
 - (int64_t) decodeInt64ForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_bool:
-        case bson_int:
-        case bson_long:
-        case bson_double: return [_iterator int64Value];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return 0;
+    
+    bson_type allowedTypes[4];
+    allowedTypes[0] = bson_bool;
+    allowedTypes[1] = bson_int;
+    allowedTypes[2] = bson_long;
+    allowedTypes[2] = bson_double;
+    
+    BSONAssertIteratorIsInValueTypeArray(_iterator, allowedTypes);
+    return [_iterator int64Value];
 }
 - (BOOL) decodeBoolForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_bool:
-        case bson_int:
-        case bson_long:
-        case bson_double: return [_iterator boolValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return 0;
+    
+    bson_type allowedTypes[3];
+    allowedTypes[0] = bson_bool;
+    allowedTypes[1] = bson_int;
+    allowedTypes[2] = bson_long;
+    
+    BSONAssertIteratorIsInValueTypeArray(_iterator, allowedTypes);
+    return [_iterator doubleValue];
 }
 - (double) decodeDoubleForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_bool:
-        case bson_int:
-        case bson_long:
-        case bson_double: return [_iterator doubleValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return 0;
+    
+    bson_type allowedTypes[3];
+    allowedTypes[0] = bson_double;
+    allowedTypes[1] = bson_int;
+    allowedTypes[2] = bson_long;
+    
+    BSONAssertIteratorIsInValueTypeArray(_iterator, allowedTypes);
+    return [_iterator doubleValue];
 }
 
 - (NSDate *) decodeDateForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_date: return [_iterator dateValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_date);
+    return [_iterator dateValue];
 }
 - (NSImage *) decodeImageForKey:(NSString *)key {
     NSData *data = [self decodeDataForKey:key];
@@ -215,74 +221,51 @@
 }
 
 - (NSString *) decodeStringForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_string:
-        case bson_code:
-        case bson_symbol: return [_iterator stringValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }    
+    if (![_iterator containsValueForKey:key]) return nil;
+    
+    bson_type allowedTypes[3];
+    allowedTypes[0] = bson_string;
+    allowedTypes[1] = bson_code;
+    allowedTypes[2] = bson_symbol;
+    
+    BSONAssertIteratorIsInValueTypeArray(_iterator, allowedTypes);
+    return [_iterator stringValue];
 }
 
-- (id) decodeSymbolForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_symbol: return [_iterator stringValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+- (BSONSymbol *) decodeSymbolForKey:(NSString *)key {
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_symbol);
+    return [_iterator symbolValue];
 }
 
-- (id) decodeRegularExpressionForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_regex: return [_iterator regularExpressionValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+- (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *)key {
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_regex);
+    return [_iterator regularExpressionValue];
 }
 
 - (BSONDocument *) decodeBSONDocumentForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_object: return [_iterator subDocumentValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_object);
+    return [_iterator subDocumentValue];
 }
 
 - (NSData *)decodeDataForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_bindata: return [_iterator dataValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_bindata);
+    return [_iterator dataValue];
+    
 }
 
 - (id) decodeCodeForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_code: return [_iterator codeValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_code);
+    return [_iterator codeValue];
 }
 - (id) decodeCodeWithScopeForKey:(NSString *)key {
-    [BSONArchiver assertNonNil:key withReason:KeyMustNotBeNil];
-    bson_type type = [_iterator findKey:key];
-    switch (type) {
-        case bson_eoo: return 0;
-        case bson_codewscope: return [_iterator codeWithScopeValue];
-        default: @throw [BSONUnarchiver failedWithIteratorType:type selector:_cmd];
-    }
+    if (![_iterator containsValueForKey:key]) return nil;
+    BSONAssertIteratorIsValueType(_iterator, bson_codewscope);
+    return [_iterator codeWithScopeValue];
 }
 
 #pragma mark - Unsupported unkeyed encoding methods
@@ -290,7 +273,7 @@
 - (void) decodeValueOfObjCType:(const char *)type at:(void *)data {
     @throw [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
 }
--(NSData *)decodeDataObject {
+- (NSData *) decodeDataObject {
     @throw [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
 }
 
@@ -299,7 +282,7 @@
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
-    return [NSException exceptionWithName:NSInvalidArchiveOperationException
+    return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
 }

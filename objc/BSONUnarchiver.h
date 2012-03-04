@@ -32,7 +32,6 @@
 + (BSONUnarchiver *) unarchiverWithData:(NSData *)data;
 
 - (NSDictionary *) decodeDictionary;
-- (NSArray *) decodeArray;
 
 - (NSDictionary *)decodeDictionaryForKey:(NSString *)key;
 - (NSArray *)decodeArrayForKey:(NSString *)key;
@@ -46,8 +45,8 @@
 - (NSDate *) decodeDateForKey:(NSString *)key;
 - (NSImage *) decodeImageForKey:(NSString *)key;
 - (NSString *) decodeStringForKey:(NSString *)key;
-- (id) decodeSymbolForKey:(NSString *)key;
-- (id) decodeRegularExpressionForKey:(NSString *)key;
+- (BSONSymbol *) decodeSymbolForKey:(NSString *)key;
+- (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *)key;
 - (BSONDocument *) decodeBSONDocumentForKey:(NSString *)key;
 - (NSData *)decodeDataForKey:(NSString *)key;
 - (id) decodeCodeForKey:(NSString *)key;

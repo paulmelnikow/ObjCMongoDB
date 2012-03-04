@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import "BSONObjectID.h"
+#import "BSONTypes.h"
 
 @implementation BSONObjectID
 
@@ -32,7 +32,7 @@
 
 - (id) initWithString:(NSString *) s {
     if (self = [super init]) {
-        bson_oid_from_string(&_oid, [s cStringUsingEncoding:NSUTF8StringEncoding]);
+        bson_oid_from_string(&_oid, BSONStringFromNSString(s));
     }
     return self;
 }
@@ -119,7 +119,7 @@
     // str must be at least 24 hex chars + null byte
     char buffer[25];
     bson_oid_to_string(&_oid, buffer);
-    return _stringValue = [NSString stringWithCString:buffer encoding:NSUTF8StringEncoding];
+    return _stringValue = NSStringFromBSONString(buffer);
 }
 
 - (NSComparisonResult)compare:(BSONObjectID *) other {
@@ -135,6 +135,115 @@
 
 - (BOOL)isEqual:(id)other {
     return [self compare:other] == NSOrderedSame;
+}
+
+@end
+
+@implementation BSONRegularExpression
+@synthesize pattern, options;
+
++ (BSONRegularExpression *) regularExpressionWithPattern:(NSString *) pattern options:(NSString *) options {
+    BSONRegularExpression *obj = [[self alloc] init];
+    obj.pattern = pattern;
+    obj.options = options;
+#if __has_feature(objc_arc)
+    return obj;
+#else
+    return [obj autorelease];
+#endif
+}
+
+@end
+
+@implementation  BSONTimestamp
+
+- (BSONTimestamp *) initWithNativeTimestamp:(bson_timestamp_t) timestamp {
+    if (self = [super init]) {
+        _timestamp = timestamp;
+    }
+    return self;
+}
+
++ (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t) timestamp {
+#if __has_feature(objc_arc)
+    return [[self alloc] initWithNativeTimestamp:timestamp];
+#else
+    return [[[self alloc] initWithNativeTimestamp:timestamp] autorelease];
+#endif
+}
+
++ (BSONTimestamp *) timestampWithIncrement:(int) increment timeInSeconds:(int) time {
+    BSONTimestamp *obj = [[self alloc] init];
+    obj.increment = increment;
+    obj.timeInSeconds = time;
+#if __has_feature(objc_arc)
+    return obj;
+#else
+    return [obj autorelease];
+#endif
+}
+
+- (bson_timestamp_t *) timestampPointer {
+    return &_timestamp;
+}
+
+- (int) increment { return _timestamp.i; }
+- (void) setIncrement:(int) increment {
+    [self willChangeValueForKey:@"increment"];
+    _timestamp.i = increment;
+    [self didChangeValueForKey:@"increment"];
+}
+- (int) timeInSeconds { return _timestamp.t; }
+- (void) setTimeInSeconds:(int) timeInSeconds {
+    [self willChangeValueForKey:@"timeInSeconds"];
+    _timestamp.t = timeInSeconds;
+    [self didChangeValueForKey:@"timeInSeconds"];
+}
+
+@end
+
+@implementation BSONCode
+@synthesize code;
+
++ (BSONCode *) code:(NSString *) code {
+    BSONCode *obj = [[self alloc] init];
+    obj.code = code;
+#if __has_feature(objc_arc)
+    return obj;
+#else
+    return [obj autorelease];
+#endif
+}
+
+@end
+
+@implementation BSONCodeWithScope
+@synthesize scope;
+
++ (BSONCodeWithScope *) code:(NSString *) code withScope:(BSONDocument *) scope {
+    BSONCodeWithScope *obj = [[self alloc] init];
+    obj.code = code;
+    obj.scope = scope;
+#if __has_feature(objc_arc)
+    return obj;
+#else
+    return [obj autorelease];
+#endif
+}
+
+@end
+
+@implementation BSONSymbol
+@synthesize symbol;
+
++ (BSONSymbol *) symbol:(NSString *)symbol {
+    BSONSymbol *obj = [[self alloc] init];
+    obj.symbol = symbol;
+#if __has_feature(objc_arc)
+    return obj;
+#else
+    return [obj autorelease];
+#endif
 }
 
 @end

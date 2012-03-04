@@ -19,8 +19,7 @@
 
 #import <Foundation/Foundation.h>
 #import "bson.h"
-
-NSString * NSStringFromBSONType(bson_type t);
+#import "BSONTypes.h"
 
 @class BSONDocument;
 @class BSONObjectID;
@@ -33,12 +32,45 @@ NSString * NSStringFromBSONType(bson_type t);
     bson_type _type;
 }
 
-- (BOOL) hasMore;
-- (bson_type) next;
-- (bson_type) findKey:(NSString *)key;
++ (id) objectForUndefinedValue;
 
-- (bson_type) type;
-- (NSString *) currentKey;
+/*
+ Searches for the key <i>key</i> in the iterator's BSON document.
+ @return <code>YES</code> if the key is present, and <code>NO</code> otherwise.
+ @param key The key to search for
+ */
+- (BOOL) containsValueForKey:(NSString *) key;
+
+/*
+ Searches for the key <i>key</i> in the iterator's BSON document.
+ @param key The key to search for
+ @return The native BSON type of the key (<code>bson_eoo</code> if the key is not present)
+ */
+- (bson_type) nativeValueTypeForKey:(NSString *)key;
+
+/*
+ Attempts to advance the iterator to the next item in the document.
+ @return The native BSON type of the next item in the document (<code>bson_eoo</code> if there are no more)
+ */
+- (bson_type) next;
+
+/*
+ Returns a Boolean indicating whether there are more items in the document.
+ @return <code>YES</code> if there are more items, <code>NO</code> otherwise
+ */
+- (BOOL) hasMore;
+
+/*
+ Returns the key of the current item.
+ @return An autoreleased string with the key for the current item
+ */
+- (NSString *) key;
+
+/*
+ Returns the BSON value type of the current item.
+ @return The native BSON value type of the current item.
+ */
+- (bson_type) nativeValueType;
 
 - (id) objectValue;
 - (id) objectForKey:(NSString *)key;
@@ -46,23 +78,22 @@ NSString * NSStringFromBSONType(bson_type t);
 - (BOOL) isSubDocument;
 - (BOOL) isArray;
 
-- (BSONDocument *) subDocumentValue;
 - (BSONIterator *) subIteratorValue;
+- (BSONDocument *) subDocumentValue;
 
 - (double) doubleValue;
 - (int) intValue;
 - (int64_t) int64Value;
 - (BOOL) boolValue;
 
-- (BSONObjectID *)objectIDValue;
+- (BSONObjectID *) objectIDValue;
 
 - (NSString *) stringValue;
 - (int) stringLength;
-- (NSString *) symbolValue;
+- (BSONSymbol *) symbolValue;
 
-- (NSString *) codeValue;
-- (BSONDocument *) codeScopeValue;
-- (NSDictionary *) codeWithScopeValue;
+- (BSONCode *) codeValue;
+- (BSONCodeWithScope *) codeWithScopeValue;
 
 - (NSDate *) dateValue;
 
@@ -72,11 +103,8 @@ NSString * NSStringFromBSONType(bson_type t);
 
 - (NSString *)regularExpressionPatternValue;
 - (NSString *)regularExpressionOptionsValue;
-- (NSArray *)regularExpressionValue;
+- (BSONRegularExpression *)regularExpressionValue;
 
-- (bson_timestamp_t)nativeTimestampValue;
-- (NSDictionary *)timestampValue;
-
-@property (strong) id objectForUndefined;
+- (BSONTimestamp *) timestampValue;
 
 @end

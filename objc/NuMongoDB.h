@@ -18,10 +18,10 @@ limitations under the License.
 
 #import <Foundation/Foundation.h>
 #import "mongo.h"
-#import "BSONObjectID.h"
+#import "BSONTypes.h"
 
 #define MongoDBObjectIDKey @"_id"
-#define MongoDBObjectIDUTF8Key "_id"
+#define MongoDBObjectIDUBSONKey "_id"
 
 @class NuBSON;
 

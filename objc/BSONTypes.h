@@ -80,3 +80,41 @@
 - (BOOL)isEqual:(id)other;
 
 @end
+
+@interface BSONRegularExpression : NSObject
+
++ (BSONRegularExpression *) regularExpressionWithPattern:(NSString *) pattern options:(NSString *) options;
+
+@property (retain) NSString *pattern;
+@property (retain) NSString *options;
+
+@end
+
+@interface BSONTimestamp : NSObject {
+    bson_timestamp_t _timestamp;
+}
+
++ (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t)timestamp;
++ (BSONTimestamp *) timestampWithIncrement:(int) increment timeInSeconds:(int) time;
+
+@property (assign) int increment;
+@property (assign) int timeInSeconds;
+
+@end
+
+@class BSONDocument;
+
+@interface BSONCode : NSObject
++ (BSONCode *) code:(NSString *) code;
+@property (retain) NSString * code;
+@end
+
+@interface BSONCodeWithScope : BSONCode
++ (BSONCodeWithScope *) code:(NSString *) code withScope:(BSONDocument *) scope;
+@property (retain) BSONDocument * scope;
+@end
+
+@interface BSONSymbol : NSObject 
++ (BSONSymbol *) symbol:(NSString *)symbol;
+@property (retain) NSString * symbol;
+@end

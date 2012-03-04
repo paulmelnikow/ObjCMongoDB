@@ -15,16 +15,16 @@
 //  See the License for the specific language governing permissions and
 //  limitations under the License.
 
-
 #ifdef __OBJC__
 
 #import "bson.h"
 
 #import "BSONDocument.h"
 #import "BSONArchiver.h"
-#import "BSONObjectID.h"
+#import "BSONTypes.h"
 #import "BSONUnarchiver.h"
 #import "BSONIterator.h"
+#import "BSON_Helper.h"
 
 @interface BSONDocument (Project)
 -(bson *)bsonValue;
@@ -37,6 +37,10 @@
 @interface BSONObjectID (Project)
 - (bson_oid_t) oid;
 - (const bson_oid_t *) objectIDPointer;
+@end
+
+@interface BSONTimestamp (Project)
+- (bson_timestamp_t *) timestampPointer;
 @end
 
 @interface BSONIterator (Project)
