@@ -58,7 +58,7 @@
  Returns the object which iterators return for undefined values (type 0x06).
  @return The object which iterators return for undefined values
  */
-+ (id) objectForUndefinedValue;
++ (id) objectForUndefined;
 
 /**
  Searches for the key <i>key</i> in the iterator's BSON document.

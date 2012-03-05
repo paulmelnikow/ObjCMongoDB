@@ -28,14 +28,17 @@
     BSONIterator *_iterator;
 }
 
-+ (BSONUnarchiver *) unarchiverWithDocument:(BSONDocument *)document;
-+ (BSONUnarchiver *) unarchiverWithData:(NSData *)data;
+- (BSONUnarchiver *) initWithDocument:(BSONDocument *) document;
+- (BSONUnarchiver *) initWithData:(NSData *) data;
+
++ (NSDictionary *) unarchiveDictionaryWithDocument:(BSONDocument *) document;
++ (NSDictionary *) unarchiveDictionaryWithData:(NSData *) data;
 
 - (NSDictionary *) decodeDictionary;
 
-- (NSDictionary *)decodeDictionaryForKey:(NSString *)key;
-- (NSArray *)decodeArrayForKey:(NSString *)key;
-- (id) decodeObjectForKey:(NSString *)key;
+- (NSDictionary *)decodeDictionaryForKey:(NSString *) key;
+- (NSArray *)decodeArrayForKey:(NSString *) key;
+- (id) decodeObjectForKey:(NSString *) key;
 
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
 - (int) decodeIntForKey:(NSString *)key;

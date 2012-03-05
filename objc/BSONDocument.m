@@ -50,7 +50,9 @@
 
 - (BSONDocument *) initWithNativeBuffer:(bson_buffer *)bb {
     if (!bb) {
+#if !__has_feature(objc_arc)
         [self release];
+#endif
         return nil;
     }
     if (self = [super init]) {
@@ -71,15 +73,15 @@
 }
 
 - (NSData *) dataValue {
-    return [[NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson)] autorelease];
+#if __has_feature(objc_arc)
+    return [NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson) freeWhenDone:NO];
+#else
+    return [NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson) freeWhenDone:NO];
+#endif
 }
 
 - (BSONIterator *) iterator {
-#if __has_feature(objc_arc)
     return [[BSONIterator alloc] initWithDocument:self];
-#else
-    return [[[BSONIterator alloc] initWithDocument:self] autorelease];
-#endif
 }
 
 - (BOOL) isEqual:(id)object {

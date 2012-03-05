@@ -38,6 +38,29 @@ void BSONAssertKeyNonNil(NSString *key) {
                                  userInfo:nil];
 }
 
+void BSONAssertKeyLegalForMongoDB(NSString *key) {
+    static NSString *singletonString;
+    static NSCharacterSet *singletonCharacterSet;
+    if (!singletonString) {
+#if __has_feature(objc_arc)
+        singletonString = @"$.";
+        singletonCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"$."];
+#else
+        singletonString = @"$.";
+        singletonCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"$."] retain];
+#endif
+    }
+
+    BSONAssertKeyNonNil(key);
+    if (NSNotFound == [key rangeOfCharacterFromSet:singletonCharacterSet].location) return;
+    NSString *reason = [NSString stringWithFormat:@"Invalid key %@ - MongoDB keys may not contain the following characters: %@",
+                        key,
+                        singletonString];
+    @throw [[NSException exceptionWithName:NSInvalidArgumentException
+                                   reason:reason
+                                 userInfo:nil] retain];    
+}
+
 void BSONAssertValueNonNil(id value) {
     if (value) return;
     @throw [NSException exceptionWithName:NSInvalidArgumentException

@@ -22,6 +22,7 @@
 NSString * NSStringFromBSONString (const char * cString);
 const char * BSONStringFromNSString (NSString * key);
 void BSONAssertKeyNonNil (NSString *key);
+void BSONAssertKeyLegalForMongoDB(NSString *key);
 void BSONAssertValueNonNil (id key);
 void BSONAssertIteratorIsValueType (BSONIterator * iterator, bson_type valueType);
 void BSONAssertIteratorIsInValueTypeArray (BSONIterator * iterator, bson_type * valueType);

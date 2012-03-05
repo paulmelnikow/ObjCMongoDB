@@ -55,8 +55,8 @@
 -(BSONDocument *)initWithData:(NSData *)data;
 
 /**
- Initializes a BSON document by copying data from an archiver's buffer after encoding
- is finished.
+ Initializes a BSON document by ending encoding and taking ownership of an archiver's
+ buffer after encoding is finished.
  
  There's usually no need to invoke this directly. Instead, call the
  <code>BSONDocument<code> method on the <code>BSONArchiver</code>.
@@ -65,15 +65,16 @@
 - (BSONDocument *) initWithArchiver:(BSONArchiver *)archiver;
 
 /**
- Initializes a BSON document by copying data from a BSON buffer. This allows you to
- create a bson_buffer directly and then bridge it into the framework, but there's
- usually no need to call this directly.
+ Initializes a BSON document by taking ownership of an existing BSON buffer. This allows
+ you to create a bson_buffer directly and then bridge it into the ObjCMongoDB framework,
+ but there's usually no need to do this directly.
  @param bb A pointer to a <code>bson_buffer</code> structure.
  */
 - (BSONDocument *) initWithNativeBuffer:(bson_buffer *)bb;
 
 /**
- Returns an immutable <code>NSData</code> object pointing to the BSON data buffer.
+ Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make
+ a copy of the buffer, and will stop working if the document is deallocated.
  @returns An immutable <code>NSData</code> object pointing to the BSON data buffer.
  */
 - (NSData *) dataValue;
@@ -82,7 +83,7 @@
  Returns a new BSON iterator initialized for the document.
  
  The iterator retains the document.
- @returns A new, autoreleased BSON iterator initialized for the document.
+ @returns A BSON iterator initialized for the document with its retain count set to 1.
  */
 - (BSONIterator *) iterator;
 

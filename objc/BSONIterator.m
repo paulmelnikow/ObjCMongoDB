@@ -41,15 +41,16 @@
     return self;
 }
 
-// Called internally when creating subiterators
-// Takes ownership of the bson_iterator it's passed
+/**
+ Called internally when creating subiterators
+ Takes ownership of the bson_iterator it's passed
+ */
 - (BSONIterator *) initAsSubIteratorWithDocument:(BSONDocument *)document
                                        iterator:(BSONIterator *)iterator
                                 newBsonIterator:(bson_iterator *)bsonIter {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
         _document = document;
-        self.objectForUndefined = iterator.objectForUndefined;
 #else
         _document = [document retain];
 #endif
@@ -61,6 +62,7 @@
 }
 
 - (void) dealloc {
+    NSLog(@"bsoniterator dealloc");
     free(_iter);
 #if !__has_feature(objc_arc)
     [_document release];
@@ -161,7 +163,7 @@
         case bson_bindata:
             return [self dataValue];
         case bson_undefined:
-            return [BSONIterator objectForUndefinedValue];
+            return [BSONIterator objectForUndefined];
         case bson_oid:
             return [self objectIDValue];
         case bson_bool:
@@ -197,8 +199,12 @@
 - (BOOL) boolValue { return bson_iterator_bool(_iter); }
 
 - (BSONObjectID *) objectIDValue {
-    BSONObjectID *objid = [BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)];
-    return [objid autorelease];
+#if __has_feature(objc_arc)
+    return [BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)];
+#else
+    return [[BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)] autorelease];
+#endif
+    
 }
 
 - (NSString *) stringValue { return NSStringFromBSONString(bson_iterator_string(_iter)); }
@@ -253,7 +259,7 @@
 
 #pragma mark - Helper methods
 
-+ (id) objectForUndefinedValue {
++ (id) objectForUndefined {
     static NSString *singleton;
     if (!singleton) singleton = @"bson:undefined";
     return singleton;;

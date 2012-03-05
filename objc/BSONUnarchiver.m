@@ -23,9 +23,7 @@
 - (NSArray *) decodeInternalArray;
 - (NSDictionary *) decodeInternalDictionary;
 - (id) decodeInternalObject;
-+ (void) assertIterator:(BSONIterator *) iterator isValueType:(bson_type) type forSelector:(SEL)selector;
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
-+ (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector;
 @end
 
 @implementation BSONUnarchiver
@@ -40,20 +38,38 @@
     if (self) {
         _iterator = [document iterator];
         self.objectForNull = nil;
-        self.objectForUndefined = nil;
+        self.objectForUndefined = [BSONIterator objectForUndefined];
     }
     return self;
 }
 
-+ (BSONUnarchiver *) unarchiverWithDocument:(BSONDocument *)document {
-    return [[self alloc] initWithDocument:document];
+- (BSONUnarchiver *) initWithData:(NSData *)data {
+    return [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
 }
 
-+ (BSONUnarchiver *) unarchiverWithData:(NSData *)data {
-    return [[self alloc] initWithDocument:[[BSONDocument alloc] initWithData:data]];
++ (NSDictionary *) unarchiveDictionaryWithDocument:(BSONDocument *)document {
+    BSONUnarchiver *unarchiver = [[self alloc] initWithDocument:document];
+    NSDictionary *result = [unarchiver decodeDictionary];
+#if !__has_feature(objc_arc)
+    [unarchiver release];
+#endif
+    return result;
 }
 
-- (void) dealloc { }
++ (NSDictionary *) unarchiveDictionaryWithData:(NSData *)data {
+    BSONUnarchiver *unarchiver = [[self alloc] initWithData:data];
+    NSDictionary *result = [unarchiver decodeDictionary];
+#if !__has_feature(objc_arc)
+    [unarchiver release];
+#endif
+    return result;
+}
+
+- (void) dealloc {
+#if !__has_feature(objc_arc)
+    [_iterator release];
+#endif    
+}
 
 #pragma mark - NSCoder interface
 
@@ -114,12 +130,11 @@
     id obj = [_iterator objectValue];
     if ([NSNull null] == obj)
         return self.objectForNull;
-    else if ([BSONIterator objectForUndefinedValue] == obj)
+    else if ([BSONIterator objectForUndefined] == obj)
         return self.objectForUndefined;
     else
         return obj;
 }
-
 
 - (NSDictionary *)decodeDictionaryForKey:(NSString *)key {
     if (![_iterator containsValueForKey:key]) return nil;
@@ -282,16 +297,6 @@
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
-    return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                   reason:reason
-                                 userInfo:nil];
-}
-
-+ (NSException *) failedWithIteratorType:(bson_type)bsonType selector:(SEL)selector {
-    NSString *reason = [NSString stringWithFormat:@"Can't %@ with type %@",
-                        NSStringFromSelector(selector),
-                        NSStringFromBSONType(bsonType),
-                        nil];
     return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
