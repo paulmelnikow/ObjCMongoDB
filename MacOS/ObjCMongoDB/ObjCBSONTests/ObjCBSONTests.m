@@ -8,6 +8,7 @@
 
 #import "ObjCBSONTests.h"
 #import "BSONArchiver.h"
+#import "BSONUnarchiver.h"
 #import "BSONDocument.h"
 #import "BSONTypes.h"
 
@@ -29,6 +30,13 @@
                                    reason:@"initWithCoder: was called"
                                  userInfo:nil];
 }
+-(BOOL)isEqual:(Person *) obj {
+    if (![obj isKindOfClass:[Person class]]) return NO;
+    return ((!self.name && !obj.name) || [self.name isEqualTo:obj.name])
+    && ((!self.dob && !obj.dob) || [self.dob isEqualTo:obj.dob])
+    && self.numberOfVisits == obj.numberOfVisits
+    && ((!self.children && !obj.children) || [self.children isEqualTo:obj.children]);
+}
 @end
 @interface PersonWithCoding : Person <NSCoding>
 @end
@@ -43,10 +51,20 @@
     [coder encodeInt64:self.numberOfVisits forKey:@"numberOfVisits"];
     [coder encodeArray:self.children forKey:@"children"];
 }
--(id)initWithCoder:(NSCoder *)coder {
-    @throw [NSException exceptionWithName:@"initWithCoder: was called"
-                                   reason:@"initWithCoder: was called"
-                                 userInfo:nil];
+-(id)initWithCoder:(BSONUnarchiver *)coder {
+    if (![coder isKindOfClass:[BSONUnarchiver class]])
+        @throw [NSException exceptionWithName:@"Needs a BSONUnarchiver"
+                                       reason:@"Needs a BSONUnarchiver"
+                                     userInfo:nil];
+    if (self = [super init]) {
+        self.name = [coder decodeStringForKey:@"name"];
+        self.dob = [coder decodeDateForKey:@"dob"];
+        self.numberOfVisits = [coder decodeInt64ForKey:@"numberOfVisits"];
+        self.children = [NSMutableArray array];
+        
+        [[coder decodeArrayForKey:@"children"] mutableCopy];
+    }
+    return self;
 }
 @end
 
@@ -76,7 +94,7 @@
                             [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
                             nil];
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     
     STAssertThrowsSpecificNamed([sample encodeWithCoder:archiver],
                                 NSException,
@@ -86,13 +104,13 @@
     NSDictionary *badSample1 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"this.is.a.bad.key",
                                 nil];
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     STAssertThrowsSpecificNamed([archiver encodeDictionary:badSample1],
                                 NSException,
                                 NSInvalidArgumentException,
                                 @"Exception wasn't raised for invalid MongoDB key containing '.'");
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.restrictsKeyNamesForMongoDB = NO;
     STAssertNoThrowSpecificNamed([archiver encodeDictionary:badSample1],
                                  NSException,
@@ -103,13 +121,13 @@
     NSDictionary *badSample2 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"bad$key",
                                 nil];
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     STAssertThrowsSpecificNamed([archiver encodeDictionary:badSample2],
                                 NSException,
                                 NSInvalidArgumentException,
                                 @"Exception wasn't raised for invalid MongoDB key containing '$'");
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.restrictsKeyNamesForMongoDB = NO;
     STAssertNoThrowSpecificNamed([archiver encodeDictionary:badSample2],
                                  NSException,
@@ -126,10 +144,10 @@
                             [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
                             nil];
     
-    BSONArchiver *archiver1 = [BSONArchiver archiver];
+    BSONArchiver *archiver1 = [[BSONArchiver alloc] init];
     [archiver1 encodeDictionary:sample];
 
-    BSONArchiver *archiver2 = [BSONArchiver archiver];
+    BSONArchiver *archiver2 = [[BSONArchiver alloc] init];
     [archiver2 encodeDictionary:sample];
     
     STAssertEqualObjects([[archiver1 BSONDocument] dataValue],
@@ -155,10 +173,10 @@
                              [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
                              nil];
     
-    BSONArchiver *archiver1 = [BSONArchiver archiver];
+    BSONArchiver *archiver1 = [[BSONArchiver alloc] init];
     [archiver1 encodeDictionary:sample1];
     
-    BSONArchiver *archiver2 = [BSONArchiver archiver];
+    BSONArchiver *archiver2 = [[BSONArchiver alloc] init];
     [archiver2 encodeDictionary:sample2];
         
     STAssertFalse([[archiver1 BSONDocument] isEqualTo:[archiver2 BSONDocument]],
@@ -173,7 +191,7 @@
                              [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
                              nil];
 
-    BSONArchiver *archiver = [BSONArchiver archiver];
+    BSONArchiver *archiver = [[BSONArchiver alloc] init];
     [archiver encodeDictionary:sample1];
     [archiver BSONDocument];
     STAssertThrowsSpecificNamed([archiver encodeBool:NO forKey:@"testKey"],
@@ -183,7 +201,7 @@
 }
 
 - (void) testEncodeNilKeys {
-    BSONArchiver *archiver = [BSONArchiver archiver];
+    BSONArchiver *archiver = [[BSONArchiver alloc] init];
     NSString *reason = @"Nil key should throw an exception";
     STAssertThrows([archiver encodeObject:@"test" forKey:nil], reason);
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"asdf", @"asdf", nil];
@@ -217,7 +235,7 @@
 }
 
 - (void) testEncodeNilValues {
-    BSONArchiver *archiver = [BSONArchiver archiver];
+    BSONArchiver *archiver = [[BSONArchiver alloc] init];
     
     NSString *reason = nil;
     
@@ -249,7 +267,7 @@
                          [[BSONDocument alloc] init],
                          @"With default behavior, encoding nil values should result in an empty document");
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     
     reason = @"Zero value on primitive types should not throw an exception";
     STAssertNoThrow([archiver encodeInt:0 forKey:@"testKey"], reason);
@@ -260,7 +278,7 @@
     STAssertFalse([[archiver BSONDocument] isEqualTo:[[BSONDocument alloc] init]],
                          @"With default behavior, encoding zero-value primitives should fill up the document");
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONRaiseExceptionOnNil;
     
     reason = @"Half-nil values should throw an exception";
@@ -297,7 +315,7 @@
     STAssertNoThrow([archiver encodeDouble:0 forKey:@"testKey"], reason);
     STAssertNoThrow([archiver encodeBool:NO forKey:@"testKey"], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     
     // FIXME test encoding of nil as null
@@ -306,87 +324,87 @@
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     STAssertThrows([archiver encodeDictionary:nil forKey:@"testKey"], @"Encoding finished");
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeDictionary:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeArray:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
 
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeBSONDocument:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeObjectID:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeNumber:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeString:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeSymbol:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeDate:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeImage:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeRegularExpressionPattern:nil options:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeRegularExpression:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeCode:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeCodeString:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeCodeWithScope:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeCodeString:nil withScope:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeData:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     archiver.behaviorOnNil = BSONEncodeNullOnNil;
     [archiver encodeTimestamp:nil forKey:@"testKey"];
     STAssertEquals([archiver.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
@@ -394,6 +412,7 @@
 
 - (void) testEncodeCustomObjectWithRecursiveChildren {
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    df.lenient = YES;
     BSONArchiver *archiver = nil;
         
     Person *lucy = [[Person alloc] init];
@@ -402,7 +421,7 @@
     lucy.numberOfVisits = 75;
     lucy.children = [NSMutableArray array];
     
-    archiver = [BSONArchiver archiver];
+    archiver = [[BSONArchiver alloc] init];
     STAssertThrows([archiver encodeObject:lucy],
                    @"Should have called our bogus encodeWithCoder: and raised an exception, but didn't");
 
@@ -419,9 +438,15 @@
     
     [lucy.children addObject:littleRicky];
     
-    archiver = [BSONArchiver archiver];
-    STAssertThrows([archiver encodeObject:lucy],
+    archiver = [[BSONArchiver alloc] init];
+    STAssertNoThrow([archiver encodeObject:lucy],
                    @"Should have called our functional encodeWithCoder:, no exception");
+    
+    BSONUnarchiver *unarchiver = nil;
+    unarchiver = [[BSONUnarchiver alloc] initWithDocument:archiver.BSONDocument];
+    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:unarchiver];
+    
+    STAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
     
     
 }

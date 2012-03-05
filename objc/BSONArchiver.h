@@ -49,7 +49,7 @@ typedef enum {
     BSONDocument *_resultDocument;
 }
 
-+ (BSONArchiver *) archiver;
+- (BSONArchiver *) init;
 - (BSONDocument *) BSONDocument;
 
 - (void) encodeObject:(id) obj;

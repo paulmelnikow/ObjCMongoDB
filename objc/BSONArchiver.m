@@ -137,7 +137,7 @@
 
 #pragma mark - Encoding internal collections
 
-- (void) startInternalObjectForKey:(NSString *) key {
+- (void) startInternalObjectForKey:(NSString *) key asArray:(BOOL)asArray {
     BSONAssertKeyNonNil(key);
     if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
     
@@ -145,7 +145,10 @@
     record.pathComponent = key;
     record.bb = _bb;
     [_stack addObject:record];
-    _bb = bson_append_start_object(_bb, BSONStringFromNSString(key));    
+    if (asArray)
+        _bb = bson_append_start_array(_bb, BSONStringFromNSString(key));
+    else
+        _bb = bson_append_start_object(_bb, BSONStringFromNSString(key));    
 }
 
 - (void) finishInternalObject {
@@ -174,7 +177,7 @@
 - (void) encodeInternalObject:(id) obj forKey:(NSString *) key {
     if ([self encodingHelper:obj key:key]) return;
     
-    [self startInternalObjectForKey:key];
+    [self startInternalObjectForKey:key asArray:NO];
     [self encodeObject:obj];
     [self finishInternalObject];
 }
@@ -188,7 +191,7 @@
 - (void) encodeArray:(NSArray *) array forKey:(NSString *) key {
     if ([self encodingHelper:array key:key]) return;
     
-    [self startInternalObjectForKey:key];
+    [self startInternalObjectForKey:key asArray:YES];
     for (NSUInteger i = 0; i < array.count; ++i)
         [self encodeObject:[array objectAtIndex:i]
                     forKey:[[NSNumber numberWithInteger:i] stringValue]];
@@ -204,7 +207,7 @@
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key {
     if ([self encodingHelper:dictionary key:key]) return;
 
-    [self startInternalObjectForKey:key];
+    [self startInternalObjectForKey:key asArray:NO];
     [self encodeDictionary:dictionary];
     [self finishInternalObject];    
 }
