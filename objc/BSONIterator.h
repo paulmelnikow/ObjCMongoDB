@@ -49,9 +49,10 @@
 @interface BSONIterator : NSObject {
 @private
     bson_iterator *_iter;
-    BSONDocument *_document;
+    id _parent;
     bson *_b;
     bson_type _type;
+    NSArray *_keyPathComponents;
 }
 
 /**
@@ -91,6 +92,8 @@
  @return An autoreleased string with the key for the current item
  */
 - (NSString *) key;
+
+- (NSArray *) keyPathComponents;
 
 /**
  Returns the BSON value type of the current item.
@@ -140,10 +143,22 @@
 - (id) objectForKey:(NSString *)key;
 
 /**
- Returns a sub-iterator for the current item, whose native type must be <code>bson_array</code> or <code>bson_object</code>.
+ Returns a sub-iterator for the current item, supporting sequential access only. The current item's native type
+ must be <code>bson_array</code> or <code>bson_object</code>.
+ 
+ For keyed access to a <code>bson_object</code> use <code>-keyedSubIteratorValue</code> instead.
  @return A sub-iterator for the current item
  */
-- (BSONIterator *) subIteratorValue;
+- (BSONIterator *) sequentialSubIteratorValue;
+
+/**
+ Returns an iterator initialized to the embedded document. The current item's native type must be
+ <code>bson_object</code>.
+ 
+ For sequential access to keys you can use <code>-sequentialSubIteratorValue</code> instead which is slightly
+ more efficient.
+ */
+- (BSONIterator *) embeddedDocumentIteratorValue;
 
 /**
  Returns an embedded document for the current item, whose native type must be <code>bson_object</code>.

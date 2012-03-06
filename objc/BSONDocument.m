@@ -21,15 +21,23 @@
 
 @implementation BSONDocument
 
--(BSONDocument *)init {
-    self = [super init];
-    if (self) {
+- (BSONDocument *)init {
+    return [self initWithParentOrNil:nil];
+}
+
+- (BSONDocument *)initWithParentOrNil:(id) parent {
+    if (self = [super init]) {
         bson_empty(&_bson);
+#if __has_feature(objc_arc)
+        _source = parent;
+#else
+        _source = [parent retain];
+#endif
     }
     return self;
 }
 
-- (BSONDocument *) initWithData:(NSData *)data {
+- (BSONDocument *) initWithData:(NSData *) data {
     if (!data) return [self init];
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
@@ -81,7 +89,7 @@
 }
 
 - (BSONIterator *) iterator {
-    return [[BSONIterator alloc] initWithDocument:self];
+    return [[BSONIterator alloc] initWithDocument:self keyPathComponentsOrNil:nil];
 }
 
 - (BOOL) isEqual:(id)object {

@@ -18,14 +18,21 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "bson.h"
+
+//typedef enum {
+//    BSONReturnNSNullForNull
+//    BSONReturnNilForNull
+//    BSONRaiseExceptionOnNull
+//} BSONUnarchiverBehaviorOnNull;
 
 @class BSONIterator;
 @class BSONDocument;
 @class BSONObjectID;
 
 @interface BSONUnarchiver : NSCoder {
+    @private
     BSONIterator *_iterator;
+    NSMutableArray *_stack;
 }
 
 - (BSONUnarchiver *) initWithDocument:(BSONDocument *) document;
@@ -36,8 +43,10 @@
 
 - (NSDictionary *) decodeDictionary;
 
-- (NSDictionary *)decodeDictionaryForKey:(NSString *) key;
-- (NSArray *)decodeArrayForKey:(NSString *) key;
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key;
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForUnarchiver;
+- (NSArray *) decodeArrayForKey:(NSString *) key;
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForUnarchiver;
 - (id) decodeObjectForKey:(NSString *) key;
 
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
@@ -52,9 +61,8 @@
 - (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *)key;
 - (BSONDocument *) decodeBSONDocumentForKey:(NSString *)key;
 - (NSData *)decodeDataForKey:(NSString *)key;
-- (id) decodeCodeForKey:(NSString *)key;
-- (id) decodeCodeWithScopeForKey:(NSString *)key;
-
+- (BSONCode *) decodeCodeForKey:(NSString *)key;
+- (BSONCodeWithScope *) decodeCodeWithScopeForKey:(NSString *)key;
 
 @property (strong) id objectForNull;
 @property (strong) id objectForUndefined;

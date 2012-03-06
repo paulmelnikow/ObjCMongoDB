@@ -42,7 +42,15 @@
 /**
  Initializes an empty BSON document.
  */
--(BSONDocument *)init;
+- (BSONDocument *)init;
+
+/**
+ Initializes an empty BSON document which retains parent until deallocation.
+ 
+ Used internally to initialize embedded BSON documents, which depend on the root BSONDocument
+ for their data storage.
+ */
+- (BSONDocument *)initWithParentOrNil:(id) parent;
 
 /**
  Initializes a BSON document.

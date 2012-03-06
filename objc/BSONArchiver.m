@@ -62,7 +62,7 @@
 
 - (void) dealloc {
     free(_bb);
-#if __has_feature(objc_arc)
+#if !__has_feature(objc_arc)
     [_resultDocument release];
 #endif
 }
@@ -410,16 +410,18 @@
 + (void) unsupportedUnkeyedCodingSelector:(SEL) selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed encoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
-    @throw [NSException exceptionWithName:NSInvalidArchiveOperationException
+    id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
                                    reason:reason
                                  userInfo:nil];
+    @throw exc;
 }
 
 - (void) encodingHelper {
     if (!_bb) {
-        @throw [NSException exceptionWithName:NSInvalidArchiveOperationException
+        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
                                        reason:@"Can't continue to encode after finishEncoding called"
-                                     userInfo:nil];
+                                                      userInfo:nil];
+        @throw exc;
     }
 }
 

@@ -21,14 +21,16 @@
 @implementation Person
 @synthesize name, dob, numberOfVisits, children;
 -(void)encodeWithCoder:(NSCoder *)coder {
-    @throw [NSException exceptionWithName:@"encodeWithCoder: was called"
+    id exc = [NSException exceptionWithName:@"encodeWithCoder: was called"
                                    reason:@"encodeWithCoder: was called"
                                  userInfo:nil];
+    @throw exc;
 }
 -(id)initWithCoder:(NSCoder *)coder {
-    @throw [NSException exceptionWithName:@"initWithCoder: was called"
+    id exc = [NSException exceptionWithName:@"initWithCoder: was called"
                                    reason:@"initWithCoder: was called"
                                  userInfo:nil];
+    @throw exc;
 }
 -(BOOL)isEqual:(Person *) obj {
     if (![obj isKindOfClass:[Person class]]) return NO;
@@ -42,27 +44,31 @@
 @end
 @implementation PersonWithCoding
 -(void)encodeWithCoder:(BSONArchiver *)coder {
-    if (![coder isKindOfClass:[BSONArchiver class]])
-        @throw [NSException exceptionWithName:@"Needs a BSONArchiver"
+    if (![coder isKindOfClass:[BSONArchiver class]]) {
+        id exc = [NSException exceptionWithName:@"Needs a BSONArchiver"
                                        reason:@"Needs a BSONArchiver"
                                      userInfo:nil];
+        @throw exc;
+    }
     [coder encodeString:self.name forKey:@"name"];
     [coder encodeDate:self.dob forKey:@"dob"];
     [coder encodeInt64:self.numberOfVisits forKey:@"numberOfVisits"];
     [coder encodeArray:self.children forKey:@"children"];
 }
 -(id)initWithCoder:(BSONUnarchiver *)coder {
-    if (![coder isKindOfClass:[BSONUnarchiver class]])
-        @throw [NSException exceptionWithName:@"Needs a BSONUnarchiver"
+    if (![coder isKindOfClass:[BSONUnarchiver class]]) {
+        id exc = [NSException exceptionWithName:@"Needs a BSONUnarchiver"
                                        reason:@"Needs a BSONUnarchiver"
                                      userInfo:nil];
+        @throw exc;
+    }
     if (self = [super init]) {
         self.name = [coder decodeStringForKey:@"name"];
         self.dob = [coder decodeDateForKey:@"dob"];
         self.numberOfVisits = [coder decodeInt64ForKey:@"numberOfVisits"];
-        self.children = [NSMutableArray array];
-        
-        [[coder decodeArrayForKey:@"children"] mutableCopy];
+//        self.children = [[coder decodeArrayForKey:@"children"] mutableCopy];
+        self.children = [[coder decodeArrayForKey:@"children"
+                                        withClass:[PersonWithCoding class]] mutableCopy];
     }
     return self;
 }
@@ -194,6 +200,7 @@
     BSONArchiver *archiver = [[BSONArchiver alloc] init];
     [archiver encodeDictionary:sample1];
     [archiver BSONDocument];
+    NSLog(@"hey");
     STAssertThrowsSpecificNamed([archiver encodeBool:NO forKey:@"testKey"],
                                 NSException,
                                 NSInvalidArchiveOperationException,
@@ -413,11 +420,14 @@
 - (void) testEncodeCustomObjectWithRecursiveChildren {
     NSDateFormatter *df = [[NSDateFormatter alloc] init];
     df.lenient = YES;
+    [df setLenient:YES];
+    [df setTimeStyle:NSDateFormatterNoStyle];
+    [df setDateStyle:NSDateFormatterShortStyle];
     BSONArchiver *archiver = nil;
         
     Person *lucy = [[Person alloc] init];
     lucy.name = @"Lucy Ricardo";
-    lucy.dob = [df dateFromString:@"1920-01-01"];
+    lucy.dob = [df dateFromString:@"Jan 1, 1920"];
     lucy.numberOfVisits = 75;
     lucy.children = [NSMutableArray array];
     
@@ -433,7 +443,7 @@
 
     PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
     littleRicky.name = @"Ricky Ricardo, Jr.";
-    littleRicky.dob = [df dateFromString:@"1953-01-19"];
+    littleRicky.dob = [df dateFromString:@"Jan 19, 1953"];
     littleRicky.numberOfVisits = 15;
     
     [lucy.children addObject:littleRicky];
@@ -447,8 +457,6 @@
     PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:unarchiver];
     
     STAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
-    
-    
 }
 
 

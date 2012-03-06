@@ -20,18 +20,22 @@
 #import "BSONIterator.h"
 
 @interface BSONIterator (Private)
+- (void) assertSupportsKeyedSearching;
 @end
 
 @implementation BSONIterator
 
 #pragma mark - Initialization
 
-- (BSONIterator *) initWithDocument:(BSONDocument *)document {
+- (BSONIterator *) initWithDocument:(BSONDocument *)document
+             keyPathComponentsOrNil:(NSArray *) keyPathComponents {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
-        _document = document;
+        _parent = document;
+        _keyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
 #else
-        _document = [document retain];
+        _parent = [document retain];
+        _keyPathComponents = keyPathComponents ? [keyPathComponents retain] : [[NSArray array] retain];
 #endif
         _b = [document bsonValue];
         _iter = malloc(sizeof(bson_iterator));
@@ -45,14 +49,16 @@
  Called internally when creating subiterators
  Takes ownership of the bson_iterator it's passed
  */
-- (BSONIterator *) initAsSubIteratorWithDocument:(BSONDocument *)document
-                                       iterator:(BSONIterator *)iterator
-                                newBsonIterator:(bson_iterator *)bsonIter {
+- (BSONIterator *) initWithNativeIterator:(bson_iterator *) bsonIter
+                                  parent:(id) parent
+                        keyPathComponents:(NSArray *) keyPathComponents {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
-        _document = document;
+        _parent = parent;
+        _keyPathComponents = keyPathComponents;
 #else
-        _document = [document retain];
+        _parent = [parent retain];
+        _keyPathComponents = [keyPathComponents retain];
 #endif
         _iter = bsonIter;
         _type = bson_iterator_type(_iter);
@@ -62,21 +68,22 @@
 }
 
 - (void) dealloc {
-    NSLog(@"bsoniterator dealloc");
     free(_iter);
 #if !__has_feature(objc_arc)
-    [_document release];
+    [_parent release];
 #endif
 }
 
 #pragma mark - Searching
 
 - (bson_type) nativeValueTypeForKey:(NSString *) key {
+    [self assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
     return _type = bson_find(_iter, _b, BSONStringFromNSString(key));
 }
 
 - (BOOL) containsValueForKey:(NSString *) key {
+    [self assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
     return bson_eoo != [self nativeValueTypeForKey:key];
 }
@@ -112,27 +119,34 @@
 - (BOOL) isArray { return bson_array == _type; }
 
 - (NSString *) key { return NSStringFromBSONString(bson_iterator_key(_iter)); }
+- (NSArray *) keyPathComponents {
+#if __has_feature(objc_arc)
+    return [_keyPathComponents arrayByAddingObject:self.key];
+#else
+    return [[_keyPathComponents arrayByAddingObject:[self.key retain]] autorelease];
+#endif
+}
 
 //not implemeneted
 //const char * bson_iterator_value( const bson_iterator * i );
 
 #pragma mark - Values for collections
 
-- (BSONIterator *) subIteratorValue {
+- (BSONIterator *) sequentialSubIteratorValue {
     bson_iterator *subIter = malloc(sizeof(bson_iterator));
     bson_iterator_subiterator(_iter, subIter);
-    BSONIterator *iterator = [[BSONIterator alloc] initAsSubIteratorWithDocument:_document
-                                                      iterator:self
-                                               newBsonIterator:subIter];
+    BSONIterator *iterator = [[BSONIterator alloc] initWithNativeIterator:subIter
+                                                                   parent:_parent
+                                                        keyPathComponents:self.keyPathComponents];
 #if __has_feature(objc_arc)
     return iterator;
 #else
     return [iterator autorelease];
-#endif    
+#endif
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    BSONDocument *document = [[BSONDocument alloc] init];
+    BSONDocument *document = [[BSONDocument alloc] initWithParentOrNil:document];
     bson_iterator_subobject(_iter, [document bsonValue]);
 #if __has_feature(objc_arc)
     return document;
@@ -141,9 +155,19 @@
 #endif
 }
 
+- (BSONIterator *) embeddedDocumentIteratorValue {
+    BSONIterator *iterator = [[BSONIterator alloc] initWithDocument:self.embeddedDocumentValue
+                                             keyPathComponentsOrNil:self.keyPathComponents];
+#if __has_feature(objc_arc)
+    return iterator;
+#else
+    return [iterator autorelease];
+#endif
+}
+
 - (NSArray *) arrayValue {
     NSMutableArray *array = [NSMutableArray array];
-    BSONIterator *subIterator = [self subIteratorValue];
+    BSONIterator *subIterator = [self sequentialSubIteratorValue];
     while ([subIterator next]) [array addObject:[subIterator objectValue]];
     return [NSArray arrayWithArray:array];
 }
@@ -159,7 +183,7 @@
         case bson_object:
             return [self embeddedDocumentValue];
         case bson_array:
-            return [self subIteratorValue];
+            return [self sequentialSubIteratorValue];
         case bson_bindata:
             return [self dataValue];
         case bson_undefined:
@@ -262,7 +286,40 @@
 + (id) objectForUndefined {
     static NSString *singleton;
     if (!singleton) singleton = @"bson:undefined";
-    return singleton;;
+    return singleton;
+}
+
+- (void) assertSupportsKeyedSearching {
+    if (!_b) {
+        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                         reason:@"Can't perform keyed searching on a sequential iterator; use -embeddedDocumentIterator instead"
+                                       userInfo:nil];
+        @throw exc;
+    }
+}
+
++ (NSException *) assert:(SEL)selector {
+    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
+                        NSStringFromSelector(selector)];
+    return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                   reason:reason
+                                 userInfo:nil];
+}
+
+#pragma mark - Debugging
+
+- (NSString *) description {
+//    id objectValue = [self objectValue];
+//    NSString *objectDescription = [NSString stringWithFormat:[objectValue class]
+//    [[self objectValue] description];
+    NSMutableString *string = [NSMutableString stringWithFormat:@"<%@: %p>", [[self class] description], self];
+    [string appendFormat:@"\n    keyPathComponents:"];
+    for (NSString *keyPath in [self keyPathComponents])
+        [string appendFormat:@"\n        %@", keyPath];
+    [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self nativeValueType])];
+    [string appendString:@"\n"];
+    NSLog(@"returning %p", string);
+    return string;
 }
 
 @end

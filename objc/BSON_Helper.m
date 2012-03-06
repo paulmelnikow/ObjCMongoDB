@@ -33,9 +33,10 @@ const char * BSONStringFromNSString (NSString * key) {
 
 void BSONAssertKeyNonNil(NSString *key) {
     if (key) return;
-    @throw [NSException exceptionWithName:NSInvalidArgumentException
+    id exc = [NSException exceptionWithName:NSInvalidArgumentException
                                    reason:@"Key must not be nil"
                                  userInfo:nil];
+    @throw exc;
 }
 
 void BSONAssertKeyLegalForMongoDB(NSString *key) {
@@ -56,16 +57,18 @@ void BSONAssertKeyLegalForMongoDB(NSString *key) {
     NSString *reason = [NSString stringWithFormat:@"Invalid key %@ - MongoDB keys may not contain the following characters: %@",
                         key,
                         singletonString];
-    @throw [[NSException exceptionWithName:NSInvalidArgumentException
-                                   reason:reason
-                                 userInfo:nil] retain];    
+    id exc = [NSException exceptionWithName:NSInvalidArgumentException
+                                    reason:reason
+                                  userInfo:nil];
+    @throw exc;
 }
 
 void BSONAssertValueNonNil(id value) {
     if (value) return;
-    @throw [NSException exceptionWithName:NSInvalidArgumentException
+    id exc = [NSException exceptionWithName:NSInvalidArgumentException
                                    reason:@"Value must not be nil"
                                  userInfo:nil];
+    @throw exc;
 }
 
 void BSONAssertIteratorIsValueType(BSONIterator * iterator, bson_type valueType) {
@@ -74,9 +77,10 @@ void BSONAssertIteratorIsValueType(BSONIterator * iterator, bson_type valueType)
                         NSStringFromBSONType(valueType),
                         NSStringFromBSONType(iterator.nativeValueType),
                         nil];
-    @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
+    @throw exc;
 }
 
 void BSONAssertIteratorIsInValueTypeArray(BSONIterator * iterator, bson_type * valueType) {
@@ -91,9 +95,10 @@ void BSONAssertIteratorIsInValueTypeArray(BSONIterator * iterator, bson_type * v
                         allowedTypes,
                         NSStringFromBSONType(iterator.nativeValueType),
                         nil];
-    @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
+    @throw exc;
 }
 
 
