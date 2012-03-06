@@ -21,7 +21,7 @@
 #import "BSONIterator.h"
 #import "bson.h"
 
-@class BSONArchiver;
+@class BSONEncoder;
 
 /**
  Encapsulates an immutable BSON document, as a wrapper around a <code>bson</code>
@@ -60,17 +60,17 @@
  @param data An instance of <code>NSData</code> with the binary data for the new
  document.
  */
--(BSONDocument *)initWithData:(NSData *)data;
+-(BSONDocument *)initWithData:(NSData *) data;
 
 /**
- Initializes a BSON document by ending encoding and taking ownership of an archiver's
+ Initializes a BSON document by ending encoding and taking ownership of a BSON encoder's
  buffer after encoding is finished.
  
  There's usually no need to invoke this directly. Instead, call the
- <code>BSONDocument<code> method on the <code>BSONArchiver</code>.
- @param archiver An archiver which has finished encoding a BSON document
+ <code>BSONDocument<code> method on the <code>BSONEncoder</code>.
+ @param encoder A BSON encoder which has finished encoding a BSON document
  */
-- (BSONDocument *) initWithArchiver:(BSONArchiver *)archiver;
+- (BSONDocument *) initWithEncoder:(BSONEncoder *) encoder;
 
 /**
  Initializes a BSON document by taking ownership of an existing BSON buffer. This allows
@@ -78,7 +78,7 @@
  but there's usually no need to do this directly.
  @param bb A pointer to a <code>bson_buffer</code> structure.
  */
-- (BSONDocument *) initWithNativeBuffer:(bson_buffer *)bb;
+- (BSONDocument *) initWithNativeBuffer:(bson_buffer *) bb;
 
 /**
  Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make

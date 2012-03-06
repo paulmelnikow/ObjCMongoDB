@@ -36,7 +36,7 @@
  the type-specific accessors like <code>-intValue</code> or <code>-stringValue</code>. To query the
  item's native type, call <code>-nativeValueType</code>, and to get its key, call <code>-key</code>.
  
- In most cases, you won't need to use <code>BSONIterator</code> directly. <code>BSONUnarchiver</code>
+ In most cases, you won't need to use <code>BSONIterator</code> directly. <code>BSONDecoder</code>
  provides a higher-level interface for creating an object graph from a BSON document, suitable for
  handling BSON-supported types, arrays and dictionaries, and custom objects which conform to
  <code>NSCoding</code> and support keyed archiving. In more complex cases, you can use delegation and

@@ -1,5 +1,5 @@
 //
-//  BSONUnarchiver.m
+//  BSONDecoder.m
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
@@ -17,13 +17,13 @@
 //  limitations under the License.
 //
 
-#import "BSONUnarchiver.h"
+#import "BSONDecoder.h"
 #import "bson.h"
 
-@interface BSONUnarchiver (Private)
-- (NSDictionary *) decodeInternalDictionaryWithClassOrNil:(Class) classForUnarchiver;
-- (NSArray *) decodeInternalArrayWithClassOrNil:(Class) classForUnarchiver;
-- (id) decodeInternalObjectWithClassOrNil:(Class) classForUnarchiver;
+@interface BSONDecoder (Private)
+- (NSDictionary *) decodeInternalDictionaryWithClassOrNil:(Class) classForDecoder;
+- (NSArray *) decodeInternalArrayWithClassOrNil:(Class) classForDecoder;
+- (id) decodeInternalObjectWithClassOrNil:(Class) classForDecoder;
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
 - (BOOL) decodingHelper:(id*) result;
 - (BOOL) decodingHelperForKey:(NSString *) key result:(id*) result;
@@ -31,14 +31,13 @@
 - (BOOL) decodingHelperForKey:(NSString *) key nativeValueTypeArray:(bson_type*) nativeValueTypeArray result:(id*) result;
 @end
 
-@implementation BSONUnarchiver
+@implementation BSONDecoder
 
-@synthesize objectForNull;
-@synthesize objectForUndefined;
+@synthesize behaviorOnNull, behaviorOnUndefined;
 
 #pragma mark - Initialization
 
-- (BSONUnarchiver *) initWithDocument:(BSONDocument *)document {
+- (BSONDecoder *) initWithDocument:(BSONDocument *)document {
     self = [super init];
     if (self) {
         _iterator = [document iterator];
@@ -47,30 +46,28 @@
 #else
         _stack = [[NSMutableArray array] retain];
 #endif
-        self.objectForNull = nil;
-        self.objectForUndefined = [BSONIterator objectForUndefined];
     }
     return self;
 }
 
-- (BSONUnarchiver *) initWithData:(NSData *)data {
+- (BSONDecoder *) initWithData:(NSData *)data {
     return [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
 }
 
-+ (NSDictionary *) unarchiveDictionaryWithDocument:(BSONDocument *)document {
-    BSONUnarchiver *unarchiver = [[self alloc] initWithDocument:document];
-    NSDictionary *result = [unarchiver decodeDictionary];
++ (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *)document {
+    BSONDecoder *decoder = [[self alloc] initWithDocument:document];
+    NSDictionary *result = [decoder decodeDictionary];
 #if !__has_feature(objc_arc)
-    [unarchiver release];
+    [decoder release];
 #endif
     return result;
 }
 
-+ (NSDictionary *) unarchiveDictionaryWithData:(NSData *)data {
-    BSONUnarchiver *unarchiver = [[self alloc] initWithData:data];
-    NSDictionary *result = [unarchiver decodeDictionary];
++ (NSDictionary *) decodeDictionaryWithData:(NSData *)data {
+    BSONDecoder *decoder = [[self alloc] initWithData:data];
+    NSDictionary *result = [decoder decodeDictionary];
 #if !__has_feature(objc_arc)
-    [unarchiver release];
+    [decoder release];
 #endif
     return result;
 }
@@ -87,8 +84,8 @@
 
 #pragma mark - Decoding collections
 
-- (NSDictionary *) decodeDictionaryWithClass:(Class) classForUnarchiver {
-    return [self decodeInternalDictionaryWithClassOrNil:classForUnarchiver];
+- (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder {
+    return [self decodeInternalDictionaryWithClassOrNil:classForDecoder];
 }
 
 - (NSDictionary *) decodeDictionary {
@@ -97,7 +94,7 @@
 
 #pragma mark - Internal methods for decoding objects and collections
 
-- (void) enterInternalObjectAsArray:(BOOL) asArray { 
+- (void) exposeObjectAsArray:(BOOL) asArray { 
     [_stack addObject:_iterator];
     if (asArray)
         _iterator = [_iterator sequentialSubIteratorValue];
@@ -105,7 +102,7 @@
         _iterator = [_iterator embeddedDocumentIteratorValue];
 }
 
-- (void) leaveInternalObject {
+- (void) closeInternalObject {
     if (![_stack count]) {
         id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                          reason:@"-leaveInternalObject called too many times (without matching call to -enterInternalObjectAsArray:)"
@@ -116,38 +113,38 @@
     [_stack removeLastObject];
 }
 
-- (NSDictionary *) decodeInternalDictionaryWithClassOrNil:(Class) classForUnarchiver {
+- (NSDictionary *) decodeInternalDictionaryWithClassOrNil:(Class) classForDecoder {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
     while ([_iterator next])
-        [dictionary setObject:[self decodeInternalObjectWithClassOrNil:classForUnarchiver]
+        [dictionary setObject:[self decodeInternalObjectWithClassOrNil:classForDecoder]
                        forKey:[_iterator key]];
     return [NSDictionary dictionaryWithDictionary:dictionary];
 }
 
-- (NSArray *) decodeInternalArrayWithClassOrNil:(Class) classForUnarchiver {
+- (NSArray *) decodeInternalArrayWithClassOrNil:(Class) classForDecoder {
     NSMutableArray *array = [NSMutableArray array];
     while ([_iterator next])
-        [array addObject:[self decodeInternalObjectWithClassOrNil:classForUnarchiver]];
+        [array addObject:[self decodeInternalObjectWithClassOrNil:classForDecoder]];
     return [NSArray arrayWithArray:array];
 }
 
-- (id) decodeInternalObjectWithClassOrNil:(Class) classForUnarchiver {
+- (id) decodeInternalObjectWithClassOrNil:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelper:&result]) return result;
     
     if ([_iterator isArray]) {
-        [self enterInternalObjectAsArray:YES];
+        [self exposeObjectAsArray:YES];
         result = [self decodeInternalArrayWithClassOrNil:nil];
-        [self leaveInternalObject];
+        [self closeInternalObject];
         
     } else if ([_iterator isEmbeddedDocument]) {
-        [self enterInternalObjectAsArray:NO];
-        if (classForUnarchiver) {
-            result = [[classForUnarchiver alloc] initWithCoder:self];
+        [self exposeObjectAsArray:NO];
+        if (classForDecoder) {
+            result = [[classForDecoder alloc] initWithCoder:self];
         } else {
             result = [self decodeInternalDictionaryWithClassOrNil:nil];
         }
-        [self leaveInternalObject];
+        [self closeInternalObject];
         
     } else {
         result = [_iterator objectValue];
@@ -160,13 +157,13 @@
     return [self decodeDictionaryForKey:key withClass:nil];
 }
 
-- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForUnarchiver {
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_object result:&result]) return result;
     
-    [self enterInternalObjectAsArray:NO];
-    result = [self decodeInternalDictionaryWithClassOrNil:classForUnarchiver];
-    [self leaveInternalObject];
+    [self exposeObjectAsArray:NO];
+    result = [self decodeInternalDictionaryWithClassOrNil:classForDecoder];
+    [self closeInternalObject];
     return result;
 }
 
@@ -174,13 +171,13 @@
     return [self decodeArrayForKey:key withClass:nil];
 }
 
-- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForUnarchiver {
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_array result:&result]) return result;
 
-    [self enterInternalObjectAsArray:YES];
-    result = [self decodeInternalArrayWithClassOrNil:classForUnarchiver];
-    [self leaveInternalObject];
+    [self exposeObjectAsArray:YES];
+    result = [self decodeInternalArrayWithClassOrNil:classForDecoder];
+    [self closeInternalObject];
     return result;
 }
 
@@ -309,22 +306,45 @@
 #pragma mark - Unsupported unkeyed encoding methods
 
 - (void) decodeValueOfObjCType:(const char *)type at:(void *)data {
-    id exc = [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
+    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
     @throw exc;
 }
 - (NSData *) decodeDataObject {
-    id exc = [BSONUnarchiver unsupportedUnkeyedCodingSelector:_cmd];
+    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
     @throw exc;
 }
 
 #pragma mark - Helper methods
 
++ (id) objectForUndefined {
+    return [BSONIterator objectForUndefined];
+}
+
 - (BOOL) decodingHelper:(id*) result {
     if (bson_null == [_iterator nativeValueType]) {
-        *result = self.objectForNull; return YES;
-    }    
-    if (bson_undefined == [_iterator nativeValueType]) {
-        *result = self.objectForUndefined; return YES;
+        switch(self.behaviorOnNull) {
+            case BSONReturnNSNull:
+                *result = [NSNull null]; return YES;
+            case BSONReturnNilForNull:
+                *result = nil; return YES;
+            case BSONRaiseExceptionOnNull:
+                @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                               reason:@"Tried to decode null value with BSONRaiseExceptionOnNull set"
+                                             userInfo:nil];
+        }
+    } else if (bson_undefined == [_iterator nativeValueType]) {
+        switch(self.behaviorOnUndefined) {
+            case BSONReturnBSONUndefined:
+                *result = [BSONDecoder objectForUndefined]; return YES;
+            case BSONReturnNSNullForUndefined:
+                *result = [NSNull null]; return YES;
+            case BSONReturnNilForUndefined:
+                *result = nil; return YES;
+            case BSONRaiseExceptionOnUndefined:
+                @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                               reason:@"Tried to decode undefined value with BSONRaiseExceptionOnUndefined set"
+                                             userInfo:nil];
+        }
     }
     return NO;
 }
@@ -348,8 +368,6 @@
     BSONAssertIteratorIsInValueTypeArray(_iterator, nativeValueTypeArray);
     return NO;
 }
-
-
 
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",

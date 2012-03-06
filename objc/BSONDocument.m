@@ -52,11 +52,11 @@
     return self;
 }
 
-- (BSONDocument *) initWithArchiver:(BSONArchiver *)archiver {
-    return [self initWithNativeBuffer:[archiver bsonBufferValue]];
+- (BSONDocument *) initWithEncoder:(BSONEncoder *) encoder {
+    return [self initWithNativeBuffer:[encoder bsonBufferValue]];
 }
 
-- (BSONDocument *) initWithNativeBuffer:(bson_buffer *)bb {
+- (BSONDocument *) initWithNativeBuffer:(bson_buffer *) bb {
     if (!bb) {
 #if !__has_feature(objc_arc)
         [self release];

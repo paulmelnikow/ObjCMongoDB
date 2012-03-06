@@ -20,9 +20,9 @@
 #import "bson.h"
 
 #import "BSONDocument.h"
-#import "BSONArchiver.h"
+#import "BSONEncoder.h"
 #import "BSONTypes.h"
-#import "BSONUnarchiver.h"
+#import "BSONDecoder.h"
 #import "BSONIterator.h"
 #import "BSON_Helper.h"
 
@@ -30,7 +30,7 @@
 -(bson *)bsonValue;
 @end
 
-@interface BSONArchiver (Project)
+@interface BSONEncoder (Project)
 -(bson_buffer *)bsonBufferValue;
 @end
 

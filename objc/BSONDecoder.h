@@ -1,5 +1,5 @@
 //
-//  BSONUnarchiver.h
+//  BSONDecoder.h
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
@@ -19,34 +19,41 @@
 
 #import <Foundation/Foundation.h>
 
-//typedef enum {
-//    BSONReturnNSNullForNull
-//    BSONReturnNilForNull
-//    BSONRaiseExceptionOnNull
-//} BSONUnarchiverBehaviorOnNull;
+typedef enum {
+    BSONReturnNSNull,
+    BSONReturnNilForNull,
+    BSONRaiseExceptionOnNull
+} BSONDecoderBehaviorOnNull;
+
+typedef enum {
+    BSONReturnBSONUndefined,
+    BSONReturnNSNullForUndefined,
+    BSONReturnNilForUndefined,
+    BSONRaiseExceptionOnUndefined
+} BSONDecoderBehaviorOnUndefined;
 
 @class BSONIterator;
 @class BSONDocument;
 @class BSONObjectID;
 
-@interface BSONUnarchiver : NSCoder {
+@interface BSONDecoder : NSCoder {
     @private
     BSONIterator *_iterator;
     NSMutableArray *_stack;
 }
 
-- (BSONUnarchiver *) initWithDocument:(BSONDocument *) document;
-- (BSONUnarchiver *) initWithData:(NSData *) data;
+- (BSONDecoder *) initWithDocument:(BSONDocument *) document;
+- (BSONDecoder *) initWithData:(NSData *) data;
 
-+ (NSDictionary *) unarchiveDictionaryWithDocument:(BSONDocument *) document;
-+ (NSDictionary *) unarchiveDictionaryWithData:(NSData *) data;
++ (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *) document;
++ (NSDictionary *) decodeDictionaryWithData:(NSData *) data;
 
 - (NSDictionary *) decodeDictionary;
 
 - (NSDictionary *) decodeDictionaryForKey:(NSString *) key;
-- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForUnarchiver;
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForDecoder;
 - (NSArray *) decodeArrayForKey:(NSString *) key;
-- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForUnarchiver;
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForDecoder;
 - (id) decodeObjectForKey:(NSString *) key;
 
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
@@ -64,7 +71,13 @@
 - (BSONCode *) decodeCodeForKey:(NSString *)key;
 - (BSONCodeWithScope *) decodeCodeWithScopeForKey:(NSString *)key;
 
-@property (strong) id objectForNull;
-@property (strong) id objectForUndefined;
+/**
+ Returns the object which iterators return for undefined values (type 0x06).
+ @return The object which iterators return for undefined values
+ */
++ (id) objectForUndefined;
+
+@property (assign) BSONDecoderBehaviorOnNull behaviorOnNull;
+@property (assign) BSONDecoderBehaviorOnUndefined behaviorOnUndefined;
 
 @end
