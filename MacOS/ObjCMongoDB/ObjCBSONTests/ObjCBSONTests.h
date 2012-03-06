@@ -10,4 +10,6 @@
 
 @interface ObjCBSONTests : SenTestCase
 
+@property (retain) NSDateFormatter *df;
+
 @end

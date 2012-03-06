@@ -1,5 +1,5 @@
 //
-//  BSONArchiver.h
+//  BSONEncoder.h
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
@@ -26,30 +26,30 @@ typedef enum {
     BSONDoNothingOnNil,
     BSONEncodeNullOnNil,
     BSONRaiseExceptionOnNil
-} BSONArchiverBehaviorOnNil;
+} BSONEncoderBehaviorOnNil;
 
 @class BSONDocument;
-@class BSONArchiver;
+@class BSONEncoder;
 
-@protocol BSONArchiverDelegate
+@protocol BSONEncoderDelegate
 @optional
-
-- (BOOL) archiver:(BSONArchiver *) archiver shouldEncodeObject:(id) obj forKeyPath:(NSString *) keyPath;
-- (void) archiver:(BSONArchiver *) archiver willReplaceObject:(id) obj withObject:(id) obj forKeyPath:(NSString *) keyPath;
-- (void) archiver:(BSONArchiver *) archiverDidEncodeObject;
-- (void) archiverDidFinish:(BSONArchiver *) archiver;
-- (void) archiverWillFinish:(BSONArchiver *) archiver;
+- (BOOL) encoder:(BSONEncoder *) encoder shouldEncodeObject:(id) obj forKeyPath:(NSString *) keyPath;
+//- (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) obj forKeyPath:(NSString *) keyPath;
+- (void) encoder:(BSONEncoder *) encoder didEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
+- (void) encoderDidFinish:(BSONEncoder *) encoder;
+- (void) encoderWillFinish:(BSONEncoder *) encoder;
 
 @end
 
-@interface BSONArchiver : NSCoder {
+@interface BSONEncoder : NSCoder {
 @private
     bson_buffer *_bb;
     NSMutableArray *_stack;
+    NSMutableArray *_keyPathComponents;
     BSONDocument *_resultDocument;
 }
 
-- (BSONArchiver *) init;
+- (BSONEncoder *) init;
 - (BSONDocument *) BSONDocument;
 
 - (void) encodeObject:(id) obj;
@@ -89,9 +89,10 @@ typedef enum {
 
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key;
 
+- (NSArray *) keyPathComponents;
 
-@property (retain) NSObject<BSONArchiverDelegate> * delegate;
-@property (assign) BSONArchiverBehaviorOnNil behaviorOnNil;
+@property (retain) NSObject<BSONEncoderDelegate> * delegate;
+@property (assign) BSONEncoderBehaviorOnNil behaviorOnNil;
 @property (assign) BOOL restrictsKeyNamesForMongoDB;
 
 @end
