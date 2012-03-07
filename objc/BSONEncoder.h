@@ -41,15 +41,24 @@ typedef enum {
 
 @end
 
+/**
+ Doesn't support classForCoder. Doesn't make sense for an encoder which doesn't really store class information.
+ Detects loops in internal objects.
+ */
 @interface BSONEncoder : NSCoder {
 @private
     bson_buffer *_bb;
-    NSMutableArray *_stack;
+    NSMutableArray *_bufferStack;
+    NSMutableArray *_encodingObjectStack;
     NSMutableArray *_keyPathComponents;
     BSONDocument *_resultDocument;
 }
 
-- (BSONEncoder *) init;
+- (BSONEncoder *) initForWriting;
+
++ (BSONDocument *) BSONDocumentForObject:(id) obj;
++ (BSONDocument *) BSONDocumentForDictionary:(NSDictionary *) dictionary;
+
 - (BSONDocument *) BSONDocument;
 
 - (void) encodeObject:(id) obj;

@@ -157,7 +157,7 @@
     return [self decodeDictionaryForKey:key withClass:nil];
 }
 
-- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForDecoder {
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_object result:&result]) return result;
     
@@ -171,7 +171,7 @@
     return [self decodeArrayForKey:key withClass:nil];
 }
 
-- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForDecoder {
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_array result:&result]) return result;
 
@@ -183,19 +183,23 @@
 
 #pragma mark - Decoding basic types
 
-- (id) decodeObjectForKey:(NSString *)key {
+- (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key result:&result]) return result;
-    return [_iterator objectValue];
+    return [self decodeInternalObjectWithClassOrNil:classForDecoder];    
 }
 
-- (BSONObjectID *) decodeObjectIDForKey:(NSString *)key {
+- (id) decodeObjectForKey:(NSString *) key {
+    return [self decodeObjectForKey:key withClass:nil];
+}
+
+- (BSONObjectID *) decodeObjectIDForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_oid result:&result]) return result;
     return [_iterator objectIDValue];
 }
 
-- (int) decodeIntForKey:(NSString *)key {
+- (int) decodeIntForKey:(NSString *) key {
     bson_type allowedTypes[4];
     allowedTypes[0] = bson_bool;
     allowedTypes[1] = bson_int;
@@ -207,7 +211,7 @@
 
     return [_iterator intValue];
 }
-- (int64_t) decodeInt64ForKey:(NSString *)key {
+- (int64_t) decodeInt64ForKey:(NSString *) key {
     bson_type allowedTypes[4];
     allowedTypes[0] = bson_bool;
     allowedTypes[1] = bson_int;
@@ -219,7 +223,7 @@
 
     return [_iterator int64Value];
 }
-- (BOOL) decodeBoolForKey:(NSString *)key {
+- (BOOL) decodeBoolForKey:(NSString *) key {
     bson_type allowedTypes[3];
     allowedTypes[0] = bson_bool;
     allowedTypes[1] = bson_int;
@@ -230,7 +234,7 @@
 
     return [_iterator doubleValue];
 }
-- (double) decodeDoubleForKey:(NSString *)key {
+- (double) decodeDoubleForKey:(NSString *) key {
     bson_type allowedTypes[3];
     allowedTypes[0] = bson_double;
     allowedTypes[1] = bson_int;
@@ -247,7 +251,7 @@
     if ([self decodingHelperForKey:key nativeValueType:bson_date result:&result]) return result;
     return [_iterator dateValue];
 }
-- (NSImage *) decodeImageForKey:(NSString *)key {
+- (NSImage *) decodeImageForKey:(NSString *) key {
     NSData *data = [self decodeDataForKey:key];
     if (data)
         return [[NSImage alloc] initWithData:data];
@@ -255,7 +259,7 @@
         return nil;
 }
 
-- (NSString *) decodeStringForKey:(NSString *)key {
+- (NSString *) decodeStringForKey:(NSString *) key {
     bson_type allowedTypes[3];
     allowedTypes[0] = bson_string;
     allowedTypes[1] = bson_code;
@@ -267,37 +271,37 @@
     return [_iterator stringValue];
 }
 
-- (BSONSymbol *) decodeSymbolForKey:(NSString *)key {
+- (BSONSymbol *) decodeSymbolForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_symbol result:&result]) return result;
     return [_iterator symbolValue];
 }
 
-- (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *)key {
+- (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_regex result:&result]) return result;
     return [_iterator regularExpressionValue];
 }
 
-- (BSONDocument *) decodeBSONDocumentForKey:(NSString *)key {
+- (BSONDocument *) decodeBSONDocumentForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_object result:&result]) return result;
     return [_iterator embeddedDocumentValue];
 }
 
-- (NSData *)decodeDataForKey:(NSString *)key {
+- (NSData *)decodeDataForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_bindata result:&result]) return result;
     return [_iterator dataValue];
     
 }
 
-- (id) decodeCodeForKey:(NSString *)key {
+- (id) decodeCodeForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_code result:&result]) return result;
     return [_iterator codeValue];
 }
-- (id) decodeCodeWithScopeForKey:(NSString *)key {
+- (id) decodeCodeWithScopeForKey:(NSString *) key {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:bson_codewscope result:&result]) return result;
     return [_iterator codeWithScopeValue];
@@ -305,7 +309,7 @@
 
 #pragma mark - Unsupported unkeyed encoding methods
 
-- (void) decodeValueOfObjCType:(const char *)type at:(void *)data {
+- (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
     id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
     @throw exc;
 }

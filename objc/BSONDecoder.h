@@ -55,6 +55,7 @@ typedef enum {
 - (NSArray *) decodeArrayForKey:(NSString *) key;
 - (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForDecoder;
 - (id) decodeObjectForKey:(NSString *) key;
+- (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder;
 
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
 - (int) decodeIntForKey:(NSString *)key;

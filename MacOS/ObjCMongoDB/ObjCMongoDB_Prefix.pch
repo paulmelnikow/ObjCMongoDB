@@ -25,6 +25,7 @@
 #import "BSONDecoder.h"
 #import "BSONIterator.h"
 #import "BSON_Helper.h"
+#import "BSONCoding.h"
 
 @interface BSONDocument (Project)
 -(bson *)bsonValue;

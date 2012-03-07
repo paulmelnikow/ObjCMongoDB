@@ -1,3 +1,4 @@
+//
 //  BSONEncoder.m
 //  ObjCMongoDB
 //
@@ -19,12 +20,21 @@
 #import "BSONEncoder.h"
 #import "NuMongoDB.h"
 
-@interface BSONEncoderStackRecord : NSObject
-@property (retain) NSString *pathComponent;
+@interface BSONBufferWrapper : NSObject
++(BSONBufferWrapper *) wrapperForNativeBuffer:(bson_buffer *) bb;
 @property (assign) bson_buffer *bb;
 @end
-@implementation BSONEncoderStackRecord
-@synthesize pathComponent, bb;
+@implementation BSONBufferWrapper
+@synthesize bb;
++(BSONBufferWrapper *) wrapperForNativeBuffer:(bson_buffer *) bb {
+    BSONBufferWrapper *result = [[self alloc] init];
+    result.bb = bb;
+#if __has_feature(objc_arc)
+    return result;
+#else
+    return [result autorelease];
+#endif
+}
 @end
 
 @interface BSONEncoder (Private)
@@ -34,7 +44,7 @@
 - (void) encodeExposedArray:(NSArray *) array;
 - (void) encodeExposedCustomObject:(id) obj;
 
-- (void) encodeObject:(id) objv withSubstitutions:(BOOL) substitutions;
+- (void) encodeObject:(id) objv withSubstitutions:(BOOL) substitutions topLevel:(BOOL)topLevel;
 
 - (void) encodeObject:(id) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions;
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key withSubstitutions:(BOOL) substitutions;
@@ -55,15 +65,14 @@
 - (void) encodeData:(NSData *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions;
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions;
 
-+ (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector;
 - (NSArray *) keyPathComponentsAddingKeyOrNil:(NSString *) key;
 - (id) substituteForObject:(id) object keyOrNil:(NSString *) key;
 
 - (void) encodingHelper;
 - (void) encodingHelperForKey:(NSString *) key;
-- (BOOL) encodingHelper:(id) object withSubstitutions:(BOOL) substitutions;
+- (BOOL) encodingHelper:(id) object withSubstitutions:(BOOL) substitutions topLevel:(BOOL) topLevel;
 - (BOOL) encodingHelper:(id) object key:(NSString *) key withSubstitutions:(BOOL) substitutions;
-- (void) postEncodingHelper:(id) object key:(NSString *) key;
+- (void) postEncodingHelper:(id) object key:(NSString *) key topLevel:(BOOL) topLevel;
 
 @end
 
@@ -74,33 +83,64 @@
 #pragma mark - Initialization
 
 - (BSONEncoder *) init {
+    return [self initForWriting];
+}
+
+- (BSONEncoder *) initForWriting {
     if (self = [super init]) {
         _bb = malloc(sizeof(bson_buffer));
         bson_buffer_init(_bb);
         self.restrictsKeyNamesForMongoDB = YES;
 #if __has_feature(objc_arc)
-        _stack = [NSMutableArray array];
+        _bufferStack = [NSMutableArray array];
+        _encodingObjectStack = [NSMutableArray array];
         _keyPathComponents = [NSMutableArray array];
 #else
-        _stack = [[NSMutableArray array] retain];
+        _bufferStack = [[NSMutableArray array] retain];
+        _encodingObjectStack = [[NSMutableArray array] retain];
         _keyPathComponents = [[NSMutableArray array] retain];
 #endif
     }
     return self;
 }
 
-+ (BSONEncoder *) encoder {
-    return [[self alloc] init];
-}
-
 - (void) dealloc {
+    // In case object is deallocated in the middle of encoding
+    for (BSONBufferWrapper *wrapper in _bufferStack) free(wrapper.bb);
     free(_bb);
 #if !__has_feature(objc_arc)
     [_resultDocument release];
+    [_bufferStack release];
+    [_encodingObjectStack release];
+    [_keyPathComponents release];
 #endif
 }
 
 - (bson_buffer *)bsonBufferValue { return _bb; }
+
+#pragma mark - Convenience methods
+
++ (BSONDocument *) BSONDocumentForObject:(id) obj {
+    BSONEncoder *encoder = [[self alloc] initForWriting];
+    [encoder encodeObject:obj];
+    BSONDocument *result = [encoder BSONDocument];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [encoder release];
+#endif
+    return result;    
+}
+
++ (BSONDocument *) BSONDocumentForDictionary:(NSDictionary *) dictionary {    
+    BSONEncoder *encoder = [[self alloc] initForWriting];
+    [encoder encodeDictionary:dictionary];
+    BSONDocument *result = [encoder BSONDocument];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [encoder release];
+#endif
+    return result;
+}
 
 #pragma mark - Finishing
 
@@ -184,10 +224,11 @@
 #pragma mark - Encoding top-level objects
 
 - (void) encodeObject:(id) objv {
-    [self encodeObject:objv withSubstitutions:YES];
+    if ([self encodingHelper:objv withSubstitutions:YES topLevel:YES]) return;
+    [self encodeObject:objv withSubstitutions:NO topLevel:YES];
 }
 
-- (void) encodeObject:(id) objv withSubstitutions:(BOOL) substitutions {
+- (void) encodeObject:(id) objv withSubstitutions:(BOOL) substitutions topLevel:(BOOL)topLevel {
     [self encodingHelper];
     if (!objv) return;
     if ([NSNull null] == objv
@@ -216,24 +257,30 @@
     else
         [self encodeExposedCustomObject:objv];
     
-    [self postEncodingHelper:objv key:nil];
+    [self postEncodingHelper:objv key:nil topLevel:topLevel];
 }
 
-- (void) encodeDictionary:(NSDictionary *) dictionary {
-    [self encodeExposedDictionary:dictionary];
-    [self postEncodingHelper:dictionary key:nil];
+- (void) encodeDictionary:(NSDictionary *) objv {
+    if ([self encodingHelper:objv withSubstitutions:YES topLevel:YES]) return;
+    [self encodeExposedDictionary:objv];
+    [self postEncodingHelper:objv key:nil topLevel:YES];
 }
 
 #pragma mark - Exposing internal objects
 
-- (void) exposeObjectForKey:(NSString *) key asArray:(BOOL)asArray {
+- (void) exposeKey:(NSString *) key asArray:(BOOL)asArray forObject:(id) object {
     BSONAssertKeyNonNil(key);
     if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
     
-    BSONEncoderStackRecord *record = [[BSONEncoderStackRecord alloc] init];
-    record.pathComponent = key;
-    record.bb = _bb;
-    [_stack addObject:record];
+    if ([_encodingObjectStack containsObject:object]) {
+        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                         reason:@"Attempting to encoding objects in a loop"
+                                       userInfo:nil];
+        @throw exc;
+    }
+    [_encodingObjectStack addObject:object];
+    
+    [_bufferStack addObject:[BSONBufferWrapper wrapperForNativeBuffer:_bb]];
     [_keyPathComponents addObject:key];
     if (asArray)
         _bb = bson_append_start_array(_bb, BSONStringFromNSString(key));
@@ -242,26 +289,26 @@
 }
 
 - (void) closeInternalObject {
-    if (![_stack count]) {
+    if (![_bufferStack count]) {
         id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"-closeInternalObject called too many times (without matching call to -exposeObjectForKey:asArray:)"
+                                         reason:@"-closeInternalObject called too many times (without matching call to -exposeKey:asArray:forObject:)"
                                        userInfo:nil];
         @throw exc;
     }
-    bson_append_finish_object(_bb);    
-    BSONEncoderStackRecord *record = [_stack lastObject];
-    _bb = record.bb;
-    [_stack removeLastObject];
+    bson_append_finish_object(_bb);
+    _bb = ((BSONBufferWrapper *)[_bufferStack lastObject]).bb;
+    [_bufferStack removeLastObject];
     [_keyPathComponents removeLastObject];
+    [_encodingObjectStack removeLastObject];
 }
 
 - (void) encodeCustomObject:(id) obj forKey:(NSString *) key {
     if ([self encodingHelper:obj key:key withSubstitutions:NO]) return;
     
-    [self exposeObjectForKey:key asArray:NO];
+    [self exposeKey:key asArray:NO forObject:obj];
     [self encodeExposedCustomObject:obj];
     [self closeInternalObject];
-    [self postEncodingHelper:obj key:key];
+    [self postEncodingHelper:obj key:key topLevel:NO];
 }
 
 - (void) encodeArray:(NSArray *) array forKey:(NSString *) key {
@@ -271,10 +318,10 @@
 - (void) encodeArray:(NSArray *) array forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:array key:key withSubstitutions:substitutions]) return;
     
-    [self exposeObjectForKey:key asArray:YES];
+    [self exposeKey:key asArray:YES forObject:array];
     [self encodeExposedArray:array];
     [self closeInternalObject];
-    [self postEncodingHelper:array key:key];
+    [self postEncodingHelper:array key:key topLevel:NO];
 }
 
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key {
@@ -284,10 +331,10 @@
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:dictionary key:key withSubstitutions:substitutions]) return;
     
-    [self exposeObjectForKey:key asArray:NO];
+    [self exposeKey:key asArray:NO forObject:dictionary];
     [self encodeExposedDictionary:dictionary];
     [self closeInternalObject];    
-    [self postEncodingHelper:dictionary key:key];
+    [self postEncodingHelper:dictionary key:key topLevel:NO];
 }
 
 #pragma mark - Encoding exposed objects
@@ -362,7 +409,7 @@
 - (void) encodeObjectID:(BSONObjectID *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     bson_append_oid(_bb, BSONStringFromNSString(key), [objv objectIDPointer]);
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeInt:(int) intv forKey:(NSString *) key {
@@ -424,7 +471,7 @@
             [self encodeInt:objv.intValue forKey:key];
             break;
     }
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeDate:(NSDate *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -432,13 +479,13 @@
     bson_append_date (_bb,
                       BSONStringFromNSString(key),
                       1000.0 * [objv timeIntervalSince1970]);
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     bson_append_timestamp(_bb, BSONStringFromNSString(key), [objv timestampPointer]);
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeImage:(NSImage *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -446,7 +493,7 @@
     NSData *data = [objv TIFFRepresentationUsingCompression:NSTIFFCompressionLZW
                                                      factor:1.0L];
     [self encodeObject:data forKey:key];
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeString:(NSString *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -454,7 +501,7 @@
     bson_append_string(_bb,
                        BSONStringFromNSString(key),
                        BSONStringFromNSString(objv));
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeSymbol:(BSONSymbol *)objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -462,7 +509,7 @@
     bson_append_symbol(_bb,
                        BSONStringFromNSString(key),
                        BSONStringFromNSString(objv.symbol));
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeRegularExpressionPattern:(NSString *) pattern options:(NSString *) options forKey:(NSString *) key {
@@ -483,7 +530,7 @@
 - (void) encodeRegularExpression:(BSONRegularExpression *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeRegularExpressionPattern:objv.pattern options:objv.options forKey:key];
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeBSONDocument:(BSONDocument *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -491,7 +538,7 @@
     bson_append_bson(_bb,
                      BSONStringFromNSString(key),
                      [objv bsonValue]);
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeData:(NSData *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -501,7 +548,7 @@
                        0,
                        objv.bytes,
                        objv.length);
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeCodeString:(NSString *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -509,13 +556,13 @@
     bson_append_code(_bb,
                      BSONStringFromNSString(key),
                      BSONStringFromNSString(objv));
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeCode:(BSONCode *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeCodeString:objv.code forKey:key];
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 - (void) encodeCodeString:(NSString *) code withScope:(BSONDocument *) scope forKey:(NSString *) key {
@@ -535,13 +582,87 @@
 - (void) encodeCodeWithScope:(BSONCodeWithScope *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeCodeString:objv.code withScope:objv.scope forKey:key];
-    [self postEncodingHelper:objv key:key];
+    [self postEncodingHelper:objv key:key topLevel:NO];
 }
 
 // FIXME not implemented:
 //bson_buffer * bson_append_element( bson_buffer * b, const char * name_or_null, const bson_iterator* elem);
 
-#pragma mark - Helper methods
+#pragma mark - Helper methods for -encode... methods
+
+- (void) encodingHelper {
+    if (!_bb) {
+        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                         reason:@"Can't continue to encode after finishEncoding called"
+                                       userInfo:nil];
+        @throw exc;
+    }
+}
+
+- (void) encodingHelperForKey:(NSString *) key {
+    [self encodingHelper];
+    BSONAssertKeyNonNil(key);
+    if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
+}
+
+- (BOOL) encodingHelper:(id) object withSubstitutions:(BOOL) substitutions topLevel:(BOOL) topLevel {
+    [self encodingHelper];
+    
+    if (topLevel) {
+        if ([_encodingObjectStack count]) {
+            id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                             reason:@"Can only use top-level encoding methods for top-level objects. Use encode...ForKey methods instead."
+                                           userInfo:nil];
+            @throw exc;
+        }
+    }
+    
+    if (substitutions && object) {
+        id substituteObject = [self substituteForObject:object keyOrNil:nil];
+        if (substituteObject != object) {
+            if (topLevel) [_encodingObjectStack addObject:substituteObject];
+            [self encodeObject:substituteObject withSubstitutions:NO topLevel:topLevel];
+            return YES;
+        }
+    }
+    
+    if (topLevel) [_encodingObjectStack addObject:object];    
+    return NO;
+}
+
+- (BOOL) encodingHelper:(id) object key:(NSString *) key withSubstitutions:(BOOL) substitutions {
+    [self encodingHelperForKey:key];
+    
+    if (substitutions && object) {
+        id substituteObject = [self substituteForObject:object keyOrNil:key];
+        if (substituteObject != object) {
+            [self encodeObject:substituteObject forKey:key withSubstitutions:NO];
+            return YES;
+        }
+    }
+    
+    if (!object)
+        switch(self.behaviorOnNil) {
+            case BSONDoNothingOnNil:
+                return YES;
+            case BSONEncodeNullOnNil:
+                [self encodeNullForKey:key];
+                return YES;
+            case BSONRaiseExceptionOnNil:
+                @throw [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                               reason:@"Can't encode nil value with BSONRaiseExceptionOnNil set"
+                                             userInfo:nil];
+        }
+    return NO;
+}
+
+- (void) postEncodingHelper:(id) object key:(NSString *) key topLevel:(BOOL) topLevel {
+    if ([self.delegate respondsToSelector:@selector(encoder:didEncodeObject:forKeyPath:)])
+        [self.delegate encoder:self didEncodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
+    if (topLevel) [_encodingObjectStack removeLastObject];
+}
+
+#pragma mark - Other helper methods
 
 - (BOOL) allowsKeyedCoding { return YES; }
 
@@ -557,92 +678,109 @@
 
 - (id) substituteForObject:(id) object keyOrNil:(NSString *) key {
     id substituteObject = object;
+    
+    // Allow the object to present a substitute object
+    if ([object respondsToSelector:@selector(replacementObjectForBSONEncoder:)])
+        substituteObject = [(id<BSONCoding>)object replacementObjectForBSONEncoder:self];
+    else if ([object respondsToSelector:@selector(replacementObjectForCoder:)])
+        substituteObject = [object replacementObjectForCoder:self];
+    
+    // Then, allow the delegate to present a substitute object
     if (object && [self.delegate respondsToSelector:@selector(encoder:willEncodeObject:forKeyPath:)])
         substituteObject = [self.delegate encoder:self willEncodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
     
     if (substituteObject != object
         && [self.delegate respondsToSelector:@selector(encoder:willReplaceObject:withObject:forKeyPath:)])
         [self.delegate encoder:self willReplaceObject:object withObject:substituteObject forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
-        
     
     return substituteObject;
 }
+
+#pragma mark - Unsupported unkeyed encoding methods
 
 + (void) unsupportedUnkeyedCodingSelector:(SEL) selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed encoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
     id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                   reason:reason
-                                 userInfo:nil];
+                                     reason:reason
+                                   userInfo:nil];
     @throw exc;
 }
-
-- (void) encodingHelper {
-    if (!_bb) {
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                       reason:@"Can't continue to encode after finishEncoding called"
-                                                      userInfo:nil];
-        @throw exc;
-    }
-}
-
-- (void) encodingHelperForKey:(NSString *) key {
-    [self encodingHelper];
-    BSONAssertKeyNonNil(key);
-    if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
-}
-
-- (BOOL) encodingHelper:(id) object withSubstitutions:(BOOL) substitutions {
-    [self encodingHelper];
-    
-    if (substitutions && object) {
-        id substituteObject = [self substituteForObject:object keyOrNil:nil];
-        if (substituteObject != object) {
-            [self encodeObject:substituteObject withSubstitutions:NO];
-            return YES;
-        }
-    }    
-    return NO;
-}
-
-- (BOOL) encodingHelper:(id) object key:(NSString *) key withSubstitutions:(BOOL) substitutions {
-    [self encodingHelperForKey:key];
-    
-    if (substitutions && object) {
-        id substituteObject = [self substituteForObject:object keyOrNil:key];
-        if (substituteObject != object) {
-            [self encodeObject:substituteObject forKey:key withSubstitutions:NO];
-            return YES;
-        }
-    }
-    
-    if (object) return NO;
-    
-    switch(self.behaviorOnNil) {
-        case BSONDoNothingOnNil:
-            return YES;
-        case BSONEncodeNullOnNil:
-            [self encodeNullForKey:key];
-            return YES;
-        case BSONRaiseExceptionOnNil:
-            @throw [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                           reason:@"Can't encode nil value with BSONRaiseExceptionOnNil set"
-                                         userInfo:nil];
-    }
-}
-
-- (void) postEncodingHelper:(id) object key:(NSString *) key {
-    if ([self.delegate respondsToSelector:@selector(encoder:didEncodeObject:forKeyPath:)])
-        [self.delegate encoder:self didEncodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
-}
-
-#pragma mark - Unsupported unkeyed encoding methods
 
 - (void) encodeValueOfObjCType:(const char *) type at:(const void *) addr {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
 }
+- (void)encodeValuesOfObjCTypes:(const char *)types, ... {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
 - (void) encodeDataObject:(NSData *) data {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
+}
+- (void) encodeArrayOfObjCType:(const char *) itemType count:(NSUInteger) count at:(const void *) address {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodeBycopyObject:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodeByrefObject:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodePropertyList:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodeRootObject:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodeNXObject:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+
+#pragma mark - Unsupported keyed encoding methods
+
++ (void) unsupportedCodingSelector:(SEL) selector {
+    NSString *reason = [NSString stringWithFormat:@"%@ is not supported. Subclass if coding this type is needed.",
+                        NSStringFromSelector(selector)];
+    id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
+                                     reason:reason
+                                   userInfo:nil];
+    @throw exc;
+}
+
+- (void) encodeBytes:(const void *) address length:(NSUInteger) numBytes {
+    [BSONEncoder unsupportedCodingSelector:_cmd];    
+}
+- (void) encodeBytes:(const uint8_t *) bytesp length:(NSUInteger) lenv forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeConditionalObject:(id) object {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeConditionalObject:(id) objv forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeFloat:(float) realv forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeInt32:(int32_t) intv forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodePoint:(NSPoint) point {
+    [BSONEncoder unsupportedCodingSelector:_cmd];    
+}
+- (void) encodePoint:(NSPoint) point forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeRect:(NSRect) rect {
+    [BSONEncoder unsupportedCodingSelector:_cmd];    
+}
+- (void) encodeRect:(NSRect) rect forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodeSize:(NSSize) size {
+    [BSONEncoder unsupportedCodingSelector:_cmd];    
+}
+- (void) encodeSize:(NSSize) size forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
 }
 
 @end

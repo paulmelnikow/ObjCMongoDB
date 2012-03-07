@@ -1,4 +1,4 @@
-//
+ //
 //  ObjCBSONTests.m
 //  ObjCBSONTests
 //
@@ -28,9 +28,10 @@
 @property (retain) NSDate * dob;
 @property (assign) NSInteger numberOfVisits;
 @property (retain) NSMutableArray * children;
+@property (retain) Person * parent;
 @end
 @implementation Person
-@synthesize name, dob, numberOfVisits, children;
+@synthesize name, dob, numberOfVisits, children, parent;
 -(void)encodeWithCoder:(NSCoder *)coder {
     id exc = [NSException exceptionWithName:@"encodeWithCoder: was called"
                                    reason:@"encodeWithCoder: was called"
@@ -52,7 +53,8 @@
     [string appendFormat:@"  name: %@", self.name];
     [string appendFormat:@"  dob: %@", [df stringFromDate:self.dob]];
     [string appendFormat:@"  numberOfVisits: %ld", (long)numberOfVisits];
-    [string appendFormat:@"  children: %@", (long)children];
+    [string appendFormat:@"  parent: %@", parent];
+    [string appendFormat:@"  children: %@", children];
     return string;
 }
 -(BOOL)isEqual:(Person *) obj {
@@ -77,6 +79,7 @@
     [coder encodeDate:self.dob forKey:@"dob"];
     [coder encodeInt64:self.numberOfVisits forKey:@"numberOfVisits"];
     [coder encodeArray:self.children forKey:@"children"];
+    [coder encodeObject:self.parent forKey:@"parent"];
 }
 -(id)initWithCoder:(BSONDecoder *)coder {
     if (![coder isKindOfClass:[BSONDecoder class]]) {
@@ -91,9 +94,24 @@
         self.numberOfVisits = [coder decodeInt64ForKey:@"numberOfVisits"];
         self.children = [[coder decodeArrayForKey:@"children"
                                         withClass:[PersonWithCoding class]] mutableCopy];
+        self.parent = [coder decodeObjectForKey:@"parent" withClass:[PersonWithCoding class]];
     }
     return self;
 }
+@end
+
+@interface PersonWithBriefCoding : PersonWithCoding
+@end
+@implementation PersonWithBriefCoding
+
+- (id) replacementObjectForCoder:(BSONEncoder *) encoder {
+    // Encode the name only, unless encoding at the top level
+    if (encoder.keyPathComponents.count)
+        return self.name;
+    else
+        return self;
+}
+
 @end
 
 @interface TestEncoderDelegate : NSObject <BSONEncoderDelegate>
@@ -187,6 +205,20 @@
     [super encoder:encoder willEncodeObject:obj forKeyPath:keyPathComponents];
     if ([obj isKindOfClass:[NSDate class]])
         return [TestEncoderDelegateRedactDates redactedDate];
+    else
+        return obj;
+}
+
+@end
+
+@interface EncodesParentByReferenceDelegate : NSObject <BSONEncoderDelegate>
+@end
+
+@implementation EncodesParentByReferenceDelegate
+
+-(id)encoder:(BSONEncoder *)encoder willEncodeObject:(Person *)obj forKeyPath:(NSArray *)keyPathComponents {
+    if ([obj isKindOfClass:[Person class]] && [[keyPathComponents lastObject] isEqualToString:@"parent"])
+        return [obj name];
     else
         return obj;
 }
@@ -867,6 +899,116 @@
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+}
+
+- (void)testObjectLoop {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+    
+    STAssertNoThrow([BSONEncoder BSONDocumentForObject:lucy],
+                    @"Encoding a loop should raise an exception");
+
+    [littlerRicky.children addObject:lucy];
+    
+    STAssertThrows([BSONEncoder BSONDocumentForObject:lucy],
+                   @"Encoding a loop should raise an exception");
+}
+
+- (void)testEncodeObjectsByInclusionAndByReference {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+
+    [lucy.children addObject:littleRicky];
+    littleRicky.parent = lucy;
+    [littleRicky.children addObject:littlerRicky];
+    littlerRicky.parent = littleRicky;
+
+    BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
+    EncodesParentByReferenceDelegate *delegate = [[EncodesParentByReferenceDelegate alloc] init];
+    encoder.delegate = delegate;
+    [encoder encodeObject:lucy];
+    BSONDocument *document = [encoder BSONDocument];
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
+    
+    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *littleRicky2 = [lucy2.children objectAtIndex:0];
+    PersonWithCoding *littlerRicky2 = [littleRicky2.children objectAtIndex:0];
+    
+    STAssertEqualObjects(littleRicky2.parent,
+                         lucy.name,
+                         @"Parent encoded by name should match");
+    STAssertEqualObjects(littlerRicky2.parent,
+                         littleRicky.name,
+                         @"Parent encoded by name should match");
+}
+
+- (void) testReplacementObjectForCoder {
+    PersonWithBriefCoding *lucy = [[PersonWithBriefCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithBriefCoding *littleRicky = [[PersonWithBriefCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithBriefCoding *littlerRicky = [[PersonWithBriefCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+    
+    BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
+
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
+    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    
+    STAssertEqualObjects(lucy2.name,
+                         lucy.name,
+                         @"Encoded name should match");
+    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+                         ((Person *)[lucy.children objectAtIndex:0]).name,
+                         @"Encoded child should match child's name");
 }
 
 @end
