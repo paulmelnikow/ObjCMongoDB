@@ -44,6 +44,7 @@ typedef enum {
 /**
  Doesn't support classForCoder. Doesn't make sense for an encoder which doesn't really store class information.
  Detects loops in internal objects.
+ Supports replacementObjectForBSONEncoder
  */
 @interface BSONEncoder : NSCoder {
 @private

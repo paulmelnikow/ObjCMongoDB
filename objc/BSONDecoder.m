@@ -54,35 +54,63 @@
     return [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
 }
 
-+ (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *)document {
-    BSONDecoder *decoder = [[self alloc] initWithDocument:document];
-    NSDictionary *result = [decoder decodeDictionary];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
-    return result;
-}
-
-+ (NSDictionary *) decodeDictionaryWithData:(NSData *)data {
-    BSONDecoder *decoder = [[self alloc] initWithData:data];
-    NSDictionary *result = [decoder decodeDictionary];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
-    return result;
-}
-
 - (void) dealloc {
 #if !__has_feature(objc_arc)
     [_iterator release];
 #endif    
 }
 
-#pragma mark - NSCoder interface
+#pragma mark - Convenience methods
 
-- (BOOL) allowsKeyedCoding { return YES; }
++ (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *)document {
+    return [self decodeDictionaryWithClass:nil document:document];
+}
 
-#pragma mark - Decoding collections
++ (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder document:(BSONDocument *) document {
+    BSONDecoder *decoder = [[self alloc] initWithDocument:document];
+    NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [decoder release];
+#endif
+    return result;
+}
+
++ (NSDictionary *) decodeDictionaryWithData:(NSData *)data {
+    return [self decodeDictionaryWithClass:nil data:data];
+}
+
++ (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder data:(NSData *) data {
+    BSONDecoder *decoder = [[self alloc] initWithData:data];
+    NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [decoder release];
+#endif
+    return result;
+}
+
++ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document {
+    BSONDecoder *decoder = [[self alloc] initWithDocument:document];
+    NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [decoder release];
+#endif
+    return result;
+}
+
++ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data {
+    BSONDecoder *decoder = [[self alloc] initWithData:data];
+    NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
+#if !__has_feature(objc_arc)
+    [[result retain] autorelease];
+    [decoder release];
+#endif
+    return result;
+}
+
+#pragma mark - Decoding top-level objects
 
 - (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder {
     return [self decodeInternalDictionaryWithClassOrNil:classForDecoder];
@@ -92,7 +120,11 @@
     return [self decodeDictionaryWithClass:nil];
 }
 
-#pragma mark - Internal methods for decoding objects and collections
+- (id) decodeObjectWithClass:(Class) classForDecoder {
+    return [self decodeInternalObjectWithClassOrNil:classForDecoder];
+}
+
+#pragma mark - Exposing internal objects
 
 - (void) exposeObjectAsArray:(BOOL) asArray { 
     [_stack addObject:_iterator];
@@ -112,6 +144,36 @@
     _iterator = [_stack lastObject];
     [_stack removeLastObject];
 }
+
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key {
+    return [self decodeDictionaryForKey:key withClass:nil];
+}
+
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class) classForDecoder {
+    id result = nil;
+    if ([self decodingHelperForKey:key nativeValueType:bson_object result:&result]) return result;
+    
+    [self exposeObjectAsArray:NO];
+    result = [self decodeInternalDictionaryWithClassOrNil:classForDecoder];
+    [self closeInternalObject];
+    return result;
+}
+
+- (NSArray *) decodeArrayForKey:(NSString *) key {
+    return [self decodeArrayForKey:key withClass:nil];
+}
+
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder {
+    id result = nil;
+    if ([self decodingHelperForKey:key nativeValueType:bson_array result:&result]) return result;
+
+    [self exposeObjectAsArray:YES];
+    result = [self decodeInternalArrayWithClassOrNil:classForDecoder];
+    [self closeInternalObject];
+    return result;
+}
+
+#pragma mark - Decoding exposed internal objects
 
 - (NSDictionary *) decodeInternalDictionaryWithClassOrNil:(Class) classForDecoder {
     NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
@@ -153,35 +215,7 @@
     return result;
 }
 
-- (NSDictionary *)decodeDictionaryForKey:(NSString *)key {
-    return [self decodeDictionaryForKey:key withClass:nil];
-}
-
-- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class) classForDecoder {
-    id result = nil;
-    if ([self decodingHelperForKey:key nativeValueType:bson_object result:&result]) return result;
-    
-    [self exposeObjectAsArray:NO];
-    result = [self decodeInternalDictionaryWithClassOrNil:classForDecoder];
-    [self closeInternalObject];
-    return result;
-}
-
-- (NSArray *)decodeArrayForKey:(NSString *)key {
-    return [self decodeArrayForKey:key withClass:nil];
-}
-
-- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder {
-    id result = nil;
-    if ([self decodingHelperForKey:key nativeValueType:bson_array result:&result]) return result;
-
-    [self exposeObjectAsArray:YES];
-    result = [self decodeInternalArrayWithClassOrNil:classForDecoder];
-    [self closeInternalObject];
-    return result;
-}
-
-#pragma mark - Decoding basic types
+#pragma mark - Decoding supported types
 
 - (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
@@ -307,22 +341,7 @@
     return [_iterator codeWithScopeValue];
 }
 
-#pragma mark - Unsupported unkeyed encoding methods
-
-- (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
-    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
-    @throw exc;
-}
-- (NSData *) decodeDataObject {
-    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
-    @throw exc;
-}
-
-#pragma mark - Helper methods
-
-+ (id) objectForUndefined {
-    return [BSONIterator objectForUndefined];
-}
+#pragma mark - Helper methods for -decode... methods
 
 - (BOOL) decodingHelper:(id*) result {
     if (bson_null == [_iterator nativeValueType]) {
@@ -373,12 +392,32 @@
     return NO;
 }
 
+#pragma mark - Other helper methods
+
+- (BOOL) allowsKeyedCoding { return YES; }
+
++ (id) objectForUndefined {
+    return [BSONIterator objectForUndefined];
+}
+
+
+#pragma mark - Unsupported unkeyed encoding methods
+
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
     return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
+}
+
+- (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
+    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+    @throw exc;
+}
+- (NSData *) decodeDataObject {
+    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+    @throw exc;
 }
 
 @end

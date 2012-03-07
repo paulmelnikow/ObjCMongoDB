@@ -36,6 +36,16 @@ typedef enum {
 @class BSONDocument;
 @class BSONObjectID;
 
+@protocol BSONDecoderDelegate
+@optional
+
+//- (id) decoder:(BSONDecoder *) decoder didDecodeObject: (id) object forKeyPath:(NSArray *) keyPathComponents;
+//- (id) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
+//- (void) decoderWillFinish:(BSONDecoder *) decoder;
+//- (void) decoderDidFinish:(BSONDecoder *) decoder;
+
+@end
+
 @interface BSONDecoder : NSCoder {
     @private
     BSONIterator *_iterator;
@@ -46,14 +56,21 @@ typedef enum {
 - (BSONDecoder *) initWithData:(NSData *) data;
 
 + (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *) document;
++ (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder document:(BSONDocument *) document;
 + (NSDictionary *) decodeDictionaryWithData:(NSData *) data;
++ (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder data:(NSData *) data;
+
++ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document;
++ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data;
 
 - (NSDictionary *) decodeDictionary;
+- (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder;
+- (id) decodeObjectWithClass:(Class) classForDecoder;
 
 - (NSDictionary *) decodeDictionaryForKey:(NSString *) key;
-- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class)classForDecoder;
+- (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class) classForDecoder;
 - (NSArray *) decodeArrayForKey:(NSString *) key;
-- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class)classForDecoder;
+- (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder;
 - (id) decodeObjectForKey:(NSString *) key;
 - (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder;
 

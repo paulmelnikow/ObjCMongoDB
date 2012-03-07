@@ -114,6 +114,20 @@
 
 @end
 
+@interface PersonWithBriefCoding2 : PersonWithCoding
+@end
+@implementation PersonWithBriefCoding2
+
+- (id) replacementObjectForBSONEncoder:(BSONEncoder *) encoder {
+    // Encode the name only, unless encoding at the top level
+    if (encoder.keyPathComponents.count)
+        return self.name;
+    else
+        return self;
+}
+
+@end
+
 @interface TestEncoderDelegate : NSObject <BSONEncoderDelegate>
 @property (retain) NSMutableArray *encodedObjects;
 @property (retain) NSMutableArray *willEncodeKeyPaths;
@@ -1010,5 +1024,41 @@
                          ((Person *)[lucy.children objectAtIndex:0]).name,
                          @"Encoded child should match child's name");
 }
+
+- (void) testReplacementObjectForBSONEncoder {
+    PersonWithBriefCoding2 *lucy = [[PersonWithBriefCoding2 alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithBriefCoding2 *littleRicky = [[PersonWithBriefCoding2 alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithBriefCoding2 *littlerRicky = [[PersonWithBriefCoding2 alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+    
+    BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
+    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    
+    STAssertEqualObjects(lucy2.name,
+                         lucy.name,
+                         @"Encoded name should match");
+    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+                         ((Person *)[lucy.children objectAtIndex:0]).name,
+                         @"Encoded child should match child's name");
+}
+
 
 @end

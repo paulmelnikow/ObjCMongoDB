@@ -23,7 +23,6 @@
 
 @optional
 
-- (Class) classForBSONDecoder;
 - (id) replacementObjectForBSONEncoder:(BSONEncoder *) encoder;
 - (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder;
 
