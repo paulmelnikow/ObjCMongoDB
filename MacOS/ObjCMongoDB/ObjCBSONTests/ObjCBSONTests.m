@@ -2,8 +2,19 @@
 //  ObjCBSONTests.m
 //  ObjCBSONTests
 //
-//  Created by Paul Melnikow on 3/1/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 Paul Melnikow and other contributors
+//
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 #import "ObjCBSONTests.h"
@@ -87,25 +98,30 @@
 
 @interface TestEncoderDelegate : NSObject <BSONEncoderDelegate>
 @property (retain) NSMutableArray *encodedObjects;
+@property (retain) NSMutableArray *willEncodeKeyPaths;
 @property (retain) NSMutableArray *encodedKeyPaths;
 @property (assign) NSUInteger encodedNilKeyPath;
 @property (assign) BOOL willFinish;
 @property (assign) BOOL didFinish;
 @end
 @implementation TestEncoderDelegate
-@synthesize encodedObjects, encodedKeyPaths, encodedNilKeyPath, willFinish, didFinish;
+@synthesize encodedObjects, willEncodeKeyPaths, encodedKeyPaths, encodedNilKeyPath, willFinish, didFinish;
+
 -(id)init {
     self.encodedObjects = [NSMutableArray array];
+    self.willEncodeKeyPaths = [NSMutableArray array];
     self.encodedKeyPaths = [NSMutableArray array];
     return self;
 }
--(void)encoder:(BSONEncoder *)encoder didEncodeObject:(id) obj forKeyPath:(NSString *) keyPath {
+
+-(void)encoder:(BSONEncoder *)encoder didEncodeObject:(id) obj forKeyPath:(NSString *) keyPathComponents {
     [encodedObjects addObject:obj];
-    if (keyPath)
-        [encodedKeyPaths addObject:keyPath];
+    if (keyPathComponents)
+        [encodedKeyPaths addObject:keyPathComponents];
     else
         self.encodedNilKeyPath = self.encodedNilKeyPath + 1;
 }
+
 - (void)encoderWillFinish:(BSONEncoder *)encoder {
     if (self.willFinish) {
         id exc = [NSException exceptionWithName:@"-encoderWillFinish: called more than once"
@@ -115,6 +131,7 @@
     }
     self.willFinish = YES;
 }
+
 - (void)encoderDidFinish:(BSONEncoder *)encoder {
     if (!self.willFinish) {
         id exc = [NSException exceptionWithName:@"-encoderDidFinish: called without -encoderWillFinish:"
@@ -130,16 +147,104 @@
     }
     self.didFinish = YES;
 }
-- (BOOL) encoder:(BSONEncoder *) encoder shouldEncodeObject:(id) obj forKeyPath:(NSString *) keyPath {
-    if ([obj isKindOfClass:[NSDate class]])
-        return NO;
-    else
-        return YES;
+
+-(id)encoder:(BSONEncoder *)encoder willEncodeObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
+    if (keyPathComponents) [willEncodeKeyPaths addObject:keyPathComponents];
+    return obj;
 }
+
+@end
+
+@interface TestEncoderDelegateRedactDates : TestEncoderDelegate
++(NSString *)redactedDate;
+@property (retain) NSMutableArray *replacedObjects;
+@property (retain) NSMutableArray *replacedKeyPaths;
+@end
+@implementation TestEncoderDelegateRedactDates
+@synthesize replacedObjects, replacedKeyPaths;
+
+-(id)init {
+    if (self = [super init]) {
+        self.replacedObjects = [NSMutableArray array];
+        self.replacedKeyPaths = [NSMutableArray array];
+    }
+    return self;
+}
+
++(NSString *)redactedDate {
+    static NSString *singleton;
+    if (!singleton)
+        singleton = @"--redacted!--";
+    return singleton;
+}
+
+-(void)encoder:(BSONEncoder *)encoder willReplaceObject:(id) obj withObject:(id) replacementObj forKeyPath:(NSArray *)keyPathComponents {
+    [self.replacedObjects addObject:obj];
+    [self.replacedKeyPaths addObject:keyPathComponents];
+}
+
+-(id)encoder:(BSONEncoder *)encoder willEncodeObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
+    [super encoder:encoder willEncodeObject:obj forKeyPath:keyPathComponents];
+    if ([obj isKindOfClass:[NSDate class]])
+        return [TestEncoderDelegateRedactDates redactedDate];
+    else
+        return obj;
+}
+
 @end
 
 @implementation ObjCBSONTests
 @synthesize df;
+
++ (NSCountedSet *) missingValuesInResultSet:(NSCountedSet *) one expectedSet:(NSCountedSet *) two {
+    if (!one && !two) return [NSCountedSet set];
+    
+    NSCountedSet *intersection = [one copy];
+    [intersection intersectSet:two];
+    
+//    NSCountedSet *oneOnly = [one copy];
+//    [oneOnly minusSet:intersection];
+    
+    NSCountedSet *twoOnly = [two copy];
+    [twoOnly minusSet:intersection];
+    
+    return twoOnly;
+}
+
++ (NSCountedSet *) unexpectedValuesInResultSet:(NSCountedSet *) one expectedSet:(NSCountedSet *) two {
+    if (!one && !two) return [NSCountedSet set];
+    
+    NSCountedSet *intersection = [one copy];
+    [intersection intersectSet:two];
+    
+    NSCountedSet *oneOnly = [one copy];
+    [oneOnly minusSet:intersection];
+    
+//    NSCountedSet *twoOnly = [two copy];
+//    [twoOnly minusSet:intersection];
+    
+    return oneOnly;
+}
+
+- (void) assertResultSet:(NSCountedSet *) one isEqualToExpectedSet:(NSCountedSet *) two name:(NSString *) name {
+    if (!one && !two) return;
+    
+    NSCountedSet *intersection = [one copy];
+    [intersection intersectSet:two];
+    
+    NSCountedSet *oneOnly = [one copy];
+    [oneOnly minusSet:intersection];
+    
+    NSCountedSet *twoOnly = [two copy];
+    [twoOnly minusSet:intersection];
+    
+    STAssertEquals(twoOnly.count,
+                   (NSUInteger)0,
+                   @"Expected %@ missing from result", name);
+    STAssertEquals(oneOnly.count,
+                   (NSUInteger)0,
+                   @"Unexpected %@ found in result", name);    
+}
 
 - (void)setUp
 {
@@ -267,7 +372,6 @@
     BSONEncoder *encoder = [[BSONEncoder alloc] init];
     [encoder encodeDictionary:sample1];
     [encoder BSONDocument];
-    NSLog(@"hey");
     STAssertThrowsSpecificNamed([encoder encodeBool:NO forKey:@"testKey"],
                                 NSException,
                                 NSInvalidArchiveOperationException,
@@ -392,7 +496,6 @@
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     
-    // FIXME test encoding of nil as null
     [encoder encodeObject:nil forKey:@"testKey"];
     reason = @"Inserted nil and should have encoded null, but did not";
     STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
@@ -528,7 +631,9 @@
     STAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
 }
 
-- (void)testDelegate {
+- (void)testDelegate1 {
+    NSCountedSet *resultSet, *missing, *unexpected;
+
     NSDictionary *sample = [NSDictionary dictionaryWithObjectsAndKeys:
                             [NSNumber numberWithInt:1], @"one",
                             [NSNumber numberWithDouble:2.0], @"two",
@@ -536,12 +641,12 @@
                             [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
                             nil];
     
-    NSMutableSet *allEncodedObjects = [NSMutableSet set];
+    NSCountedSet *allEncodedObjects = [NSCountedSet set];
     [allEncodedObjects addObjectsFromArray:[[sample objectForKey:@"four"] allObjects]];
     [allEncodedObjects addObjectsFromArray:[sample objectsForKeys:[sample allKeys] notFoundMarker:[NSNull null]]];
     [allEncodedObjects addObject:sample];
     
-    NSMutableSet *allEncodedKeyPaths = [NSMutableSet set];
+    NSCountedSet *allEncodedKeyPaths = [NSCountedSet set];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"one"]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"two"]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"three"]];
@@ -556,47 +661,28 @@
     encoder1.delegate = delegate;
     [encoder1 encodeDictionary:sample];
     
-    NSSet *delegateEncodedObjectsSet = [NSSet setWithArray:delegate.encodedObjects];
-    STAssertEquals([delegateEncodedObjectsSet count],
-                   [delegate.encodedObjects count],
-                    @"Duplicate object notifications received");
+    resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEqualObjects(delegateEncodedObjectsSet,
-                         allEncodedObjects,
-                         @"Delegate did not receive notification for all encoded objects");
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    NSSet *delegateEncodeKeyPathsSet = [NSSet setWithArray:delegate.encodedKeyPaths];
-    STAssertEquals([delegateEncodeKeyPathsSet count],
-                   [delegate.encodedKeyPaths count],
-                   @"Duplicate key path notifications received");
+    resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals([delegateEncodeKeyPathsSet count],
-                   [allEncodedKeyPaths count],
-                   @"Delegate did not receive notification for all encoded key paths");
-    
-    NSMutableSet *missingObjects = [allEncodedKeyPaths mutableCopy];
-    [missingObjects minusSet:delegateEncodeKeyPathsSet];
-    
-    STAssertEquals([missingObjects count],
-                   (NSUInteger)0,
-                   @"Delegate did not receive notification for all encoded key paths");
-    
-    NSMutableSet *unexpectedObjects = [delegateEncodeKeyPathsSet mutableCopy];
-    [unexpectedObjects minusSet:allEncodedKeyPaths];
-    
-    STAssertEquals([missingObjects count],
-                   (NSUInteger)0,
-                   @"Delegate received notification for unexpected key paths");
-    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+
     STAssertEquals(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
-    
-    
     STAssertFalse(delegate.willFinish, @"Delegate received -encoderWillFinish before encoding finished");
     STAssertFalse(delegate.didFinish, @"Delegate received -encoderDidFinish before encoding finished");
-        
+    
+    // Do this twice; the delegate throws an exception if it receives two sets of notifications
     BSONDocument *document = encoder1.BSONDocument;
     BSONDocument *document2 = encoder1.BSONDocument;
     document = nil;
@@ -604,8 +690,10 @@
 
     STAssertTrue(delegate.willFinish, @"Delegate did not receive -encoderWillFinish");
     STAssertTrue(delegate.didFinish, @"Delegate did not receive -encoderDidFinish");
-    
-    
+}
+
+- (void)testDelegate2 {
+    NSCountedSet *resultSet, *missing, *unexpected;
     
     PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
     lucy.name = @"Lucy Ricardo";
@@ -627,46 +715,13 @@
     [lucy.children addObject:littleRicky];
     [littleRicky.children addObject:littlerRicky];
     
-    allEncodedObjects = [NSSet setWithObjects:
+    NSCountedSet *allEncodedObjects = [NSCountedSet setWithObjects:
                                 lucy, lucy.name, lucy.dob, lucy.children,
                                 littleRicky, littleRicky.name, littleRicky.dob, littleRicky.children,
                                 littlerRicky, littlerRicky.name, littlerRicky.dob,
                                 nil];
-        
-    delegate = [[TestEncoderDelegate alloc] init];
-    encoder1 = [[BSONEncoder alloc] init];
-    encoder1.delegate = delegate;
-    [encoder1 encodeObject:lucy];
     
-    delegateEncodedObjectsSet = [NSSet setWithArray:delegate.encodedObjects];
-    STAssertEquals([delegateEncodedObjectsSet count],
-                   [delegate.encodedObjects count],
-                   @"Duplicate notifications received");
-        
-    missingObjects = [allEncodedObjects mutableCopy];
-    [missingObjects minusSet:delegateEncodedObjectsSet];
-    
-    unexpectedObjects = [delegateEncodedObjectsSet mutableCopy];
-    [unexpectedObjects minusSet:allEncodedObjects];
-    
-    STAssertEquals([missingObjects count],
-                   (NSUInteger)0,
-                   @"Delegate did not receive notification for all encoded objects");
-    
-    STAssertEquals([unexpectedObjects count],
-                   (NSUInteger)0,
-                   @"Delegate received notification for unexpected objects");
-    
-    STAssertEquals(delegate.encodedNilKeyPath,
-                   (NSUInteger)1,
-                   @"Delegate did not receive exactly one notification for nil key path");
-    
-    delegateEncodeKeyPathsSet = [NSSet setWithArray:delegate.encodedKeyPaths];
-    STAssertEquals([delegateEncodeKeyPathsSet count],
-                   [delegate.encodedKeyPaths count],
-                   @"Duplicate notifications received");
-    
-    allEncodedKeyPaths = [NSMutableSet set];
+    NSCountedSet *allEncodedKeyPaths = [NSCountedSet set];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"name"]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"dob"]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"children"]];
@@ -677,20 +732,141 @@
     [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", nil]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"name", nil]];
     [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"dob", nil]];
+        
+    TestEncoderDelegate *delegate = [[TestEncoderDelegate alloc] init];
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] init];
+    encoder1.delegate = delegate;
+    [encoder1 encodeObject:lucy];
+        
+    resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    missingObjects = [allEncodedKeyPaths mutableCopy];
-    [missingObjects minusSet:delegateEncodeKeyPathsSet];
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    STAssertEquals([missingObjects count],
-                   (NSUInteger)0,
-                   @"Delegate did not receive notification for all encoded key paths");
+    STAssertEquals(delegate.encodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+        
+    resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    unexpectedObjects = [delegateEncodeKeyPathsSet mutableCopy];
-    [unexpectedObjects minusSet:allEncodedKeyPaths];
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
-    STAssertEquals([missingObjects count],
-                   (NSUInteger)0,
-                   @"Delegate received notification for unexpected key paths");
+    resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+}
+
+- (void)testDelegateSubstitution {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+
+    BSONEncoder *encoder = [[BSONEncoder alloc] init];
+    TestEncoderDelegateRedactDates *delegate = [[TestEncoderDelegateRedactDates alloc] init];
+    encoder.delegate = delegate;
+    [encoder encodeObject:lucy];
+    
+    BSONDecoder *decoder = nil;
+    decoder = [[BSONDecoder alloc] initWithDocument:encoder.BSONDocument];
+    NSDictionary *lucyAsDictionary = [[decoder decodeDictionary] retain];
+
+    STAssertEqualObjects([lucyAsDictionary objectForKey:@"dob"],
+                         [TestEncoderDelegateRedactDates redactedDate],
+                         @"Date should have been redacted");
+    
+    NSCountedSet *allEncodedObjects = [NSCountedSet setWithObjects:
+                                       lucy, lucy.name, [TestEncoderDelegateRedactDates redactedDate], lucy.children,
+                                       littleRicky, littleRicky.name, [TestEncoderDelegateRedactDates redactedDate], littleRicky.children,
+                                       littlerRicky, littlerRicky.name, [TestEncoderDelegateRedactDates redactedDate],
+                                       nil];
+    
+    NSCountedSet *allEncodedKeyPaths = [NSCountedSet set];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"name"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"dob"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"children"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"name", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"dob", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"name", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"dob", nil]];
+
+    NSCountedSet *resultSet, *missing, *unexpected;
+    
+    resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    
+    STAssertEquals(delegate.encodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+    
+    resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    
+    resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    
+    NSCountedSet *replacedKeyPaths = [NSCountedSet set];
+    [replacedKeyPaths addObject:[NSArray arrayWithObject:@"dob"]];
+    [replacedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"dob", nil]];
+    [replacedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"dob", nil]];
+
+    NSCountedSet *replacedObjects = [NSCountedSet setWithObjects:
+                                     lucy.dob,
+                                     littleRicky.dob,
+                                     littlerRicky.dob,
+                                     nil];
+
+    resultSet = [NSCountedSet setWithArray:delegate.replacedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+
+    resultSet = [NSCountedSet setWithArray:delegate.replacedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:replacedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:replacedObjects];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
 }
 
 @end

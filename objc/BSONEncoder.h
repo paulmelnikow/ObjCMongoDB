@@ -33,8 +33,8 @@ typedef enum {
 
 @protocol BSONEncoderDelegate
 @optional
-- (BOOL) encoder:(BSONEncoder *) encoder shouldEncodeObject:(id) obj forKeyPath:(NSString *) keyPath;
-//- (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) obj forKeyPath:(NSString *) keyPath;
+- (id) encoder:(BSONEncoder *) encoder willEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
+- (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) replacementObj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder didEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoderDidFinish:(BSONEncoder *) encoder;
 - (void) encoderWillFinish:(BSONEncoder *) encoder;

@@ -146,7 +146,7 @@
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    BSONDocument *document = [[BSONDocument alloc] initWithParentOrNil:document];
+    BSONDocument *document = [[BSONDocument alloc] initWithParentOrNil:_parent];
     bson_iterator_subobject(_iter, [document bsonValue]);
 #if __has_feature(objc_arc)
     return document;
