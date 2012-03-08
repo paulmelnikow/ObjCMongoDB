@@ -1,5 +1,5 @@
 
-An Objective-C library, under development, for MongoDB.
+An Objective-C library, under development, for BSON and MongoDB.
 
 Sources copyright Paul Melnikow, Neon Design Technology, Inc., and other contributors.
 
