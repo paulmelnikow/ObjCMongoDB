@@ -104,5 +104,6 @@ typedef enum {
 @property (retain) NSObject<BSONDecoderDelegate> * delegate;
 @property (assign) BSONDecoderBehaviorOnNull behaviorOnNull;
 @property (assign) BSONDecoderBehaviorOnUndefined behaviorOnUndefined;
+@property (assign) NSZone * objectZone;
 
 @end

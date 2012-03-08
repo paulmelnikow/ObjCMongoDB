@@ -741,15 +741,6 @@
     @throw exc;
 }
 
-- (void) encodeValueOfObjCType:(const char *) type at:(const void *) addr {
-    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
-}
-- (void)encodeValuesOfObjCTypes:(const char *)types, ... {
-    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
-}
-- (void) encodeDataObject:(NSData *) data {
-    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
-}
 - (void) encodeArrayOfObjCType:(const char *) itemType count:(NSUInteger) count at:(const void *) address {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
@@ -759,17 +750,23 @@
 - (void) encodeByrefObject:(id) object {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
-- (void) encodePropertyList:(id) object {
-    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+- (void) encodeDataObject:(NSData *) data {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
 }
 - (void) encodeRootObject:(id) object {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (void) encodeValueOfObjCType:(const char *) type at:(const void *) addr {
+    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];
+}
+- (void) encodeValuesOfObjCTypes:(const char *) types, ... {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
 - (void) encodeNXObject:(id) object {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
 
-#pragma mark - Unsupported keyed encoding methods
+#pragma mark - Unsupported encoding types
 
 + (void) unsupportedCodingSelector:(SEL) selector {
     NSString *reason = [NSString stringWithFormat:@"%@ is not supported. Subclass if coding this type is needed.",
@@ -798,10 +795,16 @@
 - (void) encodeInt32:(int32_t) intv forKey:(NSString *) key {
     [BSONEncoder unsupportedCodingSelector:_cmd];
 }
+- (void) encodeInteger:(NSInteger) intv forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];    
+}
 - (void) encodePoint:(NSPoint) point {
     [BSONEncoder unsupportedCodingSelector:_cmd];    
 }
 - (void) encodePoint:(NSPoint) point forKey:(NSString *) key {
+    [BSONEncoder unsupportedCodingSelector:_cmd];
+}
+- (void) encodePropertyList:(id) object {
     [BSONEncoder unsupportedCodingSelector:_cmd];
 }
 - (void) encodeRect:(NSRect) rect {

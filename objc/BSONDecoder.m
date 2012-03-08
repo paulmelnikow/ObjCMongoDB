@@ -37,7 +37,7 @@
 
 @implementation BSONDecoder
 
-@synthesize delegate, behaviorOnNull, behaviorOnUndefined;
+@synthesize delegate, behaviorOnNull, behaviorOnUndefined, objectZone;
 
 #pragma mark - Initialization
 
@@ -53,6 +53,7 @@
         _iteratorStack = [[NSMutableArray array] retain];
         _keyPathComponents = [[NSMutableArray array] retain];
 #endif
+        self.objectZone = NSDefaultMallocZone();
     }
     return self;
 }
@@ -200,7 +201,7 @@
 
 - (id) decodeExposedCustomObjectWithClassOrNil:(Class) classForDecoder {
     if (classForDecoder)
-        return [[classForDecoder alloc] initWithCoder:self];
+        return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
     else
         return [self decodeExposedDictionaryWithClassOrNil:nil];
 }
@@ -493,18 +494,94 @@
 + (NSException *) unsupportedUnkeyedCodingSelector:(SEL)selector {
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
-    return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                    reason:reason
                                  userInfo:nil];
+    @throw exc;
 }
 
-- (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
-    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
-    @throw exc;
+- (void) decodeArrayOfObjCType:(const char *) itemType count:(NSUInteger) count at:(void *) array {
+    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
 }
 - (NSData *) decodeDataObject {
-    id exc = [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+    return nil;
+}
+- (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
+    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+}
+- (void) decodeValuesOfObjCTypes:(const char *)types, ... {
+    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];    
+}
+- (id) decodeNXObject {
+    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
+    return nil;
+}
+
+#pragma mark - Unsupported decoding types
+
++ (void) unsupportedCodingSelector:(SEL) selector {
+    NSString *reason = [NSString stringWithFormat:@"%@ is not supported. Subclass if coding this type is needed.",
+                        NSStringFromSelector(selector)];
+    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                     reason:reason
+                                   userInfo:nil];
     @throw exc;
+}
+
+- (const uint8_t *) decodeBytesForKey:(NSString *) key returnedLength:(NSUInteger *)lengthp {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NULL;
+}
+- (void *) decodeBytesWithReturnedLength:(NSUInteger *) lengthp {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NULL;
+}
+- (float) decodeFloatForKey:(NSString *) key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return 0;
+}
+- (int32_t) decodeInt32ForKey:(NSString *) key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return 0;
+}
+- (NSInteger) decodeIntegerForKey:(NSString *) key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return 0;
+}
+- (id)decodeObject {
+    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                     reason:@"Use -decodeObjectWithClass: instead."
+                                   userInfo:nil];
+    @throw exc;
+}
+-(NSPoint)decodePoint {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroPoint;
+}
+-(NSPoint)decodePointForKey:(NSString *)key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroPoint;
+}
+-(id)decodePropertyList {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return nil;
+}
+-(NSRect)decodeRect {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroRect;    
+}
+-(NSRect)decodeRectForKey:(NSString *)key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroRect;    
+}
+-(NSSize)decodeSize {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroSize;    
+}
+-(NSSize)decodeSizeForKey:(NSString *)key {
+    [BSONDecoder unsupportedCodingSelector:_cmd];
+    return NSZeroSize;    
 }
 
 @end
