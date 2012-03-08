@@ -44,11 +44,12 @@
 - (BSONDecoder *) initWithDocument:(BSONDocument *)document {
     self = [super init];
     if (self) {
-        _iterator = [document iterator];
 #if __has_feature(objc_arc)
+        _iterator = [document iterator];
         _iteratorStack = [NSMutableArray array];
         _keyPathComponents = [NSMutableArray array];
 #else
+        _iterator = [[document iterator] retain];
         _iteratorStack = [[NSMutableArray array] retain];
         _keyPathComponents = [[NSMutableArray array] retain];
 #endif
@@ -136,10 +137,17 @@
 
 - (void) exposeKey:(NSString *)key asArray:(BOOL) asArray { 
     [_iteratorStack addObject:_iterator];
+#if __has_feature(objc_arc)
     if (asArray)
         _iterator = [_iterator sequentialSubIteratorValue];
     else
         _iterator = [_iterator embeddedDocumentIteratorValue];
+#else
+    if (asArray)
+        _iterator = [[_iterator sequentialSubIteratorValue] retain];
+    else
+        _iterator = [[_iterator embeddedDocumentIteratorValue] retain];
+#endif
 }
 
 - (void) closeInternalObject {
@@ -149,6 +157,9 @@
                                        userInfo:nil];
         @throw exc;
     }
+#if !__has_feature(objc_arc)
+    [_iterator release];
+#endif
     _iterator = [_iteratorStack lastObject];
     [_iteratorStack removeLastObject];
 }
