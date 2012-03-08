@@ -118,7 +118,7 @@
 
 #pragma mark - Convenience methods
 
-+ (BSONDocument *) BSONDocumentForObject:(id) obj {
++ (BSONDocument *) documentForObject:(id) obj {
     BSONEncoder *encoder = [[self alloc] initForWriting];
     [encoder encodeObject:obj];
     BSONDocument *result = [encoder BSONDocument];
@@ -129,7 +129,7 @@
     return result;    
 }
 
-+ (BSONDocument *) BSONDocumentForDictionary:(NSDictionary *) dictionary {    
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary {    
     BSONEncoder *encoder = [[self alloc] initForWriting];
     [encoder encodeDictionary:dictionary];
     BSONDocument *result = [encoder BSONDocument];

@@ -103,4 +103,10 @@
  */
 - (BOOL) isEqual:(id)object;
 
+/**
+ Returns a string representation of the BSON document for debugging purposes.
+ @returns A string representation of the BSON document.
+ */
+- (NSString *) description;
+
 @end

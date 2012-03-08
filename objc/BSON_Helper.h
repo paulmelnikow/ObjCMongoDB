@@ -27,3 +27,4 @@ void BSONAssertValueNonNil (id key);
 void BSONAssertIteratorIsValueType (BSONIterator * iterator, bson_type valueType);
 void BSONAssertIteratorIsInValueTypeArray (BSONIterator * iterator, bson_type * valueType);
 NSString * NSStringFromBSONType (bson_type t);
+NSString * NSStringFromBSON( bson * b );

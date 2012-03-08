@@ -1036,12 +1036,12 @@
     [lucy.children addObject:littleRicky];
     [littleRicky.children addObject:littlerRicky];
     
-    STAssertNoThrow([BSONEncoder BSONDocumentForObject:lucy],
+    STAssertNoThrow([BSONEncoder documentForObject:lucy],
                     @"Encoding a loop should raise an exception");
 
     [littlerRicky.children addObject:lucy];
     
-    STAssertThrows([BSONEncoder BSONDocumentForObject:lucy],
+    STAssertThrows([BSONEncoder documentForObject:lucy],
                    @"Encoding a loop should raise an exception");
 }
 
@@ -1111,7 +1111,7 @@
     [lucy.children addObject:littleRicky];
     [littleRicky.children addObject:littlerRicky];
     
-    BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
+    BSONDocument *document = [BSONEncoder documentForObject:lucy];
 
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
@@ -1146,7 +1146,7 @@
     [lucy.children addObject:littleRicky];
     [littleRicky.children addObject:littlerRicky];
     
-    BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
+    BSONDocument *document = [BSONEncoder documentForObject:lucy];
     
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
@@ -1435,6 +1435,70 @@
     STAssertEqualObjects([lucy2.children objectAtIndex:0],
                    littleRicky.BSONObjectID,
                    @"Lucy's child should be the object id");
+}
+
+- (void) testDescription {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+
+    BSONDocument *document = [BSONEncoder documentForObject:lucy];
+    NSString *description = [document description];
+    
+/*
+BSONDocument <0x106236cd0>   bson.data: 0x10623c440   bson.owned: 1
+	name : 2 	 Lucy Ricardo
+	dob : 9 	 [can't print this type]
+	numberOfVisits : 18 	 [can't print this type]
+	children : 4 	 
+		0 : 3 	 
+			name : 2 	 Ricky Ricardo, Jr.
+			dob : 9 	 [can't print this type]
+			numberOfVisits : 18 	 [can't print this type]
+			children : 4 	 
+				0 : 3 	 
+					name : 2 	 Ricky Ricardo III
+					dob : 9 	 [can't print this type]
+					numberOfVisits : 18 	 [can't print this type]
+					children : 4 	 
+*/
+    
+    NSArray *searchTerms = [NSArray arrayWithObjects:@"name", @"dob", @"numberOfVisits", @"children", nil];
+    NSCountedSet *occurrences = [NSCountedSet set];
+    for (NSString *line in [description componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]])
+        for (NSString *term in searchTerms)
+            if (NSNotFound != [line rangeOfString:term].location)
+                [occurrences addObject:term];
+    
+    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:0]],
+                    (NSUInteger)3,
+                    @"'name' should appear three times");
+    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:1]],
+                   (NSUInteger)3,
+                   @"'dob' should appear three times");
+    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:2]],
+                   (NSUInteger)3,
+                   @"'numberOfVisits' should appear three times");
+    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:3]],
+                   (NSUInteger)3,
+                   @"'children' should appear three times");
 }
 
 @end

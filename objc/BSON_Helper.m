@@ -151,3 +151,51 @@ NSString * NSStringFromBSONType(bson_type t) {
     return [name autorelease];
 #endif
 }
+
+void bson_appendString_raw( const char * data , int depth, NSMutableString *string ){
+    bson_iterator i;
+    const char * key;
+    int temp;
+    bson_timestamp_t ts;
+    char oidhex[25];
+    bson_iterator_init( &i , data );
+    
+    while ( bson_iterator_next( &i ) ){
+        bson_type t = bson_iterator_type( &i );
+        if ( t == 0 )
+            break;
+        key = bson_iterator_key( &i );
+        
+        [string appendString:@"\n"];
+        for ( temp=0; temp<=depth; temp++ )
+            [string appendString:@"\t"];
+        [string appendFormat:@"%s : %d \t " , key , t];
+        switch ( (int)t ){
+            case bson_int: [string appendFormat:@"%d", bson_iterator_int( &i ) ]; break;
+            case bson_double: [string appendFormat:@"%f" , bson_iterator_double( &i ) ]; break;
+            case bson_bool: [string appendString: bson_iterator_bool( &i ) ? @"true" : @"false" ]; break;
+            case bson_string: [string appendString: NSStringFromBSONString(bson_iterator_string( &i ) )]; break;
+            case bson_null: [string appendString:@"null" ]; break;
+            case bson_oid: bson_oid_to_string(bson_iterator_oid(&i), oidhex); [string appendString:NSStringFromBSONString(oidhex)]; break;
+            case bson_timestamp:
+                ts = bson_iterator_timestamp( &i );
+                [string appendFormat:@"i: %d, t: %d", ts.i, ts.t];
+                break;
+            case bson_object:
+            case bson_array:
+                bson_appendString_raw( bson_iterator_value( &i ) , depth + 1, string );
+//                [string appendString:@"\n"];
+                break;
+            default:
+                [string appendString:@"[can't print this type]"];
+        }
+    }
+}
+
+NSString * NSStringFromBSON( bson * b ){
+    NSMutableString *result = [NSMutableString string];
+    bson_appendString_raw( b->data , 0, result );
+    return [result stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+}
+
+

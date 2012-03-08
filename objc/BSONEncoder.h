@@ -58,8 +58,8 @@ typedef enum {
 
 - (BSONEncoder *) initForWriting;
 
-+ (BSONDocument *) BSONDocumentForObject:(id) obj;
-+ (BSONDocument *) BSONDocumentForDictionary:(NSDictionary *) dictionary;
++ (BSONDocument *) documentForObject:(id) obj;
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary;
 
 - (BSONDocument *) BSONDocument;
 
