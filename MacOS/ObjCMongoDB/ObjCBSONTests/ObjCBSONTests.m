@@ -239,6 +239,71 @@
 
 @end
 
+@interface TestDecoderDelegate : NSObject <BSONDecoderDelegate>
+@property (retain) NSMutableArray *decodedObjects;
+@property (retain) NSMutableArray *decodedKeyPaths;
+@property (assign) NSUInteger decodedNilKeyPath;
+@property (assign) BOOL willFinish;
+@property (assign) BOOL didFinish;
+@end
+@implementation TestDecoderDelegate
+@synthesize decodedObjects, decodedKeyPaths, decodedNilKeyPath, willFinish, didFinish;
+
+-(id)init {
+    self.decodedObjects = [NSMutableArray array];
+    self.decodedKeyPaths = [NSMutableArray array];
+    return self;
+}
+-(id)decoder:(BSONDecoder *)decoder didDecodeObject:(id) object forKeyPath:(NSArray *) keyPathComponents {
+    [decodedObjects addObject:object];
+    if (keyPathComponents)
+        [decodedKeyPaths addObject:keyPathComponents];
+    else
+        self.decodedNilKeyPath = self.decodedNilKeyPath + 1;
+    return object;
+}
+//-(void)encoder:(BSONEncoder *)encoder didEncodeObject:(id) obj forKeyPath:(NSString *) keyPathComponents {
+//    [encodedObjects addObject:obj];
+//    if (keyPathComponents)
+//        [encodedKeyPaths addObject:keyPathComponents];
+//    else
+//        self.encodedNilKeyPath = self.encodedNilKeyPath + 1;
+//}
+//
+//- (void)encoderWillFinish:(BSONEncoder *)encoder {
+//    if (self.willFinish) {
+//        id exc = [NSException exceptionWithName:@"-encoderWillFinish: called more than once"
+//                                         reason:@"-encoderWillFinish: called more than once"
+//                                       userInfo:nil];
+//        @throw exc;
+//    }
+//    self.willFinish = YES;
+//}
+//
+//- (void)encoderDidFinish:(BSONEncoder *)encoder {
+//    if (!self.willFinish) {
+//        id exc = [NSException exceptionWithName:@"-encoderDidFinish: called without -encoderWillFinish:"
+//                                         reason:@"-encoderDidFinish: called without -encoderWillFinish:"
+//                                       userInfo:nil];
+//        @throw exc;
+//    }
+//    if (self.didFinish) {
+//        id exc = [NSException exceptionWithName:@"-encoderDidFinish: called more than once"
+//                                         reason:@"-encoderDidFinish: called more than once"
+//                                       userInfo:nil];
+//        @throw exc;        
+//    }
+//    self.didFinish = YES;
+//}
+//
+//-(id)encoder:(BSONEncoder *)encoder willEncodeObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
+//    if (keyPathComponents) [willEncodeKeyPaths addObject:keyPathComponents];
+//    return obj;
+//}
+
+@end
+
+
 @implementation ObjCBSONTests
 @synthesize df;
 
@@ -1060,5 +1125,87 @@
                          @"Encoded child should match child's name");
 }
 
+- (void) testDidDecodeDelegateMethod {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+    
+    NSCountedSet *allEncodedObjects = [NSCountedSet setWithObjects:
+                                       lucy, lucy.name, lucy.dob, lucy.children,
+                                       littleRicky, littleRicky.name, littleRicky.dob, littleRicky.children,
+                                       littlerRicky, littlerRicky.name, littlerRicky.dob,
+                                       nil];
+    
+    NSCountedSet *allEncodedKeyPaths = [NSCountedSet set];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"name"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"dob"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"children"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"name", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"dob", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"name", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"dob", nil]];
+    
+    TestEncoderDelegate *delegate = [[TestEncoderDelegate alloc] init];
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] init];
+    encoder1.delegate = delegate;
+    [encoder1 encodeObject:lucy];
+    
+    NSCountedSet *resultSet, *missing, *unexpected;
+    resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    
+    STAssertEquals(delegate.encodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+    
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
+    TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
+    decoder.delegate = delegate2;
+    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    [lucy2 retain];
+    
+    resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    
+    STAssertEquals(delegate2.decodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+    
+    
+    resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+}
 
 @end

@@ -309,9 +309,6 @@
 #pragma mark - Debugging
 
 - (NSString *) description {
-//    id objectValue = [self objectValue];
-//    NSString *objectDescription = [NSString stringWithFormat:[objectValue class]
-//    [[self objectValue] description];
     NSMutableString *string = [NSMutableString stringWithFormat:@"<%@: %p>", [[self class] description], self];
     [string appendFormat:@"\n    keyPathComponents:"];
     for (NSString *keyPath in [self keyPathComponents])

@@ -32,6 +32,7 @@ typedef enum {
     BSONRaiseExceptionOnUndefined
 } BSONDecoderBehaviorOnUndefined;
 
+@class BSONDecoder;
 @class BSONIterator;
 @class BSONDocument;
 @class BSONObjectID;
@@ -39,7 +40,7 @@ typedef enum {
 @protocol BSONDecoderDelegate
 @optional
 
-//- (id) decoder:(BSONDecoder *) decoder didDecodeObject: (id) object forKeyPath:(NSArray *) keyPathComponents;
+- (id) decoder:(BSONDecoder *) decoder didDecodeObject: (id) object forKeyPath:(NSArray *) keyPathComponents;
 //- (id) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
 //- (void) decoderWillFinish:(BSONDecoder *) decoder;
 //- (void) decoderDidFinish:(BSONDecoder *) decoder;
@@ -49,7 +50,8 @@ typedef enum {
 @interface BSONDecoder : NSCoder {
     @private
     BSONIterator *_iterator;
-    NSMutableArray *_stack;
+    NSMutableArray *_iteratorStack;
+    NSMutableArray *_keyPathComponents;
 }
 
 - (BSONDecoder *) initWithDocument:(BSONDocument *) document;
@@ -89,12 +91,15 @@ typedef enum {
 - (BSONCode *) decodeCodeForKey:(NSString *)key;
 - (BSONCodeWithScope *) decodeCodeWithScopeForKey:(NSString *)key;
 
+- (NSArray *) keyPathComponents;
+
 /**
  Returns the object which iterators return for undefined values (type 0x06).
  @return The object which iterators return for undefined values
  */
 + (id) objectForUndefined;
 
+@property (retain) NSObject<BSONDecoderDelegate> * delegate;
 @property (assign) BSONDecoderBehaviorOnNull behaviorOnNull;
 @property (assign) BSONDecoderBehaviorOnUndefined behaviorOnUndefined;
 

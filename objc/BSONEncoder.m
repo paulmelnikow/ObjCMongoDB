@@ -288,10 +288,10 @@
         _bb = bson_append_start_object(_bb, BSONStringFromNSString(key));    
 }
 
-- (void) closeInternalObject {
+- (void) closeKey {
     if (![_bufferStack count]) {
         id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"-closeInternalObject called too many times (without matching call to -exposeKey:asArray:forObject:)"
+                                         reason:@"-closeKey called too many times (without matching call to -exposeKey:asArray:forObject:)"
                                        userInfo:nil];
         @throw exc;
     }
@@ -307,7 +307,7 @@
     
     [self exposeKey:key asArray:NO forObject:obj];
     [self encodeExposedCustomObject:obj];
-    [self closeInternalObject];
+    [self closeKey];
     [self postEncodingHelper:obj key:key topLevel:NO];
 }
 
@@ -320,7 +320,7 @@
     
     [self exposeKey:key asArray:YES forObject:array];
     [self encodeExposedArray:array];
-    [self closeInternalObject];
+    [self closeKey];
     [self postEncodingHelper:array key:key topLevel:NO];
 }
 
@@ -333,7 +333,7 @@
     
     [self exposeKey:key asArray:NO forObject:dictionary];
     [self encodeExposedDictionary:dictionary];
-    [self closeInternalObject];    
+    [self closeKey];    
     [self postEncodingHelper:dictionary key:key topLevel:NO];
 }
 
