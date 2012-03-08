@@ -258,15 +258,17 @@
 @property (retain) NSMutableArray *decodedObjects;
 @property (retain) NSMutableArray *decodedKeyPaths;
 @property (assign) NSUInteger decodedNilKeyPath;
+@property (retain) NSMutableArray *replacedObjects;
 @property (assign) BOOL willFinish;
 @property (assign) BOOL didFinish;
 @end
 @implementation TestDecoderDelegate
-@synthesize decodedObjects, decodedKeyPaths, decodedNilKeyPath, willFinish, didFinish;
+@synthesize decodedObjects, decodedKeyPaths, decodedNilKeyPath, replacedObjects, willFinish, didFinish;
 
 -(id)init {
     self.decodedObjects = [NSMutableArray array];
     self.decodedKeyPaths = [NSMutableArray array];
+    self.replacedObjects = [NSMutableArray array];
     return self;
 }
 -(id)decoder:(BSONDecoder *)decoder didDecodeObject:(id) object forKeyPath:(NSArray *) keyPathComponents {
@@ -277,44 +279,18 @@
         self.decodedNilKeyPath = self.decodedNilKeyPath + 1;
     return object;
 }
-//-(void)encoder:(BSONEncoder *)encoder didEncodeObject:(id) obj forKeyPath:(NSString *) keyPathComponents {
-//    [encodedObjects addObject:obj];
-//    if (keyPathComponents)
-//        [encodedKeyPaths addObject:keyPathComponents];
-//    else
-//        self.encodedNilKeyPath = self.encodedNilKeyPath + 1;
-//}
-//
-//- (void)encoderWillFinish:(BSONEncoder *)encoder {
-//    if (self.willFinish) {
-//        id exc = [NSException exceptionWithName:@"-encoderWillFinish: called more than once"
-//                                         reason:@"-encoderWillFinish: called more than once"
-//                                       userInfo:nil];
-//        @throw exc;
-//    }
-//    self.willFinish = YES;
-//}
-//
-//- (void)encoderDidFinish:(BSONEncoder *)encoder {
-//    if (!self.willFinish) {
-//        id exc = [NSException exceptionWithName:@"-encoderDidFinish: called without -encoderWillFinish:"
-//                                         reason:@"-encoderDidFinish: called without -encoderWillFinish:"
-//                                       userInfo:nil];
-//        @throw exc;
-//    }
-//    if (self.didFinish) {
-//        id exc = [NSException exceptionWithName:@"-encoderDidFinish: called more than once"
-//                                         reason:@"-encoderDidFinish: called more than once"
-//                                       userInfo:nil];
-//        @throw exc;        
-//    }
-//    self.didFinish = YES;
-//}
-//
-//-(id)encoder:(BSONEncoder *)encoder willEncodeObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
-//    if (keyPathComponents) [willEncodeKeyPaths addObject:keyPathComponents];
-//    return obj;
-//}
+-(void)decoder:(BSONDecoder *)decoder willReplaceObject:(id)object withObject:(id)newObject forKeyPath:(NSArray *)keyPathComponents {
+    [replacedObjects addObject:object];
+}
+-(void)decoderWillFinish:(BSONDecoder *)decoder {
+    if (self.willFinish) {
+        id exc = [NSException exceptionWithName:@"-decoderWillFinish: called more than once"
+                                         reason:@"-decoderWillFinish: called more than once"
+                                       userInfo:nil];
+        @throw exc;
+    }
+    self.willFinish = YES;
+}
 
 @end
 
@@ -1341,6 +1317,12 @@
     NSArray *expectedResult = [NSArray arrayWithObjects:@"zero", @"uno", @"dos", @"tres", nil];
     STAssertEqualObjects(sample2_4,
                          expectedResult, @"Values should have been translated");
+    
+    NSArray *substitutedObjects = [NSArray arrayWithObjects:@"one", @"two", @"three", nil];
+
+    STAssertEqualObjects(delegate2.replacedObjects,
+                         substitutedObjects,
+                         @"Should have been notified of translated values");
 }
 
 - (void) testAwakeAfterUsingCoder {
@@ -1370,8 +1352,13 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
     TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
+    
+    STAssertFalse(delegate2.willFinish, @"Delegate received -decoderWillFinish before encoding finished");
+    
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     [lucy2 retain];
+    
+    STAssertTrue(delegate2.willFinish, @"Delegate did not receive -decoderWillFinish");
     
     NSArray *createdPersonObjects = [NSArray arrayWithObjects:
                                      lucy2,
@@ -1385,7 +1372,7 @@
     
     STAssertEquals(awakenedPersonObjects,
                    createdPersonObjects.count,
-                   @"Person objects should ahve received awakeAfterUsingCoder");
+                   @"Person objects should have received awakeAfterUsingCoder");
 }
 
 @end

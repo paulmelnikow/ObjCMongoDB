@@ -41,9 +41,8 @@ typedef enum {
 @optional
 
 - (id) decoder:(BSONDecoder *) decoder didDecodeObject: (id) object forKeyPath:(NSArray *) keyPathComponents;
-//- (id) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
-//- (void) decoderWillFinish:(BSONDecoder *) decoder;
-//- (void) decoderDidFinish:(BSONDecoder *) decoder;
+- (void) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
+- (void) decoderWillFinish:(BSONDecoder *) decoder;
 
 @end
 
