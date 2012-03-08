@@ -33,6 +33,7 @@ typedef enum {
 
 @protocol BSONEncoderDelegate
 @optional
+// never called on the root object
 - (BOOL) encoder:(BSONEncoder *) encoder shouldSubstituteObjectIDForObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (id) encoder:(BSONEncoder *) encoder willEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) replacementObj forKeyPath:(NSArray *) keyPathComponents;
@@ -43,9 +44,88 @@ typedef enum {
 @end
 
 /**
- Doesn't support classForCoder. Doesn't make sense for an encoder which doesn't really store class information.
- Detects loops in internal objects.
- Supports replacementObjectForBSONEncoder
+ Provides a high-level interface for creating a BSON document from a top-level object.
+ <code>BSONEncoder</code> handles BSON-supported types, arrays and dictionaries, and custom objects
+ which conform to <code>NSCoding</code> and support keyed archiving.
+ 
+ Invoke <code>BSONDocument</code> to finish encoding and return the encoded document. To encode another
+ top-level object, instantiate another encoder.
+
+ <code>BSONEncoder</code> follows the design of <code>NSCoder</code> as much as possible. For more
+ details, refer to Apple's Objects and Serializations Guide.
+  
+ Important differences from <code>NSKeyedArchiver</code>:
+ 
+ - <code>BSONEncoder</code> provides its own encoding implementation for:
+     - <code>NSString</code>
+     - <code>NSNumber</code>
+     - <code>NSDate</code>
+     - <code>NSData</code>
+     - <code>NSImage</code>
+     - <code>NSDictionary</code>
+     - <code>NSArray</code>
+     - <code>BSONObjectID</code> and the other classes defined in <code>BSONTypes.h</code>
+ - <code>BSONEncoder</code> does not store class information. While BSON documents include enough
+ type information to decode to appropriate Objective-C object types, <code>BSONDecoder</code> relies
+ on subclasses to encode themselves.
+ - <code>BSONEncoder</code> does not store version information.
+ - <code>BSONEncoder</code> does not support unkeyed coding. (If your custom objects can't implement
+ unkeyed coding, you can implement unkeyed coding by subclassing <code>BSONEncoder</code> and
+ overriding the unkeyed methods to automatically generate pre-defined, sequential key names, and
+ subclassing <code>BSONDecoder</code> to override the decoding methods to use these pre-defined key
+ names in the same sequence.)
+ - BSON documents may contain only one top-level object. Encoding multiple objects by encapsulating
+ them in an parent object, or by creating a separate BSON document for each one. (Each document
+ inserted into a MongoDB collection needs its own BSON document.)
+ - In MongoDB, key names may not contain <code>$</code> or <code.</code> characters. By default,
+ <code>BSONEncoder</code> throws an exception on illegal keys. You can control this behavior by
+ setting <code>restrictsKeyNamesForMongoDB</code> to <code>NO</code>. (Note that implementations
+ of <code>-encodeWithCoder:</code> in some Foundation classes may generate illegal keys. If this is
+ a problem, consider subclassing to mangle the keys so they're safe for MongoDB.)
+ - <code>BSONEncoder</code> does not allow objects to override their encoding with
+ <code>classForCoder</code>. Use <code>-encodeWithCoder:</code> (from <code>NSCoding</code>),
+ <code>-replacementObjectForCoder:</code> (from <code>NSObject</code>),
+ <code>-encodeWithBSONEncoder:</code>, or <code>-replacementObjectForBSONEncoder:</code> (both from
+ <code>BSONCoding</code>) instead.
+ - <code>BSONEncoder</code> does not automatically encode objects by reference, even duplicate objects.
+ (BSON's object ID type is useful for identifying a reference to another document in a MongoDB collection,
+ but unlike an Objective-C pointer, it can't be used to refer to a sub-object. A BSON object ID only
+ gets meaning in the context of a MongoDB collection. It has no meaning within a single document.) To
+ encode an object by reference, either the object or the delegate needs to substitute another object.
+ (See Encoding by Reference below.)
+ - To avoid infinite loops, <code>BSONEncoder</code> throws an exception if an object attempts to encode
+ its parent object or its direct ancestors. This check is done after object and delegate substitution,
+ and isn't triggered when, for example, an object ID is substituted in place of a parent object.
+ - <code>BSONEncoderDelegate</code> provides a similar interface to <code>NSKeyedArchiver</code>, but
+ conveys additional state information in the encoder's key path, and provides an additional delegate
+ method for substituing object IDs during encoding.
+  
+ Encoding by Reference
+ 
+ While by default <code>BSONEncoder</code> encodes child objects essentially by copying, it provides
+ a mechanism for substituting BSON object IDs for child objects. If an object should <i>always</i>
+ encode a child as an object ID, its <code>-encodeWithCoder:</code> can invoke
+ <code>-encodeObjectIDForObject:forKey:</code>. If the appropriate behavior depends on context or
+ other factors, have the delegate implement
+ <code>-encoder:shouldSubstituteObjectIDForObject:forKeyPath:</code>, and consider the key path,
+ key path depth, the object, or the delegate's own state.
+ 
+ For either of these to work, the child object must be able to generate an object ID by implementing
+ <code>BSONObjectID</code> or <code>BSONObjectIDForEncoder:</code> (defined in <code>BSONCoding</code>).
+ 
+ To encode some other reference structure, use one of the substitution methods of the object or delegate.
+ 
+ Controlling encoding of sub-objects
+ 
+ Objects may control their encoding by implementing one of these methods:
+ - <code>-encodeWithCoder:</code>
+ - <code>-encodeWithBSONEncoder:</code>
+ - <code>-replacementObjectForCoder:</code>
+ - <code>-replacementObjectForBSONEncoder:</code>
+ 
+ In addition, a delegate may control encoding by implementing one of these methods:
+ - <code>-encoder:shouldSubstituteObjectIDForObject:forKeyPath:</code>
+ - <code>-encoder:willEncodeObject:forKeyPath:</code>
  */
 @interface BSONEncoder : NSCoder {
 @private
