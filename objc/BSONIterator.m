@@ -315,8 +315,11 @@
         [string appendFormat:@"\n        %@", keyPath];
     [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self nativeValueType])];
     [string appendString:@"\n"];
-    NSLog(@"returning %p", string);
+#if __has_feature(objc_arc)
     return string;
+#else
+    return [[string retain] autorelease];
+#endif
 }
 
 @end
