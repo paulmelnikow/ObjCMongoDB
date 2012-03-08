@@ -22,6 +22,7 @@
 #import "BSONDecoder.h"
 #import "BSONDocument.h"
 #import "BSONTypes.h"
+#import "BSONCoding.h"
 
 @interface Person : NSObject
 @property (retain) NSString * name;
@@ -66,9 +67,11 @@
     && ((!self.children && !obj.children) || [self.children isEqualTo:obj.children]);
 }
 @end
-@interface PersonWithCoding : Person <NSCoding>
+@interface PersonWithCoding : Person <NSCoding, BSONCoding>
+@property (retain) BSONObjectID *BSONObjectID;
 @end
 @implementation PersonWithCoding
+@synthesize BSONObjectID;
 
 -(void)encodeWithCoder:(BSONEncoder *)coder {
     if (![coder isKindOfClass:[BSONEncoder class]]) {
@@ -236,6 +239,16 @@
         return [TestEncoderDelegateRedactDates redactedDate];
     else
         return obj;
+}
+
+@end
+
+@interface EncodesObjectIDForChildren : TestEncoderDelegate
+@end
+@implementation EncodesObjectIDForChildren
+
+-(BOOL)encoder:(BSONEncoder *)encoder shouldSubstituteObjectIDForObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
+    return [obj isKindOfClass:[PersonWithCoding class]];
 }
 
 @end
@@ -1373,6 +1386,55 @@
     STAssertEquals(awakenedPersonObjects,
                    createdPersonObjects.count,
                    @"Person objects should have received awakeAfterUsingCoder");
+}
+
+- (void) testShouldSubstituteObjectID {
+    
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    littlerRicky.children = [NSMutableArray array];
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+    
+    BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
+    EncodesObjectIDForChildren *delegate = [[EncodesObjectIDForChildren alloc] init];
+    encoder.delegate = delegate;
+    STAssertThrows([encoder encodeObject:lucy],
+                   @"Attempting to encode a nil objectID for a non-nil object should throw an exception");
+    
+    littleRicky.BSONObjectID = [BSONObjectID objectID];
+    
+    encoder = [[BSONEncoder alloc] initForWriting];
+    encoder.delegate = delegate;
+    [encoder encodeObject:lucy];
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:[encoder BSONDocument]];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
+    
+    STAssertEqualObjects(lucy2.name,
+                         lucy.name,
+                         @"Encoded name should match");
+    STAssertEquals([lucy2.children count],
+                   (NSUInteger)1,
+                   @"Lucy should still have one child");
+    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+                   littleRicky.BSONObjectID,
+                   @"Lucy's child should be the object id");
 }
 
 @end

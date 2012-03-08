@@ -90,6 +90,9 @@ typedef enum {
 - (BSONCode *) decodeCodeForKey:(NSString *)key;
 - (BSONCodeWithScope *) decodeCodeWithScopeForKey:(NSString *)key;
 
+// has side effect of moving the iterator
+- (BOOL) containsValueForKey:(NSString *) key;
+
 - (NSArray *) keyPathComponents;
 
 /**

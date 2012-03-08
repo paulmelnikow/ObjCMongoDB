@@ -19,11 +19,19 @@
 
 #import <Foundation/Foundation.h>
 
+@class BSONObjectID;
+
 @protocol BSONCoding <NSObject>
 
 @optional
 
+// different from BSONKeyedArchiverDelegate
+- (void) encodeWithBSONEncoder:(BSONEncoder *) encoder;
 - (id) replacementObjectForBSONEncoder:(BSONEncoder *) encoder;
 - (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder;
+
+// Support conveninence method encodeUsingObjectID
+- (BSONObjectID *) BSONObjectID;
+- (BSONObjectID *) BSONObjectIDForEncoder:(BSONEncoder *) encoder;
 
 @end

@@ -33,6 +33,7 @@ typedef enum {
 
 @protocol BSONEncoderDelegate
 @optional
+- (BOOL) encoder:(BSONEncoder *) encoder shouldSubstituteObjectIDForObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (id) encoder:(BSONEncoder *) encoder willEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) replacementObj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder didEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
@@ -66,6 +67,10 @@ typedef enum {
 - (void) encodeDictionary:(NSDictionary *) dictionary;
 
 - (void) encodeObject:(id) objv forKey:(NSString *) key;
+
+// objectid is substituted before other methods, eg delegate, are called
+// objv must implement -BSONObjectID or -BSONObjectIDForEncoder: method
+- (void) encodeObjectIDForObject:(id) objv forKey:(NSString *) key;
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key;
 - (void) encodeArray:(NSArray *) array forKey:(NSString *) key;
 - (void) encodeBSONDocument:(BSONDocument *) objv forKey:(NSString *) key;

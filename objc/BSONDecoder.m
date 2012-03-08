@@ -466,10 +466,13 @@
     return object;
 }
 
-
 #pragma mark - Other helper methods
 
 - (BOOL) allowsKeyedCoding { return YES; }
+
+- (BOOL) containsValueForKey:(NSString *) key {
+    return [_iterator containsValueForKey:key];
+}
 
 + (id) objectForUndefined {
     return [BSONIterator objectForUndefined];
