@@ -72,7 +72,7 @@
 - (void) encodingHelperForKey:(NSString *) key;
 - (BOOL) encodingHelper:(id) object withSubstitutions:(BOOL) substitutions topLevel:(BOOL) topLevel;
 - (BOOL) encodingHelper:(id) object key:(NSString *) key withSubstitutions:(BOOL) substitutions;
-- (void) postEncodingHelper:(id) object key:(NSString *) key topLevel:(BOOL) topLevel;
+- (void) postEncodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel;
 
 @end
 
@@ -257,13 +257,13 @@
     else
         [self encodeExposedCustomObject:objv];
     
-    [self postEncodingHelper:objv key:nil topLevel:topLevel];
+    [self postEncodingHelper:objv keyOrNil:nil topLevel:topLevel];
 }
 
 - (void) encodeDictionary:(NSDictionary *) objv {
     if ([self encodingHelper:objv withSubstitutions:YES topLevel:YES]) return;
     [self encodeExposedDictionary:objv];
-    [self postEncodingHelper:objv key:nil topLevel:YES];
+    [self postEncodingHelper:objv keyOrNil:nil topLevel:YES];
 }
 
 #pragma mark - Exposing internal objects
@@ -308,7 +308,7 @@
     [self exposeKey:key asArray:NO forObject:obj];
     [self encodeExposedCustomObject:obj];
     [self closeKey];
-    [self postEncodingHelper:obj key:key topLevel:NO];
+    [self postEncodingHelper:obj keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeArray:(NSArray *) array forKey:(NSString *) key {
@@ -321,7 +321,7 @@
     [self exposeKey:key asArray:YES forObject:array];
     [self encodeExposedArray:array];
     [self closeKey];
-    [self postEncodingHelper:array key:key topLevel:NO];
+    [self postEncodingHelper:array keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeDictionary:(NSDictionary *) dictionary forKey:(NSString *) key {
@@ -334,7 +334,7 @@
     [self exposeKey:key asArray:NO forObject:dictionary];
     [self encodeExposedDictionary:dictionary];
     [self closeKey];    
-    [self postEncodingHelper:dictionary key:key topLevel:NO];
+    [self postEncodingHelper:dictionary keyOrNil:key topLevel:NO];
 }
 
 #pragma mark - Encoding exposed objects
@@ -409,7 +409,7 @@
 - (void) encodeObjectID:(BSONObjectID *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     bson_append_oid(_bb, BSONStringFromNSString(key), [objv objectIDPointer]);
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeInt:(int) intv forKey:(NSString *) key {
@@ -471,7 +471,7 @@
             [self encodeInt:objv.intValue forKey:key];
             break;
     }
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeDate:(NSDate *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -479,13 +479,13 @@
     bson_append_date (_bb,
                       BSONStringFromNSString(key),
                       1000.0 * [objv timeIntervalSince1970]);
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     bson_append_timestamp(_bb, BSONStringFromNSString(key), [objv timestampPointer]);
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeImage:(NSImage *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -493,7 +493,7 @@
     NSData *data = [objv TIFFRepresentationUsingCompression:NSTIFFCompressionLZW
                                                      factor:1.0L];
     [self encodeObject:data forKey:key];
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeString:(NSString *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -501,7 +501,7 @@
     bson_append_string(_bb,
                        BSONStringFromNSString(key),
                        BSONStringFromNSString(objv));
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeSymbol:(BSONSymbol *)objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -509,7 +509,7 @@
     bson_append_symbol(_bb,
                        BSONStringFromNSString(key),
                        BSONStringFromNSString(objv.symbol));
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeRegularExpressionPattern:(NSString *) pattern options:(NSString *) options forKey:(NSString *) key {
@@ -530,7 +530,7 @@
 - (void) encodeRegularExpression:(BSONRegularExpression *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeRegularExpressionPattern:objv.pattern options:objv.options forKey:key];
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeBSONDocument:(BSONDocument *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -538,7 +538,7 @@
     bson_append_bson(_bb,
                      BSONStringFromNSString(key),
                      [objv bsonValue]);
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeData:(NSData *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -548,7 +548,7 @@
                        0,
                        objv.bytes,
                        objv.length);
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeCodeString:(NSString *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -556,13 +556,13 @@
     bson_append_code(_bb,
                      BSONStringFromNSString(key),
                      BSONStringFromNSString(objv));
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeCode:(BSONCode *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeCodeString:objv.code forKey:key];
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeCodeString:(NSString *) code withScope:(BSONDocument *) scope forKey:(NSString *) key {
@@ -582,7 +582,7 @@
 - (void) encodeCodeWithScope:(BSONCodeWithScope *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions]) return;
     [self encodeCodeString:objv.code withScope:objv.scope forKey:key];
-    [self postEncodingHelper:objv key:key topLevel:NO];
+    [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 // FIXME not implemented:
@@ -656,7 +656,7 @@
     return NO;
 }
 
-- (void) postEncodingHelper:(id) object key:(NSString *) key topLevel:(BOOL) topLevel {
+- (void) postEncodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel {
     if ([self.delegate respondsToSelector:@selector(encoder:didEncodeObject:forKeyPath:)])
         [self.delegate encoder:self didEncodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
     if (topLevel) [_encodingObjectStack removeLastObject];

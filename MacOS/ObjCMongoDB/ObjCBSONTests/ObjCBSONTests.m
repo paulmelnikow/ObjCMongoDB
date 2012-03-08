@@ -29,9 +29,10 @@
 @property (assign) NSInteger numberOfVisits;
 @property (retain) NSMutableArray * children;
 @property (retain) Person * parent;
+@property (assign) BOOL awakeAfterCoder;
 @end
 @implementation Person
-@synthesize name, dob, numberOfVisits, children, parent;
+@synthesize name, dob, numberOfVisits, children, parent, awakeAfterCoder;
 -(void)encodeWithCoder:(NSCoder *)coder {
     id exc = [NSException exceptionWithName:@"encodeWithCoder: was called"
                                    reason:@"encodeWithCoder: was called"
@@ -68,6 +69,7 @@
 @interface PersonWithCoding : Person <NSCoding>
 @end
 @implementation PersonWithCoding
+
 -(void)encodeWithCoder:(BSONEncoder *)coder {
     if (![coder isKindOfClass:[BSONEncoder class]]) {
         id exc = [NSException exceptionWithName:@"Needs a BSONEncoder"
@@ -81,6 +83,7 @@
     [coder encodeArray:self.children forKey:@"children"];
     [coder encodeObject:self.parent forKey:@"parent"];
 }
+
 -(id)initWithCoder:(BSONDecoder *)coder {
     if (![coder isKindOfClass:[BSONDecoder class]]) {
         id exc = [NSException exceptionWithName:@"Needs a BSONDecoder"
@@ -98,6 +101,18 @@
     }
     return self;
 }
+
+-(id)awakeAfterUsingCoder:(NSCoder *)aDecoder {
+    if (self.awakeAfterCoder) {
+        id exc = [NSException exceptionWithName:@"awakeAfterUsingCoder: was called more than once"
+                                         reason:@"awakeAfterUsingCoder: was called more than once"
+                                       userInfo:nil];
+        @throw exc;
+    }
+    self.awakeAfterCoder = YES;
+    return self;
+}
+
 @end
 
 @interface PersonWithBriefCoding : PersonWithCoding
@@ -302,6 +317,36 @@
 //}
 
 @end
+
+@interface TranslatingTestDecoderDelegate : TestDecoderDelegate
+@end
+@implementation TranslatingTestDecoderDelegate
+
+-(id)decoder:(BSONDecoder *)decoder didDecodeObject:(id)object forKeyPath:(NSArray *)keyPathComponents {
+    [super decoder:decoder didDecodeObject:object forKeyPath:keyPathComponents];
+    if ([object isEqualTo:@"one"])
+        return @"uno";
+    else if ([object isEqualTo:@"two"])
+        return @"dos";
+    else if ([object isEqualTo:@"three"])
+        return @"tres";
+    else if ([object isEqualTo:@"four"])
+        return @"quattro";
+    else if ([object isEqualTo:@"five"])
+        return @"cinco";
+    else if ([object isEqualTo:@"six"])
+        return @"seis";
+    else if ([object isEqualTo:@"seven"])
+        return @"siete";
+    else if ([object isEqualTo:@"eight"])
+        return @"ocho";
+    else if ([object isEqualTo:@"nine"])
+        return @"nueve";
+    else
+        return object;
+}
+@end
+
 
 
 @implementation ObjCBSONTests
@@ -737,7 +782,7 @@
     
     BSONDecoder *decoder = nil;
     decoder = [[BSONDecoder alloc] initWithDocument:encoder.BSONDocument];
-    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
     STAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
 }
@@ -1043,7 +1088,7 @@
     
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
     
-    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     PersonWithCoding *littleRicky2 = [lucy2.children objectAtIndex:0];
     PersonWithCoding *littlerRicky2 = [littleRicky2.children objectAtIndex:0];
     
@@ -1080,7 +1125,7 @@
     BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
 
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
-    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
     STAssertEqualObjects(lucy2.name,
                          lucy.name,
@@ -1115,7 +1160,7 @@
     BSONDocument *document = [BSONEncoder BSONDocumentForObject:lucy];
     
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
-    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
     STAssertEqualObjects(lucy2.name,
                          lucy.name,
@@ -1165,7 +1210,7 @@
     [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"children", @"0", @"children", @"0", @"dob", nil]];
     
     TestEncoderDelegate *delegate = [[TestEncoderDelegate alloc] init];
-    BSONEncoder *encoder1 = [[BSONEncoder alloc] init];
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] initForWriting];
     encoder1.delegate = delegate;
     [encoder1 encodeObject:lucy];
     
@@ -1185,7 +1230,7 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
     TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
-    PersonWithCoding *lucy2 = [[PersonWithCoding alloc] initWithCoder:decoder];
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     [lucy2 retain];
     
     resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
@@ -1206,6 +1251,141 @@
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+}
+
+- (void) testDidDecodeDelegateMethod2 {    
+    NSDictionary *sample = [NSDictionary dictionaryWithObjectsAndKeys:
+                            [NSNumber numberWithInt:1], @"one",
+                            [NSNumber numberWithDouble:2.0], @"two",
+                            @"3", @"three",
+                            [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
+                            nil];
+    
+    NSCountedSet *allEncodedObjects = [NSCountedSet set];
+    [allEncodedObjects addObjectsFromArray:[[sample objectForKey:@"four"] allObjects]];
+    [allEncodedObjects addObjectsFromArray:[sample objectsForKeys:[sample allKeys] notFoundMarker:[NSNull null]]];
+    [allEncodedObjects addObject:sample];
+    
+    NSCountedSet *allEncodedKeyPaths = [NSCountedSet set];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"one"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"two"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"three"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObject:@"four"]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"four", @"0", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"four", @"1", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"four", @"2", nil]];
+    [allEncodedKeyPaths addObject:[NSArray arrayWithObjects:@"four", @"3", nil]];
+    
+    TestEncoderDelegate *delegate = [[TestEncoderDelegate alloc] init];
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] initForWriting];
+    encoder1.delegate = delegate;
+    [encoder1 encodeDictionary:sample];
+    
+    NSCountedSet *resultSet, *missing, *unexpected;
+    resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    
+    STAssertEquals(delegate.encodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+    
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
+    TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
+    decoder.delegate = delegate2;
+    NSDictionary *sample2 = [decoder decodeDictionary];
+    [sample2 retain];
+    
+    resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    
+    STAssertEquals(delegate2.decodedNilKeyPath,
+                   (NSUInteger)1,
+                   @"Delegate did not receive exactly one notification for nil key path");
+    
+    
+    resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
+    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    
+    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+}
+
+- (void) testDidDecodeDelegateSubstitutions {    
+    NSDictionary *sample = [NSDictionary dictionaryWithObjectsAndKeys:
+                            [NSNumber numberWithInt:1], @"one",
+                            [NSNumber numberWithDouble:2.0], @"two",
+                            @"3", @"three",
+                            [NSArray arrayWithObjects:@"zero", @"one", @"two", @"three", nil], @"four",
+                            nil];
+        
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] initForWriting];
+    [encoder1 encodeDictionary:sample];
+    
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
+    TranslatingTestDecoderDelegate *delegate2 = [[TranslatingTestDecoderDelegate alloc] init];
+    decoder.delegate = delegate2;
+    NSDictionary *sample2 = [decoder decodeDictionary];
+    [sample2 retain];
+    
+    NSArray *sample2_4 = [sample2 objectForKey:@"four"];
+    NSArray *expectedResult = [NSArray arrayWithObjects:@"zero", @"uno", @"dos", @"tres", nil];
+    STAssertEqualObjects(sample2_4,
+                         expectedResult, @"Values should have been translated");
+}
+
+- (void) testAwakeAfterUsingCoder {
+    PersonWithCoding *lucy = [[PersonWithCoding alloc] init];
+    lucy.name = @"Lucy Ricardo";
+    lucy.dob = [self.df dateFromString:@"Jan 1, 1920"];
+    lucy.numberOfVisits = 75;
+    lucy.children = [NSMutableArray array];
+    
+    PersonWithCoding *littleRicky = [[PersonWithCoding alloc] init];
+    littleRicky.name = @"Ricky Ricardo, Jr.";
+    littleRicky.dob = [self.df dateFromString:@"Jan 19, 1953"];
+    littleRicky.numberOfVisits = 15;
+    littleRicky.children = [NSMutableArray array];
+    
+    PersonWithCoding *littlerRicky = [[PersonWithCoding alloc] init];
+    littlerRicky.name = @"Ricky Ricardo III";
+    littlerRicky.dob = [self.df dateFromString:@"Jan 19, 1975"];
+    littlerRicky.numberOfVisits = 1;
+    
+    [lucy.children addObject:littleRicky];
+    [littleRicky.children addObject:littlerRicky];
+        
+    BSONEncoder *encoder1 = [[BSONEncoder alloc] initForWriting];
+    [encoder1 encodeObject:lucy];
+        
+    BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
+    TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
+    decoder.delegate = delegate2;
+    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
+    [lucy2 retain];
+    
+    NSArray *createdPersonObjects = [NSArray arrayWithObjects:
+                                     lucy2,
+                                     [lucy2.children objectAtIndex:0],
+                                     [[(PersonWithCoding *)[lucy2.children objectAtIndex:0] children] objectAtIndex:0],
+    nil];
+    
+    NSUInteger awakenedPersonObjects = 0;
+    for (PersonWithCoding *person in createdPersonObjects)
+        if (person.awakeAfterCoder) awakenedPersonObjects = awakenedPersonObjects + 1;
+    
+    STAssertEquals(awakenedPersonObjects,
+                   createdPersonObjects.count,
+                   @"Person objects should ahve received awakeAfterUsingCoder");
 }
 
 @end
