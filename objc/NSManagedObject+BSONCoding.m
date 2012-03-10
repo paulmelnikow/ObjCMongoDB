@@ -52,7 +52,8 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
         else if ([property isKindOfClass:[NSFetchedPropertyDescription class]])
             [self encodeFetchedProperty:(NSFetchedPropertyDescription *)property withEncoder:encoder];
     }
-    [encoder encodeData:[[self entity] versionHash] forKey:BSONCodingEntityVersionHashKey];
+    if (encoder.managedObjectsShouldEncodeEntityVersionHash)
+        [encoder encodeData:[[self entity] versionHash] forKey:BSONCodingEntityVersionHashKey];
 }
 
 - (void) encodeAttribute:(NSAttributeDescription *) attribute withEncoder:(BSONEncoder *) encoder {

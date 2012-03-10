@@ -189,5 +189,6 @@ typedef enum {
 @property (retain) NSObject<BSONEncoderDelegate> * delegate;
 @property (assign) BSONEncoderBehaviorOnNil behaviorOnNil;
 @property (assign) BOOL restrictsKeyNamesForMongoDB;
+@property (assign) BOOL managedObjectsShouldEncodeEntityVersionHash;
 
 @end

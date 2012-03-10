@@ -77,7 +77,7 @@
 
 @implementation BSONEncoder
 
-@synthesize delegate, behaviorOnNil, restrictsKeyNamesForMongoDB;
+@synthesize delegate, behaviorOnNil, restrictsKeyNamesForMongoDB, managedObjectsShouldEncodeEntityVersionHash;
 
 #pragma mark - Initialization
 
