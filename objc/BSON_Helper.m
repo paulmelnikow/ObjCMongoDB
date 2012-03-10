@@ -102,7 +102,6 @@ void BSONAssertIteratorIsInValueTypeArray(BSONIterator * iterator, bson_type * v
     @throw exc;
 }
 
-
 NSString * NSStringFromBSONType(bson_type t) {
     NSString *name = nil;
     switch(t) {
@@ -152,50 +151,31 @@ NSString * NSStringFromBSONType(bson_type t) {
 #endif
 }
 
-void bson_appendString_raw( const char * data , int depth, NSMutableString *string ){
-    bson_iterator i;
-    const char * key;
-    int temp;
-    bson_timestamp_t ts;
-    char oidhex[25];
-    bson_iterator_from_buffer( &i, data );
+NSMutableString * target_for_NSStringFromBSON_target = nil;
+
+int substitute_for_printf( const char *format, ... ) {
+    if (!target_for_NSStringFromBSON_target) return 0;
     
-    while ( bson_iterator_next( &i ) ){
-        bson_type t = bson_iterator_type( &i );
-        if ( t == 0 )
-            break;
-        key = bson_iterator_key( &i );
-        
-        [string appendString:@"\n"];
-        for ( temp=0; temp<=depth; temp++ )
-            [string appendString:@"\t"];
-        [string appendFormat:@"%s : %d \t " , key , t];
-        switch ( (int)t ){
-            case BSON_INT: [string appendFormat:@"%d", bson_iterator_int( &i ) ]; break;
-            case BSON_DOUBLE: [string appendFormat:@"%f" , bson_iterator_double( &i ) ]; break;
-            case BSON_BOOL: [string appendString: bson_iterator_bool( &i ) ? @"true" : @"false" ]; break;
-            case BSON_STRING: [string appendString: NSStringFromBSONString(bson_iterator_string( &i ) )]; break;
-            case BSON_NULL: [string appendString:@"null" ]; break;
-            case BSON_OID: bson_oid_to_string(bson_iterator_oid(&i), oidhex); [string appendString:NSStringFromBSONString(oidhex)]; break;
-            case BSON_TIMESTAMP:
-                ts = bson_iterator_timestamp( &i );
-                [string appendFormat:@"i: %d, t: %d", ts.i, ts.t];
-                break;
-            case BSON_OBJECT:
-            case BSON_ARRAY:
-                bson_appendString_raw( bson_iterator_value( &i ) , depth + 1, string );
-//                [string appendString:@"\n"];
-                break;
-            default:
-                [string appendString:@"[can't print this type]"];
-        }
-    }
+    va_list args;
+    va_start(args, format);
+    NSString *stringToAppend = [[NSString alloc] initWithFormat:NSStringFromBSONString(format) arguments:args];
+    va_end(args);    
+    
+    [target_for_NSStringFromBSON_target appendString:stringToAppend];
+#if __has_feature(objc_arc)
+    [stringToAppend release];
+#endif
+    
+    return 0;
 }
 
 NSString * NSStringFromBSON( bson * b ){
-    NSMutableString *result = [NSMutableString string];
-    bson_appendString_raw( b->data , 0, result );
-    return [result stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    target_for_NSStringFromBSON_target = [NSMutableString string];
+    bson_errprintf = bson_printf = substitute_for_printf;
+    bson_print(b);
+    bson_errprintf = bson_printf = printf;
+    NSString *result = [target_for_NSStringFromBSON_target stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    target_for_NSStringFromBSON_target = nil;
+    return result;
 }
-
 
