@@ -42,7 +42,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
                                        userInfo:nil];
         @throw exc;
     }
-    for (NSPropertyDescription *property in [[self entity] properties]) {
+    for (NSPropertyDescription *property in [self entity]) {
         if ([property isTransient])
             continue;
         else if ([property isKindOfClass:[NSAttributeDescription class]])
@@ -110,7 +110,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
     NSEntityDescription *edesc = [NSEntityDescription entityForName:[[self class] description]
                                              inManagedObjectContext:moc];    
     if (self = [self initWithEntity:edesc insertIntoManagedObjectContext:moc]) {
-        for (NSPropertyDescription *property in [[self entity] properties]) {
+        for (NSPropertyDescription *property in [self entity]) {
             if ([property isTransient])
                 continue;
             else if ([property isKindOfClass:[NSAttributeDescription class]])
