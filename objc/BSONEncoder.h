@@ -28,8 +28,8 @@ typedef enum {
     BSONRaiseExceptionOnNil
 } BSONEncoderBehaviorOnNil;
 
-@class BSONDocument;
 @class BSONEncoder;
+@class BSONDocument;
 
 @protocol BSONEncoderDelegate
 @optional

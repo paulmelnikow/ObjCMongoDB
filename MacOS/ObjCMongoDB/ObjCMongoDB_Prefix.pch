@@ -29,11 +29,11 @@
 #import "MongoDB.h"
 
 @interface BSONDocument (Project)
--(bson *) bsonValue;
+- (bson *) bsonValue;
 @end
 
 @interface BSONEncoder (Project)
--(bson *) bsonValue;
+- (bson *) bsonValue;
 @end
 
 @interface BSONObjectID (Project)
