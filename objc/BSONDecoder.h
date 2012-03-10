@@ -61,8 +61,8 @@ typedef enum {
 + (NSDictionary *) decodeDictionaryWithData:(NSData *) data;
 + (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder data:(NSData *) data;
 
-+ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document;
-+ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data;
++ (id) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document;
++ (id) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data;
 
 - (NSDictionary *) decodeDictionary;
 - (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder;
