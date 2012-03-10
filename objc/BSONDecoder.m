@@ -31,6 +31,7 @@
 - (BOOL) decodingHelperForKey:(NSString *) key nativeValueType:(bson_type) nativeValueType result:(id*) result;
 - (BOOL) decodingHelperForKey:(NSString *) key nativeValueTypeArray:(bson_type*) nativeValueTypeArray result:(id*) result;
 - (id) postDecodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel;
+- (id) postDecodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel substituteClassForObjectID:(Class) classForObjectID;
 
 - (NSArray *) keyPathComponentsAddingKeyOrNil:(NSString *) key;
 @end
@@ -298,6 +299,12 @@
     return [self postDecodingHelper:[_iterator objectIDValue] keyOrNil:key topLevel:NO];
 }
 
+- (id) decodeObjectIDForKey:(NSString *) key substituteObjectWithClass:(Class) classForDecoder {
+    id result = nil;
+    if ([self decodingHelperForKey:key nativeValueType:BSON_OID result:&result]) return result;
+    return [self postDecodingHelper:[_iterator objectIDValue] keyOrNil:key topLevel:NO substituteClassForObjectID:classForDecoder];
+}
+
 - (int) decodeIntForKey:(NSString *) key {
     bson_type allowedTypes[3];
     allowedTypes[0] = BSON_INT;
@@ -456,7 +463,30 @@
 }
 
 - (id) postDecodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel {
+    return [self postDecodingHelper:object keyOrNil:key topLevel:topLevel substituteClassForObjectID:nil];
+}
+
+- (id) postDecodingHelper:(id) object keyOrNil:(NSString *) key topLevel:(BOOL) topLevel substituteClassForObjectID:(Class) classForObjectID {
     id originalObject = object;
+    
+    if ([object isKindOfClass:[BSONObjectID class]]) {
+        if (!classForObjectID
+            && [self.delegate respondsToSelector:@selector(decoder:classToSubstituteForObjectID:forKeyPath:)])
+            classForObjectID = [self.delegate decoder:self classToSubstituteForObjectID:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
+
+        if (classForObjectID) {
+            if ([classForObjectID respondsToSelector:@selector(instanceForObjectID:decoder:)])
+                object = [classForObjectID instanceForObjectID:object decoder:self];
+            else {
+                NSString *reason = [NSString stringWithFormat:@"Substituting class %@ for object ID but class doesn't respond to +instanceForObjectID:decoder:",
+                                    NSStringFromClass(classForObjectID)];
+                id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                                 reason:reason
+                                               userInfo:nil];
+                @throw exc;
+            }
+        }
+    }
     
     if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
         object = [object awakeAfterUsingBSONDecoder:self];

@@ -43,9 +43,7 @@ typedef enum {
 - (id) decoder:(BSONDecoder *) decoder didDecodeObject: (id) object forKeyPath:(NSArray *) keyPathComponents;
 - (void) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
 - (void) decoderWillFinish:(BSONDecoder *) decoder;
-
-//- (BOOL) decoder:(BSONDecoder *) decoder shouldSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents withClass:(Class *) classForDecoder;
-//- (Class) decoder:(BSONDecoder *) decoder classToSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents;
+- (Class) decoder:(BSONDecoder *) decoder classToSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents;
 
 @end
 
@@ -186,8 +184,7 @@ typedef enum {
 - (id) decodeObjectForKey:(NSString *) key;
 - (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder;
 
-//- (id) decodeObjectIDForKey:(NSString *) key substituteObjectWithClass:(Class) classForDecoder;
-
+- (id) decodeObjectIDForKey:(NSString *) key substituteObjectWithClass:(Class) classForDecoder;
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
 - (int) decodeIntForKey:(NSString *)key;
 - (int64_t) decodeInt64ForKey:(NSString *)key;
