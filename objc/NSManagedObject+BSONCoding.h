@@ -22,6 +22,8 @@
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 
+extern NSString * const BSONCodingEntityVersionHashKey;
+
 @interface NSManagedObject (BSONCoding) <BSONCoding>
 
 // reason:@"Encoder's behaviorOnNil must be BSONDoNothingOnNil to encode NSManagedObject instances"
@@ -30,6 +32,7 @@
 - (void) encodeRelationship:(NSRelationshipDescription *) relationship withEncoder:(BSONEncoder *) encoder;
 - (void) encodeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withEncoder:(BSONEncoder *) encoder;
 
+// Encodes the version hash key in BSONCodingEntityVersionHashKey
 - (id) initWithBSONDecoder:(BSONDecoder *) decoder;
 - (void) decodeAttribute:(NSAttributeDescription *) attribute withDecoder:(BSONDecoder *) decoder;
 - (void) decodeRelationship:(NSRelationshipDescription *) relationship withDecoder:(BSONDecoder *) decoder;
