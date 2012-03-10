@@ -37,7 +37,7 @@
 
 @implementation BSONDecoder
 
-@synthesize delegate, behaviorOnNull, behaviorOnUndefined, objectZone;
+@synthesize delegate, managedObjectContext, behaviorOnNull, behaviorOnUndefined, objectZone;
 
 #pragma mark - Initialization
 
@@ -200,10 +200,20 @@
 #pragma mark - Decoding exposed internal objects
 
 - (id) decodeExposedCustomObjectWithClassOrNil:(Class) classForDecoder {
-    if (classForDecoder)
-        return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
-    else
+    if (!classForDecoder)
         return [self decodeExposedDictionaryWithClassOrNil:nil];
+    else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
+        return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];        
+    else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
+        return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
+    else {
+        NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
+                            NSStringFromClass(classForDecoder)];
+        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                         reason:reason
+                                       userInfo:nil];
+        @throw exc;
+    }
 }
 
 - (NSDictionary *) decodeExposedDictionaryWithClassOrNil:(Class) classForDecoder {
@@ -472,6 +482,18 @@
 
 - (BOOL) containsValueForKey:(NSString *) key {
     return [_iterator containsValueForKey:key];
+}
+
+- (bson_type) nativeValueTypeForKey:(NSString *) key {
+    return [_iterator nativeValueTypeForKey:key];
+}
+
+- (BOOL) valueIsEmbeddedDocumentForKey:(NSString *) key {
+    return BSON_OBJECT == [self nativeValueTypeForKey:key];
+}
+
+- (BOOL) valueIsArrayForKey:(NSString *) key {
+    return BSON_ARRAY == [self nativeValueTypeForKey:key];
 }
 
 + (id) objectForUndefined {

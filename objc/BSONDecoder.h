@@ -92,6 +92,10 @@ typedef enum {
 
 // has side effect of moving the iterator
 - (BOOL) containsValueForKey:(NSString *) key;
+- (bson_type) nativeValueTypeForKey:(NSString *) key;
+- (BOOL) valueIsEmbeddedDocumentForKey:(NSString *) key;
+- (BOOL) valueIsArrayForKey:(NSString *) key;
+
 
 - (NSArray *) keyPathComponents;
 
@@ -102,6 +106,7 @@ typedef enum {
 + (id) objectForUndefined;
 
 @property (retain) NSObject<BSONDecoderDelegate> * delegate;
+@property (retain) NSManagedObjectContext * managedObjectContext;
 @property (assign) BSONDecoderBehaviorOnNull behaviorOnNull;
 @property (assign) BSONDecoderBehaviorOnUndefined behaviorOnUndefined;
 @property (assign) NSZone * objectZone;

@@ -1,6 +1,6 @@
 //
-//  BSONCoding.h
-//  ObjCMongoDB
+//  ObjCBSONCoreDataTests.h
+//  ObjCBSONTests
 //
 //  Copyright 2012 Paul Melnikow and other contributors
 //
@@ -17,24 +17,14 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
-#import "BSONEncoder.h"
-#import "BSONDecoder.h"
+#import <SenTestingKit/SenTestingKit.h>
 
-@class BSONObjectID;
+@interface ObjCBSONCoreDataTests : SenTestCase {
+    NSManagedObjectModel *_mom;
+    NSPersistentStoreCoordinator *_psc;
+    NSManagedObjectContext *_moc;
+}
 
-@protocol BSONCoding <NSObject>
-
-@optional
-
-// different from BSONKeyedArchiverDelegate
-- (void) encodeWithBSONEncoder:(BSONEncoder *) encoder;
-- (id) replacementObjectForBSONEncoder:(BSONEncoder *) encoder;
-- (id) initWithBSONDecoder:(BSONDecoder *) decoder;
-- (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder;
-
-// Support conveninence method encodeUsingObjectID
-- (BSONObjectID *) BSONObjectID;
-- (BSONObjectID *) BSONObjectIDForEncoder:(BSONEncoder *) encoder;
+@property (retain) NSDateFormatter * df;
 
 @end
