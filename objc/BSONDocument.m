@@ -49,12 +49,17 @@
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
     if (self = [super init]) {
+        if (BSON_ERROR == bson_init_data(_bson, (char *)data.bytes)) {
+#if !__has_feature(objc_arc)
+            [self release];
+#endif
+            return nil;
+        }
 #if __has_feature(objc_arc)
         _source = data;
 #else
         _source = [data retain];
 #endif
-        bson_init_data(_bson, (char *)data.bytes);
     }
     return self;
 }
@@ -86,7 +91,7 @@
 
 - (NSData *) dataValue {
 #if __has_feature(objc_arc)
-    return [NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson) freeWhenDone:NO];
+    return [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
 #else
     return [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
 #endif
@@ -108,7 +113,7 @@
 - (NSString *) description {
     NSString *identifier = [NSString stringWithFormat:@"%@ <%p>  bson.data: %p  bson.cur: %p  bson.dataSize: %i  bson.stackPos: %i  bson.err: %i  bson.errstr: %s\n",
                             [[self class] description], self,
-                            bson_data(_bson),
+                            _bson->data,
                             _bson->cur,
                             _bson->dataSize,
                             _bson->stackPos,
