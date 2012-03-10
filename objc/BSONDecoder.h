@@ -45,6 +45,7 @@ typedef enum {
 - (void) decoderWillFinish:(BSONDecoder *) decoder;
 
 //- (BOOL) decoder:(BSONDecoder *) decoder shouldSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents withClass:(Class *) classForDecoder;
+//- (Class) decoder:(BSONDecoder *) decoder classToSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents;
 
 @end
 
@@ -112,9 +113,10 @@ typedef enum {
  is responsible for locating the specified instance or returning a suitable placeholder.
  
  If the appropriate behavior depends on context or other factors, instead the delegate can implement
- <code>-decoder:shouldSubstituteForObjectID:forKeyPath:withClass:</code> returning <code>YES</code>
+ <code>-decoder:classToSubstituteForObjectID:forKeyPath:</code> returning <code>YES</code>
  and providing class information after considering the key path, key path depth, the object ID, or
  the delegate's own state.
+
   
  To decode some other reference structure, build the logic into <code>-initWithCoder:</code> or use
  the delegate substitution method <code>-decoder:didDecodeObject:forKeyPath</code>.
@@ -128,8 +130,8 @@ typedef enum {
  - <code>-awakeAfterUsingBSONDecoder:</code>
  
  In addition, a delegate may control encoding by implementing one of these methods:
+ - <code>-decoder:classToSubstituteForObjectID:forKeyPath:</code>
  - <code>-decoder:didDecodeObject:forKeyPath</code>
- - <code>-decodeObjectIDForKey:substituteObjectWithClass:</code>
  
  Decoding managed objects
  
