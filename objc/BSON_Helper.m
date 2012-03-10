@@ -41,27 +41,22 @@ void BSONAssertKeyNonNil(NSString *key) {
 }
 
 void BSONAssertKeyLegalForMongoDB(NSString *key) {
-    static NSString *singletonString;
-    static NSCharacterSet *singletonCharacterSet;
-    if (!singletonString) {
-#if __has_feature(objc_arc)
-        singletonString = @"$.";
-        singletonCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"$."];
-#else
-        singletonString = @"$.";
-        singletonCharacterSet = [[NSCharacterSet characterSetWithCharactersInString:@"$."] retain];
-#endif
-    }
-
     BSONAssertKeyNonNil(key);
-    if (NSNotFound == [key rangeOfCharacterFromSet:singletonCharacterSet].location) return;
-    NSString *reason = [NSString stringWithFormat:@"Invalid key %@ - MongoDB keys may not contain the following characters: %@",
-                        key,
-                        singletonString];
-    id exc = [NSException exceptionWithName:NSInvalidArgumentException
-                                    reason:reason
-                                  userInfo:nil];
-    @throw exc;
+    if ([key hasPrefix:@"$"]) {
+        NSString *reason = [NSString stringWithFormat:@"Invalid key %@ - MongoDB keys may not begin with '$'",
+                            key];
+        id exc = [NSException exceptionWithName:NSInvalidArgumentException
+                                         reason:reason
+                                       userInfo:nil];
+        @throw exc;
+    } else if (NSNotFound != [key rangeOfString:@"."].location) {
+        NSString *reason = [NSString stringWithFormat:@"Invalid key %@ - MongoDB keys may not contain '.'",
+                            key];
+        id exc = [NSException exceptionWithName:NSInvalidArgumentException
+                                         reason:reason
+                                       userInfo:nil];
+        @throw exc;
+    }
 }
 
 void BSONAssertValueNonNil(id value) {
