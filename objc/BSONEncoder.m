@@ -223,7 +223,7 @@
         [self encodeCustomObject:objv forKey:key];
 }
 
-#pragma mark - Encoding top-level objects
+#pragma mark - Encoding the root object
 
 - (void) encodeObject:(id) objv {
     if ([self encodingHelper:objv withSubstitutions:YES withObjectIDSubstitution:NO topLevel:YES]) return;
@@ -631,7 +631,7 @@
     if (topLevel) {
         if ([_encodingObjectStack count]) {
             id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                             reason:@"Can only use top-level encoding methods for top-level objects. Use encode...ForKey methods instead."
+                                             reason:@"Can only use root object encoding methods for the root object. Use encode...:forKey: methods instead."
                                            userInfo:nil];
             @throw exc;
         }

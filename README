@@ -1,5 +1,7 @@
 
-An Objective-C library, under development, for BSON and MongoDB.
+An Objective-C library, under development, for BSON and MongoDB. Supports encoding
+and decoding BSON simple types, arrays and dictionaries, custom objects, and Core Data
+managed objects. 
 
 Sources copyright Paul Melnikow, Neon Design Technology, Inc., and other contributors.
 

@@ -37,4 +37,7 @@
 - (BSONObjectID *) BSONObjectID;
 - (BSONObjectID *) BSONObjectIDForEncoder:(BSONEncoder *) encoder;
 
+// Support decoding object IDs
++ (id) instanceForObjectID:(BSONObjectID *) objectID decoder:(BSONDecoder *) decoder;
+
 @end

@@ -44,8 +44,117 @@ typedef enum {
 - (void) decoder:(BSONDecoder *) decoder willReplaceObject: (id) object withObject:(id) newObject forKeyPath:(NSArray *) keyPathComponents;
 - (void) decoderWillFinish:(BSONDecoder *) decoder;
 
+//- (BOOL) decoder:(BSONDecoder *) decoder shouldSubstituteForObjectID:(BSONObjectID *) objectID forKeyPath:(NSArray *) keyPathComponents withClass:(Class *) classForDecoder;
+
 @end
 
+/**
+ Provides a high-level interface for creating a tree of objects from a BSON document.
+ <code>BSONDecoder</code> handles BSON-supported types, arrays and dictionaries, custom objects
+ which conform to <code>NSCoding</code> and support keyed archiving, and Core Data managed
+ objects.
+
+ Create a <code>BSONDecoder</code> from a <code>BSONDocument</code> or an <code>NSData</code>
+ containing a BSON document, and decode the root object using one of the root decoding methods:
+ - <code>-decodeDictionary</code>
+ - <code>-decodeDictionaryWithClass:</code>
+ - <code>-decodeObjectWithClass:</code> 
+ To decode another BSON document, instantiate another decoder.
+
+ As much as possible <code>BSONDecoder</code> follows the design of <code>NSCoder</code>. For more
+ details, refer to Apple's Objects and Serializations Guide.
+ 
+ Important differences from <code>NSKeyedUnarchiver</code>:
+ 
+ - <code>BSONDecoder</code> provides its own support for unarchiving these types from BSON objects:
+ - <code>NSString</code>
+ - <code>NSNumber</code>
+ - <code>NSDate</code>
+ - <code>NSData</code>
+ - <code>NSImage</code>
+ - <code>NSDictionary</code>
+ - <code>NSArray</code>
+ - <code>BSONObjectID</code> and the other classes defined in <code>BSONTypes.h</code>
+ - <code>BSONDecoder</code> relies on subclasses to de
+ does not store class information. While BSON documents include enough
+ type information to decode to appropriate Objective-C object types, <code>BSONDecoder</code> relies
+ on subclasses to encode themselves.
+ - <code>BSONDecoder</code> relies on the caller to provide class information for custom objects,
+ and relies on objects to provide class information for their descendent objects. While BSON documents
+ include enough type information to decode to appropriate Objective-C object types,
+ <code>BSONEncoder</code> does not specifically encode class information.
+ - <code>BSONDecoder</code> does not support unkeyed coding. (If your custom objects can't implement
+ unkeyed coding, you can implement unkeyed coding by subclassing <code>BSONEncoder</code> and
+ overriding the unkeyed methods to automatically generate pre-defined, sequential key names, and
+ subclassing <code>BSONDecoder</code> to override the decoding methods to use these pre-defined key
+ names in the same sequence.)
+ - A BSON document may contain only one root object. When fetching multiple items from a MongoDB
+ collection, each item returned is its own document.
+ - <code>BSONDecoder</code> does not allow objects to override their decoding with
+ <code>classForCoder</code>. This would be little help, since class information is always provided
+ at the time of decoding. Use <code>-initWithCoder:</code> (from <code>NSCoding</code>),
+ <code>-awakeAfterUsingCoder:</code> (from <code>NSObject</code>),
+ <code>-initWithBSONDecoder:</code>, or <code>-awakeAfterUsingBSONDecoder:</code> (both from
+ <code>BSONCoding</code>) instead.
+ - <code>BSONDecoder</code> decodes BSON object IDs but relies on the parent object or the delegate
+ to resolve replace the reference with another object if desired. 
+ - <code>BSONDecoderDelegate</code> provides a similar interface to <code>NSKeyedUnarchiver</code>, but
+ conveys additional state information in the encoder's key path, and provides an additional delegate
+ method for resolving BSON object IDs during decoding.
+ 
+ Resolving references
+ 
+ While by default <code>BSONDecoder</code> simply decodes BSON object IDs without resolving them,
+ it provides a mechanism for parent objects or delegates to resolve these references to the specified
+ object. If an object <i>always</i> encodes a child as an object ID, its <code>-initWithCoder:</code>
+ can invoke <code>-decodeObjectIDForKey:substituteObjectWithClass:</code>. The delegate will invoke
+ <code>+instanceForObjectID:decoder:</code> (defined in <code>BSONCoding</code>) on the class which
+ is responsible for locating the specified instance or returning a suitable placeholder.
+ 
+ If the appropriate behavior depends on context or other factors, instead the delegate can implement
+ <code>-decoder:shouldSubstituteForObjectID:forKeyPath:withClass:</code> returning <code>YES</code>
+ and providing class information after considering the key path, key path depth, the object ID, or
+ the delegate's own state.
+  
+ To decode some other reference structure, build the logic into <code>-initWithCoder:</code> or use
+ the delegate substitution method <code>-decoder:didDecodeObject:forKeyPath</code>.
+  
+ Controlling decoding of sub-objects
+ 
+ Objects control their own decoding by implementing one of these methods:
+ - <code>-initWithCoder:</code>
+ - <code>-initWithBSONDecoder:</code>
+ - <code>-awakeAfterUsingCoder:</code>
+ - <code>-awakeAfterUsingBSONDecoder:</code>
+ 
+ In addition, a delegate may control encoding by implementing one of these methods:
+ - <code>-decoder:didDecodeObject:forKeyPath</code>
+ - <code>-decodeObjectIDForKey:substituteObjectWithClass:</code>
+ 
+ Decoding managed objects
+ 
+ The <code>BSONCoding</code> category on <code>NSManagedObject</code> uses the entity description
+ to automatically insert objects into a managed object context and decode properties. To use this
+ functionality, set the <code>managedObjectContext</code> on the decoder and invoke any of the
+ <code>-decode...:withClass:</code> methods. <code>NSManagedObject</code>'s default implementation
+ of <code>-initWithBSONDecoder:</code> uses the property names as key names, and decodes
+ and sets all persistent attributes and relationships. If you need to skip certain relationships or
+ attributes, resolve references to entities, or otherwise customize their decoding, override one of
+ the category's helper methods, providing your own logic where needed and invoking <code>super</code>
+ the rest of the time. 
+ - <code>-decodeAttribute:withDecoder:</code>
+ - <code>-decodeRelationship:withDecoder:</code>
+ - <code>-decodeFetchedProperty:withDecoder:</code>
+ You can also override <code>-initWithBSONDecoder:</code> if necessary.
+ 
+ <code>BSONIterator</code> is a lower-level alternative to <code>BSONEncoder</code>
+
+ <code>BSONDecoder</code> depends on <code>BSONIterator</code> to access the contents of BSON documents.
+ It provides methods for getting information from the iterator including <code>-containsValueForKey:</code>,
+ and <code>-valueIsEmbeddedDocumentForKey:</code>, and <code>-valueIsArrayForKey:</code>. For some
+ applications you may prefer to work with the iterator directly. In that case, don't use
+ <code>BSONDecoder</code>, just work directly with tht document's `-iterator`. 
+ */
 @interface BSONDecoder : NSCoder {
     @private
     BSONIterator *_iterator;
@@ -75,6 +184,8 @@ typedef enum {
 - (id) decodeObjectForKey:(NSString *) key;
 - (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder;
 
+//- (id) decodeObjectIDForKey:(NSString *) key substituteObjectWithClass:(Class) classForDecoder;
+
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *)key;
 - (int) decodeIntForKey:(NSString *)key;
 - (int64_t) decodeInt64ForKey:(NSString *)key;
@@ -95,7 +206,6 @@ typedef enum {
 - (bson_type) nativeValueTypeForKey:(NSString *) key;
 - (BOOL) valueIsEmbeddedDocumentForKey:(NSString *) key;
 - (BOOL) valueIsArrayForKey:(NSString *) key;
-
 
 - (NSArray *) keyPathComponents;
 

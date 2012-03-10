@@ -44,14 +44,14 @@ typedef enum {
 @end
 
 /**
- Provides a high-level interface for creating a BSON document from a top-level object.
- <code>BSONEncoder</code> handles BSON-supported types, arrays and dictionaries, and custom objects
- which conform to <code>NSCoding</code> and support keyed archiving.
+ Creates a BSON document from a root object. <code>BSONEncoder</code> handles BSON-supported types,
+ arrays and dictionaries, custom objects which conform to <code>NSCoding</code> and support keyed
+ archiving, and Core Data managed objects.
  
  Invoke <code>BSONDocument</code> to finish encoding and return the encoded document. To encode another
- top-level object, instantiate another encoder.
+ root object, instantiate another encoder.
 
- <code>BSONEncoder</code> follows the design of <code>NSCoder</code> as much as possible. For more
+ As much as possible <code>BSONEncoder</code> follows the design of <code>NSCoder</code>. For more
  details, refer to Apple's Objects and Serializations Guide.
   
  Important differences from <code>NSKeyedArchiver</code>:
@@ -67,14 +67,14 @@ typedef enum {
      - <code>BSONObjectID</code> and the other classes defined in <code>BSONTypes.h</code>
  - <code>BSONEncoder</code> does not store class information. While BSON documents include enough
  type information to decode to appropriate Objective-C object types, <code>BSONDecoder</code> relies
- on subclasses to encode themselves.
+ on objects to provide class information for their descendent custom objects.
  - <code>BSONEncoder</code> does not store version information.
  - <code>BSONEncoder</code> does not support unkeyed coding. (If your custom objects can't implement
  unkeyed coding, you can implement unkeyed coding by subclassing <code>BSONEncoder</code> and
  overriding the unkeyed methods to automatically generate pre-defined, sequential key names, and
  subclassing <code>BSONDecoder</code> to override the decoding methods to use these pre-defined key
  names in the same sequence.)
- - BSON documents may contain only one top-level object. Encoding multiple objects by encapsulating
+ - BSON documents may contain only one root object. Encoding multiple objects by encapsulating
  them in an parent object, or by creating a separate BSON document for each one. (Each document
  inserted into a MongoDB collection needs its own BSON document.)
  - In MongoDB, key names may not contain <code>$</code> or <code.</code> characters. By default,
@@ -98,9 +98,9 @@ typedef enum {
  and isn't triggered when, for example, an object ID is substituted in place of a parent object.
  - <code>BSONEncoderDelegate</code> provides a similar interface to <code>NSKeyedArchiver</code>, but
  conveys additional state information in the encoder's key path, and provides an additional delegate
- method for substituing object IDs during encoding.
+ method for substituting object IDs during encoding.
   
- Encoding by Reference
+ Encoding by reference
  
  While by default <code>BSONEncoder</code> encodes child objects essentially by copying, it provides
  a mechanism for substituting BSON object IDs for child objects. If an object should <i>always</i>
@@ -126,6 +126,23 @@ typedef enum {
  In addition, a delegate may control encoding by implementing one of these methods:
  - <code>-encoder:shouldSubstituteObjectIDForObject:forKeyPath:</code>
  - <code>-encoder:willEncodeObject:forKeyPath:</code>
+ 
+ Decoding managed objects
+ 
+ The <code>BSONCoding</code> category on <code>NSManagedObject</code> uses the entity description
+ to automatically encode the properties of managed objects. <code>NSManagedObject</code>'s default
+ implementation of <code>-encodeWithBSONEncoder:</code> uses the property names as key names, and
+ encodes all persistent attributes and relationships. If you need to skip certain relationships or
+ attributes, replace entities with references, or otherwise customize the encoding, override one of
+ the category's helper methods, providing your own logic where needed and invoking
+ <code>super</code> the rest of the time. 
+ - <code>-encodeAttribute:withEncoder:</code>
+ - <code>-encodeRelationship:withEncoder:</code>
+ - <code>-encodeFetchedProperty:withEncoder:</code>
+ You can also override <code>-encodeWithBSONEncoder:</code> if necessary.
+
+ Objects can automatically encode their entity hash if desired. Set
+ <code>managedObjectsShouldEncodeEntityVersionHash</code> to enable this behavior.
  */
 @interface BSONEncoder : NSCoder {
 @private
