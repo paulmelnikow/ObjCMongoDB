@@ -276,7 +276,7 @@
     
     if ([_encodingObjectStack containsObject:object]) {
         id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"Attempting to encoding objects in a loop"
+                                         reason:@"Attempting to encode objects in a loop"
                                        userInfo:nil];
         @throw exc;
     }
