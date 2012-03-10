@@ -73,6 +73,12 @@
  */
 - (NSData *) dataValue;
 
+/**
+ Returns the time the object ID was generated.
+ @return the time the object ID was generated
+ */
+- (NSDate *) dateGenerated;
+
 /*! Compare two object ID values. */
 - (NSComparisonResult)compare:(BSONObjectID *) other;
 

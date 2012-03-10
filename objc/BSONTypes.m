@@ -106,6 +106,14 @@
 #endif
 }
 
+- (NSDate *) dateGenerated {
+#if __has_feature(objc_arc)
+    return [NSDate dateWithTimeIntervalSince1970:bson_oid_generated_time(&_oid)];
+#else
+    return [[NSDate dateWithTimeIntervalSince1970:bson_oid_generated_time(&_oid)] autorelease];
+#endif
+}
+
 - (NSUInteger) hash {
 	return _oid.ints[0] + _oid.ints[1] + _oid.ints[2];
 }
