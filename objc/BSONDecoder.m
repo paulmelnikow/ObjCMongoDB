@@ -289,10 +289,9 @@
 }
 
 - (int) decodeIntForKey:(NSString *) key {
-    bson_type allowedTypes[4];
-    allowedTypes[0] = BSON_BOOL;
-    allowedTypes[1] = BSON_INT;
-    allowedTypes[2] = BSON_LONG;
+    bson_type allowedTypes[3];
+    allowedTypes[0] = BSON_INT;
+    allowedTypes[1] = BSON_LONG;
     allowedTypes[2] = BSON_DOUBLE;
     
     id result = nil;
@@ -301,10 +300,9 @@
     return [_iterator intValue];
 }
 - (int64_t) decodeInt64ForKey:(NSString *) key {
-    bson_type allowedTypes[4];
-    allowedTypes[0] = BSON_BOOL;
-    allowedTypes[1] = BSON_INT;
-    allowedTypes[2] = BSON_LONG;
+    bson_type allowedTypes[3];
+    allowedTypes[0] = BSON_INT;
+    allowedTypes[1] = BSON_LONG;
     allowedTypes[2] = BSON_DOUBLE;
     
     id result = nil;
@@ -313,10 +311,11 @@
     return [_iterator int64Value];
 }
 - (BOOL) decodeBoolForKey:(NSString *) key {
-    bson_type allowedTypes[3];
+    bson_type allowedTypes[4];
     allowedTypes[0] = BSON_BOOL;
     allowedTypes[1] = BSON_INT;
     allowedTypes[2] = BSON_LONG;
+    allowedTypes[3] = BSON_DOUBLE;
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
@@ -325,9 +324,9 @@
 }
 - (double) decodeDoubleForKey:(NSString *) key {
     bson_type allowedTypes[3];
-    allowedTypes[0] = BSON_DOUBLE;
-    allowedTypes[1] = BSON_INT;
-    allowedTypes[2] = BSON_LONG;
+    allowedTypes[0] = BSON_INT;
+    allowedTypes[1] = BSON_LONG;
+    allowedTypes[2] = BSON_DOUBLE;
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
