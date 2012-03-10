@@ -26,6 +26,7 @@
 #import "BSONIterator.h"
 #import "BSON_Helper.h"
 #import "BSONCoding.h"
+#import "MongoDB.h"
 
 @interface BSONDocument (Project)
 -(bson *)bsonValue;

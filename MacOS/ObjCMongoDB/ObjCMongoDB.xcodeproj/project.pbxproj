@@ -15,13 +15,14 @@
 		22ED5B4911DF1A7200410529 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; };
 		22ED5B4A11DF1A7200410529 /* mongo.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B4111DF1A7200410529 /* mongo.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B4C11DF1A7200410529 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
-		22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B4F11DF1A8600410529 /* NuMongoDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5BDC11DF1AC400410529 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		22ED5BE911DF1AED00410529 /* NuMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* NuMongoDB.framework */; };
 		22ED5BF611DF1B5E00410529 /* sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5BF511DF1B5E00410529 /* sample.m */; };
 		9E1054481503F42600805F26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
+		9E2725B9150AF1CD009CBE47 /* MongoDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoDB.h */; };
+		9E2725BA150AF1CD009CBE47 /* MongoDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725B8150AF1CD009CBE47 /* MongoDB.m */; };
 		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; };
 		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
 		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
@@ -111,6 +112,8 @@
 		9E1054491503F6ED00805F26 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		9E10544F150408DE00805F26 /* BSON_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSON_Helper.h; sourceTree = "<group>"; };
 		9E105450150408DE00805F26 /* BSON_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSON_Helper.m; sourceTree = "<group>"; };
+		9E2725B7150AF1CD009CBE47 /* MongoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoDB.h; sourceTree = "<group>"; };
+		9E2725B8150AF1CD009CBE47 /* MongoDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoDB.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = SOURCE_ROOT; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
@@ -242,6 +245,8 @@
 			children = (
 				9E10543F1501C73B00805F26 /* old */,
 				9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */,
+				9E2725B7150AF1CD009CBE47 /* MongoDB.h */,
+				9E2725B8150AF1CD009CBE47 /* MongoDB.m */,
 				9EBE79B715000EA6000E767D /* BSONTypes.h */,
 				9EBE79B815000EA6000E767D /* BSONTypes.m */,
 				9E10544F150408DE00805F26 /* BSON_Helper.h */,
@@ -358,7 +363,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22ED5B5111DF1A8600410529 /* NuMongoDB.h in Headers */,
 				22739CE01231446B00909551 /* NuBSON.h in Headers */,
 				22ED5B4611DF1A7200410529 /* bson.h in Headers */,
 				22ED5B4811DF1A7200410529 /* md5.h in Headers */,
@@ -374,6 +378,7 @@
 				C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */,
 				C2891A4C150AB6D40065E2E9 /* net.h in Headers */,
 				C2891A4D150AB6D40065E2E9 /* platform.h in Headers */,
+				9E2725B9150AF1CD009CBE47 /* MongoDB.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,6 +550,7 @@
 				9E105452150408DF00805F26 /* BSON_Helper.m in Sources */,
 				C2891A49150AB6D40065E2E9 /* encoding.c in Sources */,
 				C2891A4B150AB6D40065E2E9 /* net.c in Sources */,
+				9E2725BA150AF1CD009CBE47 /* MongoDB.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

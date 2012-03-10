@@ -18,7 +18,6 @@
 //
 
 #import "BSONEncoder.h"
-#import "NuMongoDB.h"
 
 @interface BSONBufferWrapper : NSObject
 +(BSONBufferWrapper *) wrapperForNativeBuffer:(bson_buffer *) bb;
