@@ -62,7 +62,7 @@
  @param data An instance of <code>NSData</code> with the binary data for the new
  document.
  */
--(BSONDocument *)initWithData:(NSData *) data;
+-(BSONDocument *) initWithData:(NSData *) data;
 
 /**
  Initializes a BSON document by taking ownership of an existing native BSON document. This
