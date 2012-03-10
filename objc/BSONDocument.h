@@ -36,7 +36,8 @@
     /**
      The <code>bson</code> structure.
      */
-    bson _bson;
+    bson *_bson;
+    BOOL _destroyOnDealloc;
 }
 
 /**
@@ -45,12 +46,13 @@
 - (BSONDocument *)init;
 
 /**
- Initializes an empty BSON document which retains parent until deallocation.
+ Initializes a BSON document as a sub-object for a given iterator, which retains its parent
+ until deallocation.
  
- Used internally to initialize embedded BSON documents, which depend on the root BSONDocument
- for their data storage.
+ Since only the root document may is responsible to call bson_destroy, instances created
+  with this method will not call bson_destroy on deallocation.
  */
-- (BSONDocument *)initWithParentOrNil:(id) parent;
+- (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent;
 
 /**
  Initializes a BSON document.
@@ -63,22 +65,12 @@
 -(BSONDocument *)initWithData:(NSData *) data;
 
 /**
- Initializes a BSON document by ending encoding and taking ownership of a BSON encoder's
- buffer after encoding is finished.
- 
- There's usually no need to invoke this directly. Instead, call the
- <code>BSONDocument<code> method on the <code>BSONEncoder</code>.
- @param encoder A BSON encoder which has finished encoding a BSON document
- */
-- (BSONDocument *) initWithEncoder:(BSONEncoder *) encoder;
-
-/**
- Initializes a BSON document by taking ownership of an existing BSON buffer. This allows
- you to create a bson_buffer directly and then bridge it into the ObjCMongoDB framework,
+ Initializes a BSON document by taking ownership of an existing native BSON document. This
+ allows you to create a bson directly and then bridge it into the ObjCMongoDB framework,
  but there's usually no need to do this directly.
- @param bb A pointer to a <code>bson_buffer</code> structure.
+ @param b A pointer to a <code>bson</code> structure
  */
-- (BSONDocument *) initWithNativeBuffer:(bson_buffer *) bb;
+- (BSONDocument *) initWithNativeDocument:(bson *) b;
 
 /**
  Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make

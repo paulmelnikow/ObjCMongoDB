@@ -29,11 +29,11 @@
 #import "MongoDB.h"
 
 @interface BSONDocument (Project)
--(bson *)bsonValue;
+-(bson *) bsonValue;
 @end
 
 @interface BSONEncoder (Project)
--(bson_buffer *)bsonBufferValue;
+-(bson *) bsonValue;
 @end
 
 @interface BSONObjectID (Project)
@@ -48,6 +48,7 @@
 @interface BSONIterator (Project)
 - (BSONIterator *) initWithDocument:(BSONDocument *)document
              keyPathComponentsOrNil:(NSArray *) keyPathComponents;
+- (bson_iterator *) nativeIteratorValue;
 @end
 
 #endif

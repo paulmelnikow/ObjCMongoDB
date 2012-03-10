@@ -106,44 +106,44 @@ void BSONAssertIteratorIsInValueTypeArray(BSONIterator * iterator, bson_type * v
 NSString * NSStringFromBSONType(bson_type t) {
     NSString *name = nil;
     switch(t) {
-        case bson_eoo:
-            name = @"bson_eoo"; break;
-        case bson_double:
-            name = @"bson_double"; break;
-        case bson_string:
-            name = @"bson_string"; break;
-        case bson_object:
-            name = @"bson_object"; break;
-        case bson_array:
-            name = @"bson_array"; break;
-        case bson_bindata:
-            name = @"bson_bindata"; break;
-        case bson_undefined:
-            name = @"bson_undefined"; break;
-        case bson_oid:
-            name = @"bson_oid"; break;
-        case bson_bool:
-            name = @"bson_bool"; break;
-        case bson_date:
-            name = @"bson_date"; break;
-        case bson_null:
-            name = @"bson_null"; break;
-        case bson_regex:
-            name = @"bson_regex"; break;
-        case bson_code:
-            name = @"bson_code"; break;
-        case bson_symbol:
-            name = @"bson_symbol"; break;
-        case bson_codewscope:
-            name = @"bson_codewscope"; break;
-        case bson_int:
-            name = @"bson_int"; break;
-        case bson_timestamp:
-            name = @"bson_timestamp"; break;
-        case bson_long:
-            name = @"bson_long"; break;
+        case BSON_EOO:
+            name = @"BSON_EOO"; break;
+        case BSON_DOUBLE:
+            name = @"BSON_DOUBLE"; break;
+        case BSON_STRING:
+            name = @"BSON_STRING"; break;
+        case BSON_OBJECT:
+            name = @"BSON_OBJECT"; break;
+        case BSON_ARRAY:
+            name = @"BSON_ARRAY"; break;
+        case BSON_BINDATA:
+            name = @"BSON_BINDATA"; break;
+        case BSON_UNDEFINED:
+            name = @"BSON_UNDEFINED"; break;
+        case BSON_OID:
+            name = @"BSON_OID"; break;
+        case BSON_BOOL:
+            name = @"BSON_BOOL"; break;
+        case BSON_DATE:
+            name = @"BSON_DATE"; break;
+        case BSON_NULL:
+            name = @"BSON_NULL"; break;
+        case BSON_REGEX:
+            name = @"BSON_REGEX"; break;
+        case BSON_CODE:
+            name = @"BSON_CODE"; break;
+        case BSON_SYMBOL:
+            name = @"BSON_SYMBOL"; break;
+        case BSON_CODEWSCOPE:
+            name = @"BSON_CODEWSCOPE"; break;
+        case BSON_INT:
+            name = @"BSON_INT"; break;
+        case BSON_TIMESTAMP:
+            name = @"BSON_TIMESTAMP"; break;
+        case BSON_LONG:
+            name = @"BSON_LONG"; break;
         default:
-            name = @"???";
+            name = [NSString stringWithFormat:@"(%i) ???", t];
     }
 #if __has_feature(objc_arc)
     return name;
@@ -158,7 +158,7 @@ void bson_appendString_raw( const char * data , int depth, NSMutableString *stri
     int temp;
     bson_timestamp_t ts;
     char oidhex[25];
-    bson_iterator_init( &i , data );
+    bson_iterator_from_buffer( &i, data );
     
     while ( bson_iterator_next( &i ) ){
         bson_type t = bson_iterator_type( &i );
@@ -171,18 +171,18 @@ void bson_appendString_raw( const char * data , int depth, NSMutableString *stri
             [string appendString:@"\t"];
         [string appendFormat:@"%s : %d \t " , key , t];
         switch ( (int)t ){
-            case bson_int: [string appendFormat:@"%d", bson_iterator_int( &i ) ]; break;
-            case bson_double: [string appendFormat:@"%f" , bson_iterator_double( &i ) ]; break;
-            case bson_bool: [string appendString: bson_iterator_bool( &i ) ? @"true" : @"false" ]; break;
-            case bson_string: [string appendString: NSStringFromBSONString(bson_iterator_string( &i ) )]; break;
-            case bson_null: [string appendString:@"null" ]; break;
-            case bson_oid: bson_oid_to_string(bson_iterator_oid(&i), oidhex); [string appendString:NSStringFromBSONString(oidhex)]; break;
-            case bson_timestamp:
+            case BSON_INT: [string appendFormat:@"%d", bson_iterator_int( &i ) ]; break;
+            case BSON_DOUBLE: [string appendFormat:@"%f" , bson_iterator_double( &i ) ]; break;
+            case BSON_BOOL: [string appendString: bson_iterator_bool( &i ) ? @"true" : @"false" ]; break;
+            case BSON_STRING: [string appendString: NSStringFromBSONString(bson_iterator_string( &i ) )]; break;
+            case BSON_NULL: [string appendString:@"null" ]; break;
+            case BSON_OID: bson_oid_to_string(bson_iterator_oid(&i), oidhex); [string appendString:NSStringFromBSONString(oidhex)]; break;
+            case BSON_TIMESTAMP:
                 ts = bson_iterator_timestamp( &i );
                 [string appendFormat:@"i: %d, t: %d", ts.i, ts.t];
                 break;
-            case bson_object:
-            case bson_array:
+            case BSON_OBJECT:
+            case BSON_ARRAY:
                 bson_appendString_raw( bson_iterator_value( &i ) , depth + 1, string );
 //                [string appendString:@"\n"];
                 break;

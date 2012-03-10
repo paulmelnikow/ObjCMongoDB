@@ -22,12 +22,19 @@
 @implementation BSONDocument
 
 - (BSONDocument *)init {
-    return [self initWithParentOrNil:nil];
+    if (self = [super init]) {
+        _bson = malloc(sizeof(bson));
+        bson_empty(_bson);
+        _destroyOnDealloc = YES;
+    }
+    return self;
 }
 
-- (BSONDocument *)initWithParentOrNil:(id) parent {
+- (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent {
     if (self = [super init]) {
-        bson_empty(&_bson);
+        _bson = malloc(sizeof(bson));
+        bson_iterator_subobject([iterator nativeIteratorValue], _bson);
+        _destroyOnDealloc = NO;
 #if __has_feature(objc_arc)
         _source = parent;
 #else
@@ -47,44 +54,41 @@
 #else
         _source = [data retain];
 #endif
-        bson_init(&_bson, (char *)data.bytes, NO);
+        bson_init_data(_bson, (char *)data.bytes);
     }
     return self;
 }
 
-- (BSONDocument *) initWithEncoder:(BSONEncoder *) encoder {
-    return [self initWithNativeBuffer:[encoder bsonBufferValue]];
-}
-
-- (BSONDocument *) initWithNativeBuffer:(bson_buffer *) bb {
-    if (!bb) {
+- (BSONDocument *) initWithNativeDocument:(bson *) b {
+    if (!b) {
 #if !__has_feature(objc_arc)
         [self release];
 #endif
         return nil;
     }
     if (self = [super init]) {
-        bson_from_buffer(&_bson, bb);
+        _bson = b;
     }
     return self;
 }
 
 - (void) dealloc {
-    bson_destroy(&_bson);
+    if (_destroyOnDealloc) bson_destroy(_bson);
+    free(_bson);
 #if !__has_feature(objc_arc)
     [_source release];
 #endif
 }
 
 - (bson *) bsonValue {
-    return &_bson;
+    return _bson;
 }
 
 - (NSData *) dataValue {
 #if __has_feature(objc_arc)
     return [NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson) freeWhenDone:NO];
 #else
-    return [NSData dataWithBytesNoCopy:_bson.data length:bson_size(&_bson) freeWhenDone:NO];
+    return [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
 #endif
 }
 
@@ -102,8 +106,15 @@
 }
 
 - (NSString *) description {
-    NSString *identifier = [NSString stringWithFormat:@"%@ <%p>        bson.data: %p   bson.owned: %i\n", [[self class] description], self, _bson.data, (int)_bson.owned];
-    return [identifier stringByAppendingString:NSStringFromBSON(&_bson)];
+    NSString *identifier = [NSString stringWithFormat:@"%@ <%p>  bson.data: %p  bson.cur: %p  bson.dataSize: %i  bson.stackPos: %i  bson.err: %i  bson.errstr: %s\n",
+                            [[self class] description], self,
+                            bson_data(_bson),
+                            _bson->cur,
+                            _bson->dataSize,
+                            _bson->stackPos,
+                            _bson->err,
+                            _bson->errstr];
+    return [identifier stringByAppendingString:NSStringFromBSON(_bson)];
 }
 
 @end

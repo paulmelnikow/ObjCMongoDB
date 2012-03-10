@@ -39,7 +39,7 @@
 #endif
         _b = [document bsonValue];
         _iter = malloc(sizeof(bson_iterator));
-        bson_iterator_init(_iter, _b->data);
+        bson_iterator_init(_iter, _b);
         _type = bson_iterator_type(_iter);
     }
     return self;
@@ -74,6 +74,8 @@
 #endif
 }
 
+- (bson_iterator *) nativeIteratorValue { return _iter; }
+
 #pragma mark - Searching
 
 - (bson_type) nativeValueTypeForKey:(NSString *) key {
@@ -85,7 +87,7 @@
 - (BOOL) containsValueForKey:(NSString *) key {
     [self assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
-    return bson_eoo != [self nativeValueTypeForKey:key];
+    return BSON_EOO != [self nativeValueTypeForKey:key];
 }
 
 - (id) objectForKey:(NSString *)key {
@@ -115,8 +117,8 @@
 #pragma mark - Information about the current key
 
 - (bson_type) nativeValueType { return _type; }
-- (BOOL) isEmbeddedDocument { return bson_object == _type; }
-- (BOOL) isArray { return bson_array == _type; }
+- (BOOL) isEmbeddedDocument { return BSON_OBJECT == _type; }
+- (BOOL) isArray { return BSON_ARRAY == _type; }
 
 - (NSString *) key { return NSStringFromBSONString(bson_iterator_key(_iter)); }
 - (NSArray *) keyPathComponents {
@@ -146,8 +148,7 @@
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    BSONDocument *document = [[BSONDocument alloc] initWithParentOrNil:_parent];
-    bson_iterator_subobject(_iter, [document bsonValue]);
+    BSONDocument *document = [[BSONDocument alloc] initForEmbeddedDocumentWithIterator:self parent:_parent];
 #if __has_feature(objc_arc)
     return document;
 #else
@@ -174,41 +175,41 @@
 
 - (id) objectValue {
     switch([self nativeValueType]) {
-        case bson_eoo:
+        case BSON_EOO:
             return nil;
-        case bson_double:
+        case BSON_DOUBLE:
             return [NSNumber numberWithDouble:[self doubleValue]];
-        case bson_string:
+        case BSON_STRING:
             return [self stringValue];
-        case bson_object:
+        case BSON_OBJECT:
             return [self embeddedDocumentValue];
-        case bson_array:
+        case BSON_ARRAY:
             return [self sequentialSubIteratorValue];
-        case bson_bindata:
+        case BSON_BINDATA:
             return [self dataValue];
-        case bson_undefined:
+        case BSON_UNDEFINED:
             return [BSONIterator objectForUndefined];
-        case bson_oid:
+        case BSON_OID:
             return [self objectIDValue];
-        case bson_bool:
+        case BSON_BOOL:
             return [NSNumber numberWithBool:[self boolValue]];
-        case bson_date:
+        case BSON_DATE:
             return [self dateValue];
-        case bson_null:
+        case BSON_NULL:
             return [NSNull null];
-        case bson_regex:
+        case BSON_REGEX:
             return [self regularExpressionValue];
-        case bson_code:
+        case BSON_CODE:
             return [self codeValue];
-        case bson_symbol:
+        case BSON_SYMBOL:
             return [self symbolValue];
-        case bson_codewscope:
+        case BSON_CODEWSCOPE:
             return [self codeWithScopeValue];
-        case bson_int:
+        case BSON_INT:
             return [NSNumber numberWithInt:[self intValue]];
-        case bson_timestamp:
+        case BSON_TIMESTAMP:
             return [self timestampValue];
-        case bson_long:
+        case BSON_LONG:
             return [NSNumber numberWithLongLong:[self int64Value]];
         default:
             return nil;
