@@ -19,8 +19,8 @@
 
 #import <Foundation/Foundation.h>
 
-#define MongoDBObjectIDKey @"_id"
-#define MongoDBObjectIDUBSONKey "_id"
+extern NSString * const MongoDBObjectIDKey;
+extern const char * const MongoDBObjectIDBSONKey;
 
 @interface MongoDB : NSObject
 

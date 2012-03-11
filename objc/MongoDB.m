@@ -19,6 +19,9 @@
 
 #import "MongoDB.h"
 
+NSString * const MongoDBObjectIDKey = @"_id";
+const char * const MongoDBObjectIDBSONKey = "_id";
+
 @implementation MongoDB
 
 @end

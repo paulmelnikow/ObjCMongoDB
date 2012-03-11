@@ -407,7 +407,7 @@
 
 - (void) encodeNewObjectID {
     [self encodingHelper];
-    bson_append_new_oid(_bson, MongoDBObjectIDUBSONKey);
+    bson_append_new_oid(_bson, MongoDBObjectIDBSONKey);
 }
 
 - (void) encodeObjectID:(BSONObjectID *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {

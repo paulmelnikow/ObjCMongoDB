@@ -87,6 +87,9 @@
 
 @end
 
+/**
+ A wrapper class encapsulating a BSON regular expression.
+ */
 @interface BSONRegularExpression : NSObject
 
 + (BSONRegularExpression *) regularExpressionWithPattern:(NSString *) pattern options:(NSString *) options;
@@ -96,6 +99,9 @@
 
 @end
 
+/**
+ A wrapper and convenience encapsulating a BSON timestamp.
+ */
 @interface BSONTimestamp : NSObject {
     bson_timestamp_t _timestamp;
 }
@@ -110,16 +116,37 @@
 
 @class BSONDocument;
 
+/**
+ A wrapper class encapsulating a BSON code object.
+ 
+ When passing an instance of this class to <code>-[BSONEncoder encodeObject:forKey:]</code>,
+ the encoder treats it as a code instead of a string.
+ <code>-[BSONDecoder decodeObject:forKey:]</code> and <code>-[BSONIterator objectValue]</code>
+ return instances of this type, allowing the caller to distinguish a code object from a
+ string.
+ */
 @interface BSONCode : NSObject
 + (BSONCode *) code:(NSString *) code;
 @property (retain) NSString * code;
 @end
 
+/**
+ A wrapper class encapsulating a BSON code with scope object.
+ */
 @interface BSONCodeWithScope : BSONCode
 + (BSONCodeWithScope *) code:(NSString *) code withScope:(BSONDocument *) scope;
 @property (retain) BSONDocument * scope;
 @end
 
+/**
+ A wrapper class encapsulating a BSON symbol object.
+ 
+ When passing an instance of this class to <code>-[BSONEncoder encodeObject:forKey:]</code>,
+ the encoder treats it as a symbol instead of a string.
+ <code>-[BSONDecoder decodeObject:forKey:]</code> and <code>-[BSONIterator objectValue]</code>
+ return instances of this type, allowing the caller to distinguish a symbol object from a
+ string.
+ */
 @interface BSONSymbol : NSObject 
 + (BSONSymbol *) symbol:(NSString *)symbol;
 @property (retain) NSString * symbol;

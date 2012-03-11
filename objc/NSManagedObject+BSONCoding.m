@@ -19,8 +19,6 @@
 
 #import "NSManagedObject+BSONCoding.h"
 
-extern NSString * const BSONCodingEntityVersionHashKey;
-
 NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
 
 @implementation NSManagedObject (BSONCoding)

@@ -146,31 +146,31 @@ NSString * NSStringFromBSONType(bson_type t) {
 #endif
 }
 
-NSMutableString * target_for_NSStringFromBSON_target = nil;
+NSMutableString * target_for_bson_substitute_for_printf = nil;
 
 int substitute_for_printf( const char *format, ... ) {
-    if (!target_for_NSStringFromBSON_target) return 0;
+    if (!target_for_bson_substitute_for_printf) return 0;
     
     va_list args;
     va_start(args, format);
     NSString *stringToAppend = [[NSString alloc] initWithFormat:NSStringFromBSONString(format) arguments:args];
     va_end(args);    
     
-    [target_for_NSStringFromBSON_target appendString:stringToAppend];
+    [target_for_bson_substitute_for_printf appendString:stringToAppend];
+    
 #if __has_feature(objc_arc)
     [stringToAppend release];
 #endif
-    
     return 0;
 }
 
 NSString * NSStringFromBSON( bson * b ){
-    target_for_NSStringFromBSON_target = [NSMutableString string];
+    target_for_bson_substitute_for_printf = [NSMutableString string];
     bson_errprintf = bson_printf = substitute_for_printf;
     bson_print(b);
     bson_errprintf = bson_printf = printf;
-    NSString *result = [target_for_NSStringFromBSON_target stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    target_for_NSStringFromBSON_target = nil;
+    NSString *result = [target_for_bson_substitute_for_printf stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    target_for_bson_substitute_for_printf = nil;
     return result;
 }
 
