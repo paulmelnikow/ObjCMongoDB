@@ -115,30 +115,30 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
             if ([property isTransient])
                 continue;
             else if ([property isKindOfClass:[NSAttributeDescription class]])
-                [self decodeAttribute:(NSAttributeDescription *)property withDecoder:decoder];
+                [self initializeAttribute:(NSAttributeDescription *)property withDecoder:decoder];
             else if ([property isKindOfClass:[NSRelationshipDescription class]])
-                [self decodeRelationship:(NSRelationshipDescription *)property withDecoder:decoder];
+                [self initializeRelationship:(NSRelationshipDescription *)property withDecoder:decoder];
             else if ([property isKindOfClass:[NSFetchedPropertyDescription class]])
-                [self decodeFetchedProperty:(NSFetchedPropertyDescription *)property withDecoder:decoder];
+                [self initializeFetchedProperty:(NSFetchedPropertyDescription *)property withDecoder:decoder];
         }
     }
     return self;
 }
 
-- (void) decodeAttribute:(NSAttributeDescription *) attribute withDecoder:(BSONDecoder *) decoder {
+- (void) initializeAttribute:(NSAttributeDescription *) attribute withDecoder:(BSONDecoder *) decoder {
     NSString *key = [attribute name];
     id value = [decoder decodeObjectForKey:key];
     [self setValue:value forKey:key];
 }
 
-- (void) decodeRelationship:(NSRelationshipDescription *) relationship withDecoder:(BSONDecoder *) decoder {
+- (void) initializeRelationship:(NSRelationshipDescription *) relationship withDecoder:(BSONDecoder *) decoder {
     NSString *key = [relationship name];
     NSEntityDescription *destinationEntity = [relationship destinationEntity];
     Class destinationClass = NSClassFromString([destinationEntity managedObjectClassName]);
 
     if ([decoder valueIsArrayForKey:key]) {
         if (![relationship isToMany]) {
-            NSString *reason = [NSString stringWithFormat:@"While decoding to-one entity relationship %@ on entity %@, expected an embedded document but got an array",
+            NSString *reason = [NSString stringWithFormat:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got an array",
                                 [relationship name], [[self entity] name]];
             id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                              reason:reason
@@ -149,7 +149,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
         [self setValue:[NSMutableSet setWithArray:values] forKey:key];
     } else if ([decoder valueIsEmbeddedDocumentForKey:key]) {
         if ([relationship isToMany]) {
-            NSString *reason = [NSString stringWithFormat:@"While decoding to-many entity relationship %@ on entity %@, expected an array but got an embedded document",
+            NSString *reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected an array but got an embedded document",
                                 [relationship name], [[self entity] name]];
             id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                              reason:reason
@@ -162,10 +162,10 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
         NSString *type = NSStringFromBSONType([decoder nativeValueTypeForKey:key]);
         NSString *reason;
         if ([relationship isToMany])
-            reason = [NSString stringWithFormat:@"While decoding to-many entity relationship %@ on entity %@, expected a BSON array but got type %@",
+            reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected a BSON array but got type %@",
                       [relationship name], [[self entity] name], type];
         else
-            reason = [NSString stringWithFormat:@"While decoding to-one entity relationship %@ on entity %@, expected an embedded document but got type %@",
+            reason = [NSString stringWithFormat:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got type %@",
                       [relationship name], [[self entity] name], type];
         id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                          reason:reason
@@ -175,7 +175,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@ObjC_versionHash";
     // do nothing on nil
 }
 
-- (void) decodeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withDecoder:(BSONDecoder *) decoder {
+- (void) initializeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withDecoder:(BSONDecoder *) decoder {
     [NSException raise:NSInvalidArchiveOperationException format:@"Decoding fetched properties is not supported"];
 }
 

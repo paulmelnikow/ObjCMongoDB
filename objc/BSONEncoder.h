@@ -52,7 +52,7 @@ typedef enum {
  root object, instantiate another encoder.
 
  As much as possible <code>BSONEncoder</code> follows the design of <code>NSCoder</code>. For more
- details, refer to Apple's Objects and Serializations Guide.
+ information, refer to Apple's Archives and Serializations Guide.
   
  Important differences from <code>NSKeyedArchiver</code>:
  
@@ -127,7 +127,7 @@ typedef enum {
  - <code>-encoder:shouldSubstituteObjectIDForObject:forKeyPath:</code>
  - <code>-encoder:willEncodeObject:forKeyPath:</code>
  
- Decoding managed objects
+ Encoding managed objects
  
  The <code>BSONCoding</code> category on <code>NSManagedObject</code> uses the entity description
  to automatically encode the properties of managed objects. <code>NSManagedObject</code>'s default

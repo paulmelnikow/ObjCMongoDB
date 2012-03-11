@@ -38,9 +38,9 @@
         [super encodeRelationship:relationship withEncoder:encoder];
 }
 
--(void)decodeRelationship:(NSRelationshipDescription *)relationship withDecoder:(BSONDecoder *)decoder {
+-(void)initializeRelationship:(NSRelationshipDescription *)relationship withDecoder:(BSONDecoder *)decoder {
     if ([[relationship name] isEqualToString:@"parent"]) return;
-    [super decodeRelationship:relationship withDecoder:decoder];
+    [super initializeRelationship:relationship withDecoder:decoder];
 }
 
 -(BOOL)isEqualForTesting:(CDPerson *) obj {

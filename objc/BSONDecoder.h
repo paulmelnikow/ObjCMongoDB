@@ -61,7 +61,7 @@ typedef enum {
  To decode another BSON document, instantiate another decoder.
 
  As much as possible <code>BSONDecoder</code> follows the design of <code>NSCoder</code>. For more
- details, refer to Apple's Objects and Serializations Guide.
+ information, refer to Apple's Archives and Serializations Guide.
  
  Important differences from <code>NSKeyedUnarchiver</code>:
  
@@ -142,9 +142,9 @@ typedef enum {
  attributes, resolve references to entities, or otherwise customize their decoding, override one of
  the category's helper methods, providing your own logic where needed and invoking <code>super</code>
  the rest of the time. 
- - <code>-decodeAttribute:withDecoder:</code>
- - <code>-decodeRelationship:withDecoder:</code>
- - <code>-decodeFetchedProperty:withDecoder:</code>
+ - <code>-initializeAttribute:withDecoder:</code>
+ - <code>-initializeelationship:withDecoder:</code>
+ - <code>-initializeFetchedProperty:withDecoder:</code>
  You can also override <code>-initWithBSONDecoder:</code> if necessary.
  
  <code>BSONIterator</code> is a lower-level alternative to <code>BSONEncoder</code>
