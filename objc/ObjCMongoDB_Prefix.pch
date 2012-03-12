@@ -30,7 +30,7 @@
 #import "Mongo_Helper.h"
 
 @interface BSONDocument (Project)
-- (bson *) bsonValue;
+- (const bson *) bsonValue;
 @end
 
 @interface BSONEncoder (Project)

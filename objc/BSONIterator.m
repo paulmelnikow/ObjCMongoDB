@@ -238,12 +238,13 @@
 
 - (BSONCode *) codeValue { return [BSONCode code:NSStringFromBSONString(bson_iterator_code(_iter))]; }
 - (BSONCodeWithScope *) codeWithScopeValue {
+    bson *newBson = malloc(sizeof(bson));
+    bson_iterator_code_scope(_iter, newBson);
 #if __has_feature(objc_arc)
-    BSONDocument *document = [[BSONDocument alloc] init];
+    BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:NO];
 #else
-    BSONDocument *document = [[[BSONDocument alloc] init] autorelease];
+    BSONDocument *document = [[[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:NO] autorelease];
 #endif
-    bson_iterator_code_scope(_iter, [document bsonValue]);
     return [BSONCodeWithScope code:NSStringFromBSONString(bson_iterator_code(_iter)) withScope:document];
 }
 

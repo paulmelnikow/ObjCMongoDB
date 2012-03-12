@@ -148,7 +148,7 @@ NSString * NSStringFromBSONType(bson_type t) {
 
 NSMutableString * target_for_bson_substitute_for_printf = nil;
 
-int substitute_for_printf( const char *format, ... ) {
+int substitute_for_printf(const char *format, ...) {
     if (!target_for_bson_substitute_for_printf) return 0;
     
     va_list args;
@@ -164,7 +164,7 @@ int substitute_for_printf( const char *format, ... ) {
     return 0;
 }
 
-NSString * NSStringFromBSON( bson * b ){
+NSString * NSStringFromBSON(const bson * b) {
     target_for_bson_substitute_for_printf = [NSMutableString string];
     bson_errprintf = bson_printf = substitute_for_printf;
     bson_print(b);

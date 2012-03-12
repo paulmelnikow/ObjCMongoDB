@@ -58,8 +58,8 @@
         @throw exc;
     }
     int documentsToInsert = documentArray.count;
-    bson *bsonArray[documentsToInsert];
-    bson **current = bsonArray;
+    const bson *bsonArray[documentsToInsert];
+    const bson **current = bsonArray;
     for (BSONDocument *document in documentArray) {
         if(![document isKindOfClass:[BSONDocument class]]) {
             document = [BSONEncoder documentForObject:document];
@@ -93,6 +93,8 @@
 
 //int64_t mongo_count( mongo *conn, const char *db, const char *coll,
 //                    bson *query );
+
+
 
 #pragma mark - Create indexes
 

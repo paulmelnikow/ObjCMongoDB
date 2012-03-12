@@ -50,7 +50,7 @@
 @private
     bson_iterator *_iter;
     id _parent;
-    bson *_b;
+    const bson *_b;
     bson_type _type;
     NSArray *_keyPathComponents;
 }

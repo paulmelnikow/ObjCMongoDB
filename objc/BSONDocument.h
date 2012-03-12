@@ -36,7 +36,7 @@
     /**
      The <code>bson</code> structure.
      */
-    bson *_bson;
+    const bson *_bson;
     BOOL _destroyOnDealloc;
 }
 
@@ -70,7 +70,7 @@
  but there's usually no need to do this directly.
  @param b A pointer to a <code>bson</code> structure
  */
-- (BSONDocument *) initWithNativeDocument:(bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc;
+- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc;
 
 /**
  Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make

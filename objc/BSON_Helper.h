@@ -81,4 +81,4 @@ NSString * NSStringFromBSONType (bson_type t);
  @param b A pointer to a native BSON struct
  @return A string representation of the BSON document
  */
-NSString * NSStringFromBSON (bson * b);
+NSString * NSStringFromBSON (const bson * b);

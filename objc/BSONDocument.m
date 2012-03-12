@@ -23,8 +23,9 @@
 
 - (BSONDocument *)init {
     if (self = [super init]) {
-        _bson = malloc(sizeof(bson));
-        bson_empty(_bson);
+        bson * newBson = malloc(sizeof(bson));
+        bson_empty(newBson);
+        _bson = newBson;
         _destroyOnDealloc = YES;
     }
     return self;
@@ -32,8 +33,9 @@
 
 - (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent {
     if (self = [super init]) {
-        _bson = malloc(sizeof(bson));
-        bson_iterator_subobject([iterator nativeIteratorValue], _bson);
+        bson * newBson = malloc(sizeof(bson));
+        bson_iterator_subobject([iterator nativeIteratorValue], newBson);
+        _bson = newBson;
         _destroyOnDealloc = NO;
 #if __has_feature(objc_arc)
         _source = parent;
@@ -49,12 +51,15 @@
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
     if (self = [super init]) {
-        if (BSON_ERROR == bson_init_data(_bson, (char *)data.bytes)) {
+        bson * newBson = malloc(sizeof(bson));
+        if (BSON_ERROR == bson_init_data(newBson, (char *)data.bytes)) {
 #if !__has_feature(objc_arc)
+            free(newBson);
             [self release];
 #endif
             return nil;
         }
+        _bson = newBson;
 #if __has_feature(objc_arc)
         _source = data;
 #else
@@ -64,7 +69,7 @@
     return self;
 }
 
-- (BSONDocument *) initWithNativeDocument:(bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc {
+- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc {
     if (!b) {
 #if !__has_feature(objc_arc)
         [self release];
@@ -79,15 +84,23 @@
 }
 
 - (void) dealloc {
-    if (_destroyOnDealloc) bson_destroy(_bson);
-    free(_bson);
+    // override const qualifier
+    if (_destroyOnDealloc) bson_destroy((bson *)_bson);
+    free((bson *)_bson);
 #if !__has_feature(objc_arc)
     [_source release];
 #endif
 }
 
-- (bson *) bsonValue {
+- (const bson *) bsonValue {
     return _bson;
+}
+
+- (id) copy {
+    bson *newBson = malloc(sizeof(bson));
+    bson_copy(newBson, _bson);
+    BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
+    return copy;
 }
 
 - (NSData *) dataValue {

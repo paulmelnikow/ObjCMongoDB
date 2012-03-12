@@ -30,9 +30,9 @@
 }
 
 - (BSONDocument *) nextObject {
-    bson *bson = malloc(sizeof(bson));
-    bson_copy(bson, mongo_cursor_bson(_cursor));
-    return [[BSONDocument alloc] initWithNativeDocument:bson destroyOnDealloc:YES];
+    bson *newBson = malloc(sizeof(bson));
+    bson_copy(newBson, mongo_cursor_bson(_cursor));
+    return [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
 }
 
 - (NSArray *) allObjects {
