@@ -8,18 +8,28 @@
 
 #import <Foundation/Foundation.h>
 #import "MongoPredicate.h"
+#import "MongoCursor.h"
+#import "MongoFetchRequest.h"
 
 @class MongoConnection;
 
 @interface MongoDBCollection : NSObject {
-    const char * utf8Name;
+    const char * _utf8Name;
+    const char * _utf8DatabaseName;
+    const char * _utf8NamespaceName;
 }
 
 - (BOOL) insert:(BSONDocument *) document error:(NSError **) error;
 - (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError **) error;
 - (BOOL) insertObject:(id) object error:(NSError **) error;
-
 - (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error;
+
+- (MongoCursor *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (NSUInteger) count:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+
+- (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error;
+
 
 
 

@@ -98,7 +98,7 @@
 
 - (id) copy {
     bson *newBson = malloc(sizeof(bson));
-    bson_copy(newBson, _bson);
+    bson_copy_basic(newBson, _bson);
     BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
     return copy;
 }

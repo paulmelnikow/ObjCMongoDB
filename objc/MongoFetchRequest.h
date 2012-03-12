@@ -37,8 +37,8 @@
 - (NSString *) description;
 
 @property (retain) MongoPredicate *predicate;
-@property (assign) NSUInteger *limitResults;
-@property (assign) NSUInteger *skipResults;
+@property (assign) int limitResults;
+@property (assign) int skipResults;
 
 @property (assign) BOOL fetchAllResultsImmediately;
 @property (assign) BOOL timeoutEnabled;

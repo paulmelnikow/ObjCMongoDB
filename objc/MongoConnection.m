@@ -87,7 +87,7 @@ const char * const MongoDBObjectIDBSONKey = "_id";
 
 - (void) disconnect { mongo_disconnect(_conn); }
 
-#pragma mark - Namespace access
+#pragma mark - Collection access
 
 - (MongoDBCollection *) collection:(NSString *) name {
     MongoDBCollection *collection = [[MongoDBCollection alloc] init];
