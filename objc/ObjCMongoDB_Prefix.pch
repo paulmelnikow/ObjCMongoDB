@@ -26,7 +26,8 @@
 #import "BSONIterator.h"
 #import "BSON_Helper.h"
 #import "BSONCoding.h"
-#import "MongoDB.h"
+#import "MongoConnection.h"
+#import "Mongo_Helper.h"
 
 @interface BSONDocument (Project)
 - (bson *) bsonValue;
@@ -49,6 +50,10 @@
 - (BSONIterator *) initWithDocument:(BSONDocument *)document
              keyPathComponentsOrNil:(NSArray *) keyPathComponents;
 - (bson_iterator *) nativeIteratorValue;
+@end
+
+@interface MongoConnection (Project)
+- (mongo *) connValue;
 @end
 
 #endif

@@ -18,10 +18,31 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MongoDBCollection.h"
+#import "mongo.h"
 
 extern NSString * const MongoDBObjectIDKey;
 extern const char * const MongoDBObjectIDBSONKey;
 
-@interface MongoDB : NSObject
+/**
+ Encapsulates a Mongo connection object.
+ */
+@interface MongoConnection : NSObject {
+@private
+    mongo *_conn;
+}
+
+- (BOOL) connectToServer:(NSString *) hostWithPort error:(NSError **) error;
+- (BOOL) connectToReplicaSet:(NSString *) replicaSet seed:(NSArray *) seed error:(NSError **) error;
+- (BOOL) checkConnectionWithError:(NSError **) error;
+- (BOOL) reconnectWithError:(NSError **) error;
+- (void) disconnect;
+
+- (MongoDBCollection *) collection:(NSString *) name;
+
+- (BOOL) dropDatabase:(NSString *) database;
+//- (BOOL) dropCollection:(MongoDBNamespace *) collection;
+
+- (NSError *) error;
 
 @end

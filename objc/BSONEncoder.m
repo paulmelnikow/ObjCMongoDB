@@ -117,7 +117,12 @@
 #pragma mark - Convenience methods
 
 + (BSONDocument *) documentForObject:(id) obj {
+    return [self documentForObject:obj restrictsKeyNamesForMongoDB:YES];
+}
+
++ (BSONDocument *) documentForObject:(id) obj restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB {
     BSONEncoder *encoder = [[self alloc] initForWriting];
+    encoder.restrictsKeyNamesForMongoDB = restrictsKeyNamesForMongoDB;
     [encoder encodeObject:obj];
     BSONDocument *result = [encoder BSONDocument];
 #if !__has_feature(objc_arc)
@@ -127,8 +132,13 @@
     return result;    
 }
 
-+ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary {    
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary {
+    return [self documentForDictionary:dictionary restrictsKeyNamesForMongoDB:YES];
+}
+
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB {
     BSONEncoder *encoder = [[self alloc] initForWriting];
+    encoder.restrictsKeyNamesForMongoDB = restrictsKeyNamesForMongoDB;
     [encoder encodeDictionary:dictionary];
     BSONDocument *result = [encoder BSONDocument];
 #if !__has_feature(objc_arc)
