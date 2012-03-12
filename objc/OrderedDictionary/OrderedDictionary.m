@@ -5,6 +5,9 @@
 //  Created by Matt Gallagher on 19/12/08.
 //  Copyright 2008 Matt Gallagher. All rights reserved.
 //
+//  MODIFIED -descriptionWithLocale:indent:
+//  by Paul Melnikow on March 11, 2012
+//
 //  This software is provided 'as-is', without any express or implied
 //  warranty. In no event will the authors be held liable for any damages
 //  arising from the use of this software. Permission is granted to anyone to
@@ -125,6 +128,10 @@ NSString *DescriptionForObject(NSObject *object, id locale, NSUInteger indent)
 	return [array objectAtIndex:anIndex];
 }
 
+//
+//  MODIFIED by Paul Melnikow on March 11, 2012
+//
+
 - (NSString *)descriptionWithLocale:(id)locale indent:(NSUInteger)level
 {
 	NSMutableString *indentString = [NSMutableString string];
@@ -135,16 +142,44 @@ NSString *DescriptionForObject(NSObject *object, id locale, NSUInteger indent)
 	}
 	
 	NSMutableString *description = [NSMutableString string];
-	[description appendFormat:@"%@{\n", indentString];
+	[description appendFormat:@"%@{", indentString];
 	for (NSObject *key in self)
 	{
-		[description appendFormat:@"%@    %@ = %@;\n",
+		[description appendFormat:@"\n%@    %@ = %@;",
 			indentString,
-			DescriptionForObject(key, locale, level),
-			DescriptionForObject([self objectForKey:key], locale, level)];
+			DescriptionForObject(key, locale, level+1),
+			DescriptionForObject([self objectForKey:key], locale, level+1)];
 	}
-	[description appendFormat:@"%@}\n", indentString];
+	[description appendFormat:@"\n%@}", indentString];
 	return description;
 }
+
+//
+//  End MODIFIED by Paul Melnikow on March 11, 2012
+//
+//  Original below:
+//
+
+//- (NSString *)descriptionWithLocale:(id)locale indent:(NSUInteger)level
+//{
+//	NSMutableString *indentString = [NSMutableString string];
+//	NSUInteger i, count = level;
+//	for (i = 0; i < count; i++)
+//	{
+//		[indentString appendFormat:@"    "];
+//	}
+//	
+//	NSMutableString *description = [NSMutableString string];
+//	[description appendFormat:@"%@{\n", indentString];
+//	for (NSObject *key in self)
+//	{
+//		[description appendFormat:@"%@    %@ = %@;\n",
+//			indentString,
+//			DescriptionForObject(key, locale, level),
+//			DescriptionForObject([self objectForKey:key], locale, level)];
+//	}
+//	[description appendFormat:@"%@}\n", indentString];
+//	return description;
+//}
 
 @end
