@@ -64,7 +64,7 @@
     return self;
 }
 
-- (BSONDocument *) initWithNativeDocument:(bson *) b {
+- (BSONDocument *) initWithNativeDocument:(bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc {
     if (!b) {
 #if !__has_feature(objc_arc)
         [self release];
@@ -73,6 +73,7 @@
     }
     if (self = [super init]) {
         _bson = b;
+        _destroyOnDealloc = destroyOnDealloc;
     }
     return self;
 }

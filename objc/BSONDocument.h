@@ -70,7 +70,7 @@
  but there's usually no need to do this directly.
  @param b A pointer to a <code>bson</code> structure
  */
-- (BSONDocument *) initWithNativeDocument:(bson *) b;
+- (BSONDocument *) initWithNativeDocument:(bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc;
 
 /**
  Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make

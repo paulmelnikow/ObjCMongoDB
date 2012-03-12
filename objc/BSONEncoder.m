@@ -156,7 +156,7 @@
 
     if (BSON_ERROR == bson_finish(_bson)) [self raiseBSONError];
     
-    _resultDocument = [[BSONDocument alloc] initWithNativeDocument:_bson];
+    _resultDocument = [[BSONDocument alloc] initWithNativeDocument:_bson destroyOnDealloc:YES];
     _bson = NULL;
 
     if ([self.delegate respondsToSelector:@selector(encoderDidFinish:)])
