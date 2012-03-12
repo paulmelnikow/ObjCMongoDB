@@ -1,4 +1,4 @@
-Based on NuMongoDB, by Tim Burks, copyright 2010 Neon Design Technology, Inc.
+Based on NuMongoDB, by Tim Burks: Copyright 2010 Neon Design Technology, Inc.
 https://github.com/timburks/NuMongoDB
 
 Includes enhancements by Diederik Hoogenboom:
@@ -7,5 +7,8 @@ https://github.com/dhoogenb/NuMongoDB
 and by Rob Elkin:
 https://github.com/robelkin/NuMongoDB
 
-C source from the official MongoDB C driver, copyright 2009, 2010 10gen Inc.
+Official MongoDB C driver: Copyright 2009, 2010 10gen Inc.
 http://github.com/mongodb/mongo-c-driver
+
+OrderedDictionary by Matt Gallagher: Copyright 2008 Matt Gallagher
+http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html
