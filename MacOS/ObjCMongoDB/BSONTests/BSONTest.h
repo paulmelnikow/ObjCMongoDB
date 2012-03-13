@@ -19,7 +19,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface ObjCBSONTests : SenTestCase
+@interface BSONTest : SenTestCase
 
 @property (retain) NSDateFormatter *df;
 

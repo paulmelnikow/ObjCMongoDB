@@ -23,7 +23,7 @@
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; };
 		9E2725BA150AF1CD009CBE47 /* MongoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725B8150AF1CD009CBE47 /* MongoConnection.m */; };
-		9E2725C2150B16EB009CBE47 /* ObjCBSONCoreDataTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* ObjCBSONCoreDataTests.m */; };
+		9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
 		9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C4150B1743009CBE47 /* CoreDataTests.xcdatamodeld */; };
 		9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
 		9E2725E0150B2131009CBE47 /* NSManagedObject+BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */; };
@@ -51,7 +51,7 @@
 		9EBE79EA150040D4000E767D /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EBE79EC150040D4000E767D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EBE79F4150040D5000E767D /* InfoPlist.strings */; };
-		9EBE79F9150040D5000E767D /* ObjCBSONTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79F8150040D5000E767D /* ObjCBSONTests.m */; };
+		9EBE79F9150040D5000E767D /* BSONTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79F8150040D5000E767D /* BSONTest.m */; };
 		9EBE79FF15004163000E767D /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
 		9EBE7A0415004640000E767D /* BSONDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A021500463F000E767D /* BSONDecoder.h */; };
 		9EBE7A0515004640000E767D /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONDecoder.m */; };
@@ -146,8 +146,8 @@
 		9E105450150408DE00805F26 /* BSON_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSON_Helper.m; sourceTree = "<group>"; };
 		9E2725B7150AF1CD009CBE47 /* MongoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoConnection.h; sourceTree = "<group>"; };
 		9E2725B8150AF1CD009CBE47 /* MongoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoConnection.m; sourceTree = "<group>"; };
-		9E2725C0150B16EB009CBE47 /* ObjCBSONCoreDataTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSONCoreDataTests.h; sourceTree = "<group>"; };
-		9E2725C1150B16EB009CBE47 /* ObjCBSONCoreDataTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSONCoreDataTests.m; sourceTree = "<group>"; };
+		9E2725C0150B16EB009CBE47 /* BSONCoreDataTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoreDataTest.h; sourceTree = "<group>"; };
+		9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONCoreDataTest.m; sourceTree = "<group>"; };
 		9E2725C5150B1743009CBE47 /* CoreDataTests.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTests.xcdatamodel; sourceTree = "<group>"; };
 		9E2725C7150B17C4009CBE47 /* CDPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPerson.h; sourceTree = "<group>"; };
 		9E2725C8150B17C4009CBE47 /* CDPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CDPerson.m; sourceTree = "<group>"; };
@@ -160,7 +160,7 @@
 		9E3A0C48150D9C1000BD3933 /* MongoCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoCursor.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
 		9E72DC8F150EBC5A00217439 /* java */ = {isa = PBXFileReference; lastKnownFileType = folder; name = java; path = ../../MongoPlacesTest/java; sourceTree = "<group>"; };
-		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; path = PredicateTest.h; sourceTree = "<group>"; };
+		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredicateTest.h; sourceTree = "<group>"; };
 		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
@@ -176,14 +176,14 @@
 		9EBE79CF15003CF2000E767D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		9EBE79D215003CF2000E767D /* test2-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "test2-Prefix.pch"; sourceTree = "<group>"; };
 		9EBE79D315003CF2000E767D /* test2.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = test2.1; sourceTree = "<group>"; };
-		9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ObjCBSONTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EBE79E8150040D4000E767D /* BSONTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSONTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EBE79E9150040D4000E767D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		9EBE79EB150040D4000E767D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		9EBE79F3150040D5000E767D /* ObjCBSONTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ObjCBSONTests-Info.plist"; sourceTree = "<group>"; };
+		9EBE79F3150040D5000E767D /* BSONTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSONTest-Info.plist"; sourceTree = "<group>"; };
 		9EBE79F5150040D5000E767D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		9EBE79F7150040D5000E767D /* ObjCBSONTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCBSONTests.h; sourceTree = "<group>"; };
-		9EBE79F8150040D5000E767D /* ObjCBSONTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCBSONTests.m; sourceTree = "<group>"; };
-		9EBE79FA150040D5000E767D /* ObjCBSONTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ObjCBSONTests-Prefix.pch"; sourceTree = "<group>"; };
+		9EBE79F7150040D5000E767D /* BSONTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSONTest.h; sourceTree = "<group>"; };
+		9EBE79F8150040D5000E767D /* BSONTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSONTest.m; sourceTree = "<group>"; };
+		9EBE79FA150040D5000E767D /* BSONTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BSONTest-Prefix.pch"; sourceTree = "<group>"; };
 		9EBE7A021500463F000E767D /* BSONDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDecoder.h; sourceTree = "<group>"; };
 		9EBE7A031500463F000E767D /* BSONDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDecoder.m; sourceTree = "<group>"; };
 		9EBE7A06150056FD000E767D /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
@@ -267,7 +267,7 @@
 				8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */,
 				22ED5BE311DF1AE100410529 /* sample */,
 				9EBE79C915003CF2000E767D /* test2 */,
-				9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */,
+				9EBE79E8150040D4000E767D /* BSONTests.octest */,
 				9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */,
 			);
 			name = Products;
@@ -278,11 +278,11 @@
 			children = (
 				22ED5B4E11DF1A8600410529 /* objc */,
 				9EFF2B5F150D5B7B00EDC285 /* MongoTests */,
+				9EBE79F1150040D4000E767D /* BSONTests */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				9E1054431503EE6300805F26 /* Documentation */,
 				9E10544E1503F70400805F26 /* Resources */,
 				9EBE79CE15003CF2000E767D /* test2 */,
-				9EBE79F1150040D4000E767D /* ObjCBSONTests */,
 				9EBE79CB15003CF2000E767D /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				22ED5BF511DF1B5E00410529 /* sample.m */,
@@ -385,27 +385,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		9EBE79F1150040D4000E767D /* ObjCBSONTests */ = {
+		9EBE79F1150040D4000E767D /* BSONTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EBE79F7150040D5000E767D /* ObjCBSONTests.h */,
-				9EBE79F8150040D5000E767D /* ObjCBSONTests.m */,
-				9E2725C0150B16EB009CBE47 /* ObjCBSONCoreDataTests.h */,
-				9E2725C1150B16EB009CBE47 /* ObjCBSONCoreDataTests.m */,
+				9EBE79F7150040D5000E767D /* BSONTest.h */,
+				9EBE79F8150040D5000E767D /* BSONTest.m */,
+				9E2725C0150B16EB009CBE47 /* BSONCoreDataTest.h */,
+				9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */,
 				9E2725C4150B1743009CBE47 /* CoreDataTests.xcdatamodeld */,
 				9E2725C7150B17C4009CBE47 /* CDPerson.h */,
 				9E2725C8150B17C4009CBE47 /* CDPerson.m */,
 				9EBE79F2150040D5000E767D /* Supporting Files */,
 			);
-			path = ObjCBSONTests;
+			path = BSONTests;
 			sourceTree = "<group>";
 		};
 		9EBE79F2150040D5000E767D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				9EBE79F3150040D5000E767D /* ObjCBSONTests-Info.plist */,
+				9EBE79F3150040D5000E767D /* BSONTest-Info.plist */,
 				9EBE79F4150040D5000E767D /* InfoPlist.strings */,
-				9EBE79FA150040D5000E767D /* ObjCBSONTests-Prefix.pch */,
+				9EBE79FA150040D5000E767D /* BSONTest-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -574,9 +574,9 @@
 			productReference = 9EBE79C915003CF2000E767D /* test2 */;
 			productType = "com.apple.product-type.tool";
 		};
-		9EBE79E7150040D4000E767D /* ObjCBSONTests */ = {
+		9EBE79E7150040D4000E767D /* BSONTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "ObjCBSONTests" */;
+			buildConfigurationList = 9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "BSONTests" */;
 			buildPhases = (
 				9EBE79E3150040D4000E767D /* Sources */,
 				9EBE79E4150040D4000E767D /* Frameworks */,
@@ -588,9 +588,9 @@
 			dependencies = (
 				9EBE7A0115004169000E767D /* PBXTargetDependency */,
 			);
-			name = ObjCBSONTests;
+			name = BSONTests;
 			productName = ObjCBSONTests;
-			productReference = 9EBE79E8150040D4000E767D /* ObjCBSONTests.octest */;
+			productReference = 9EBE79E8150040D4000E767D /* BSONTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
 		9EFF2B5B150D5B7B00EDC285 /* MongoTests */ = {
@@ -637,7 +637,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* ObjCMongoDB */,
-				9EBE79E7150040D4000E767D /* ObjCBSONTests */,
+				9EBE79E7150040D4000E767D /* BSONTests */,
 				9EFF2B5B150D5B7B00EDC285 /* MongoTests */,
 				22ED5BE211DF1AE100410529 /* sample */,
 				9EBE79C815003CF2000E767D /* test2 */,
@@ -749,8 +749,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EBE79F9150040D5000E767D /* ObjCBSONTests.m in Sources */,
-				9E2725C2150B16EB009CBE47 /* ObjCBSONCoreDataTests.m in Sources */,
+				9EBE79F9150040D5000E767D /* BSONTest.m in Sources */,
+				9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */,
 				9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */,
 				9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */,
 			);
@@ -980,7 +980,7 @@
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ObjCBSONTests/ObjCBSONTests-Prefix.pch";
+				GCC_PREFIX_HEADER = "BSONTests/BSONTest-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -989,7 +989,7 @@
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = "ObjCBSONTests/ObjCBSONTests-Info.plist";
+				INFOPLIST_FILE = "BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MallocStackLogging = Yes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1008,11 +1008,11 @@
 				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ObjCBSONTests/ObjCBSONTests-Prefix.pch";
+				GCC_PREFIX_HEADER = "BSONTests/BSONTest-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
-				INFOPLIST_FILE = "ObjCBSONTests/ObjCBSONTests-Info.plist";
+				INFOPLIST_FILE = "BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				MallocStackLogging = Yes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1108,7 +1108,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "ObjCBSONTests" */ = {
+		9EBE79FB150040D5000E767D /* Build configuration list for PBXNativeTarget "BSONTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				9EBE79FC150040D5000E767D /* Debug */,

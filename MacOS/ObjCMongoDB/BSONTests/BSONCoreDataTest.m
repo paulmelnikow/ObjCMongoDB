@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import "ObjCBSONCoreDataTests.h"
+#import "BSONCoreDataTest.h"
 #import "CDPerson.h"
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
@@ -26,7 +26,7 @@
 #import "BSONCoding.h"
 
 
-@implementation ObjCBSONCoreDataTests
+@implementation BSONCoreDataTest
 
 @synthesize df;
 

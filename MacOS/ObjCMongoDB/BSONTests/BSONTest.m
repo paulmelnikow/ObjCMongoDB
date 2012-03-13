@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import "ObjCBSONTests.h"
+#import "BSONTest.h"
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 #import "BSONDocument.h"
@@ -336,7 +336,7 @@
 }
 @end
 
-@implementation ObjCBSONTests
+@implementation BSONTest
 @synthesize df;
 
 + (NSCountedSet *) missingValuesInResultSet:(NSCountedSet *) one expectedSet:(NSCountedSet *) two {

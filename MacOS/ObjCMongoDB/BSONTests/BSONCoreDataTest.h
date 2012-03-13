@@ -19,7 +19,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
-@interface ObjCBSONCoreDataTests : SenTestCase {
+@interface BSONCoreDataTest : SenTestCase {
     NSManagedObjectModel *_mom;
     NSPersistentStoreCoordinator *_psc;
     NSManagedObjectContext *_moc;
