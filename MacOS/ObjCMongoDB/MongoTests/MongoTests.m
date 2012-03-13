@@ -33,17 +33,18 @@
     [predicate keyPath:@"age" isLessThanOrEqualTo:[NSNumber numberWithInteger:30]];
     [predicate keyPath:@"username" isNotEqualTo:@"joe"];
 
-    NSLog(@"%@", predicate);
+//    NSLog(@"%@", predicate);
 
     MongoFetchRequest *request = [MongoFetchRequest fetchRequest];
     request.predicate = predicate;
     [request includeKey:@"username"];
     [request excludeKey:@"_id"];
 
-    NSLog(@"%@", request);
-
-    NSLog(@"\n");
-    
+//    NSLog(@"%@", request);
+//
+//    NSLog(@"\n");
+//    
+    /*
     
     
     NuMongoDB *mongo = [NuMongoDB new];
@@ -134,7 +135,7 @@
         NSLog(@"%@", object);
     }
     
-
+*/
 }
 
 @end
