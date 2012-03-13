@@ -25,13 +25,16 @@
 - (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error;
 
 - (MongoCursor *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (MongoCursor *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
+- (MongoCursor *) findAllWithError:(NSError **) error;
+
 - (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
-- (NSUInteger) count:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
+- (BSONDocument *) findOneWithError:(NSError **) error;
+
+- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
 
 - (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error;
-
-
-
 
 - (NSError *) error;
 

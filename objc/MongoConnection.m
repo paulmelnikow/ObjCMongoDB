@@ -37,6 +37,21 @@ const char * const MongoDBObjectIDBSONKey = "_id";
     return self;
 }
 
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError **) error {
+    MongoConnection *conn = [[self alloc] init];
+    BOOL success = [conn connectToServer:hostWithPort error:error];
+    if (!success) {
+#if !__has_feature(objc_arc)
+        [conn release];
+#endif
+        return NO;
+    }
+#if !__has_feature(objc_arc)
+    [conn autorelease];
+#endif
+    return conn;
+}
+
 - (void) dealloc {
     mongo_destroy(_conn);
     free(_conn);
@@ -112,8 +127,14 @@ const char * const MongoDBObjectIDBSONKey = "_id";
 #pragma mark - Error handling
 
 - (NSError *) error {
+    if (!_conn->err) return nil;
+    NSString *description = [NSString stringWithFormat:@"%@ [%@]",
+                             MongoErrorCodeDescription(_conn->err),
+                             NSStringFromMongoErrorCode(_conn->err)];
+    if (_conn->errstr) description = [description stringByAppendingFormat:@": %s",
+                                      _conn->errstr];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                              NSStringFromBSONString(_conn->errstr), NSLocalizedDescriptionKey,
+                              description, NSLocalizedDescriptionKey,
                               nil];
     return [NSError errorWithDomain:MongoDBErrorDomain
                                code:_conn->err

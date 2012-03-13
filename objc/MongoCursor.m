@@ -30,6 +30,7 @@
 }
 
 - (BSONDocument *) nextObject {
+    if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
     bson *newBson = malloc(sizeof(bson));
     bson_copy_basic(newBson, mongo_cursor_bson(_cursor));
     return [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];

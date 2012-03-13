@@ -18,6 +18,7 @@
 
 - (id) init;
 + (MongoFetchRequest *) fetchRequest;
++ (MongoFetchRequest *) fetchRequestWithPredicate:(MongoPredicate *) predicate;
 
 - (void) includeKey:(NSString *) key;
 - (void) excludeKey:(NSString *) key;

@@ -57,6 +57,15 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     return result;
 }
 
++ (MongoFetchRequest *) fetchRequestWithPredicate:(MongoPredicate *) predicate {
+    MongoFetchRequest *request = [self fetchRequest];
+    request.predicate = predicate;
+#if !__has_feature(objc_arc)
+    [[request retain] autorelease];
+#endif
+    return request;
+}
+
 #pragma mark - Manipulating the request
 
 - (void) includeKey:(NSString *) key {

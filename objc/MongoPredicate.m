@@ -78,9 +78,17 @@ NSString * const MongoOrOperator = @"$or";
 }
 
 - (void) keyPath:(NSString *) keyPath matchesRegularExpression:(BSONRegularExpression *) object {
-    [self keyPath:object.pattern addOperation:MongoRegularExpressionPatternOperator object:object];
+    [self keyPath:keyPath addOperation:MongoRegularExpressionPatternOperator object:object.pattern];
     if (object.options)
-        [self keyPath:object.options addOperation:MongoRegularExpressionOptionsOperator object:object];
+        [self keyPath:keyPath addOperation:MongoRegularExpressionOptionsOperator object:object.options];
+}
+
+- (void) keyPath:(NSString *) keyPath matchesAnyFromArray:(NSArray *) objects {
+    [self keyPath:keyPath addOperation:MongoInOperator object:objects];
+}
+
+- (void) keyPath:(NSString *) keyPath doesNotMatchAnyFromArray:(NSArray *) objects {
+    [self keyPath:keyPath addOperation:MongoNotInOperator object:objects];
 }
 
 - (void) keyPath:(NSString *) keyPath isLessThan:(id) object {
@@ -103,72 +111,32 @@ NSString * const MongoOrOperator = @"$or";
     [self keyPath:keyPath addOperation:MongoNotEqualOperator object:object];
 }
 
-- (void) keyPathExists:(NSString *) keyPath {
+- (void) valueExistsForKeyPath:(NSString *) keyPath {
     [self keyPath:keyPath addOperation:MongoExistsOperator object:[NSNumber numberWithBool:YES]];
 }
 
-- (void) keyPathDoesNotExist:(NSString *) keyPath {
+- (void) valueDoesNotExistForKeyPath:(NSString *) keyPath {
     [self keyPath:keyPath addOperation:MongoExistsOperator object:[NSNumber numberWithBool:NO]];
 }
 
-- (void) keyPath:(NSString *) keyPath arrayContains:(id) object {
+- (void) keyPath:(NSString *) keyPath arrayContainsObject:(id) object {
     return [self keyPath:keyPath matches:object];
 }
-- (void) keyPath:(NSString *) keyPath arrayContainsAny:(id) firstObject, ... {
-    NSMutableArray *objects = [NSMutableArray array];
-    va_list args;
-    va_start(args, firstObject);
-    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
-        [objects addObject:obj];
-    va_end(args);
-    [self keyPath:keyPath arrayContainsAnyInArray:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayContainsAnyInArray:(NSArray *) objects {
-    [self keyPath:keyPath addOperation:MongoInOperator object:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayContainsAll:(id) firstObject, ... {
-    NSMutableArray *objects = [NSMutableArray array];
-    va_list args;
-    va_start(args, firstObject);
-    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
-        [objects addObject:obj];
-    va_end(args);
-    [self keyPath:keyPath arrayContainsAllInArray:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayContainsAllInArray:(NSArray *) objects {
+
+- (void) keyPath:(NSString *) keyPath arrayContainsAllFromArray:(NSArray *) objects {
     [self keyPath:keyPath addOperation:MongoAllOperator object:objects];
 }
 
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAny:(id) firstObject, ... {
-    NSMutableArray *objects = [NSMutableArray array];
-    va_list args;
-    va_start(args, firstObject);
-    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
-        [objects addObject:obj];
-    va_end(args);
-    [self keyPath:keyPath arrayDoesNotContainAnyInArray:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAnyInArray:(NSArray *) objects {
-    [self keyPath:keyPath addOperation:MongoNotInOperator object:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAll:(id) firstObject, ... {
-    NSMutableArray *objects = [NSMutableArray array];
-    va_list args;
-    va_start(args, firstObject);
-    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
-        [objects addObject:obj];
-    va_end(args);
-    [self keyPath:keyPath arrayDoesNotContainAllInArray:objects];
-}
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllInArray:(NSArray *) objects {
+- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllFromArray:(NSArray *) objects {
     [self keyPath:keyPath addNegationOfOperation:MongoAllOperator object:objects];
 }
 
-- (void) keyPath:(NSString *) keyPath arraySizeEquals:(NSUInteger) arraySize {
+- (void) keyPath:(NSString *) keyPath arraySizeIsEqualTo:(NSUInteger) arraySize {
     [self keyPath:keyPath addOperation:MongoSizeOperator
            object:[NSNumber numberWithInteger:arraySize]];
 }
-- (void) keyPath:(NSString *) keyPath arraySizeDoesNotEqual:(NSUInteger) arraySize {
+
+- (void) keyPath:(NSString *) keyPath arraySizeIsNotEqualTo:(NSUInteger) arraySize {
     [self keyPath:keyPath addNegationOfOperation:MongoSizeOperator
            object:[NSNumber numberWithInteger:arraySize]];
 }
@@ -178,7 +146,7 @@ NSString * const MongoOrOperator = @"$or";
            object:[NSNumber numberWithInt:nativeValueType]];    
 }
 
-- (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder mod:(NSUInteger) modulus {
+- (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus {
     NSArray *arguments = [NSArray arrayWithObjects:
                           [NSNumber numberWithInteger:modulus],
                           [NSNumber numberWithInteger:remainder],
@@ -186,7 +154,7 @@ NSString * const MongoOrOperator = @"$or";
     [self keyPath:keyPath addOperation:MongoModuloOperator object:arguments];
 }
 
-- (void) keyPath:(NSString *) keyPath isNotEquivalentTo:(NSUInteger) remainder mod:(NSUInteger) modulus {
+- (void) keyPath:(NSString *) keyPath isNotEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus {
     NSArray *arguments = [NSArray arrayWithObjects:
                           [NSNumber numberWithInteger:modulus],
                           [NSNumber numberWithInteger:remainder],
@@ -268,6 +236,48 @@ NSString * const MongoOrOperator = @"$or";
     OrderedDictionary *subPredicate = [OrderedDictionary dictionary];
     [_orPredicates addObject:subPredicate];
     return [[MongoPredicate alloc] initWithParent:self dictionary:subPredicate];
+}
+
+#pragma mark - Trampoline methods
+
+- (void) keyPath:(NSString *) keyPath matchesAnyObjects:(id) firstObject, ... {
+    NSMutableArray *objects = [NSMutableArray array];
+    va_list args;
+    va_start(args, firstObject);
+    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
+        [objects addObject:obj];
+    va_end(args);
+    [self keyPath:keyPath matchesAnyFromArray:objects];
+}
+
+- (void) keyPath:(NSString *) keyPath doesNotMatchAnyObjects:(id) firstObject, ... {
+    NSMutableArray *objects = [NSMutableArray array];
+    va_list args;
+    va_start(args, firstObject);
+    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
+        [objects addObject:obj];
+    va_end(args);
+    [self keyPath:keyPath doesNotMatchAnyFromArray:objects];    
+}
+
+- (void) keyPath:(NSString *) keyPath arrayContainsAllObjects:(id) firstObject, ... {
+    NSMutableArray *objects = [NSMutableArray array];
+    va_list args;
+    va_start(args, firstObject);
+    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
+        [objects addObject:obj];
+    va_end(args);
+    [self keyPath:keyPath arrayContainsAllFromArray:objects];
+}
+
+- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllObjects:(id) firstObject, ... {
+    NSMutableArray *objects = [NSMutableArray array];
+    va_list args;
+    va_start(args, firstObject);
+    for (id obj = firstObject; obj != nil; obj = va_arg(args, id))
+        [objects addObject:obj];
+    va_end(args);
+    [self keyPath:keyPath arrayDoesNotContainAllFromArray:objects];
 }
 
 #pragma mark - Getting the result

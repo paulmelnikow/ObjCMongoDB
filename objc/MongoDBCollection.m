@@ -35,8 +35,8 @@
                                        userInfo:nil];
         @throw exc;
     }
-    _utf8DatabaseName = BSONStringFromNSString([value substringToIndex:firstDot.location-1]);
-    _utf8NamespaceName = BSONStringFromNSString([value substringFromIndex:firstDot.location+1]);
+    _utf8DatabaseName = BSONStringFromNSString([value substringToIndex:firstDot.location]);
+    _utf8NamespaceName = BSONStringFromNSString([value substringFromIndex:1+firstDot.location]);
 }
 
 #pragma mark - Insert
@@ -138,10 +138,27 @@
 #endif
 }
 
-- (NSUInteger) count:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
+- (MongoCursor *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
+    return [self find:[MongoFetchRequest fetchRequestWithPredicate:predicate] error:error];
+}
+
+- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
+    return [self findOne:[MongoFetchRequest fetchRequestWithPredicate:predicate] error:error];    
+}
+
+- (MongoCursor *) findAllWithError:(NSError **) error {
+    return [self findWithPredicate:[MongoPredicate predicate] error:error];
+}
+
+- (BSONDocument *) findOneWithError:(NSError **) error {
+    return [self findOneWithPredicate:[MongoPredicate predicate] error:error];
+}
+
+- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
+    if (!predicate) predicate = [MongoPredicate predicate];
     NSUInteger result = mongo_count(connection.connValue,
-                             _utf8DatabaseName, _utf8NamespaceName,
-                             fetchRequest.queryDocument.bsonValue);
+                                    _utf8DatabaseName, _utf8NamespaceName,
+                                    predicate.BSONDocument.bsonValue);
     if (BSON_ERROR == result) set_error_and_return_BSON_ERROR;
     return result;
 }

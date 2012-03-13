@@ -32,6 +32,10 @@ extern const char * const MongoDBObjectIDBSONKey;
     mongo *_conn;
 }
 
+- (MongoConnection *) init;
+
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError **) error;
+
 - (BOOL) connectToServer:(NSString *) hostWithPort error:(NSError **) error;
 - (BOOL) connectToReplicaSet:(NSString *) replicaSet seed:(NSArray *) seed error:(NSError **) error;
 - (BOOL) checkConnectionWithError:(NSError **) error;

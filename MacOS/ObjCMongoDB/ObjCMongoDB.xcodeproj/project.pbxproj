@@ -34,6 +34,7 @@
 		9E2725F3150C34CB009CBE47 /* MongoDBCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725F1150C34CA009CBE47 /* MongoDBCollection.m */; };
 		9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3A0C47150D9C1000BD3933 /* MongoCursor.h */; };
 		9E3A0C4A150D9C1000BD3933 /* MongoCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3A0C48150D9C1000BD3933 /* MongoCursor.m */; };
+		9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72DC91150EBC7E00217439 /* PredicateTest.m */; };
 		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; };
 		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
 		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
@@ -158,6 +159,9 @@
 		9E3A0C47150D9C1000BD3933 /* MongoCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoCursor.h; sourceTree = "<group>"; };
 		9E3A0C48150D9C1000BD3933 /* MongoCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoCursor.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
+		9E72DC8F150EBC5A00217439 /* java */ = {isa = PBXFileReference; lastKnownFileType = folder; name = java; path = ../../MongoPlacesTest/java; sourceTree = "<group>"; };
+		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; path = PredicateTest.h; sourceTree = "<group>"; };
+		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
 		9EBE79B2150006DF000E767D /* gridfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gridfs.h; sourceTree = "<group>"; };
@@ -273,12 +277,12 @@
 			isa = PBXGroup;
 			children = (
 				22ED5B4E11DF1A8600410529 /* objc */,
+				9EFF2B5F150D5B7B00EDC285 /* MongoTests */,
 				22ED5B3B11DF1A7200410529 /* src */,
 				9E1054431503EE6300805F26 /* Documentation */,
 				9E10544E1503F70400805F26 /* Resources */,
 				9EBE79CE15003CF2000E767D /* test2 */,
 				9EBE79F1150040D4000E767D /* ObjCBSONTests */,
-				9EFF2B5F150D5B7B00EDC285 /* MongoTests */,
 				9EBE79CB15003CF2000E767D /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				22ED5BF511DF1B5E00410529 /* sample.m */,
@@ -451,8 +455,11 @@
 		9EFF2B5F150D5B7B00EDC285 /* MongoTests */ = {
 			isa = PBXGroup;
 			children = (
+				9E72DC8F150EBC5A00217439 /* java */,
 				9EFF2B65150D5B7B00EDC285 /* MongoTests.h */,
 				9EFF2B66150D5B7B00EDC285 /* MongoTests.m */,
+				9E72DC90150EBC7E00217439 /* PredicateTest.h */,
+				9E72DC91150EBC7E00217439 /* PredicateTest.m */,
 				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
 			);
 			path = MongoTests;
@@ -754,6 +761,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EFF2B67150D5B7B00EDC285 /* MongoTests.m in Sources */,
+				9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
