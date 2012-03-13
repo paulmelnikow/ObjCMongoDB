@@ -812,15 +812,15 @@
     [encoder1 encodeDictionary:sample];
     
     resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -889,8 +889,8 @@
     [encoder1 encodeObject:lucy];
         
     resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
@@ -900,15 +900,15 @@
                    @"Delegate did not receive exactly one notification for nil key path");
         
     resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -969,8 +969,8 @@
     NSCountedSet *resultSet, *missing, *unexpected;
     
     resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
@@ -980,15 +980,15 @@
                    @"Delegate did not receive exactly one notification for nil key path");
     
     resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -1005,15 +1005,15 @@
                                      nil];
 
     resultSet = [NSCountedSet setWithArray:delegate.replacedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
 
     resultSet = [NSCountedSet setWithArray:delegate.replacedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:replacedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:replacedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:replacedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:replacedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
@@ -1210,8 +1210,8 @@
     
     NSCountedSet *resultSet, *missing, *unexpected;
     resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
@@ -1228,8 +1228,8 @@
     [lucy2 retain];
     
     resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -1240,8 +1240,8 @@
     
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -1277,8 +1277,8 @@
     
     NSCountedSet *resultSet, *missing, *unexpected;
     resultSet = [NSCountedSet setWithArray:delegate.encodedObjects];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
@@ -1295,8 +1295,8 @@
     [sample2 retain];
     
     resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
@@ -1307,8 +1307,8 @@
     
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
-    missing = [ObjCBSONTests missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
-    unexpected = [ObjCBSONTests unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
+    unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
     STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
     STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
