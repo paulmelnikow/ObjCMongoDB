@@ -101,7 +101,11 @@
 
 #pragma mark - Find
 
-- (MongoCursor *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
+- (NSArray *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
+    return [[self cursorForFind:fetchRequest error:error] allObjects];
+}
+
+- (MongoCursor *) cursorForFind:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
     mongo_cursor *cursor = mongo_find(connection.connValue, _utf8Name,
                                       fetchRequest.queryDocument.bsonValue,
                                       fetchRequest.fieldsDocument.bsonValue,
@@ -138,16 +142,24 @@
 #endif
 }
 
-- (MongoCursor *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
-    return [self find:[MongoFetchRequest fetchRequestWithPredicate:predicate] error:error];
+- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
+    return [[self cursorForFindWithPredicate:predicate error:error] allObjects];
+}
+
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
+    return [self cursorForFind:[MongoFetchRequest fetchRequestWithPredicate:predicate] error:error];
 }
 
 - (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
     return [self findOne:[MongoFetchRequest fetchRequestWithPredicate:predicate] error:error];    
 }
 
-- (MongoCursor *) findAllWithError:(NSError **) error {
-    return [self findWithPredicate:[MongoPredicate predicate] error:error];
+- (NSArray *) findAllWithError:(NSError **) error {
+    return [[self cursorForFindAllWithError:error] allObjects];
+}
+
+- (MongoCursor *) cursorForFindAllWithError:(NSError **) error {
+    return [self cursorForFindWithPredicate:[MongoPredicate predicate] error:error];
 }
 
 - (BSONDocument *) findOneWithError:(NSError **) error {

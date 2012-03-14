@@ -24,9 +24,13 @@
 - (BOOL) insertObject:(id) object error:(NSError **) error;
 - (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error;
 
-- (MongoCursor *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
-- (MongoCursor *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
-- (MongoCursor *) findAllWithError:(NSError **) error;
+- (NSArray *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
+- (NSArray *) findAllWithError:(NSError **) error;
+
+- (MongoCursor *) cursorForFind:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
+- (MongoCursor *) cursorForFindAllWithError:(NSError **) error;
 
 - (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
 - (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
