@@ -117,7 +117,7 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     OrderedDictionary *result = [OrderedDictionary dictionary];
     
     if (self.predicate)
-        [result setObject:[predicate dictionaryValue] forKey:MongoQueryMetaOperator];
+        [result setObject:[predicate dictionary] forKey:MongoQueryMetaOperator];
     else
         [result setObject:[OrderedDictionary dictionary] forKey:MongoQueryMetaOperator];
     
@@ -139,9 +139,9 @@ NSString * const MongoCommentMetaOperator = @"$comment";
         [result setObject:[NSNumber numberWithInteger:self.maximumDocumentsToScan]
                    forKey:MongoMaximumDocumentsToScanMetaOperator];
     if (self.lowerIndexBound)
-        [result setObject:[self.lowerIndexBound dictionaryValue] forKey:MongoLowerIndexBoundMetaOperator];
+        [result setObject:[self.lowerIndexBound dictionary] forKey:MongoLowerIndexBoundMetaOperator];
     if (self.upperIndexBound)
-        [result setObject:[self.lowerIndexBound dictionaryValue] forKey:MongoUpperIndexBoundMetaOperator];
+        [result setObject:[self.lowerIndexBound dictionary] forKey:MongoUpperIndexBoundMetaOperator];
     
     if (1 == [result count])
         return [result objectForKey:MongoQueryMetaOperator];

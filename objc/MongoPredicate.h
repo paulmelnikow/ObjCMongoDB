@@ -1,70 +1,52 @@
 //
-//  MongoQuery.h
+//  MongoAbstractPredicate.h
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 3/11/12.
+//  Created by Paul Melnikow on 3/13/12.
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
-#import "bson.h"
-#import "BSONTypes.h"
 #import "OrderedDictionary.h"
+#import "BSONTypes.h"
+
+extern NSString * const MongoNotOperatorKey;
+
+@class BSONDocument;
+@class MongoKeyedPredicate;
 
 @interface MongoPredicate : NSObject {
-@private
+@protected
     OrderedDictionary *_dict;
-    NSMutableArray *_orPredicates;
+    NSString *_operator;
 }
 
 - (id) init;
+- (id) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates;
+- (MongoPredicate *) initWithWhereExpression:(BSONCode *) whereExpression;
+
 + (MongoPredicate *) predicate;
 
-// object or a regex
-- (void) keyPath:(NSString *) keyPath matches:(id) object;
-- (void) keyPath:(NSString *) keyPath matchesRegularExpression:(BSONRegularExpression *) object;
-- (void) keyPath:(NSString *) keyPath matchesAnyObjects:(id) firstObject, ... NS_REQUIRES_NIL_TERMINATION;
-- (void) keyPath:(NSString *) keyPath matchesAnyFromArray:(NSArray *) objects;
-- (void) keyPath:(NSString *) keyPath doesNotMatchAnyObjects:(id) firstObject, ... NS_REQUIRES_NIL_TERMINATION;
-- (void) keyPath:(NSString *) keyPath doesNotMatchAnyFromArray:(NSArray *) objects;
++ (MongoPredicate *) orPredicateWithSubPredicate:(MongoPredicate *) predicate;
++ (MongoPredicate *) orPredicateWithSubPredicates:(MongoPredicate *) predicate, ... NS_REQUIRES_NIL_TERMINATION;
++ (MongoPredicate *) orPredicateWithArray:(NSArray *) array;
 
-- (void) keyPath:(NSString *) keyPath isLessThan:(id) object;
-- (void) keyPath:(NSString *) keyPath isLessThanOrEqualTo:(id) object;
-- (void) keyPath:(NSString *) keyPath isGreaterThanOrEqualTo:(id) object;
-- (void) keyPath:(NSString *) keyPath isGreaterThan:(id) object;
-- (void) keyPath:(NSString *) keyPath isNotEqualTo:(id) object;
++ (MongoPredicate *) norPredicateWithSubPredicate:(MongoPredicate *) predicate;
++ (MongoPredicate *) norPredicateWithSubPredicates:(MongoPredicate *) predicate, ... NS_REQUIRES_NIL_TERMINATION;
++ (MongoPredicate *) norPredicateWithArray:(NSArray *) array;
 
-- (void) valueExistsForKeyPath:(NSString *) keyPath;
-- (void) valueDoesNotExistForKeyPath:(NSString *) keyPath;
++ (MongoPredicate *) andPredicateWithSubPredicate:(MongoPredicate *) predicate;
++ (MongoPredicate *) andPredicateWithSubPredicates:(MongoPredicate *) predicate, ... NS_REQUIRES_NIL_TERMINATION;
++ (MongoPredicate *) andPredicateWithArray:(NSArray *) array;
 
-- (void) keyPath:(NSString *) keyPath arrayContainsAllObjects:(id) firstObject, ... NS_REQUIRES_NIL_TERMINATION;
-- (void) keyPath:(NSString *) keyPath arrayContainsAllFromArray:(NSArray *) objects;
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllObjects:(id) firstObject, ... NS_REQUIRES_NIL_TERMINATION;
-- (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllFromArray:(NSArray *) objects;
-- (void) keyPath:(NSString *) keyPath arraySizeIsEqualTo:(NSUInteger) arraySize;
-- (void) keyPath:(NSString *) keyPath arraySizeIsNotEqualTo:(NSUInteger) arraySize;
++ (MongoPredicate *) wherePredicateWithExpression:(BSONCode *) whereExpression;
 
-- (void) keyPath:(NSString *) keyPath nativeValueTypeEquals:(bson_type) nativeValueType;
+// only when initialized wiht operator
+- (void) addSubPredicate:(MongoPredicate *) predicate;
+- (MongoKeyedPredicate *) addKeyedSubPredicate;
 
-- (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;
-- (void) keyPath:(NSString *) keyPath isNotEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;
-
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point;
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance;
-- (void) keyPath:(NSString *) keyPath isWithinRect:(NSRect) rect;
-- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(NSPoint) center radius:(CGFloat) radius;
-
-- (void) where:(BSONCode *) where;
-
-- (MongoPredicate *) subPredicateForKeyPath:(NSString *) keyPath;
-- (MongoPredicate *) negationSubPredicateForKeyPath:(NSString *) keyPath;
-- (MongoPredicate *) arrayElementSubPredicateForKeyPath:(NSString *) keyPath;
-- (MongoPredicate *) orSubPredicate;
-
-- (OrderedDictionary *) dictionaryValue;
-- (OrderedDictionary *) dictionaryValueForKeyPath:(NSString *) keyPath;
+- (OrderedDictionary *) dictionary;
 - (BSONDocument *) BSONDocument;
 - (NSString *) description;
 
 @end
-

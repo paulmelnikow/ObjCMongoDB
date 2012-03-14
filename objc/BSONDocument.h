@@ -43,7 +43,7 @@
 /**
  Initializes an empty BSON document.
  */
-- (BSONDocument *)init;
+- (id) init;
 
 /**
  Initializes a BSON document as a sub-object for a given iterator, which retains its parent
@@ -52,7 +52,7 @@
  Since only the root document may is responsible to call bson_destroy, instances created
   with this method will not call bson_destroy on deallocation.
  */
-- (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent;
+- (BSONDocument *) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent;
 
 /**
  Initializes a BSON document.

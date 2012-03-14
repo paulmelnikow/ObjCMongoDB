@@ -15,3 +15,13 @@
 
 NSString * NSStringFromMongoErrorCode(mongo_error_t err);
 NSString * MongoErrorCodeDescription(mongo_error_t err);
+
+
+#define va_addToNSMutableArray(firstObject, array) \
+do { \
+    va_list args; \
+    va_start(args, firstObject); \
+    for (id obj = firstObject; obj != nil; obj = va_arg(args, id)) \
+        [array addObject:obj]; \
+    va_end(args); \
+} while (0)

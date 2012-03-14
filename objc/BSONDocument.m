@@ -21,7 +21,7 @@
 
 @implementation BSONDocument
 
-- (BSONDocument *)init {
+- (id) init {
     if (self = [super init]) {
         bson * newBson = malloc(sizeof(bson));
         bson_empty(newBson);

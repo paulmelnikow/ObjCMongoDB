@@ -542,14 +542,12 @@
         [self encodingHelper:nil key:key withSubstitutions:NO withObjectIDSubstitution:NO];
         return;
     } else {
-        BSONAssertValueNonNil(pattern);
-        BSONAssertValueNonNil(options);
         [self encodingHelperForKey:key];
     }
     if (BSON_ERROR == bson_append_regex(_bson,
                                         BSONStringFromNSString(key),
-                                        BSONStringFromNSString(pattern),
-                                        BSONStringFromNSString(options)))
+                                        pattern ? BSONStringFromNSString(pattern) : "",
+                                        options ? BSONStringFromNSString(options) : ""))
         [self raiseBSONError];
 }
 

@@ -27,7 +27,7 @@
 
 #pragma mark - Initialization
 
-- (BSONIterator *) initWithDocument:(BSONDocument *)document
+- (id) initWithDocument:(BSONDocument *)document
              keyPathComponentsOrNil:(NSArray *) keyPathComponents {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
@@ -49,7 +49,7 @@
  Called internally when creating subiterators
  Takes ownership of the bson_iterator it's passed
  */
-- (BSONIterator *) initWithNativeIterator:(bson_iterator *) bsonIter
+- (id) initWithNativeIterator:(bson_iterator *) bsonIter
                                   parent:(id) parent
                         keyPathComponents:(NSArray *) keyPathComponents {
     if (self = [super init]) {
