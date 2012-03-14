@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22739CE01231446B00909551 /* NuBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 22739CDE1231446B00909551 /* NuBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		22ED5B4611DF1A7200410529 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		22ED5B4711DF1A7200410529 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; };
@@ -19,33 +18,33 @@
 		22ED5BE911DF1AED00410529 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
 		22ED5BF611DF1B5E00410529 /* sample.m in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5BF511DF1B5E00410529 /* sample.m */; };
 		9E1054481503F42600805F26 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; };
+		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
-		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; };
+		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725BA150AF1CD009CBE47 /* MongoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725B8150AF1CD009CBE47 /* MongoConnection.m */; };
 		9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
 		9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C4150B1743009CBE47 /* CoreDataTests.xcdatamodeld */; };
 		9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
-		9E2725E0150B2131009CBE47 /* NSManagedObject+BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */; };
+		9E2725E0150B2131009CBE47 /* NSManagedObject+BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725E1150B2131009CBE47 /* NSManagedObject+BSONCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725DF150B2131009CBE47 /* NSManagedObject+BSONCoding.m */; };
 		9E2725E3150B2301009CBE47 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2725E2150B2301009CBE47 /* CoreData.framework */; };
 		9E2725E4150B2315009CBE47 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2725E2150B2301009CBE47 /* CoreData.framework */; };
-		9E2725F2150C34CB009CBE47 /* MongoDBCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725F0150C34CA009CBE47 /* MongoDBCollection.h */; };
+		9E2725F2150C34CB009CBE47 /* MongoDBCollection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725F0150C34CA009CBE47 /* MongoDBCollection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725F3150C34CB009CBE47 /* MongoDBCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725F1150C34CA009CBE47 /* MongoDBCollection.m */; };
-		9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3A0C47150D9C1000BD3933 /* MongoCursor.h */; };
+		9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3A0C47150D9C1000BD3933 /* MongoCursor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E3A0C4A150D9C1000BD3933 /* MongoCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3A0C48150D9C1000BD3933 /* MongoCursor.m */; };
 		9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72DC91150EBC7E00217439 /* PredicateTest.m */; };
-		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; };
-		9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9BE86F150FBEC600B6FCAB /* MongoPredicate.h */; };
+		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9BE86F150FBEC600B6FCAB /* MongoPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E9BE872150FBEC600B6FCAB /* MongoPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9BE870150FBEC600B6FCAB /* MongoPredicate.m */; };
 		9EBE79B3150006DF000E767D /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
-		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; };
+		9EBE79B4150006DF000E767D /* gridfs.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B2150006DF000E767D /* gridfs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE79B6150007C4000E767D /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79B5150007C4000E767D /* AppKit.framework */; };
-		9EBE79B915000EA7000E767D /* BSONTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONTypes.h */; };
+		9EBE79B915000EA7000E767D /* BSONTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE79BA15000EA7000E767D /* BSONTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONTypes.m */; };
-		9EBE79BF150013B6000E767D /* BSONEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79BD150013B6000E767D /* BSONEncoder.h */; };
+		9EBE79BF150013B6000E767D /* BSONEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79BD150013B6000E767D /* BSONEncoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE79C0150013B6000E767D /* BSONEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79BE150013B6000E767D /* BSONEncoder.m */; };
-		9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; };
+		9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE79C4150028D1000E767D /* BSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79C2150028D1000E767D /* BSONDocument.m */; };
 		9EBE79D015003CF2000E767D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79CF15003CF2000E767D /* main.m */; };
 		9EBE79D415003CF2000E767D /* test2.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9EBE79D315003CF2000E767D /* test2.1 */; };
@@ -55,13 +54,13 @@
 		9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EBE79F4150040D5000E767D /* InfoPlist.strings */; };
 		9EBE79F9150040D5000E767D /* BSONTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79F8150040D5000E767D /* BSONTest.m */; };
 		9EBE79FF15004163000E767D /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
-		9EBE7A0415004640000E767D /* BSONDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A021500463F000E767D /* BSONDecoder.h */; };
+		9EBE7A0415004640000E767D /* BSONDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A021500463F000E767D /* BSONDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE7A0515004640000E767D /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONDecoder.m */; };
-		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; };
+		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
-		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; };
+		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */; };
-		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; };
+		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B56150D081E00EDC285 /* MongoKeyedPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B54150D081E00EDC285 /* MongoKeyedPredicate.m */; };
 		9EFF2B5D150D5B7B00EDC285 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EFF2B5E150D5B7B00EDC285 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
@@ -69,14 +68,14 @@
 		9EFF2B67150D5B7B00EDC285 /* MongoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B66150D5B7B00EDC285 /* MongoTests.m */; };
 		9EFF2B6E150D5C3500EDC285 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
 		9EFF2B71150D6B3600EDC285 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
-		9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; };
-		9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */; };
+		9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B77150D780400EDC285 /* MongoFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */; };
 		C2891A49150AB6D40065E2E9 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
-		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; };
+		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		C2891A4B150AB6D40065E2E9 /* net.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A46150AB6D40065E2E9 /* net.c */; };
-		C2891A4C150AB6D40065E2E9 /* net.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A47150AB6D40065E2E9 /* net.h */; };
-		C2891A4D150AB6D40065E2E9 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A48150AB6D40065E2E9 /* platform.h */; };
+		C2891A4C150AB6D40065E2E9 /* net.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A47150AB6D40065E2E9 /* net.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C2891A4D150AB6D40065E2E9 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A48150AB6D40065E2E9 /* platform.h */; settings = {ATTRIBUTES = (Private, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -497,7 +496,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22739CE01231446B00909551 /* NuBSON.h in Headers */,
 				22ED5B4611DF1A7200410529 /* bson.h in Headers */,
 				22ED5B4811DF1A7200410529 /* md5.h in Headers */,
 				22ED5B4A11DF1A7200410529 /* mongo.h in Headers */,
@@ -509,18 +507,18 @@
 				9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */,
 				9E105451150408DF00805F26 /* BSON_Helper.h in Headers */,
 				9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */,
-				C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */,
-				C2891A4C150AB6D40065E2E9 /* net.h in Headers */,
-				C2891A4D150AB6D40065E2E9 /* platform.h in Headers */,
 				9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */,
 				9E2725E0150B2131009CBE47 /* NSManagedObject+BSONCoding.h in Headers */,
 				9E2725F2150C34CB009CBE47 /* MongoDBCollection.h in Headers */,
-				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
 				9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */,
 				9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */,
 				9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */,
 				9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */,
 				9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */,
+				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
+				C2891A4C150AB6D40065E2E9 /* net.h in Headers */,
+				C2891A4D150AB6D40065E2E9 /* platform.h in Headers */,
+				C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
