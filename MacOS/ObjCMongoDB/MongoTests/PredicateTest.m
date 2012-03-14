@@ -572,4 +572,8 @@
     STAssertFalse([self collection:coll boolForPredicate:pred2], @"");
 }
 
+- (void) testObjectIDMatches {
+    // FIXME
+}
+
 @end

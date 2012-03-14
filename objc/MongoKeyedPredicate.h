@@ -17,6 +17,8 @@
 - (id) init;
 + (MongoKeyedPredicate *) predicate;
 
+- (void) objectIDMatches:(BSONObjectID *) objectID;
+
 // object or a regex
 - (void) keyPath:(NSString *) keyPath matches:(id) object;
 - (void) keyPath:(NSString *) keyPath matchesRegularExpression:(BSONRegularExpression *) regex;

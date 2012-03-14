@@ -61,6 +61,10 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 
 #pragma mark - Predicate building
 
+- (void) objectIDMatches:(BSONObjectID *) objectID {
+    [self keyPath:MongoDBObjectIDKey matches:objectID];
+}
+
 - (void) keyPath:(NSString *) keyPath matches:(id) object {
     if ([_dict objectForKey:keyPath]) {
         NSString *reason = [NSString stringWithFormat:@"Criteria alreay set for key path %@", keyPath];
