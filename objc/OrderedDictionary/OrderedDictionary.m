@@ -31,7 +31,11 @@ NSString *DescriptionForObject(NSObject *object, id locale, NSUInteger indent)
 	NSString *objectString;
 	if ([object isKindOfClass:[NSString class]])
 	{
+#if __has_feature(objc_arc)
+		objectString = (NSString *)object;
+#else
 		objectString = (NSString *)[[object retain] autorelease];
+#endif
 	}
 	else if ([object respondsToSelector:@selector(descriptionWithLocale:indent:)])
 	{
@@ -68,9 +72,11 @@ NSString *DescriptionForObject(NSObject *object, id locale, NSUInteger indent)
 
 - (void)dealloc
 {
+#if !__has_feature(objc_arc)
 	[dictionary release];
 	[array release];
 	[super dealloc];
+#endif
 }
 
 - (id)copy

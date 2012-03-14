@@ -44,7 +44,7 @@ const char * const MongoDBObjectIDBSONKey = "_id";
 #if !__has_feature(objc_arc)
         [conn release];
 #endif
-        return NO;
+        return nil;
     }
 #if !__has_feature(objc_arc)
     [conn autorelease];

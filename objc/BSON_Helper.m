@@ -158,7 +158,7 @@ int substitute_for_printf(const char *format, ...) {
     
     [target_for_bson_substitute_for_printf appendString:stringToAppend];
     
-#if __has_feature(objc_arc)
+#if !__has_feature(objc_arc)
     [stringToAppend release];
 #endif
     return 0;

@@ -70,7 +70,7 @@
     int documentsToInsert = documentArray.count;
     const bson *bsonArray[documentsToInsert];
     const bson **current = bsonArray;
-    for (BSONDocument *document in documentArray) {
+    for (__strong BSONDocument *document in documentArray) {
         if(![document isKindOfClass:[BSONDocument class]]) {
             document = [BSONEncoder documentForObject:document];
         }
