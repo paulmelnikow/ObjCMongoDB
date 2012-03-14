@@ -72,10 +72,10 @@
 		9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B77150D780400EDC285 /* MongoFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */; };
 		C2891A49150AB6D40065E2E9 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
-		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C2891A4B150AB6D40065E2E9 /* net.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A46150AB6D40065E2E9 /* net.c */; };
-		C2891A4C150AB6D40065E2E9 /* net.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A47150AB6D40065E2E9 /* net.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		C2891A4D150AB6D40065E2E9 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A48150AB6D40065E2E9 /* platform.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		C2891A4C150AB6D40065E2E9 /* net.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A47150AB6D40065E2E9 /* net.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C2891A4D150AB6D40065E2E9 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A48150AB6D40065E2E9 /* platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -500,6 +500,9 @@
 				22ED5B4811DF1A7200410529 /* md5.h in Headers */,
 				22ED5B4A11DF1A7200410529 /* mongo.h in Headers */,
 				9EBE79B4150006DF000E767D /* gridfs.h in Headers */,
+				C2891A4C150AB6D40065E2E9 /* net.h in Headers */,
+				C2891A4D150AB6D40065E2E9 /* platform.h in Headers */,
+				C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */,
 				9EBE79B915000EA7000E767D /* BSONTypes.h in Headers */,
 				9EBE79BF150013B6000E767D /* BSONEncoder.h in Headers */,
 				9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */,
@@ -516,9 +519,6 @@
 				9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */,
 				9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */,
 				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
-				C2891A4C150AB6D40065E2E9 /* net.h in Headers */,
-				C2891A4D150AB6D40065E2E9 /* platform.h in Headers */,
-				C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
