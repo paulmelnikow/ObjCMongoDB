@@ -42,7 +42,7 @@
 
 #pragma mark - Initialization
 
-- (BSONDecoder *) initWithDocument:(BSONDocument *)document {
+- (BSONDecoder *) initWithDocument:(BSONDocument *) document {
     self = [super init];
     if (self) {
 #if __has_feature(objc_arc)
@@ -60,7 +60,11 @@
 }
 
 - (BSONDecoder *) initWithData:(NSData *)data {
+#if __has_feature(objc_arc)
     return [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
+#else
+    return [self initWithDocument:[[[BSONDocument alloc] initWithData:data] autorelease]];
+#endif
 }
 
 - (void) dealloc {
@@ -204,9 +208,17 @@
     if (!classForDecoder)
         return [self decodeExposedDictionaryWithClassOrNil:nil];
     else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
-        return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];        
+#if __has_feature (objc_arc)
+        return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
+#else
+    return [[[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self] autorelease];
+#endif
     else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
+#if __has_feature (objc_arc)
         return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
+#else
+    return [[[classForDecoder allocWithZone:self.objectZone] initWithCoder:self] autorelease];
+#endif
     else {
         NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
                             NSStringFromClass(classForDecoder)];
@@ -359,7 +371,11 @@
 - (NSImage *) decodeImageForKey:(NSString *) key {
     NSData *data = [self decodeDataForKey:key];
     if (data)
+#if __has_feature(objc_arc)
         return [[NSImage alloc] initWithData:data];
+#else
+        return [[[NSImage alloc] initWithData:data] autorelease];
+#endif
     else
         return nil;
 }
@@ -489,9 +505,9 @@
     }
     
     if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
-        object = [object awakeAfterUsingBSONDecoder:self];
+        object = [[[object retain] awakeAfterUsingBSONDecoder:self] autorelease];
     else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
-        object = [object awakeAfterUsingCoder:self];
+        object = [[[object retain] awakeAfterUsingCoder:self] autorelease];
 
     if ([self.delegate respondsToSelector:@selector(decoder:didDecodeObject:forKeyPath:)])
         object = [self.delegate decoder:self didDecodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
@@ -502,7 +518,7 @@
     
     if (topLevel && [self.delegate respondsToSelector:@selector(decoderWillFinish:)])
         [self.delegate decoderWillFinish:self];
-            
+           
     return object;
 }
 

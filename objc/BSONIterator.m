@@ -125,7 +125,7 @@
 #if __has_feature(objc_arc)
     return [_keyPathComponents arrayByAddingObject:self.key];
 #else
-    return [[_keyPathComponents arrayByAddingObject:[self.key retain]] autorelease];
+    return [[[_keyPathComponents arrayByAddingObject:self.key] retain] autorelease];
 #endif
 }
 
@@ -224,12 +224,7 @@
 - (BOOL) boolValue { return bson_iterator_bool(_iter); }
 
 - (BSONObjectID *) objectIDValue {
-#if __has_feature(objc_arc)
     return [BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)];
-#else
-    return [[BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)] autorelease];
-#endif
-    
 }
 
 - (NSString *) stringValue { return NSStringFromBSONString(bson_iterator_string(_iter)); }
@@ -249,23 +244,15 @@
 }
 
 - (NSDate *) dateValue {
-#if __has_feature(objc_arc)
     return [NSDate dateWithTimeIntervalSince1970:0.001 * bson_iterator_date(_iter)];
-#else
-    return [[NSDate dateWithTimeIntervalSince1970:0.001 * bson_iterator_date(_iter)] autorelease];
-#endif
 }
 
 - (char) dataLength { return bson_iterator_bin_len(_iter); }
 - (char) dataBinType { return bson_iterator_bin_type(_iter); }
 - (NSData *) dataValue {
     id value = [NSData dataWithBytes:bson_iterator_bin_data(_iter)
-                          length:[self dataLength]];
-#if __has_feature(objc_arc)
+                              length:[self dataLength]];
     return value;
-#else
-    return [value autorelease];
-#endif
 }
 
 - (NSString *) regularExpressionPatternValue { 

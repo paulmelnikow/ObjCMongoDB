@@ -25,7 +25,7 @@ NSString * const MongoNotOperatorKey = @"$not";
 }
 
 - (MongoPredicate *) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates {
-    if ([self init]) {
+    if (self = [self init]) {
         _operator = operator;
         NSMutableArray *dictionaries = [NSMutableArray array];
         for (MongoPredicate *predicate in subPredicates)
@@ -123,13 +123,16 @@ NSString * const MongoNotOperatorKey = @"$not";
 - (MongoKeyedPredicate *) addKeyedSubPredicate {
     id subPredicate = [[MongoKeyedPredicate alloc] init];
     [self addSubPredicate:subPredicate];
+#if !__has_feature(objc_arc)
+    [subPredicate autorelease];
+#endif
     return subPredicate;
 }
 
 #pragma mark - Where predicate
 
 - (MongoPredicate *) initWithWhereExpression:(BSONCode *) whereExpression {
-    if ([self init]) {
+    if (self = [self init]) {
         [_dict setObject:whereExpression forKey:MongoWhereOperatorKey];
     }
     return self;
