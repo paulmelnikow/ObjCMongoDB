@@ -564,12 +564,15 @@
 
 - (void) testEncodeNilValues {
     BSONEncoder *encoder = [[BSONEncoder alloc] init];
-    
     NSString *reason = nil;
+    
+    reason = @"Nil regex options should be OK";
+    STAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
+    
+    encoder = [[BSONEncoder alloc] init];
     
     reason = @"Half-nil values should throw an exception";
     STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCodeString:nil withScope:[[BSONDocument alloc] init] forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"], reason);
     
@@ -594,7 +597,7 @@
     STAssertEqualObjects([encoder BSONDocument],
                          [[BSONDocument alloc] init],
                          @"With default behavior, encoding nil values should result in an empty document");
-    
+        
     encoder = [[BSONEncoder alloc] init];
     
     reason = @"Zero value on primitive types should not throw an exception";
@@ -609,9 +612,14 @@
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONRaiseExceptionOnNil;
     
+    reason = @"Nil regex options should be OK";
+    STAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
+    
+    encoder = [[BSONEncoder alloc] init];
+    encoder.behaviorOnNil = BSONRaiseExceptionOnNil;
+    
     reason = @"Half-nil values should throw an exception";
     STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCodeString:nil withScope:[[BSONDocument alloc] init] forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"], reason);
  
@@ -627,7 +635,6 @@
     STAssertThrows([encoder encodeDate:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeImage:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeRegularExpression:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCode:nil forKey:@"testKey"], reason);
     STAssertThrows([encoder encodeCodeString:nil forKey:@"testKey"], reason);

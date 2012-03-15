@@ -105,7 +105,11 @@ const char * const MongoDBObjectIDBSONKey = "_id";
 #pragma mark - Collection access
 
 - (MongoDBCollection *) collection:(NSString *) name {
+#if __has_feature(objc_arc)
     MongoDBCollection *collection = [[MongoDBCollection alloc] init];
+#else
+    MongoDBCollection *collection = [[[MongoDBCollection alloc] init] autorelease];
+#endif
     collection.connection = self;
     collection.name = name;
     return collection;

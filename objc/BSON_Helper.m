@@ -139,11 +139,7 @@ NSString * NSStringFromBSONType(bson_type t) {
         default:
             name = [NSString stringWithFormat:@"(%i) ???", t];
     }
-#if __has_feature(objc_arc)
     return name;
-#else
-    return [name autorelease];
-#endif
 }
 
 NSMutableString * target_for_bson_substitute_for_printf = nil;

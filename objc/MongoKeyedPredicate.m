@@ -193,7 +193,7 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath negated:(BOOL) negated {
     MongoKeyedPredicate *subPredicate = [[MongoKeyedPredicate alloc] init];
     [self keyPath:keyPath addOperation:MongoArrayElementMatchOperatorKey object:subPredicate.dictionary negated:negated];
-    return subPredicate;
+    return [subPredicate autorelease];
 }
 
 #pragma mark - Trampoline methods

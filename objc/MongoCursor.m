@@ -26,14 +26,22 @@
 #pragma mark - Enumeration
 
 - (BSONDocument *) nextObjectNoCopy {
+#if __has_feature(objc_arc)
     return [[BSONDocument alloc] initWithNativeDocument:mongo_cursor_bson(_cursor) destroyOnDealloc:NO];
+#else
+    return [[[BSONDocument alloc] initWithNativeDocument:mongo_cursor_bson(_cursor) destroyOnDealloc:NO] autorelease];
+#endif
 }
 
 - (BSONDocument *) nextObject {
     if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
     bson *newBson = malloc(sizeof(bson));
     bson_copy_basic(newBson, mongo_cursor_bson(_cursor));
+#if __has_feature(objc_arc)
     return [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
+#else
+    return [[[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES] autorelease];
+#endif
 }
 
 - (NSArray *) allObjects {

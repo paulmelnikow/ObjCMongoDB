@@ -112,7 +112,11 @@
 }
 
 - (BSONIterator *) iterator {
+#if __has_feature(objc_arc)
     return [[BSONIterator alloc] initWithDocument:self keyPathComponentsOrNil:nil];
+#else
+    return [[[BSONIterator alloc] initWithDocument:self keyPathComponentsOrNil:nil] autorelease];
+#endif
 }
 
 - (BOOL) isEqual:(id)object {

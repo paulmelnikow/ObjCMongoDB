@@ -99,19 +99,11 @@
 
 
 - (NSData *) dataValue {
-#if __has_feature(objc_arc)
-    return [[NSData alloc] initWithBytes:_oid.bytes length:12];
-#else
-    return [[[NSData alloc] initWithBytes:_oid.bytes length:12] autorelease];
-#endif
+    return [NSData dataWithBytes:_oid.bytes length:12];
 }
 
 - (NSDate *) dateGenerated {
-#if __has_feature(objc_arc)
     return [NSDate dateWithTimeIntervalSince1970:bson_oid_generated_time(&_oid)];
-#else
-    return [[NSDate dateWithTimeIntervalSince1970:bson_oid_generated_time(&_oid)] autorelease];
-#endif
 }
 
 - (NSUInteger) hash {

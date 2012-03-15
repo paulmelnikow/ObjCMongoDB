@@ -119,7 +119,7 @@
  <code>-decoder:didDecodeObject:forKeyPath:</code>.
  @return <code>self</code>, <code>nil</code>, or an object to return in place of the receiver
  */
-- (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder;
+- (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder __attribute__((ns_consumes_self)) NS_RETURNS_RETAINED;
 
 // Support conveninence method encodeUsingObjectID
 
@@ -175,6 +175,6 @@
  @param decoder The active decoder
  @return An initialized object for the decoder to return
  */
-+ (id) instanceForObjectID:(BSONObjectID *) objectID decoder:(BSONDecoder *) decoder;
++ (id) instanceForObjectID:(BSONObjectID *) __attribute__((ns_consumed)) objectID decoder:(BSONDecoder *) decoder;
 
 @end

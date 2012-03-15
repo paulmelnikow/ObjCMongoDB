@@ -147,7 +147,6 @@ typedef enum {
 @interface BSONEncoder : NSCoder {
 @private
     bson *_bson;
-    NSMutableArray *_bufferStack;
     NSMutableArray *_encodingObjectStack;
     NSMutableArray *_keyPathComponents;
     BSONDocument *_resultDocument;
