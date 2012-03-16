@@ -31,6 +31,10 @@
 }
 
 - (id) initWithString:(NSString *) s {
+    if (s.length != 24) {
+        [self release];
+        [NSException raise:NSInvalidArgumentException format:@"String should be 24 characters long"];
+    }
     if (self = [super init]) {
         bson_oid_from_string(&_oid, BSONStringFromNSString(s));
     }
