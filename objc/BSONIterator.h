@@ -29,7 +29,7 @@
  
  An iterator starts before the first item in a BSON document, an embedded document, or an array. It
  can move sequentially through the items by calling <code>-next</code>, or find a specific item by
- calling <code>-nativeValueTypeForKey:</code>.
+ calling <code>-containsValueForKey:</code> or <code>-nativeValueTypeForKey:</code>.
 
  To get an item's object representation, call <code>-objectForKey:</code> or <code>-objectValue</code>,
  which returns an Objective-C type appropriate for the item's native type. You can also call one of
