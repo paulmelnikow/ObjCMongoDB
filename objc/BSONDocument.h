@@ -33,6 +33,7 @@
 @interface BSONDocument : NSObject {
 @private
     id _source;
+    NSData *_data;
     /**
      The <code>bson</code> structure.
      */
