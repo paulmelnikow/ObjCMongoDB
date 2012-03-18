@@ -183,6 +183,8 @@
 
 #pragma mark - Helper methods
 
+- (BOOL) serverStatusForLastOperation:(NSError **) error { return [connection serverStatusForLastOperation:error]; }
 - (NSError *) error { return [connection error]; }
+- (NSError *) serverError { return [connection serverError]; }
 
 @end

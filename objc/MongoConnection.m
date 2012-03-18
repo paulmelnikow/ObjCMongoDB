@@ -22,6 +22,7 @@
 #import "mongo.h"
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
+NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 NSString * const MongoDBObjectIDKey = @"_id";
 const char * const MongoDBObjectIDBSONKey = "_id";
 
@@ -144,5 +145,25 @@ const char * const MongoDBObjectIDBSONKey = "_id";
                                code:_conn->err
                            userInfo:userInfo];
 }
+
+- (NSError *) serverError {
+    if (!_conn->lasterrcode) return nil;
+    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+                              NSStringFromBSONString(_conn->lasterrstr), NSLocalizedDescriptionKey,
+                              nil];
+    return [NSError errorWithDomain:MongoDBServerErrorDomain
+                               code:_conn->lasterrcode
+                           userInfo:userInfo];
+}
+
+- (BOOL) serverStatusForLastOperation:(NSError **) error {
+    int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
+    if (error) *error = [self serverError];
+    if (MONGO_OK == status)
+        return YES;
+    else
+        return NO;
+}
+
 
 @end

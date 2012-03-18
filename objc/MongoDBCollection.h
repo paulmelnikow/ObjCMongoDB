@@ -40,7 +40,9 @@
 
 - (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error;
 
+- (BOOL) serverStatusForLastOperation:(NSError **) error;
 - (NSError *) error;
+- (NSError *) serverError;
 
 @property (retain) MongoConnection * connection;
 @property (copy, nonatomic) NSString * name;

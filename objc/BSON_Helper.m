@@ -20,6 +20,7 @@
 #import "BSON_Helper.h"
 
 NSString * NSStringFromBSONString (const char *cString) {
+    if (!cString) return nil;
 #if __has_feature(objc_arc)
     return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
 #else

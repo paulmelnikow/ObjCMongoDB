@@ -47,6 +47,8 @@ extern const char * const MongoDBObjectIDBSONKey;
 - (BOOL) dropDatabase:(NSString *) database;
 //- (BOOL) dropCollection:(MongoDBNamespace *) collection;
 
+- (BOOL) serverStatusForLastOperation:(NSError **) error;
 - (NSError *) error;
+- (NSError *) serverError;
 
 @end
