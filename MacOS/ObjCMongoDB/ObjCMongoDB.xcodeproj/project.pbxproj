@@ -33,6 +33,31 @@
 		9E2725F3150C34CB009CBE47 /* MongoDBCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725F1150C34CA009CBE47 /* MongoDBCollection.m */; };
 		9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3A0C47150D9C1000BD3933 /* MongoCursor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E3A0C4A150D9C1000BD3933 /* MongoCursor.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3A0C48150D9C1000BD3933 /* MongoCursor.m */; };
+		9E3E92A01516A04300A6F66B /* BSONTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B815000EA6000E767D /* BSONTypes.m */; };
+		9E3E92A11516A04300A6F66B /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
+		9E3E92A21516A04300A6F66B /* BSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79C2150028D1000E767D /* BSONDocument.m */; };
+		9E3E92A31516A04300A6F66B /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
+		9E3E92A41516A04300A6F66B /* BSONEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79BE150013B6000E767D /* BSONEncoder.m */; };
+		9E3E92A51516A04300A6F66B /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONDecoder.m */; };
+		9E3E92A61516A04300A6F66B /* NSManagedObject+BSONCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725DF150B2131009CBE47 /* NSManagedObject+BSONCoding.m */; };
+		9E3E92A71516A0C600A6F66B /* BSONTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79B715000EA6000E767D /* BSONTypes.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92A81516A0C600A6F66B /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92A91516A0C600A6F66B /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92AA1516A0C600A6F66B /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92AB1516A0C600A6F66B /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92AC1516A0C600A6F66B /* BSONEncoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79BD150013B6000E767D /* BSONEncoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92AD1516A0C600A6F66B /* BSONDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A021500463F000E767D /* BSONDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92AE1516A0C600A6F66B /* NSManagedObject+BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92B11516A11A00A6F66B /* ObjCBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92B21516A11A00A6F66B /* ObjCBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92B61516A1BC00A6F66B /* ObjCBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */; };
+		9E3E92B71516A1BC00A6F66B /* ObjCBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */; };
+		9E3E92B81516A21500A6F66B /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
+		9E3E92B91516A22700A6F66B /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92BA1516A24300A6F66B /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
+		9E3E92BB1516A25200A6F66B /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A48150AB6D40065E2E9 /* platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E3E92BC1516A2C100A6F66B /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
+		9E3E92BD1516A2EC00A6F66B /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72DC91150EBC7E00217439 /* PredicateTest.m */; };
 		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9BE86F150FBEC600B6FCAB /* MongoPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -58,8 +83,9 @@
 		9EBE7A0515004640000E767D /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONDecoder.m */; };
 		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
-		9EF20B05151678FF009D9402 /* GetLastErrorTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EF20B03151678FF009D9402 /* GetLastErrorTest.h */; };
 		9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF20B04151678FF009D9402 /* GetLastErrorTest.m */; };
+		9EF20B151516892A009D9402 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
+		9EF20B1F1516892A009D9402 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EF20B1D1516892A009D9402 /* InfoPlist.strings */; };
 		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */; };
 		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -161,6 +187,8 @@
 		9E2725F1150C34CA009CBE47 /* MongoDBCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoDBCollection.m; sourceTree = "<group>"; };
 		9E3A0C47150D9C1000BD3933 /* MongoCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoCursor.h; sourceTree = "<group>"; };
 		9E3A0C48150D9C1000BD3933 /* MongoCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoCursor.m; sourceTree = "<group>"; };
+		9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSON.h; sourceTree = "<group>"; };
+		9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSON.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
 		9E72DC8F150EBC5A00217439 /* java */ = {isa = PBXFileReference; lastKnownFileType = folder; name = java; path = ../../MongoPlacesTest/java; sourceTree = "<group>"; };
 		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredicateTest.h; sourceTree = "<group>"; };
@@ -195,6 +223,13 @@
 		9EBE7A07150056FD000E767D /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
 		9EF20B03151678FF009D9402 /* GetLastErrorTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLastErrorTest.h; sourceTree = "<group>"; };
 		9EF20B04151678FF009D9402 /* GetLastErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLastErrorTest.m; sourceTree = "<group>"; };
+		9EF20B141516892A009D9402 /* BSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EF20B171516892A009D9402 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		9EF20B181516892A009D9402 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		9EF20B191516892A009D9402 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		9EF20B1C1516892A009D9402 /* BSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSON-Info.plist"; sourceTree = "<group>"; };
+		9EF20B1E1516892A009D9402 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		9EF20B201516892A009D9402 /* BSON-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "BSON-Prefix.pch"; path = "../MacOS/ObjCMongoDB/BSON/BSON-Prefix.pch"; sourceTree = "<group>"; };
 		9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mongo_Helper.h; sourceTree = "<group>"; };
 		9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mongo_Helper.m; sourceTree = "<group>"; };
 		9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoKeyedPredicate.h; sourceTree = "<group>"; };
@@ -255,6 +290,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		9EF20B101516892A009D9402 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EF20B151516892A009D9402 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		9EFF2B58150D5B7B00EDC285 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -276,6 +319,7 @@
 				9EBE79C915003CF2000E767D /* test2 */,
 				9EBE79E8150040D4000E767D /* BSONTests.octest */,
 				9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */,
+				9EF20B141516892A009D9402 /* BSON.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -290,6 +334,7 @@
 				9E1054431503EE6300805F26 /* Documentation */,
 				9EBE79CE15003CF2000E767D /* test2 */,
 				9E10544E1503F70400805F26 /* Resources */,
+				9EF20B1A1516892A009D9402 /* BSON */,
 				9EBE79CB15003CF2000E767D /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 				22ED5BF511DF1B5E00410529 /* sample.m */,
@@ -326,6 +371,7 @@
 				9EFF2B52150D05BD00EDC285 /* Mongo */,
 				9E10543F1501C73B00805F26 /* old */,
 				9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */,
+				9EF20B201516892A009D9402 /* BSON-Prefix.pch */,
 			);
 			name = objc;
 			path = ../../objc;
@@ -370,6 +416,7 @@
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
 				9EBE79E9150040D4000E767D /* SenTestingKit.framework */,
 				9EBE79EB150040D4000E767D /* Cocoa.framework */,
+				9EF20B161516892A009D9402 /* Other Frameworks */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -417,9 +464,38 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9EF20B161516892A009D9402 /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9EF20B171516892A009D9402 /* AppKit.framework */,
+				9EF20B181516892A009D9402 /* CoreData.framework */,
+				9EF20B191516892A009D9402 /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		9EF20B1A1516892A009D9402 /* BSON */ = {
+			isa = PBXGroup;
+			children = (
+				9EF20B1B1516892A009D9402 /* Supporting Files */,
+			);
+			path = BSON;
+			sourceTree = "<group>";
+		};
+		9EF20B1B1516892A009D9402 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9EF20B1C1516892A009D9402 /* BSON-Info.plist */,
+				9EF20B1D1516892A009D9402 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		9EFF2B51150D059000EDC285 /* BSON */ = {
 			isa = PBXGroup;
 			children = (
+				9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */,
+				9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */,
 				9EBE79B715000EA6000E767D /* BSONTypes.h */,
 				9EBE79B815000EA6000E767D /* BSONTypes.m */,
 				9E10544F150408DE00805F26 /* BSON_Helper.h */,
@@ -429,12 +505,12 @@
 				9EBE7A06150056FD000E767D /* BSONIterator.h */,
 				9EBE7A07150056FD000E767D /* BSONIterator.m */,
 				9E901BDF1508195E00CFAC85 /* BSONCoding.h */,
+				9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */,
+				9E2725DF150B2131009CBE47 /* NSManagedObject+BSONCoding.m */,
 				9EBE79BD150013B6000E767D /* BSONEncoder.h */,
 				9EBE79BE150013B6000E767D /* BSONEncoder.m */,
 				9EBE7A021500463F000E767D /* BSONDecoder.h */,
 				9EBE7A031500463F000E767D /* BSONDecoder.m */,
-				9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */,
-				9E2725DF150B2131009CBE47 /* NSManagedObject+BSONCoding.m */,
 			);
 			name = BSON;
 			sourceTree = "<group>";
@@ -525,7 +601,26 @@
 				9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */,
 				9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */,
 				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
-				9EF20B05151678FF009D9402 /* GetLastErrorTest.h in Headers */,
+				9E3E92B11516A11A00A6F66B /* ObjCBSON.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EF20B111516892A009D9402 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E3E92A71516A0C600A6F66B /* BSONTypes.h in Headers */,
+				9E3E92A81516A0C600A6F66B /* BSON_Helper.h in Headers */,
+				9E3E92A91516A0C600A6F66B /* BSONDocument.h in Headers */,
+				9E3E92AA1516A0C600A6F66B /* BSONIterator.h in Headers */,
+				9E3E92AB1516A0C600A6F66B /* BSONCoding.h in Headers */,
+				9E3E92AC1516A0C600A6F66B /* BSONEncoder.h in Headers */,
+				9E3E92AD1516A0C600A6F66B /* BSONDecoder.h in Headers */,
+				9E3E92AE1516A0C600A6F66B /* NSManagedObject+BSONCoding.h in Headers */,
+				9E3E92B21516A11A00A6F66B /* ObjCBSON.h in Headers */,
+				9E3E92B91516A22700A6F66B /* encoding.h in Headers */,
+				9E3E92BB1516A25200A6F66B /* platform.h in Headers */,
+				9E3E92BD1516A2EC00A6F66B /* bson.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -605,6 +700,24 @@
 			productReference = 9EBE79E8150040D4000E767D /* BSONTests.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		9EF20B131516892A009D9402 /* BSON */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9EF20B241516892A009D9402 /* Build configuration list for PBXNativeTarget "BSON" */;
+			buildPhases = (
+				9EF20B0F1516892A009D9402 /* Sources */,
+				9EF20B101516892A009D9402 /* Frameworks */,
+				9EF20B111516892A009D9402 /* Headers */,
+				9EF20B121516892A009D9402 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BSON;
+			productName = BSON;
+			productReference = 9EF20B141516892A009D9402 /* BSON.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 		9EFF2B5B150D5B7B00EDC285 /* MongoTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 9EFF2B69150D5B7B00EDC285 /* Build configuration list for PBXNativeTarget "MongoTests" */;
@@ -649,6 +762,7 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* ObjCMongoDB */,
+				9EF20B131516892A009D9402 /* BSON */,
 				9EBE79E7150040D4000E767D /* BSONTests */,
 				9EFF2B5B150D5B7B00EDC285 /* MongoTests */,
 				22ED5BE211DF1AE100410529 /* sample */,
@@ -670,6 +784,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EF20B121516892A009D9402 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9EF20B1F1516892A009D9402 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -747,6 +869,7 @@
 				9EFF2B77150D780400EDC285 /* MongoFetchRequest.m in Sources */,
 				9E3A0C4A150D9C1000BD3933 /* MongoCursor.m in Sources */,
 				9E9BE872150FBEC600B6FCAB /* MongoPredicate.m in Sources */,
+				9E3E92B61516A1BC00A6F66B /* ObjCBSON.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -766,6 +889,24 @@
 				9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */,
 				9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */,
 				9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		9EF20B0F1516892A009D9402 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E3E92A01516A04300A6F66B /* BSONTypes.m in Sources */,
+				9E3E92A11516A04300A6F66B /* BSON_Helper.m in Sources */,
+				9E3E92A21516A04300A6F66B /* BSONDocument.m in Sources */,
+				9E3E92A31516A04300A6F66B /* BSONIterator.m in Sources */,
+				9E3E92A41516A04300A6F66B /* BSONEncoder.m in Sources */,
+				9E3E92A51516A04300A6F66B /* BSONDecoder.m in Sources */,
+				9E3E92A61516A04300A6F66B /* NSManagedObject+BSONCoding.m in Sources */,
+				9E3E92B71516A1BC00A6F66B /* ObjCBSON.m in Sources */,
+				9E3E92B81516A21500A6F66B /* bson.c in Sources */,
+				9E3E92BA1516A24300A6F66B /* numbers.c in Sources */,
+				9E3E92BC1516A2C100A6F66B /* encoding.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -813,6 +954,14 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		9EF20B1D1516892A009D9402 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9EF20B1E1516892A009D9402 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 		9EFF2B62150D5B7B00EDC285 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -828,6 +977,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				COPY_PHASE_STRIP = NO;
@@ -839,8 +989,8 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../objc/ObjCMongoDB_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = ObjCMongoDB;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -850,6 +1000,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = NO;
 				CLANG_WARN_OBJCPP_ARC_ABI = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -859,8 +1010,8 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = ../../objc/ObjCMongoDB_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				PRODUCT_NAME = ObjCMongoDB;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1034,6 +1185,53 @@
 			};
 			name = Release;
 		};
+		9EF20B251516892A009D9402 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BSON/BSON-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "BSON/BSON-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Debug;
+		};
+		9EF20B261516892A009D9402 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "BSON/BSON-Prefix.pch";
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				INFOPLIST_FILE = "BSON/BSON-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = framework;
+			};
+			name = Release;
+		};
 		9EFF2B6A150D5B7B00EDC285 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1127,6 +1325,15 @@
 			buildConfigurations = (
 				9EBE79FC150040D5000E767D /* Debug */,
 				9EBE79FD150040D5000E767D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		9EF20B241516892A009D9402 /* Build configuration list for PBXNativeTarget "BSON" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9EF20B251516892A009D9402 /* Debug */,
+				9EF20B261516892A009D9402 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

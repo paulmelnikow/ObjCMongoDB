@@ -21,9 +21,6 @@
 #import "MongoDBCollection.h"
 #import "mongo.h"
 
-extern NSString * const MongoDBObjectIDKey;
-extern const char * const MongoDBObjectIDBSONKey;
-
 /**
  Encapsulates a Mongo connection object.
  */

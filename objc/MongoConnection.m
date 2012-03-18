@@ -23,8 +23,6 @@
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
-NSString * const MongoDBObjectIDKey = @"_id";
-const char * const MongoDBObjectIDBSONKey = "_id";
 
 @implementation MongoConnection
 

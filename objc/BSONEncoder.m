@@ -17,6 +17,7 @@
 //  limitations under the License.
 //
 
+#import "ObjCBSON.h"
 #import "BSONEncoder.h"
 
 @interface BSONBufferWrapper : NSObject
