@@ -80,7 +80,22 @@
     }
     if (self = [super init]) {
         _bson = b;
-        _destroyOnDealloc = destroyOnDealloc;
+        if (destroyOnDealloc) {
+//            take ownership of buffer
+            _destroyOnDealloc = NO;
+#if __has_feature(objc_arc)
+            _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES];
+#else
+            _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES] retain];
+#endif
+        } else {
+            _destroyOnDealloc = NO;
+#if __has_feature(objc_arc)
+        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
+#else
+        _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO] retain];
+#endif
+        }
     }
     return self;
 }
