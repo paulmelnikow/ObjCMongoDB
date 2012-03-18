@@ -58,6 +58,8 @@
 		9EBE7A0515004640000E767D /* BSONDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A031500463F000E767D /* BSONDecoder.m */; };
 		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
+		9EF20B05151678FF009D9402 /* GetLastErrorTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EF20B03151678FF009D9402 /* GetLastErrorTest.h */; };
+		9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF20B04151678FF009D9402 /* GetLastErrorTest.m */; };
 		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */; };
 		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -191,6 +193,8 @@
 		9EBE7A031500463F000E767D /* BSONDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDecoder.m; sourceTree = "<group>"; };
 		9EBE7A06150056FD000E767D /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
 		9EBE7A07150056FD000E767D /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
+		9EF20B03151678FF009D9402 /* GetLastErrorTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLastErrorTest.h; sourceTree = "<group>"; };
+		9EF20B04151678FF009D9402 /* GetLastErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLastErrorTest.m; sourceTree = "<group>"; };
 		9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mongo_Helper.h; sourceTree = "<group>"; };
 		9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mongo_Helper.m; sourceTree = "<group>"; };
 		9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoKeyedPredicate.h; sourceTree = "<group>"; };
@@ -466,6 +470,8 @@
 				9E72DC90150EBC7E00217439 /* PredicateTest.h */,
 				9E72DC91150EBC7E00217439 /* PredicateTest.m */,
 				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
+				9EF20B03151678FF009D9402 /* GetLastErrorTest.h */,
+				9EF20B04151678FF009D9402 /* GetLastErrorTest.m */,
 			);
 			path = MongoTests;
 			sourceTree = "<group>";
@@ -519,6 +525,7 @@
 				9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */,
 				9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */,
 				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
+				9EF20B05151678FF009D9402 /* GetLastErrorTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,6 +775,7 @@
 			files = (
 				9EFF2B67150D5B7B00EDC285 /* MongoTests.m in Sources */,
 				9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */,
+				9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
