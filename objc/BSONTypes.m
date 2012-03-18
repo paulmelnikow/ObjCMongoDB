@@ -115,7 +115,7 @@
 }
 
 - (NSString *) description {
-    return [NSString stringWithFormat:@"bson:ObjectID(\"%@\")", [self stringValue]];
+    return [NSString stringWithFormat:@"Object ID \"%@\"", [self stringValue]];
 }
 
 - (NSString *) stringValue {
