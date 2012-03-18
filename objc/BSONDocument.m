@@ -37,10 +37,12 @@
         bson_iterator_subobject([iterator nativeIteratorValue], newBson);
         _bson = newBson;
         _destroyOnDealloc = NO;
+        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
 #if __has_feature(objc_arc)
         _source = parent;
 #else
         _source = [parent retain];
+        [_data retain];
 #endif
     }
     return self;
@@ -61,9 +63,9 @@
         }
         _bson = newBson;
 #if __has_feature(objc_arc)
-        _source = data;
+        _data = data;
 #else
-        _source = [data retain];
+        _data = [data retain];
 #endif
     }
     return self;
@@ -78,7 +80,22 @@
     }
     if (self = [super init]) {
         _bson = b;
-        _destroyOnDealloc = destroyOnDealloc;
+        if (destroyOnDealloc) {
+//            take ownership of buffer
+            _destroyOnDealloc = NO;
+#if __has_feature(objc_arc)
+            _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES];
+#else
+            _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES] retain];
+#endif
+        } else {
+            _destroyOnDealloc = NO;
+#if __has_feature(objc_arc)
+        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
+#else
+        _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO] retain];
+#endif
+        }
     }
     return self;
 }
@@ -88,6 +105,7 @@
     if (_destroyOnDealloc) bson_destroy((bson *)_bson);
     free((bson *)_bson);
 #if !__has_feature(objc_arc)
+    [_data release];
     [_source release];
 #endif
 }
@@ -104,11 +122,7 @@
 }
 
 - (NSData *) dataValue {
-#if __has_feature(objc_arc)
-    return [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
-#else
-    return [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
-#endif
+    return _data;
 }
 
 - (BSONIterator *) iterator {
