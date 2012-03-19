@@ -18,6 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BSONTypes.h"
 
 typedef enum {
     BSONReturnNSNull,

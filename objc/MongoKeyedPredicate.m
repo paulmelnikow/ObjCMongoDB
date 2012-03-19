@@ -9,6 +9,7 @@
 #import "MongoKeyedPredicate.h"
 #import "OrderedDictionary.h"
 #import "Mongo_Helper.h"
+#import "ObjCBSON.h"
 
 NSString * const MongoRegularExpressionPatternOperatorKey = @"$regex";
 NSString * const MongoRegularExpressionOptionsOperatorKey = @"$options";
