@@ -152,8 +152,6 @@
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		22739CDE1231446B00909551 /* NuBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NuBSON.h; sourceTree = "<group>"; };
-		22739CDF1231446B00909551 /* NuBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NuBSON.m; sourceTree = "<group>"; };
 		22ED5B3C11DF1A7200410529 /* bson.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bson.c; sourceTree = "<group>"; };
 		22ED5B3D11DF1A7200410529 /* bson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = bson.h; sourceTree = "<group>"; };
 		22ED5B3E11DF1A7200410529 /* md5.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = md5.c; sourceTree = "<group>"; };
@@ -161,8 +159,6 @@
 		22ED5B4011DF1A7200410529 /* mongo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mongo.c; sourceTree = "<group>"; };
 		22ED5B4111DF1A7200410529 /* mongo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mongo.h; sourceTree = "<group>"; };
 		22ED5B4311DF1A7200410529 /* numbers.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = numbers.c; sourceTree = "<group>"; };
-		22ED5B4F11DF1A8600410529 /* NuMongoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NuMongoDB.h; sourceTree = "<group>"; };
-		22ED5B5011DF1A8600410529 /* NuMongoDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NuMongoDB.m; sourceTree = "<group>"; };
 		22ED5BE311DF1AE100410529 /* sample */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = sample; sourceTree = BUILT_PRODUCTS_DIR; };
 		22ED5BF511DF1B5E00410529 /* sample.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = sample.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjCMongoDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -367,26 +363,16 @@
 		22ED5B4E11DF1A8600410529 /* objc */ = {
 			isa = PBXGroup;
 			children = (
+				9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */,
+				9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */,
 				9EFF2B51150D059000EDC285 /* BSON */,
 				9EFF2B52150D05BD00EDC285 /* Mongo */,
-				9E10543F1501C73B00805F26 /* old */,
 				9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */,
 				9EF20B201516892A009D9402 /* BSON-Prefix.pch */,
 			);
 			name = objc;
 			path = ../../objc;
 			sourceTree = SOURCE_ROOT;
-		};
-		9E10543F1501C73B00805F26 /* old */ = {
-			isa = PBXGroup;
-			children = (
-				22ED5B4F11DF1A8600410529 /* NuMongoDB.h */,
-				22ED5B5011DF1A8600410529 /* NuMongoDB.m */,
-				22739CDE1231446B00909551 /* NuBSON.h */,
-				22739CDF1231446B00909551 /* NuBSON.m */,
-			);
-			name = old;
-			sourceTree = "<group>";
 		};
 		9E1054431503EE6300805F26 /* Documentation */ = {
 			isa = PBXGroup;
@@ -494,8 +480,6 @@
 		9EFF2B51150D059000EDC285 /* BSON */ = {
 			isa = PBXGroup;
 			children = (
-				9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */,
-				9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */,
 				9EBE79B715000EA6000E767D /* BSONTypes.h */,
 				9EBE79B815000EA6000E767D /* BSONTypes.m */,
 				9E10544F150408DE00805F26 /* BSON_Helper.h */,
