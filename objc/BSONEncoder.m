@@ -221,6 +221,9 @@
     else if ([objv isKindOfClass:[NSData class]])
         [self encodeData:objv forKey:key withSubstitutions:NO];
     
+    else if ([objv isKindOfClass:[BSONDocument class]])
+        [self encodeBSONDocument:objv forKey:key withSubstitutions:NO];
+    
     else if ([objv isKindOfClass:[NSOrderedSet class]])
         [self encodeArray:[(NSOrderedSet *)objv array] forKey:key withSubstitutions:NO];
     

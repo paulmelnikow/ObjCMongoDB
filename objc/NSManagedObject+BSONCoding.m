@@ -125,8 +125,10 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 
 - (void) initializeAttribute:(NSAttributeDescription *) attribute withDecoder:(BSONDecoder *) decoder {
     NSString *key = [attribute name];
-    id value = [decoder decodeObjectForKey:key];
-    [self setValue:value forKey:key];
+    if ([decoder containsValueForKey:key]) {
+        id value = [decoder decodeObjectForKey:key];
+        [self setValue:value forKey:key];
+    }
 }
 
 - (void) initializeRelationship:(NSRelationshipDescription *) relationship withDecoder:(BSONDecoder *) decoder {
