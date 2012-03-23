@@ -169,6 +169,11 @@
     return _resultDocument;
 }
 
+- (NSData *) data {
+    if (!_resultDocument) [self finishEncoding];
+    return _resultDocument.dataValue;
+}
+
 #pragma mark - Basic encoding methods
 
 - (void) encodeObject:(id) objv forKey:(NSString *) key {

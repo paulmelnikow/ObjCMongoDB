@@ -160,6 +160,7 @@ typedef enum {
 + (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB;
 
 - (BSONDocument *) BSONDocument;
+- (NSData *) data;
 
 - (void) encodeObject:(id) obj;
 - (void) encodeDictionary:(NSDictionary *) dictionary;
