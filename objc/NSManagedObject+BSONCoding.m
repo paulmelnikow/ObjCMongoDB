@@ -146,7 +146,10 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
             @throw exc;
         }
         NSArray *values = [decoder decodeArrayForKey:key withClass:destinationClass];
-        [self setValue:[NSMutableSet setWithArray:values] forKey:key];
+        if ([relationship isOrdered])
+            [self setValue:[NSMutableOrderedSet orderedSetWithArray:values] forKey:key];            
+        else
+            [self setValue:[NSMutableSet setWithArray:values] forKey:key];
     } else if ([decoder valueIsEmbeddedDocumentForKey:key]) {
         if ([relationship isToMany]) {
             NSString *reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected an array but got an embedded document",
