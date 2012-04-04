@@ -1,14 +1,14 @@
+An Objective-C library, under development, for BSON and MongoDB. Supports
+encoding and decoding BSON simple types, arrays and dictionaries, custom
+objects, and Core Data managed objects. 
 
-An Objective-C library, under development, for BSON and MongoDB. Supports encoding
-and decoding BSON simple types, arrays and dictionaries, custom objects, and Core Data
-managed objects. 
-
-Sources copyright Paul Melnikow, Neon Design Technology, Inc., and other contributors.
+Sources copyright Paul Melnikow, Neon Design Technology, Inc., and other
+contributors.
 
 See acknowledgements in NOTICE file.
 
 LICENSE
 
-Unless otherwise specified in a source file, sources in this
-repository are published under the terms of the Apache License version
-2.0, a copy of which is in this repository as APACHE-2.0.txt.
+Unless otherwise specified in a source file, sources in this repository are
+published under the terms of the Apache License version 2.0, a copy of which is
+in this repository as APACHE-2.0.txt.
