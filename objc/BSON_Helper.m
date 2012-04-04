@@ -143,6 +143,19 @@ NSString * NSStringFromBSONType(bson_type t) {
     return name;
 }
 
+NSString * NSStringFromBSONError(int err) {
+    NSMutableArray *errors = [NSMutableArray array];
+    if (err & BSON_NOT_UTF8) [errors addObject:@"BSON_NOT_UTF8"];
+    if (err & BSON_FIELD_HAS_DOT) [errors addObject:@"BSON_FIELD_HAS_DOT"];
+    if (err & BSON_FIELD_INIT_DOLLAR) [errors addObject:@"BSON_FIELD_INIT_DOLLAR"];
+    if (err & BSON_ALREADY_FINISHED) [errors addObject:@"BSON_ALREADY_FINISHED"];
+    
+    if (errors.count)
+        return [errors componentsJoinedByString:@" | "];
+    else
+        return @"BSON_VALID";
+}
+
 NSMutableString * target_for_bson_substitute_for_printf = nil;
 
 int substitute_for_printf(const char *format, ...) {

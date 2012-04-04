@@ -9,7 +9,7 @@
 #import "Mongo_Helper.h"
 
 
-NSString * nameOrDescForErrorCode(mongo_error_t err, BOOL description) {
+NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
@@ -53,6 +53,27 @@ NSString * nameOrDescForErrorCode(mongo_error_t err, BOOL description) {
             name = @"MONGO_COMMAND_FAILED";
             desc = @"The command returned with 'ok' value of 0";
             break;
+        case MONGO_BSON_INVALID:
+            name = @"MONGO_BSON_INVALID";
+            desc = @"BSON not valid for the specified op";
+            break;
+        case MONGO_BSON_NOT_FINISHED:
+            name = @"MONGO_BSON_NOT_FINISHED";
+            desc = @"BSON object has not been finished";
+            break;
+    }
+    NSString *result = description ? desc : name;
+#if __has_feature(objc_arc)
+    return result;
+#else
+    return [result autorelease];
+#endif
+}
+
+NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
+    NSString *name = nil;
+    NSString *desc = nil;
+    switch(err) {
         case MONGO_CURSOR_EXHAUSTED:
             name = @"MONGO_CURSOR_EXHAUSTED";
             desc = @"The cursor has no more results";
@@ -65,27 +86,35 @@ NSString * nameOrDescForErrorCode(mongo_error_t err, BOOL description) {
             name = @"MONGO_CURSOR_PENDING";
             desc = @"Tailable cursor still alive but no data";
             break;
-        case MONGO_BSON_INVALID:
-            name = @"MONGO_BSON_INVALID";
-            desc = @"BSON not valid for the specified op";
+        case MONGO_CURSOR_QUERY_FAIL:
+            name = @"MONGO_CURSOR_QUERY_FAIL";
+            desc = @"The server returned an '$err' object, indicating query failure. See conn->lasterrcode and conn->lasterrstr for details.";
             break;
-        case MONGO_BSON_NOT_FINISHED:
-            name = @"MONGO_BSON_NOT_FINISHED";
-            desc = @"BSON object has not been finished";
-            break;
+        case MONGO_CURSOR_BSON_ERROR:
+            name = @"MONGO_CURSOR_BSON_ERROR";
+            desc = @"Something is wrong with the BSON provided. See conn->err for details.";
+            break;            
     }
     NSString *result = description ? desc : name;
 #if __has_feature(objc_arc)
-            return result;
+    return result;
 #else
-            return [result autorelease];
+    return [result autorelease];
 #endif
 }
 
 NSString * NSStringFromMongoErrorCode(mongo_error_t err) {
-    return nameOrDescForErrorCode(err, 0);
+    return nameOrDescForMongoErrorCode(err, 0);
 }
 
 NSString * MongoErrorCodeDescription(mongo_error_t err) {
-    return nameOrDescForErrorCode(err, 1);
+    return nameOrDescForMongoErrorCode(err, 1);
+}
+
+NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err) {
+    return nameOrDescForMongoCursorErrorCode(err, 0);
+}
+
+NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
+    return nameOrDescForMongoCursorErrorCode(err, 1);
 }

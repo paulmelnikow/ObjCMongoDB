@@ -23,17 +23,18 @@
 
 - (id) init {
     if (self = [super init]) {
-        bson * newBson = malloc(sizeof(bson));
+        bson * newBson = bson_create();
         bson_empty(newBson);
         _bson = newBson;
-        _destroyOnDealloc = YES;
+        _destroyOnDealloc = NO;
+        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(newBson) length:bson_size(newBson) freeWhenDone:NO];
     }
     return self;
 }
 
 - (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent {
     if (self = [super init]) {
-        bson * newBson = malloc(sizeof(bson));
+        bson * newBson = bson_create();
         bson_iterator_subobject([iterator nativeIteratorValue], newBson);
         _bson = newBson;
         _destroyOnDealloc = NO;
@@ -53,10 +54,10 @@
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
     if (self = [super init]) {
-        bson * newBson = malloc(sizeof(bson));
+        bson * newBson = bson_create();
         if (BSON_ERROR == bson_init_data(newBson, (char *)data.bytes)) {
 #if !__has_feature(objc_arc)
-            free(newBson);
+            bson_dispose(newBson);
             [self release];
 #endif
             return nil;
@@ -80,22 +81,12 @@
     }
     if (self = [super init]) {
         _bson = b;
-        if (destroyOnDealloc) {
-//            take ownership of buffer
-            _destroyOnDealloc = NO;
+        _destroyOnDealloc = destroyOnDealloc;
 #if __has_feature(objc_arc)
-            _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES];
+        _data = [NSData dataWithBytes:(void *)bson_data(_bson) length:bson_size(_bson)];
 #else
-            _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:YES] retain];
+        _data = [[NSData dataWithBytes:(void *)bson_data(_bson) length:bson_size(_bson)] retain];
 #endif
-        } else {
-            _destroyOnDealloc = NO;
-#if __has_feature(objc_arc)
-        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
-#else
-        _data = [[NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO] retain];
-#endif
-        }
     }
     return self;
 }
@@ -103,7 +94,7 @@
 - (void) dealloc {
     // override const qualifier
     if (_destroyOnDealloc) bson_destroy((bson *)_bson);
-    free((bson *)_bson);
+    bson_dispose((bson *)_bson);
 #if !__has_feature(objc_arc)
     [_data release];
     [_source release];
@@ -115,8 +106,9 @@
 }
 
 - (id) copy {
-    bson *newBson = malloc(sizeof(bson));
-    bson_copy_basic(newBson, _bson);
+//    bson *newBson = malloc(sizeof(bson));
+    bson *newBson = bson_create();
+    bson_copy(newBson, _bson);
     BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
     return copy;
 }
@@ -143,14 +135,14 @@
 }
 
 - (NSString *) description {
-    NSString *identifier = [NSString stringWithFormat:@"%@ <%p>  bson.data: %p  bson.cur: %p  bson.dataSize: %i  bson.stackPos: %i  bson.err: %i  bson.errstr: %s\n",
+    NSString *identifier = [NSString stringWithFormat:@"%@ <%p>  bson.data: %p  bson.cur: %p  bson.dataSize: %i  bson.stackPos: %i  bson.err: %@\n",
                             [[self class] description], self,
                             _bson->data,
                             _bson->cur,
                             _bson->dataSize,
                             _bson->stackPos,
-                            _bson->err,
-                            _bson->errstr];
+                            NSStringFromBSONError(_bson->err)];
+//                            _bson->errstr];
     return [identifier stringByAppendingString:NSStringFromBSON(_bson)];
 }
 

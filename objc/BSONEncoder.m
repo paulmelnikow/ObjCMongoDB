@@ -763,7 +763,7 @@
 
 - (void) raiseBSONError {
     id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                     reason:NSStringFromBSONString(_bson->errstr)
+                                     reason:NSStringFromBSONError(_bson->err)
                                    userInfo:nil];
     @throw exc;
 }

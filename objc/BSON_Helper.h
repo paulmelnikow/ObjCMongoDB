@@ -74,6 +74,8 @@ void BSONAssertIteratorIsInValueTypeArray (BSONIterator * iterator, bson_type * 
  */
 NSString * NSStringFromBSONType (bson_type t);
 
+NSString * NSStringFromBSONError(int err);
+
 /**
  Returns a string representation of a BSON document, for debugging purposes.
  

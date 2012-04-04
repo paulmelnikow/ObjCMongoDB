@@ -15,7 +15,8 @@
 
 NSString * NSStringFromMongoErrorCode(mongo_error_t err);
 NSString * MongoErrorCodeDescription(mongo_error_t err);
-
+NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err);
+NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err);
 
 #define va_addToNSMutableArray(firstObject, array) \
 do { \

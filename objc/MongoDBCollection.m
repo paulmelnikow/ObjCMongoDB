@@ -132,7 +132,7 @@
         set_error_and_return_nil;
     }
     bson *newBson = malloc(sizeof(bson));
-    bson_copy_basic(newBson, tempBson);
+    bson_copy(newBson, tempBson);
     free(tempBson);
     BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
 #if __has_feature(objc_arc)
