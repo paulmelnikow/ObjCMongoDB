@@ -60,9 +60,6 @@ NSString * const MongoCommentMetaOperator = @"$comment";
 + (MongoFetchRequest *) fetchRequestWithPredicate:(MongoPredicate *) predicate {
     MongoFetchRequest *request = [self fetchRequest];
     request.predicate = predicate;
-#if !__has_feature(objc_arc)
-    [[request retain] autorelease];
-#endif
     return request;
 }
 
@@ -117,7 +114,7 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     OrderedDictionary *result = [OrderedDictionary dictionary];
     
     if (self.predicate)
-        [result setObject:[predicate dictionary] forKey:MongoQueryMetaOperator];
+        [result setObject:[self.predicate dictionary] forKey:MongoQueryMetaOperator];
     else
         [result setObject:[OrderedDictionary dictionary] forKey:MongoQueryMetaOperator];
     

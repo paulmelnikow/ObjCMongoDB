@@ -32,10 +32,11 @@
 - (void) hintIndexKey:(NSString *) key ascending:(BOOL) ascending;
 
 - (BSONDocument *) fieldsDocument;
-- (OrderedDictionary *) queryDictionaryValue;
 - (BSONDocument *) queryDocument;
 - (int) options;
+
 - (NSString *) description;
+- (OrderedDictionary *) queryDictionaryValue;
 
 @property (retain) MongoPredicate *predicate;
 @property (assign) int limitResults;
