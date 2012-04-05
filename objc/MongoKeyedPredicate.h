@@ -41,8 +41,8 @@
 - (void) keyPath:(NSString *) keyPath arrayContainsAllFromArray:(NSArray *) objects;
 - (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllObjects:(id) firstObject, ... NS_REQUIRES_NIL_TERMINATION;
 - (void) keyPath:(NSString *) keyPath arrayDoesNotContainAllFromArray:(NSArray *) objects;
-- (void) keyPath:(NSString *) keyPath arraySizeIsEqualTo:(NSUInteger) arraySize;
-- (void) keyPath:(NSString *) keyPath arraySizeIsNotEqualTo:(NSUInteger) arraySize;
+- (void) keyPath:(NSString *) keyPath arrayCountIsEqualTo:(NSUInteger) arrayCount;
+- (void) keyPath:(NSString *) keyPath arrayCountIsNotEqualTo:(NSUInteger) arrayCount;
 
 - (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType;
 - (void) keyPath:(NSString *) keyPath nativeValueTypeIsNotEqualTo:(bson_type) nativeValueType;

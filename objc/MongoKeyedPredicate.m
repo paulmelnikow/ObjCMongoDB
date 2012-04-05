@@ -131,9 +131,9 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
     [self keyPath:keyPath addOperation:MongoAllOperatorKey object:objects negated:negated];
 }
 
-- (void) keyPath:(NSString *) keyPath arraySizeIsEqualTo:(NSUInteger) arraySize negated:(BOOL) negated {
+- (void) keyPath:(NSString *) keyPath arrayCountIsEqualTo:(NSUInteger) arrayCount negated:(BOOL) negated {
     [self keyPath:keyPath addOperation:MongoSizeOperatorKey
-           object:[NSNumber numberWithInteger:arraySize]
+           object:[NSNumber numberWithInteger:arrayCount]
           negated:negated];
 }
 
@@ -231,12 +231,12 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
     [self keyPath:keyPath arrayContainsAllFromArray:objects negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath arraySizeIsEqualTo:(NSUInteger) arraySize {
-    [self keyPath:keyPath arraySizeIsEqualTo:arraySize negated:NO];
+- (void) keyPath:(NSString *) keyPath arrayCountIsEqualTo:(NSUInteger) arraySize {
+    [self keyPath:keyPath arrayCountIsEqualTo:arraySize negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath arraySizeIsNotEqualTo:(NSUInteger) arraySize {
-    [self keyPath:keyPath arraySizeIsEqualTo:arraySize negated:YES];
+- (void) keyPath:(NSString *) keyPath arrayCountIsNotEqualTo:(NSUInteger) arraySize {
+    [self keyPath:keyPath arrayCountIsEqualTo:arraySize negated:YES];
 }
 
 - (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType {

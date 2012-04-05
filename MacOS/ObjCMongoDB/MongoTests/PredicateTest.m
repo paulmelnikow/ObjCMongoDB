@@ -266,27 +266,27 @@
     [self insertTestDocument:coll key:key value:value];
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:key arraySizeIsEqualTo:2];
+    [pred1 keyPath:key arrayCountIsEqualTo:2];
     STAssertFalse([self collection:coll boolForPredicate:pred1], @"");
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
-    [pred2 keyPath:key arraySizeIsEqualTo:3];
+    [pred2 keyPath:key arrayCountIsEqualTo:3];
     STAssertTrue([self collection:coll boolForPredicate:pred2], @"");
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
-    [pred3 keyPath:key arraySizeIsEqualTo:4];
+    [pred3 keyPath:key arrayCountIsEqualTo:4];
     STAssertFalse([self collection:coll boolForPredicate:pred3], @"");
     
     pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:key arraySizeIsNotEqualTo:2];
+    [pred1 keyPath:key arrayCountIsNotEqualTo:2];
     STAssertTrue([self collection:coll boolForPredicate:pred1], @"");
     
     pred2 = [MongoKeyedPredicate predicate];
-    [pred2 keyPath:key arraySizeIsNotEqualTo:3];
+    [pred2 keyPath:key arrayCountIsNotEqualTo:3];
     STAssertFalse([self collection:coll boolForPredicate:pred2], @"");
     
     pred3 = [MongoKeyedPredicate predicate];
-    [pred3 keyPath:key arraySizeIsNotEqualTo:4];
+    [pred3 keyPath:key arrayCountIsNotEqualTo:4];
     STAssertTrue([self collection:coll boolForPredicate:pred3], @"");
 }
 
@@ -359,17 +359,17 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayContainsAllObjects:@"c", @"b", @"a", nil];
-    [pred1 keyPath:key arraySizeIsEqualTo:3];
+    [pred1 keyPath:key arrayCountIsEqualTo:3];
     STAssertTrue([self collection:coll boolForPredicate:pred1], @"");
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayContainsAllObjects:@"c", @"b", @"a", nil];
-    [pred2 keyPath:key arraySizeIsEqualTo:4];
+    [pred2 keyPath:key arrayCountIsEqualTo:4];
     STAssertFalse([self collection:coll boolForPredicate:pred2], @"");
 
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayContainsAllObjects:@"d", @"b", @"a", nil];
-    [pred3 keyPath:key arraySizeIsEqualTo:3];
+    [pred3 keyPath:key arrayCountIsEqualTo:3];
     STAssertFalse([self collection:coll boolForPredicate:pred2], @"");
 }
 
