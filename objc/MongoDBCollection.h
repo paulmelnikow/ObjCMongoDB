@@ -39,6 +39,7 @@
 - (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
 
 - (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error;
+- (BOOL) removeAllWithError:(NSError **) error;
 
 - (BOOL) serverStatusForLastOperation:(NSError **) error;
 - (NSError *) error;

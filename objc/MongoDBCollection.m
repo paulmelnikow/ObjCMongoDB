@@ -91,12 +91,26 @@
 
 #pragma mark - Remove
 
-- (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error {
-    int result = mongo_remove(connection.connValue, _utf8Name, predicate.BSONDocument.bsonValue);
+- (BOOL) removeWithCond:(BSONDocument *) cond error:(NSError **) error {
+    int result = mongo_remove(connection.connValue, _utf8Name, cond.bsonValue);
     if (MONGO_OK == result)
         return YES;
     else
         set_error_and_return_NO;
+}
+
+- (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error {
+    if (!predicate)
+        [NSException raise:NSInvalidArgumentException format:@"For safety, remove with nil predicate is not allowed - use removeAllWithError: instead"];
+    return [self removeWithCond:predicate.BSONDocument error:error];
+}
+
+- (BOOL) removeAllWithError:(NSError **) error {
+    BSONDocument *document = [[BSONDocument alloc] init];
+#if !__has_feature(objc_arc)
+    [document autorelease];
+#endif
+    return [self removeWithCond:document error:error];    
 }
 
 #pragma mark - Find
