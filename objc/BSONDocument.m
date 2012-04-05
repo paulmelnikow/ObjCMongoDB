@@ -28,6 +28,9 @@
         _bson = newBson;
         _destroyOnDealloc = NO;
         _data = [NSData dataWithBytesNoCopy:(void *)bson_data(newBson) length:bson_size(newBson) freeWhenDone:NO];
+#if !__has_feature(objc_arc)
+        [_data retain];
+#endif
     }
     return self;
 }
