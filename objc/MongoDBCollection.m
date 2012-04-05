@@ -12,6 +12,7 @@
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
 #import "MongoFetchRequest.h"
+#import "MongoUpdateRequest.h"
 
 @implementation MongoDBCollection
 
@@ -84,10 +85,16 @@
 
 #pragma mark - Update
 
-//int mongo_update( mongo *conn, const char *ns, const bson *cond,
-//                 const bson *op, int flags );
-
-//- (BOOL) update:(MongoPredicate *) predicate 
+- (BOOL) update:(MongoUpdateRequest *) updateRequest error:(NSError **) error {
+    if (MONGO_OK == mongo_update(connection.connValue,
+                                 _utf8Name,
+                                 updateRequest.conditionDocumentValue.bsonValue,
+                                 updateRequest.operationDocumentValue.bsonValue,
+                                 updateRequest.flags))
+        return YES;
+    else
+        set_error_and_return_NO;
+}
 
 #pragma mark - Remove
 

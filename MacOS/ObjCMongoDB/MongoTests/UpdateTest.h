@@ -9,7 +9,10 @@
 //  Application unit tests contain unit test code that must be injected into an application to run correctly.
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "MongoConnection.h"
 
-@interface UpdateTest : SenTestCase
+@interface UpdateTest : SenTestCase {
+    MongoConnection *_mongo;
+}
 
 @end

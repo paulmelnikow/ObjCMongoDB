@@ -10,6 +10,7 @@
 #import "MongoPredicate.h"
 #import "MongoCursor.h"
 #import "MongoFetchRequest.h"
+#import "MongoUpdateRequest.h"
 
 @class MongoConnection;
 
@@ -23,6 +24,8 @@
 - (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError **) error;
 - (BOOL) insertObject:(id) object error:(NSError **) error;
 - (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error;
+
+- (BOOL) update:(MongoUpdateRequest *) updateRequest error:(NSError **) error;
 
 - (NSArray *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
 - (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
