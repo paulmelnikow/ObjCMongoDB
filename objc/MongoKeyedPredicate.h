@@ -63,7 +63,5 @@
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath;
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath negated:(BOOL) negated;
 
-- (OrderedDictionary *) dictionaryValueForKeyPath:(NSString *) keyPath;
-
 @end
 

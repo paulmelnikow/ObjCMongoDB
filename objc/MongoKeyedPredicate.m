@@ -298,26 +298,22 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 }
 
 - (void) keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object negated:(BOOL) negated {
-    OrderedDictionary *dict = [self dictionaryValueForKeyPath:keyPath];
-    if (!negated)
-        [dict setObject:object forKey:oper];
-    else
-        [dict setObject:[OrderedDictionary dictionaryWithObject:object forKey:oper] forKey:MongoNotOperatorKey];
-}
-
-- (OrderedDictionary *) dictionaryValueForKeyPath:(NSString *) keyPath {
-    OrderedDictionary *result = [_dict objectForKey:keyPath];
-    if (!result) {
-        result = [OrderedDictionary dictionary];
-        [_dict setObject:result forKey:keyPath];
-    } else if (![result isKindOfClass:[OrderedDictionary class]]) {
+    OrderedDictionary *dictForKeyPath = [_dict objectForKey:keyPath];
+    if (!dictForKeyPath) {
+        dictForKeyPath = [OrderedDictionary dictionary];
+        [_dict setObject:dictForKeyPath forKey:keyPath];
+    } else if (![dictForKeyPath isKindOfClass:[OrderedDictionary class]]) {
         NSString *reason = [NSString stringWithFormat:@"Match object alreay set for key path %@", keyPath];
         id exc = [NSException exceptionWithName:NSInvalidArgumentException
                                          reason:reason
                                        userInfo:nil];
         @throw exc;
     }
-    return result;
+    
+    if (negated)
+        [dictForKeyPath setObject:[OrderedDictionary dictionaryWithObject:object forKey:oper] forKey:MongoNotOperatorKey];
+    else
+        [dictForKeyPath setObject:object forKey:oper];
 }
 
 @end
