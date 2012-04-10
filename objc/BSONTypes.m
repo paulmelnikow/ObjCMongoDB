@@ -70,6 +70,7 @@
 }
 
 + (BSONObjectID *) objectIDWithString:(NSString *) s {
+    if (s.length != 24) return nil;
 #if __has_feature(objc_arc)
     return [[self alloc] initWithString:s];
 #else
