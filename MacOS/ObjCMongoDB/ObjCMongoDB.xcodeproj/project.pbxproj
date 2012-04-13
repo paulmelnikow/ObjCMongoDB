@@ -89,7 +89,7 @@
 		9EFA29DD152CCD70004F50D2 /* env_default.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29DA152CCD70004F50D2 /* env_default.c */; };
 		9EFA29DE152CCD70004F50D2 /* env_default.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29DA152CCD70004F50D2 /* env_default.c */; };
 		9EFA29E1152CCD70004F50D2 /* env.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29DC152CCD70004F50D2 /* env.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9EFA29EE152D064A004F50D2 /* MongoUpdateRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */; };
+		9EFA29EE152D064A004F50D2 /* MongoUpdateRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFA29EF152D064A004F50D2 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */; };
 		9EFA29F0152D064A004F50D2 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */; };
 		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; settings = {ATTRIBUTES = (Private, ); }; };
