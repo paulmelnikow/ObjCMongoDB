@@ -61,6 +61,12 @@
     return self;
 }
 
+- (void) dealloc {
+#if __has_feature(objc_arc)
+    [_stringValue release];
+#endif
+}
+
 + (BSONObjectID *) objectID {
 #if __has_feature(objc_arc)
     return [[self alloc] init];
@@ -124,7 +130,11 @@
     // str must be at least 24 hex chars + null byte
     char buffer[25];
     bson_oid_to_string(&_oid, buffer);
+#if __has_feature(objc_arc)
     return _stringValue = NSStringFromBSONString(buffer);
+#else
+    return _stringValue = [NSStringFromBSONString(buffer) retain];
+#endif
 }
 
 - (NSComparisonResult)compare:(BSONObjectID *) other {
