@@ -287,14 +287,6 @@
     }
 }
 
-+ (NSException *) assert:(SEL)selector {
-    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
-                        NSStringFromSelector(selector)];
-    return [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                   reason:reason
-                                 userInfo:nil];
-}
-
 #pragma mark - Debugging
 
 - (NSString *) description {
