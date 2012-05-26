@@ -99,7 +99,6 @@
 		9EFF2B5D150D5B7B00EDC285 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EFF2B5E150D5B7B00EDC285 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EFF2B64150D5B7B00EDC285 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EFF2B62150D5B7B00EDC285 /* InfoPlist.strings */; };
-		9EFF2B67150D5B7B00EDC285 /* MongoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B66150D5B7B00EDC285 /* MongoTests.m */; };
 		9EFF2B6E150D5C3500EDC285 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
 		9EFF2B71150D6B3600EDC285 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
 		9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -189,7 +188,6 @@
 		9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSON.h; sourceTree = "<group>"; };
 		9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSON.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
-		9E72DC8F150EBC5A00217439 /* java */ = {isa = PBXFileReference; lastKnownFileType = folder; name = java; path = ../../MongoPlacesTest/java; sourceTree = "<group>"; };
 		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredicateTest.h; sourceTree = "<group>"; };
 		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
@@ -243,8 +241,6 @@
 		9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EFF2B61150D5B7B00EDC285 /* MongoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoTests-Info.plist"; sourceTree = "<group>"; };
 		9EFF2B63150D5B7B00EDC285 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		9EFF2B65150D5B7B00EDC285 /* MongoTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MongoTests.h; sourceTree = "<group>"; };
-		9EFF2B66150D5B7B00EDC285 /* MongoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MongoTests.m; sourceTree = "<group>"; };
 		9EFF2B68150D5B7B00EDC285 /* MongoTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-Prefix.pch"; sourceTree = "<group>"; };
 		9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OrderedDictionary.m; path = OrderedDictionary/OrderedDictionary.m; sourceTree = "<group>"; };
 		9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OrderedDictionary.h; path = OrderedDictionary/OrderedDictionary.h; sourceTree = "<group>"; };
@@ -533,16 +529,13 @@
 		9EFF2B5F150D5B7B00EDC285 /* MongoTests */ = {
 			isa = PBXGroup;
 			children = (
-				9E72DC8F150EBC5A00217439 /* java */,
-				9EFF2B65150D5B7B00EDC285 /* MongoTests.h */,
-				9EFF2B66150D5B7B00EDC285 /* MongoTests.m */,
 				9E72DC90150EBC7E00217439 /* PredicateTest.h */,
 				9E72DC91150EBC7E00217439 /* PredicateTest.m */,
 				9EFA29D7152CC65A004F50D2 /* UpdateTest.h */,
 				9EFA29D8152CC65A004F50D2 /* UpdateTest.m */,
-				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
 				9EF20B03151678FF009D9402 /* GetLastErrorTest.h */,
 				9EF20B04151678FF009D9402 /* GetLastErrorTest.m */,
+				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
 			);
 			path = MongoTests;
 			sourceTree = "<group>";
@@ -909,7 +902,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EFF2B67150D5B7B00EDC285 /* MongoTests.m in Sources */,
 				9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */,
 				9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */,
 				9EFA29D9152CC65A004F50D2 /* UpdateTest.m in Sources */,
