@@ -93,7 +93,8 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 }
 
 - (void) encodeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withEncoder:(BSONEncoder *) encoder {
-    [NSException raise:NSInvalidArchiveOperationException format:@"Encoding fetched properties is not supported"];
+    [NSException raise:NSInvalidArchiveOperationException
+                format:@"Implement -encodeFetchedProperty:withEncoder: in your subclass to encode fetched properties"];
 }
 
 #pragma mark - Decoding methods
@@ -179,7 +180,9 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 }
 
 - (void) initializeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withDecoder:(BSONDecoder *) decoder {
-    [NSException raise:NSInvalidArchiveOperationException format:@"Decoding fetched properties is not supported"];
+    [NSException raise:NSInvalidArchiveOperationException
+                format:@"Implement -encodeFetchedProperty:withEncoder: in your subclass to decode fetched properties"];
+
 }
 
 @end

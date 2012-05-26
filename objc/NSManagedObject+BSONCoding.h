@@ -50,7 +50,7 @@ extern NSString * const BSONCodingEntityVersionHashKey;
  - <code>-[BSONDecoder decodeObjectIDForKey:substituteObjectWithClass:]</code>
 
  You may also implement your own encoding or decoding behavior using the substitution
- methods of <code>BSONCoder</code>:
+ methods of the <code>BSONCoding</code> protocol:
  - (id) replacementObjectForBSONEncoder:(BSONEncoder *) encoder;
  - (id) awakeAfterUsingBSONDecoder:(BSONDecoder *) decoder;
  or by reimplementing the base methods:
