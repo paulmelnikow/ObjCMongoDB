@@ -1,6 +1,6 @@
 //
-//  ObjCBSONCoreDataTests.m
-//  ObjCBSONTests
+//  BSONCoreDataTest.m
+//  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
 //

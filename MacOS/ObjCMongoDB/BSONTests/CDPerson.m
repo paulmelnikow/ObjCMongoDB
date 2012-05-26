@@ -1,6 +1,6 @@
 //
-//  CDPerson.m
-//  ObjCBSONTests
+//  CDPerson.h
+//  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
 //
