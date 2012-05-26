@@ -30,10 +30,12 @@ extern NSString * const BSONCodingEntityVersionHashKey;
  relationship, using the property names as  key names. It raises exceptions for fetched
  properties.
  
- If you need to skip certain relationships or attributes, encode entities in relationships
- by reference, or otherwise customize the encoding or decoding, override one of
- the category's helper methods, providing your own logic where needed and invoking
- <code>super</code> the rest of the time:
+ If you need to skip certain relationships or attributes, implement
+ <code>-shouldAutomaticallyHandlePropertyName:</code> and return <code>NO</code>.
+ 
+ If you need to encode entities in relationships by reference or otherwise customize the
+ encoding or decoding, override one of the category's helper methods, providing your own
+ logic where needed and invoking <code>super</code> the rest of the time:
  - <code>-encodeAttribute:withEncoder:</code>
  - <code>-encodeRelationship:withEncoder:</code>
  - <code>-encodeFetchedProperty:withEncoder:</code>
@@ -58,6 +60,25 @@ extern NSString * const BSONCodingEntityVersionHashKey;
  - <code>-initWithBSONDecoder:</code>
  */
 @interface NSManagedObject (BSONCoding) <BSONCoding>
+
+/**
+ Indicates whether the receiver should automatically handle the specified property, initializing
+ the property when the receiver is initialized, and decoding the property when the receiver is
+ decoded. The default is <code>YES</code>. Subclasses may override this method to easily skip
+ cetain properties.
+ 
+ Note that transient properties are never automatically encoded, even if this method returns
+ <code>YES</code>.
+ 
+ If subclasses need to customize the encoding of a specific property, they can override
+ <code>-initialize<PropertyType>:withDecoder:</code> and
+ <code>-encode<PropertyType>:withEncoder:</code> instead.
+ 
+ @param propertyName The name of the property
+ @return <code>YES</code> if the receiver should automatically handle the specified property,
+ <code>NO</code> if not
+ */
+- (BOOL) shouldAutomaticallyHandlePropertyName:(NSString *) propertyName;
 
 /**
  Encodes the receiver with the BSON encoder provided. The receiver may invoke any of the

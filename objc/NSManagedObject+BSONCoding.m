@@ -23,6 +23,10 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 
 @implementation NSManagedObject (BSONCoding)
 
+#pragma mark - Encoding and decoding behavior method
+
+- (BOOL) shouldAutomaticallyHandlePropertyName:(NSString *) propertyName { return YES; }
+
 #pragma mark - Encoding methods
 
 - (void) encodeWithBSONEncoder:(BSONEncoder *) encoder {
@@ -111,7 +115,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
                                              inManagedObjectContext:moc];    
     if (self = [self initWithEntity:edesc insertIntoManagedObjectContext:moc]) {
         for (NSPropertyDescription *property in [self entity]) {
-            if ([property isTransient])
+            if ([property isTransient] || ![self shouldAutomaticallyHandlePropertyName:property.name])
                 continue;
             else if ([property isKindOfClass:[NSAttributeDescription class]])
                 [self initializeAttribute:(NSAttributeDescription *)property withDecoder:decoder];
