@@ -31,15 +31,58 @@ typedef enum {
 @class BSONEncoder;
 @class BSONDocument;
 
+/**
+ Supports context-dependent encoding with BSONEncoder. Implement these methods to customize encoding by
+ reference, or to handle encoding of an object graph when you don't want to add BSON-related code to the
+ object-graph classes.
+  
+ These methods are never called with the root object as <code>obj</code>.
+ 
+ By all means use the delegate instead of subclassing BSONEncoder.
+ */
 @protocol BSONEncoderDelegate
 @optional
-// never called on the root object
+
+/**
+ Return <code>YES</code> to indicate that in the given context the encoder should encode an object ID in
+ place of the object. If this method returns <code>YES</code>, the object must respond to
+ <code>-BSONObjectID</code> or <code>-BSONObjectIDForEncoder:</code>. Return <code>NO</code> to proceed
+ normally with encoding.
+
+ You may use the key path, key path depth, the object, or the delegate's own state.
+ 
+ The encoder calls this method before the <code>-willEncodeObject:forKeyPath:</code> delegate method, and in turn
+ before it calls <code>-encodeWithCoder:</code> is called on <code>obj</code>.
+ 
+ @param encoder The active encoder
+ @param obj The object about to be encoded
+ @param keyPathComponents An array of keys descending from the root object (including numbers as strings in
+   the case of array elements)
+ @return <code>YES</code> to substite an object ID, <code>NO</code> to encode normally
+ */
 - (BOOL) encoder:(BSONEncoder *) encoder shouldSubstituteObjectIDForObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
+
+/**
+ Provides a substitute
+ 
+ Return <code>obj</code> to proceed normally with encoding.
+ 
+ You may use the key path, key path depth, the object, or the delegate's own state.
+ 
+ The encoder calls this method after it calls the <code>-shouldSubstituteObjectIDForObject:forKeyPath:</code>
+ delegate method, and before it calls <code>-encodeWithCoder:</code> is called on <code>obj</code>.
+ 
+ @param encoder The active encoder
+ @param obj The object about to be encoded
+ @param keyPathComponents An array of keys descending from the root object (including numbers as strings in
+ the case of array elements)
+ @return The object to substitute for the given object
+ */
 - (id) encoder:(BSONEncoder *) encoder willEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder willReplaceObject:(id) obj withObject:(id) replacementObj forKeyPath:(NSArray *) keyPathComponents;
 - (void) encoder:(BSONEncoder *) encoder didEncodeObject:(id) obj forKeyPath:(NSArray *) keyPathComponents;
-- (void) encoderDidFinish:(BSONEncoder *) encoder;
 - (void) encoderWillFinish:(BSONEncoder *) encoder;
+- (void) encoderDidFinish:(BSONEncoder *) encoder;
 
 @end
 
@@ -95,18 +138,17 @@ typedef enum {
  (See Encoding by Reference below.)
  - To avoid infinite loops, <code>BSONEncoder</code> throws an exception if an object attempts to encode
  its parent object or its direct ancestors. This check is done after object and delegate substitution,
- and isn't triggered when, for example, an object ID is substituted in place of a parent object.
- - <code>BSONEncoderDelegate</code> provides a similar interface to <code>NSKeyedArchiver</code>, but
- conveys additional state information in the encoder's key path, and provides an additional delegate
+ so it isn't triggered when, for example, an object ID is substituted in place of a parent object.
+ - <code>BSONEncoderDelegate</code> provides a similar interface to <code>NSKeyedArchiverDelegate</code>,
+ but conveys additional state information in the encoder's key path, and provides an additional delegate
  method for substituting object IDs during encoding.
-  
+ 
  Encoding by reference
  
- While by default <code>BSONEncoder</code> encodes child objects essentially by copying, it provides
- a mechanism for substituting BSON object IDs for child objects. If an object should <i>always</i>
- encode a child as an object ID, its <code>-encodeWithCoder:</code> can invoke
- <code>-encodeObjectIDForObject:forKey:</code>. If the appropriate behavior depends on context or
- other factors, have the delegate implement
+ While by default <code>BSONEncoder</code> embeds child objects, it provides a mechanism for substituting
+ BSON object IDs. If an object should <i>always</i> encode a child as an object ID, its
+ <code>-encodeWithCoder:</code> can invoke <code>-encodeObjectIDForObject:forKey:</code>. If the
+ appropriate behavior depends on context, have the delegate implement
  <code>-encoder:shouldSubstituteObjectIDForObject:forKeyPath:</code>, and consider the key path,
  key path depth, the object, or the delegate's own state.
  
