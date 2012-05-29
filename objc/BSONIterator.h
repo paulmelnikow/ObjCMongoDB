@@ -143,8 +143,8 @@
 - (id) objectForKey:(NSString *)key;
 
 /**
- Returns a sub-iterator for the current item, supporting sequential access only. The current item's native type
- must be <code>bson_array</code> or <code>bson_object</code>.
+ Returns a sub-iterator for the current item, supporting sequential access (not keyed access). The current
+ item's native type must be <code>bson_array</code> or <code>bson_object</code>.
  
  For keyed access to a <code>bson_object</code> use <code>-keyedSubIteratorValue</code> instead.
  @return A sub-iterator for the current item
