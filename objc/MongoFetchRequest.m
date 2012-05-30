@@ -202,15 +202,15 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     static NSArray *specialKeys;
     if (!specialKeys)
         specialKeys = [NSArray arrayWithObjects:
-                      @"includeIndexKeyOnly",
-                      @"explain",
-                      @"snapshotMode",
-                      @"showDiskLocation",
-                      @"comment",
-                      @"maximumDocumentsToScan",
+                       @"includeIndexKeyOnly",
+                       @"explain",
+                       @"snapshotMode",
+                       @"showDiskLocation",
+                       @"comment",
+                       @"maximumDocumentsToScan",
                        @"lowerIndexBound",
                        @"upperIndexBound",
-                      nil];
+                       nil];
     for (NSString *key in specialKeys)
         [result appendFormat:@"    %@ = %@\n", key, [self valueForKey:key]];
     [result appendString:@"}\n"];
