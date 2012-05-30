@@ -166,7 +166,6 @@
 		8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ObjCMongoDB.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E1054411503EE5800805F26 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = README; path = ../../README; sourceTree = "<group>"; };
 		9E1054441503EEEA00805F26 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = "APACHE-2.0.txt"; path = "../../APACHE-2.0.txt"; sourceTree = "<group>"; };
-		9E1054451503EEEA00805F26 /* SETUP */ = {isa = PBXFileReference; lastKnownFileType = text; name = SETUP; path = ../../SETUP; sourceTree = "<group>"; };
 		9E1054461503F05000805F26 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = NOTICE; path = ../../NOTICE; sourceTree = "<group>"; };
 		9E1054491503F6ED00805F26 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		9E10544F150408DE00805F26 /* BSON_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSON_Helper.h; sourceTree = "<group>"; };
@@ -383,7 +382,6 @@
 				9E1054411503EE5800805F26 /* README */,
 				9E1054461503F05000805F26 /* NOTICE */,
 				9E1054441503EEEA00805F26 /* APACHE-2.0.txt */,
-				9E1054451503EEEA00805F26 /* SETUP */,
 			);
 			name = Documentation;
 			sourceTree = "<group>";
