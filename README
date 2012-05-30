@@ -11,8 +11,8 @@ FEATURES
    encoding and decoding can be implemented entirely outside the model classes with
    help from robust delegate interfaces.
    
- * Built-in support for arrays, dictionaries, embedded objects, strings, numbers, dates,
-   object IDs, and the miscellaneous MongoDB types.
+ * Built-in support for arrays, dictionaries, embedded objects, strings, numbers,
+   dates, object IDs, and the miscellaneous MongoDB types.
 
  * Automatically encodes and decodes Core Data entities. The object or the coder's
    delegate can customize the default behavior.
