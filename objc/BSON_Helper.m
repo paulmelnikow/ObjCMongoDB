@@ -21,12 +21,7 @@
 
 NSString * NSStringFromBSONString (const char *cString) {
     if (!cString) return nil;
-#if __has_feature(objc_arc)
     return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
-#else
-//    return [[NSString stringWithCString:cString encoding:NSUTF8StringEncoding] autorelease];
-    return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
-#endif    
 }
 
 const char * BSONStringFromNSString (NSString * key) {
