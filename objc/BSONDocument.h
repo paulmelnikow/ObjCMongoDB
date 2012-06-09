@@ -89,6 +89,16 @@
 - (BSONIterator *) iterator;
 
 /**
+ Convenience method which decodes the document to a dictionary value using the default options. This
+ method invokes <code>[+BSONDecoder decodeDictionaryWithDocument:]</code> and returns the result.
+ 
+ For more complex decoding, instantiate a <code>BSONDecoder</code> and invoke
+ <code>-decodeDictionary:</code> directly.
+ @returns The decoded document in dictionary form
+ */
+- (NSDictionary *) dictionaryValue;
+
+/**
  Returns a Boolean value that indicates whether the receiver is equal to another BSON document.
  @param object The object with which to compare the receiver
  @returns <code>YES</code> if <i>object</i> is a <code>BSONDocument</code> with an equal <code>@link dataValue @/link</code> or

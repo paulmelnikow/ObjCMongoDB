@@ -128,6 +128,10 @@
 #endif
 }
 
+- (NSDictionary *) dictionaryValue {
+    return [BSONDecoder decodeDictionaryWithDocument:self];
+}
+
 - (BOOL) isEqual:(id)object {
     NSData *objectData = nil;
     if ([object isKindOfClass:[NSData class]])
