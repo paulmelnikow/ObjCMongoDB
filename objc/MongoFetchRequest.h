@@ -31,6 +31,7 @@
 + (MongoFetchRequest *) fetchRequest;
 + (MongoFetchRequest *) fetchRequestWithPredicate:(MongoPredicate *) predicate;
 
+// Explain how to use these together
 - (void) includeKey:(NSString *) key;
 - (void) excludeKey:(NSString *) key;
 
