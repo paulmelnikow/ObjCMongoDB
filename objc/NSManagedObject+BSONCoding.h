@@ -22,7 +22,7 @@
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 
-extern NSString * const BSONCodingEntityVersionHashKey;
+FOUNDATION_EXPORT NSString * const BSONCodingEntityVersionHashKey;
 
 /**
  Provides BSON encoding and decoding support for NSManagedObjects. The default implementation

@@ -15,5 +15,5 @@
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 
-extern NSString * const MongoDBObjectIDKey;
-extern const char * const MongoDBObjectIDBSONKey;
+FOUNDATION_EXPORT NSString * const MongoDBObjectIDKey;
+FOUNDATION_EXPORT const char * const MongoDBObjectIDBSONKey;
