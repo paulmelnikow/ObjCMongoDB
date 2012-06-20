@@ -138,6 +138,7 @@
 }
 
 - (NSComparisonResult)compare:(BSONObjectID *) other {
+    if (!other) [NSException raise:NSInvalidArgumentException format:@"Nil argument"];
     for (int i = 0; i < 3; i++) {
         int diff = _oid.ints[i] - other->_oid.ints[i];
         if (diff < 0)
@@ -149,6 +150,7 @@
 }
 
 - (BOOL)isEqual:(id)other {
+    if (![other isKindOfClass:[BSONObjectID class]]) return NO;
     return [self compare:other] == NSOrderedSame;
 }
 
