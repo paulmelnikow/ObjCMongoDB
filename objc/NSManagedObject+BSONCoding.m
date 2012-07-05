@@ -61,6 +61,11 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 - (void) encodeAttribute:(NSAttributeDescription *) attribute withEncoder:(BSONEncoder *) encoder {
     NSString *key = [attribute name];
     id value = [self valueForKey:key];
+    if (!value) {
+        // Let the encoder handle nil values directly
+        [encoder encodeObject:nil forKey:key];
+        return;
+    }
     switch ([attribute attributeType]) {
         case NSUndefinedAttributeType:
             [NSException raise:NSInvalidArchiveOperationException format:@"Can't encode undefined type for attribute %@", key];
@@ -83,7 +88,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
         case NSTransformableAttributeType:
             [encoder encodeData:value forKey:key]; break;
         case NSObjectIDAttributeType:
-            [NSException raise:NSInvalidArchiveOperationException format:@"Can't encode object ID type for attribute %@", key];                    
+            [NSException raise:NSInvalidArchiveOperationException format:@"Can't encode Core Data object ID type for attribute %@", key];                    
     }
 }
 
