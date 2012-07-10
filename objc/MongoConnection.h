@@ -45,6 +45,7 @@
 //- (BOOL) dropCollection:(MongoDBNamespace *) collection;
 
 - (BOOL) serverStatusForLastOperation:(NSError **) error;
+- (NSDictionary *) serverStatusAsDictionaryForLastOperation;
 - (NSError *) error;
 - (NSError *) serverError;
 

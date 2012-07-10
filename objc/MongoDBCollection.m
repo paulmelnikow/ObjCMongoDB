@@ -216,6 +216,7 @@
 #pragma mark - Helper methods
 
 - (BOOL) serverStatusForLastOperation:(NSError **) error { return [connection serverStatusForLastOperation:error]; }
+- (NSDictionary *) serverStatusAsDictionaryForLastOperation { return [connection serverStatusAsDictionaryForLastOperation]; }
 - (NSError *) error { return [connection error]; }
 - (NSError *) serverError { return [connection serverError]; }
 

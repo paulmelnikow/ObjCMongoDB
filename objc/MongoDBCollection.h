@@ -56,6 +56,7 @@
 - (BOOL) removeAllWithError:(NSError **) error;
 
 - (BOOL) serverStatusForLastOperation:(NSError **) error;
+- (NSDictionary *) serverStatusAsDictionaryForLastOperation;
 - (NSError *) error;
 - (NSError *) serverError;
 

@@ -163,4 +163,20 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         return NO;
 }
 
+- (NSDictionary *) serverStatusAsDictionaryForLastOperation {
+    bson *tempBson = bson_create();
+    bson_init(tempBson);
+    mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
+    if (!bson_size(tempBson)) {
+        bson_destroy(tempBson);
+        bson_dispose(tempBson);
+        return nil;
+    }
+    
+    id result = [BSONDecoder decodeDictionaryWithData:NSDataFromBSON(tempBson, NO)];
+    bson_destroy(tempBson);
+    bson_dispose(tempBson);
+    return result;
+}
+
 @end

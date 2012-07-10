@@ -19,6 +19,8 @@
 
 #import "GetLastErrorTest.h"
 #import "MongoDBCollection.h"
+#import "MongoKeyedPredicate.h"
+#import "MongoUpdateRequest.h"
 
 @implementation GetLastErrorTest
 
@@ -47,6 +49,49 @@
 
     [coll insertDictionary:entry error:&error];
     STAssertFalse([coll serverStatusForLastOperation:&error], @"should be a duplicate key");
+}
+
+- (void) testUpdateCount {
+    MongoDBCollection *coll = [_mongo collection:@"objcmongodbtest.getlasterror.testUpdateCount"];
+    
+    BSONObjectID *objectID = [BSONObjectID objectID];
+    NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+                           objectID, @"_id",
+                           @"test", @"name",
+                           nil];
+    
+    NSError *error = nil;
+    [coll insertDictionary:entry error:&error];
+    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+
+    MongoKeyedPredicate *matchingPredicate = [MongoKeyedPredicate predicate];
+    [matchingPredicate keyPath:@"_id" matches:objectID];
+    MongoUpdateRequest *request1 = [MongoUpdateRequest updateRequestWithPredicate:matchingPredicate firstMatchOnly:YES];
+    [request1 keyPath:@"addedValue" setValue:@"more test"];
+    
+    [coll update:request1 error:&error];
+    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+    
+    NSDictionary *dict = [coll serverStatusAsDictionaryForLastOperation];
+    STAssertNotNil(dict, nil);
+    if (dict) {
+        STAssertEqualObjects([NSNumber numberWithInt:1], [dict objectForKey:@"n"], nil);
+    }
+    
+    BSONObjectID *noMatchObjectID = [BSONObjectID objectID];
+    MongoKeyedPredicate *noMatchPredicate = [MongoKeyedPredicate predicate];
+    [noMatchPredicate keyPath:@"_id" matches:noMatchObjectID];
+    MongoUpdateRequest *request2 = [MongoUpdateRequest updateRequestWithPredicate:noMatchPredicate firstMatchOnly:YES];
+    [request2 keyPath:@"addedValue" setValue:@"more test"];
+    
+    [coll update:request2 error:&error];
+    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+    
+    dict = [coll serverStatusAsDictionaryForLastOperation];
+    STAssertNotNil(dict, nil);
+    if (dict) {
+        STAssertEqualObjects([NSNumber numberWithInt:0], [dict objectForKey:@"n"], nil);
+    }
 }
 
 @end
