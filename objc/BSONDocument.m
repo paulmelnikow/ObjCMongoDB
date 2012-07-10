@@ -85,10 +85,11 @@
     if (self = [super init]) {
         _bson = b;
         _destroyOnDealloc = destroyOnDealloc;
-#if __has_feature(objc_arc)
-        _data = [NSData dataWithBytes:(void *)bson_data(_bson) length:bson_size(_bson)];
-#else
-        _data = [[NSData dataWithBytes:(void *)bson_data(_bson) length:bson_size(_bson)] retain];
+        // Copy the buffer into a new NSData. That way, objects which invoke -dataValue can retain the
+        // NSData object without also retaining the BSONDocument object.
+        _data = NSDataFromBSON(_bson, YES);
+#if !__has_feature(objc_arc)
+        [_data retain];
 #endif
     }
     return self;

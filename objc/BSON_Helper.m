@@ -179,3 +179,12 @@ NSString * NSStringFromBSON(const bson * b) {
     return result;
 }
 
+NSData * NSDataFromBSON (const bson * b, BOOL copy) {
+    if (!b) return nil;
+    void *bytes = (void *)bson_data(b);
+    int size = bson_size(b);
+    if (copy)
+        return [NSData dataWithBytes:bytes length:size];
+    else
+        return [NSData dataWithBytesNoCopy:bytes length:size freeWhenDone:NO];
+}
