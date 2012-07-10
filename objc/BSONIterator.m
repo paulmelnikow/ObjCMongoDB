@@ -212,6 +212,8 @@
         case BSON_LONG:
             return [NSNumber numberWithLongLong:[self int64Value]];
         default:
+            [NSException raise:NSInvalidUnarchiveOperationException
+                        format:@"Unrecognized BSON type: %ld (Is this a BSON document?)", (long)[self nativeValueType]];
             return nil;
     }
 }

@@ -53,7 +53,7 @@
 }
 
 - (BSONDocument *) initWithData:(NSData *) data {
-    if (!data) return [self init];
+    if (!data || !data.length) return [self init];
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
     if (self = [super init]) {
