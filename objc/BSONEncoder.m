@@ -184,7 +184,10 @@
     [self encodeObject:objv forKey:key withSubstitutions:YES withObjectIDSubstitution:YES];
 }
 
-- (void) encodeObject:(id) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions withObjectIDSubstitution:(BOOL) substituteObjectID {    
+- (void) encodeObject:(id) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions withObjectIDSubstitution:(BOOL) substituteObjectID {
+    static Class orderedSetClass;
+    if (!orderedSetClass) orderedSetClass = NSClassFromString(@"NSOrderedSet");
+    
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:substituteObjectID]) return;
     
     if ([NSNull null] == objv)
@@ -229,8 +232,9 @@
     else if ([objv isKindOfClass:[BSONDocument class]])
         [self encodeBSONDocument:objv forKey:key withSubstitutions:NO];
     
-    else if ([objv isKindOfClass:[NSOrderedSet class]])
-        [self encodeArray:[(NSOrderedSet *)objv array] forKey:key withSubstitutions:NO];
+    // Use late binding so the package will work at runtime under 10.6 (which lacks NSOrderedSet) as well as 10.7
+    else if (orderedSetClass && [objv isKindOfClass:orderedSetClass])
+        [self encodeArray:[(id)objv array] forKey:key withSubstitutions:NO];
     
     else if ([objv isKindOfClass:[NSArray class]])
         [self encodeArray:objv forKey:key withSubstitutions:NO];
