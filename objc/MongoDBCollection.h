@@ -25,11 +25,7 @@
 
 @class MongoConnection;
 
-@interface MongoDBCollection : NSObject {
-    const char * _utf8Name;
-    const char * _utf8DatabaseName;
-    const char * _utf8NamespaceName;
-}
+@interface MongoDBCollection : NSObject
 
 - (BOOL) insert:(BSONDocument *) document error:(NSError **) error;
 - (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError **) error;
@@ -62,5 +58,10 @@
 
 @property (retain) MongoConnection * connection;
 @property (copy, nonatomic) NSString * name;
+@property (copy, nonatomic) NSString * databaseName;
+@property (copy, nonatomic) NSString * namespaceName;
+@property (readonly, assign) const char * utf8Name;
+@property (readonly, assign) const char * utf8DatabaseName;
+@property (readonly, assign) const char * utf8NamespaceName;
 
 @end

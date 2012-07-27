@@ -27,7 +27,7 @@
 
 @implementation MongoDBCollection
 
-@synthesize connection, name;
+@synthesize connection, name, databaseName, namespaceName;
 
 #pragma mark - Initialization
 
@@ -39,7 +39,6 @@
 #else
     name = [[value copy] retain];
 #endif
-    _utf8Name = BSONStringFromNSString(value);
     NSRange firstDot = [value rangeOfString:@"."];
     if (NSNotFound == firstDot.location) {
         id exc = [NSException exceptionWithName:NSInvalidArgumentException
@@ -47,14 +46,14 @@
                                        userInfo:nil];
         @throw exc;
     }
-    _utf8DatabaseName = BSONStringFromNSString([value substringToIndex:firstDot.location]);
-    _utf8NamespaceName = BSONStringFromNSString([value substringFromIndex:1+firstDot.location]);
+    self.databaseName = [value substringToIndex:firstDot.location];
+    self.namespaceName = [value substringFromIndex:1+firstDot.location];
 }
 
 #pragma mark - Insert
 
 - (BOOL) insert:(BSONDocument *) document error:(NSError **) error {
-    if (MONGO_OK == mongo_insert(connection.connValue, _utf8Name, [document bsonValue]))
+    if (MONGO_OK == mongo_insert(connection.connValue, self.utf8Name, [document bsonValue]))
         return YES;
     else
         set_error_and_return_NO;
@@ -88,7 +87,7 @@
         }
         *current++ = document.bsonValue;
     }
-    if (MONGO_OK == mongo_insert_batch(connection.connValue, _utf8Name, bsonArray, documentsToInsert))
+    if (MONGO_OK == mongo_insert_batch(connection.connValue, self.utf8Name, bsonArray, documentsToInsert))
         return YES;
     else
         set_error_and_return_NO;
@@ -98,7 +97,7 @@
 
 - (BOOL) update:(MongoUpdateRequest *) updateRequest error:(NSError **) error {
     if (MONGO_OK == mongo_update(connection.connValue,
-                                 _utf8Name,
+                                 self.utf8Name,
                                  updateRequest.conditionDocumentValue.bsonValue,
                                  updateRequest.operationDocumentValue.bsonValue,
                                  updateRequest.flags))
@@ -110,7 +109,7 @@
 #pragma mark - Remove
 
 - (BOOL) removeWithCond:(BSONDocument *) cond error:(NSError **) error {
-    int result = mongo_remove(connection.connValue, _utf8Name, cond.bsonValue);
+    int result = mongo_remove(connection.connValue, self.utf8Name, cond.bsonValue);
     if (MONGO_OK == result)
         return YES;
     else
@@ -138,7 +137,7 @@
 }
 
 - (MongoCursor *) cursorForFind:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
-    mongo_cursor *cursor = mongo_find(connection.connValue, _utf8Name,
+    mongo_cursor *cursor = mongo_find(connection.connValue, self.utf8Name,
                                       fetchRequest.queryDocument.bsonValue,
                                       fetchRequest.fieldsDocument.bsonValue,
                                       fetchRequest.limitResults,
@@ -155,7 +154,7 @@
 
 - (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
     bson *tempBson = malloc(sizeof(bson));
-    int result = mongo_find_one(connection.connValue, _utf8Name,
+    int result = mongo_find_one(connection.connValue, self.utf8Name,
                                 fetchRequest.queryDocument.bsonValue,
                                 fetchRequest.fieldsDocument.bsonValue,
                                 tempBson);
@@ -201,7 +200,7 @@
 - (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
     if (!predicate) predicate = [MongoPredicate predicate];
     NSUInteger result = mongo_count(connection.connValue,
-                                    _utf8DatabaseName, _utf8NamespaceName,
+                                    self.utf8DatabaseName, self.utf8NamespaceName,
                                     predicate.BSONDocument.bsonValue);
     if (BSON_ERROR == result) set_error_and_return_BSON_ERROR;
     return result;
@@ -219,5 +218,11 @@
 - (NSDictionary *) serverStatusAsDictionaryForLastOperation { return [connection serverStatusAsDictionaryForLastOperation]; }
 - (NSError *) error { return [connection error]; }
 - (NSError *) serverError { return [connection serverError]; }
+
+#pragma mark - Accessors
+
+- (const char *) utf8Name { return BSONStringFromNSString(self.name); }
+- (const char *) utf8DatabaseName { return BSONStringFromNSString(self.databaseName); }
+- (const char *) utf8NamespaceName { return BSONStringFromNSString(self.namespaceName); }
 
 @end
