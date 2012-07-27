@@ -156,8 +156,11 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
             @throw exc;
         }
         NSArray *values = [decoder decodeArrayForKey:key withClass:destinationClass];
-        if ([relationship isOrdered])
-            [self setValue:[NSMutableOrderedSet orderedSetWithArray:values] forKey:key];            
+        
+        // Use late binding so the package will work at runtime under 10.6 (which lacks NSOrderedSet) as well as 10.7
+        Class class = NSClassFromString (@"NSMutableOrderedSet");
+        if (class && [relationship isOrdered])
+            [self setValue:[class orderedSetWithArray:values] forKey:key];            
         else
             [self setValue:[NSMutableSet setWithArray:values] forKey:key];
     } else if ([decoder valueIsEmbeddedDocumentForKey:key]) {
