@@ -132,12 +132,36 @@
 }
 
 - (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder {
-    id result = [self decodeExposedDictionaryWithClassOrNil:classForDecoder];
+    id result = nil;
+    @try {
+        result = [self decodeExposedDictionaryWithClassOrNil:classForDecoder];
+    }
+    @catch (NSException *exception) {
+        if (BSONException == exception.name) {
+            NSLog(@"Raised while decoding: %@", exception);
+#if !__has_feature(objc_arc)
+            [result release];
+#endif
+            result = nil;
+        } else @throw;
+    }
     return [self postDecodingHelper:result keyOrNil:nil topLevel:YES];
 }
 
 - (id) decodeObjectWithClass:(Class) classForDecoder {
-    id result = [self decodeExposedCustomObjectWithClassOrNil:classForDecoder];
+    id result = nil;
+    @try {
+        result = [self decodeExposedCustomObjectWithClassOrNil:classForDecoder];
+    }
+    @catch (NSException *exception) {
+        if (BSONException == exception.name) {
+            NSLog(@"Raised while decoding: %@", exception);
+#if !__has_feature(objc_arc)
+            [result release];
+#endif
+            result = nil;
+        } else @throw;
+    }
     return [self postDecodingHelper:result keyOrNil:nil topLevel:YES];
 }
 
