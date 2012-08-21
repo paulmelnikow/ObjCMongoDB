@@ -19,6 +19,8 @@
 
 #import "BSONIterator.h"
 
+NSString * const BSONException = @"BSONException";
+
 @interface BSONIterator (Private)
 - (void) assertSupportsKeyedSearching;
 @end
@@ -289,7 +291,15 @@
     }
 }
 
-#pragma mark - Debugging
+#pragma mark - Debugging and error handling
+
+void objc_bson_error_handler(const char * message) {
+    [NSException raise:BSONException format:@"BSON error: %s", message, nil];
+}
+
++ (void) initialize {
+    set_bson_err_handler(objc_bson_error_handler);
+}
 
 - (NSString *) description {
     NSMutableString *string = [NSMutableString stringWithFormat:@"<%@: %p>", [[self class] description], self];

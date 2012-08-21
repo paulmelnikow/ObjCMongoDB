@@ -21,6 +21,8 @@
 #import "bson.h"
 #import "BSONTypes.h"
 
+FOUNDATION_EXPORT NSString * const BSONException;
+
 @class BSONDocument;
 @class BSONObjectID;
 
