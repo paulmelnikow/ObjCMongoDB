@@ -195,7 +195,7 @@
 - (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueType:BSON_ARRAY result:&result]) return result;
-
+    
     [self exposeKey:key asArray:YES];
     result = [self decodeExposedArrayWithClassOrNil:classForDecoder];
     [self closeInternalObject];
@@ -280,20 +280,20 @@
 - (id) decodeObjectForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
     if ([self decodingHelperForKey:key result:&result]) return result;
-
+    
     if (![_iterator isArray] && ![_iterator isEmbeddedDocument]) {
         result = [_iterator objectValue];
-
+        
     } else if (classForDecoder) {
         [self exposeKey:key asArray:NO];
         result = [self decodeExposedCustomObjectWithClassOrNil:classForDecoder];
         [self closeInternalObject];
-
+        
     } else if ([_iterator isEmbeddedDocument]) {
         [self exposeKey:key asArray:NO];
         result = [self decodeExposedDictionaryWithClassOrNil:nil];
         [self closeInternalObject];        
-
+        
     } else {
         [self exposeKey:key asArray:YES];
         result = [self decodeExposedArrayWithClassOrNil:nil];
@@ -325,7 +325,7 @@
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
-
+    
     return [_iterator intValue];
 }
 - (int64_t) decodeInt64ForKey:(NSString *) key {
@@ -336,7 +336,7 @@
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
-
+    
     return [_iterator int64Value];
 }
 - (BOOL) decodeBoolForKey:(NSString *) key {
@@ -348,7 +348,7 @@
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
-
+    
     return [_iterator doubleValue];
 }
 - (double) decodeDoubleForKey:(NSString *) key {
@@ -359,7 +359,7 @@
     
     id result = nil;
     if ([self decodingHelperForKey:key nativeValueTypeArray:allowedTypes result:&result]) return 0;
-
+    
     return [_iterator doubleValue];
 }
 
@@ -489,7 +489,7 @@
         if (!classForObjectID
             && [self.delegate respondsToSelector:@selector(decoder:classToSubstituteForObjectID:forKeyPath:)])
             classForObjectID = [self.delegate decoder:self classToSubstituteForObjectID:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
-
+        
         if (classForObjectID) {
             if ([classForObjectID respondsToSelector:@selector(instanceForObjectID:decoder:)])
                 object = [classForObjectID instanceForObjectID:object decoder:self];
@@ -508,7 +508,7 @@
         object = [[[object retain] awakeAfterUsingBSONDecoder:self] autorelease];
     else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
         object = [[[object retain] awakeAfterUsingCoder:self] autorelease];
-
+    
     if ([self.delegate respondsToSelector:@selector(decoder:didDecodeObject:forKeyPath:)])
         object = [self.delegate decoder:self didDecodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];
     
@@ -518,7 +518,7 @@
     
     if (topLevel && [self.delegate respondsToSelector:@selector(decoderWillFinish:)])
         [self.delegate decoderWillFinish:self];
-           
+    
     return object;
 }
 
@@ -562,8 +562,8 @@
     NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
                         NSStringFromSelector(selector)];
     id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                   reason:reason
-                                 userInfo:nil];
+                                     reason:reason
+                                   userInfo:nil];
     @throw exc;
 }
 

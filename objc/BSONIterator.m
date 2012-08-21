@@ -1,5 +1,5 @@
 //
-//  BSONDocument.m
+//  BSONIterator.m
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
@@ -28,7 +28,7 @@
 #pragma mark - Initialization
 
 - (id) initWithDocument:(BSONDocument *)document
-             keyPathComponentsOrNil:(NSArray *) keyPathComponents {
+ keyPathComponentsOrNil:(NSArray *) keyPathComponents {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
         _parent = document;
@@ -50,8 +50,8 @@
  Takes ownership of the bson_iterator it's passed
  */
 - (id) initWithNativeIterator:(bson_iterator *) bsonIter
-                                  parent:(id) parent
-                        keyPathComponents:(NSArray *) keyPathComponents {
+                       parent:(id) parent
+            keyPathComponents:(NSArray *) keyPathComponents {
     if (self = [super init]) {
 #if __has_feature(objc_arc)
         _parent = parent;
