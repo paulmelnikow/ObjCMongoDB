@@ -251,7 +251,7 @@ NSString * const BSONException = @"BSONException";
     return [NSDate dateWithTimeIntervalSince1970:0.001 * bson_iterator_date(_iter)];
 }
 
-- (char) dataLength { return bson_iterator_bin_len(_iter); }
+- (NSUInteger) dataLength { return (NSUInteger)bson_iterator_bin_len(_iter); }
 - (char) dataBinType { return bson_iterator_bin_type(_iter); }
 - (NSData *) dataValue {
     id value = [NSData dataWithBytes:bson_iterator_bin_data(_iter)

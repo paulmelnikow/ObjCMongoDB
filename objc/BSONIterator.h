@@ -242,7 +242,7 @@ FOUNDATION_EXPORT NSString * const BSONException;
  supported by <code>bson_iterator_bin_len</code>.
  @return The number of bytes of binary data for the current item
  */
-- (char) dataLength;
+- (NSUInteger) dataLength;
 
 /**
  Returns the binary subtype for the current item, whose native type must be
