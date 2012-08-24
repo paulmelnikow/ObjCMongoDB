@@ -58,6 +58,23 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
         [encoder encodeData:[[self entity] versionHash] forKey:BSONCodingEntityVersionHashKey];
 }
 
++ (id) transformedValue:(id) value forAttribute:(NSAttributeDescription *) attribute {
+    NSString *valueTransformerName = [attribute valueTransformerName];
+    if (valueTransformerName)
+        return [[NSValueTransformer valueTransformerForName:valueTransformerName] transformedValue:value];
+    else
+        // Per Apple's documentation, the framework uses this default value transformer, but in reverse
+        return [[NSValueTransformer valueTransformerForName:NSKeyedUnarchiveFromDataTransformerName] reverseTransformedValue:value];
+}
+
++ (id) reverseTransformedValue:(id) value forAttribute:(NSAttributeDescription *) attribute {
+    NSString *valueTransformerName = [attribute valueTransformerName];
+    if (valueTransformerName)
+        return [[NSValueTransformer valueTransformerForName:valueTransformerName] reverseTransformedValue:value];
+    else
+        return [[NSValueTransformer valueTransformerForName:NSKeyedUnarchiveFromDataTransformerName] transformedValue:value];
+}
+
 - (void) encodeAttribute:(NSAttributeDescription *) attribute withEncoder:(BSONEncoder *) encoder {
     NSString *key = [attribute name];
     id value = [self valueForKey:key];
@@ -85,8 +102,9 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
         case NSDateAttributeType:
             [encoder encodeDate:value forKey:key]; break;
         case NSBinaryDataAttributeType:
-        case NSTransformableAttributeType:
             [encoder encodeData:value forKey:key]; break;
+        case NSTransformableAttributeType:
+            [encoder encodeData:[NSManagedObject transformedValue:value forAttribute:attribute] forKey:key]; break;
         case NSObjectIDAttributeType:
             [NSException raise:NSInvalidArchiveOperationException format:@"Can't encode Core Data object ID type for attribute %@", key];                    
     }
@@ -137,6 +155,9 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
     NSString *key = [attribute name];
     if ([decoder containsValueForKey:key]) {
         id value = [decoder decodeObjectForKey:key];
+        // For transformable attributes, run the values through the transformer
+        if (NSTransformableAttributeType == attribute.attributeType)
+            value = [NSManagedObject reverseTransformedValue:value forAttribute:attribute];
         [self setValue:value forKey:key];
     }
 }
@@ -145,7 +166,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
     NSString *key = [relationship name];
     NSEntityDescription *destinationEntity = [relationship destinationEntity];
     Class destinationClass = NSClassFromString([destinationEntity managedObjectClassName]);
-
+    
     if ([decoder valueIsArrayForKey:key]) {
         if (![relationship isToMany]) {
             NSString *reason = [NSString stringWithFormat:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got an array",
@@ -194,7 +215,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
 - (void) initializeFetchedProperty:(NSFetchedPropertyDescription *) fetchedProperty withDecoder:(BSONDecoder *) decoder {
     [NSException raise:NSInvalidArchiveOperationException
                 format:@"Implement -encodeFetchedProperty:withEncoder: in your subclass to decode fetched properties"];
-
+    
 }
 
 @end
