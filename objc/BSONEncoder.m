@@ -110,6 +110,7 @@
     [_resultDocument release];
     [_encodingObjectStack release];
     [_keyPathComponents release];
+    [super dealloc];
 #endif
 }
 

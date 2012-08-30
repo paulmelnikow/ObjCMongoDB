@@ -57,6 +57,7 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     [_fields release];
     [_sort release];
     [_hint release];
+    [super dealloc];
 #endif
 }
 
@@ -183,7 +184,7 @@ NSString * const MongoCommentMetaOperator = @"$comment";
     [result appendFormat:@"predicate = %@\n", predicate ? predicate : @"{ }"];
     [result appendFormat:@"fields = %@\n", [_fields count] ? _fields : @"{ }"];
     [result appendFormat:@"sort = %@\n", [_sort count] ? _sort : @"{ }"];
-    [result appendFormat:@"limitResults = %ld\nskipResults = %ld\n", limitResults, skipResults];
+    [result appendFormat:@"limitResults = %d\nskipResults = %d\n", limitResults, skipResults];
     [result appendString:@"options = {\n"];
     static NSArray *optionKeys;
     if (!optionKeys)

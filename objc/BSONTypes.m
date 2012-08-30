@@ -62,8 +62,9 @@
 }
 
 - (void) dealloc {
-#if __has_feature(objc_arc)
+#if !__has_feature(objc_arc)
     [_stringValue release];
+    [super dealloc];
 #endif
 }
 

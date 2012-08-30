@@ -54,6 +54,9 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (void) dealloc {
     mongo_destroy(_conn);
     free(_conn);
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 - (mongo *) connValue { return _conn; }

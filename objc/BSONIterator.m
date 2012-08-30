@@ -73,6 +73,7 @@ NSString * const BSONException = @"BSONException";
     free(_iter);
 #if !__has_feature(objc_arc)
     [_parent release];
+    [super dealloc];
 #endif
 }
 

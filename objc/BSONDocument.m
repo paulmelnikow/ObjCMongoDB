@@ -102,6 +102,7 @@
 #if !__has_feature(objc_arc)
     [_data release];
     [_source release];
+    [super dealloc];
 #endif
 }
 

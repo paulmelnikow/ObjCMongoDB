@@ -72,7 +72,8 @@
     [_keyPathComponents release];
     [_iteratorStack release];
     [_iterator release];
-#endif    
+    [super dealloc];
+#endif
 }
 
 #pragma mark - Convenience methods

@@ -32,6 +32,9 @@
 
 - (void) dealloc {
     mongo_cursor_destroy(_cursor);
+#if !__has_feature(objc_arc)
+    [super dealloc];
+#endif
 }
 
 #pragma mark - Enumeration
