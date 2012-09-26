@@ -20,7 +20,6 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 #import "BSONTypes.h"
-#import "bson.h"
 
 typedef enum {
     BSONDoNothingOnNil,
@@ -52,7 +51,7 @@ typedef enum {
  You may use the key path, key path depth, the object, or the delegate's own state.
  
  The encoder calls this method before the <code>-willEncodeObject:forKeyPath:</code> delegate method, and in turn
- before it calls <code>-encodeWithCoder:</code> is called on <code>obj</code>.
+ before it calls <code>-encodeWithCoder:</code> on <code>obj</code>.
  
  @param encoder The active encoder
  @param obj The object about to be encoded
