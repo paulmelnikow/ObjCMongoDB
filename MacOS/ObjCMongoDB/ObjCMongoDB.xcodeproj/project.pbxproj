@@ -92,7 +92,6 @@
 		9EFA29E1152CCD70004F50D2 /* env.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29DC152CCD70004F50D2 /* env.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFA29EE152D064A004F50D2 /* MongoUpdateRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFA29EF152D064A004F50D2 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */; };
-		9EFA29F0152D064A004F50D2 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */; };
 		9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */; };
 		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -909,7 +908,6 @@
 				9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */,
 				9EFA29D9152CC65A004F50D2 /* UpdateTest.m in Sources */,
 				9EFA29DE152CCD70004F50D2 /* env_default.c in Sources */,
-				9EFA29F0152D064A004F50D2 /* MongoUpdateRequest.m in Sources */,
 				9EE59A6815837B5800040FE7 /* FindTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
