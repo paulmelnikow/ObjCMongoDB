@@ -36,12 +36,15 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
                                        userInfo:nil];
         @throw exc;
     }
-    if (![self validateForUpdate:nil]) {
+    NSError *error = nil;
+    if (![self validateForUpdate:&error]) {
         NSString *reason = [NSString stringWithFormat:@"While trying to encode an object for entity %@, validateForUpdate: failed",
                             [[self entity] name]];
+        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:error
+                                                             forKey:@"NSError"];
         id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
                                          reason:reason
-                                       userInfo:nil];
+                                       userInfo:userInfo];
         @throw exc;
     }
     for (NSPropertyDescription *property in [self entity]) {
