@@ -735,7 +735,7 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0440;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "ObjCMongoDB" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1028,6 +1028,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1042,6 +1043,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				SDKROOT = "";
+				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
