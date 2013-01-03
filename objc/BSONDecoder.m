@@ -72,6 +72,8 @@
     [_keyPathComponents release];
     [_iteratorStack release];
     [_iterator release];
+    [self.managedObjectContext release];
+    [self.delegate release];
     [super dealloc];
 #endif
 }
