@@ -1,5 +1,5 @@
 //
-//  NSManagedObject+BSON.h
+//  ObjCBSON.h
 //  ObjCMongoDB
 //
 //  Created by Paul Melnikow on 3/18/12.
