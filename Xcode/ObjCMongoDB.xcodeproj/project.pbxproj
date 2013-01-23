@@ -208,8 +208,8 @@
 		9EFF2B61150D5B7B00EDC285 /* MongoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoTests-Info.plist"; sourceTree = "<group>"; };
 		9EFF2B63150D5B7B00EDC285 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EFF2B68150D5B7B00EDC285 /* MongoTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-Prefix.pch"; sourceTree = "<group>"; };
-		9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OrderedDictionary.m; path = OrderedDictionary/OrderedDictionary.m; sourceTree = "<group>"; };
-		9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OrderedDictionary.h; path = OrderedDictionary/OrderedDictionary.h; sourceTree = "<group>"; };
+		9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderedDictionary.m; sourceTree = "<group>"; };
+		9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderedDictionary.h; sourceTree = "<group>"; };
 		9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoFetchRequest.h; sourceTree = "<group>"; };
 		9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoFetchRequest.m; sourceTree = "<group>"; };
 		C2891A44150AB6D40065E2E9 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encoding.c; sourceTree = "<group>"; };
@@ -302,13 +302,14 @@
 				22ED5B4311DF1A7200410529 /* numbers.c */,
 			);
 			name = "mongo-c-driver";
-			path = "../mongo-c-driver/src";
+			path = "mongo-c-driver/src";
 			sourceTree = "<group>";
 		};
 		22ED5B4E11DF1A8600410529 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				9E97CC6916B053F00035480E /* Vendor */,
+				9EFF2B73150D6B4100EDC285 /* OrderedDictionary */,
+				22ED5B3B11DF1A7200410529 /* mongo-c-driver */,
 				9EFF2B51150D059000EDC285 /* BSON */,
 				9EFF2B52150D05BD00EDC285 /* Mongo */,
 			);
@@ -334,15 +335,6 @@
 				9E1054491503F6ED00805F26 /* ObjcMongoDB-Info.plist */,
 			);
 			path = ObjCMongoDB;
-			sourceTree = "<group>";
-		};
-		9E97CC6916B053F00035480E /* Vendor */ = {
-			isa = PBXGroup;
-			children = (
-				9EFF2B73150D6B4100EDC285 /* OrderedDictionary */,
-				22ED5B3B11DF1A7200410529 /* mongo-c-driver */,
-			);
-			path = Vendor;
 			sourceTree = "<group>";
 		};
 		9E97CC6A16B054900035480E /* Tests */ = {
@@ -503,7 +495,7 @@
 				9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */,
 				9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */,
 			);
-			name = OrderedDictionary;
+			path = OrderedDictionary;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
