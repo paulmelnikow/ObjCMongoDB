@@ -618,10 +618,6 @@
 - (void) decodeValuesOfObjCTypes:(const char *)types, ... {
     [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
-- (id) decodeNXObject {
-    [BSONDecoder unsupportedUnkeyedCodingSelector:_cmd];
-    return nil;
-}
 
 #pragma mark - Unsupported decoding types
 

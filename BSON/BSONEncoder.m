@@ -808,9 +808,6 @@
 - (void) encodeValuesOfObjCTypes:(const char *) types, ... {
     [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
 }
-- (void) encodeNXObject:(id) object {
-    [BSONEncoder unsupportedUnkeyedCodingSelector:_cmd];    
-}
 
 #pragma mark - Unsupported encoding types
 
