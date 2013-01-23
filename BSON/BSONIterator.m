@@ -297,6 +297,7 @@ NSString * const BSONException = @"BSONException";
 
 #pragma mark - Debugging and error handling
 
+void objc_bson_error_handler(const char * message);
 void objc_bson_error_handler(const char * message) {
     [NSException raise:BSONException format:@"BSON error: %s", message, nil];
 }

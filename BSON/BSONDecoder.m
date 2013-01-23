@@ -535,10 +535,17 @@
         }
     }
     
+#if __has_feature(objc_arc)
+    if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
+        object = [object awakeAfterUsingBSONDecoder:self];
+    else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
+        object = [object awakeAfterUsingCoder:self];
+#else
     if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
         object = [[[object retain] awakeAfterUsingBSONDecoder:self] autorelease];
     else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
         object = [[[object retain] awakeAfterUsingCoder:self] autorelease];
+#endif
     
     if ([self.delegate respondsToSelector:@selector(decoder:didDecodeObject:forKeyPath:)])
         object = [self.delegate decoder:self didDecodeObject:object forKeyPath:[self keyPathComponentsAddingKeyOrNil:key]];

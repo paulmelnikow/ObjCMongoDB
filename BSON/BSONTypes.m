@@ -33,7 +33,9 @@
 
 - (id) initWithString:(NSString *) s {
     if (s.length != 24) {
+#if !__has_feature(objc_arc)
         [self release];
+#endif
         [NSException raise:NSInvalidArgumentException format:@"String should be 24 characters long"];
     }
     if (self = [super init]) {

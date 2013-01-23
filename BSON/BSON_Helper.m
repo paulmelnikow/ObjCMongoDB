@@ -19,7 +19,7 @@
 
 #import "BSON_Helper.h"
 
-NSString * NSStringFromBSONString (const char *cString) {
+__autoreleasing NSString * NSStringFromBSONString (const char *cString) {
     if (!cString) return nil;
     return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
 }
@@ -93,7 +93,7 @@ void BSONAssertIteratorIsInValueTypeArray(BSONIterator * iterator, bson_type * v
     @throw exc;
 }
 
-NSString * NSStringFromBSONType(bson_type t) {
+__autoreleasing NSString * NSStringFromBSONType(bson_type t) {
     NSString *name = nil;
     switch(t) {
         case BSON_EOO:
@@ -138,7 +138,7 @@ NSString * NSStringFromBSONType(bson_type t) {
     return name;
 }
 
-NSString * NSStringFromBSONError(int err) {
+__autoreleasing NSString * NSStringFromBSONError(int err) {
     NSMutableArray *errors = [NSMutableArray array];
     if (err & BSON_NOT_UTF8) [errors addObject:@"BSON_NOT_UTF8"];
     if (err & BSON_FIELD_HAS_DOT) [errors addObject:@"BSON_FIELD_HAS_DOT"];
@@ -153,6 +153,7 @@ NSString * NSStringFromBSONError(int err) {
 
 NSMutableString * target_for_bson_substitute_for_printf = nil;
 
+int substitute_for_printf(const char *format, ...);
 int substitute_for_printf(const char *format, ...) {
     if (!target_for_bson_substitute_for_printf) return 0;
     
@@ -169,7 +170,7 @@ int substitute_for_printf(const char *format, ...) {
     return 0;
 }
 
-NSString * NSStringFromBSON(const bson * b) {
+__autoreleasing NSString * NSStringFromBSON(const bson * b) {
     target_for_bson_substitute_for_printf = [NSMutableString string];
     bson_errprintf = bson_printf = substitute_for_printf;
     bson_print(b);
@@ -179,7 +180,7 @@ NSString * NSStringFromBSON(const bson * b) {
     return result;
 }
 
-NSData * NSDataFromBSON (const bson * b, BOOL copy) {
+__autoreleasing NSData * NSDataFromBSON (const bson * b, BOOL copy) {
     if (!b) return nil;
     void *bytes = (void *)bson_data(b);
     int size = bson_size(b);

@@ -25,7 +25,7 @@
  @param cString A UTF-8 C string
  @return An <code>NSString</code> representation of the string
  */
-NSString * NSStringFromBSONString (const char * cString);
+__autoreleasing NSString * NSStringFromBSONString (const char * cString);
 
 /**
  Returns a UTF-8 C string for an <code>NSString</code>.
@@ -73,9 +73,9 @@ void BSONAssertIteratorIsInValueTypeArray (BSONIterator * iterator, bson_type * 
  @param t A native BSON type
  @return A string representation of the BSON type
  */
-NSString * NSStringFromBSONType (bson_type t);
+__autoreleasing NSString * NSStringFromBSONType (bson_type t);
 
-NSString * NSStringFromBSONError(int err);
+__autoreleasing NSString * NSStringFromBSONError(int err);
 
 /**
  Returns a string representation of a BSON document, for debugging purposes.
@@ -84,7 +84,7 @@ NSString * NSStringFromBSONError(int err);
  @param b A pointer to a native BSON struct
  @return A string representation of the BSON document
  */
-NSString * NSStringFromBSON (const bson * b);
+__autoreleasing NSString * NSStringFromBSON (const bson * b);
 
 /**
  Returns an autoreleased NSData object which provides access to the BSON object.
