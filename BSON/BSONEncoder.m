@@ -586,11 +586,13 @@
 
 - (void) encodeData:(NSData *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:NO]) return;
+    if (objv.length > INT_MAX)
+        [NSException raise:NSInvalidArgumentException format:@"Data length is out of range"];
     if (BSON_ERROR == bson_append_binary(_bson,
                                          BSONStringFromNSString(key),
                                          0,
                                          objv.bytes,
-                                         objv.length))
+                                         (int) objv.length))
         [self raiseBSONError];
     [self postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
