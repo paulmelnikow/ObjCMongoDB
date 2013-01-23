@@ -77,14 +77,11 @@
 }
 
 - (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error {
-    if (documentArray.count > INT_MAX) {
-        NSString *reason = [NSString stringWithFormat:@"That's a lot of documents! Keep it to %i.",
-                            INT_MAX];
-        id exc = [NSException exceptionWithName:NSInvalidArgumentException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (documentArray.count > INT_MAX)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"That's a lot of documents! Keep it to %i",
+         INT_MAX];
+
     int documentsToInsert = documentArray.count;
     const bson *bsonArray[documentsToInsert];
     const bson **current = bsonArray;
@@ -94,7 +91,10 @@
         }
         *current++ = document.bsonValue;
     }
-    if (MONGO_OK == mongo_insert_batch(connection.connValue, self.utf8Name, bsonArray, documentsToInsert))
+    if (MONGO_OK == mongo_insert_batch(connection.connValue,
+                                       self.utf8Name,
+                                       bsonArray,
+                                       (int)documentsToInsert))
         return YES;
     else
         set_error_and_return_NO;
