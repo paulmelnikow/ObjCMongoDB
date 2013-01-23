@@ -82,7 +82,7 @@
                     format:@"That's a lot of documents! Keep it to %i",
          INT_MAX];
 
-    int documentsToInsert = documentArray.count;
+    int documentsToInsert = (int) documentArray.count;
     const bson *bsonArray[documentsToInsert];
     const bson **current = bsonArray;
     for (__strong BSONDocument *document in documentArray) {
@@ -94,7 +94,7 @@
     if (MONGO_OK == mongo_insert_batch(connection.connValue,
                                        self.utf8Name,
                                        bsonArray,
-                                       (int)documentsToInsert))
+                                       documentsToInsert))
         return YES;
     else
         set_error_and_return_NO;
