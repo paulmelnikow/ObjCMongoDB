@@ -80,7 +80,7 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
     return [result autorelease];
 #endif
 }
-
+__autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description);
 __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
