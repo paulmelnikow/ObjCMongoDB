@@ -1,5 +1,5 @@
 //
-//  ObjCBSON.h
+//  ObjCMongoDB.h
 //  ObjCMongoDB
 //
 //  Created by Paul Melnikow on 3/18/12.
@@ -18,12 +18,15 @@
 //  limitations under the License.
 //
 
-#import "BSONTypes.h"
-#import "BSONDocument.h"
-#import "BSONEncoder.h"
-#import "BSONDecoder.h"
-#import "BSONCoding.h"
-#import "NSManagedObject+BSONCoding.h"
 
-FOUNDATION_EXPORT NSString * const MongoDBObjectIDKey;
-FOUNDATION_EXPORT const char * const MongoDBObjectIDBSONKey;
+//
+// Convenience header file imports the headers for the library's public interface
+//
+
+#import "ObjCBSON.h"
+#import "MongoConnection.h"
+#import "MongoDBCollection.h"
+#import "MongoPredicate.h"
+#import "MongoKeyedPredicate.h"
+#import "MongoFetchRequest.h"
+#import "MongoUpdateRequest.h"

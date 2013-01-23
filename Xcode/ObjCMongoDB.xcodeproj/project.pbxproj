@@ -56,6 +56,10 @@
 		9E3E92BD1516A2EC00A6F66B /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72DC91150EBC7E00217439 /* PredicateTest.m */; };
 		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E97CD1416B0A1630035480E /* ObjCMongoDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E97CD1316B0A1630035480E /* ObjCMongoDB.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9E97CD1516B0A1850035480E /* Mongo_PrivateInterfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		9E97CD1616B0A1990035480E /* BSON_PrivateInterfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E97CC9916B0629A0035480E /* BSON_PrivateInterfaces.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		9E97CD1716B0A1A10035480E /* BSON_PrivateInterfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E97CC9916B0629A0035480E /* BSON_PrivateInterfaces.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E9BE86F150FBEC600B6FCAB /* MongoPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E9BE872150FBEC600B6FCAB /* MongoPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9BE870150FBEC600B6FCAB /* MongoPredicate.m */; };
 		9EAAB0461613B35B001436B2 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -159,6 +163,7 @@
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9E97CC9916B0629A0035480E /* BSON_PrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSON_PrivateInterfaces.h; sourceTree = "<group>"; };
 		9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mongo_PrivateInterfaces.h; sourceTree = "<group>"; };
+		9E97CD1316B0A1630035480E /* ObjCMongoDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB.h; sourceTree = "<group>"; };
 		9E9BE86F150FBEC600B6FCAB /* MongoPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoPredicate.h; sourceTree = "<group>"; };
 		9E9BE870150FBEC600B6FCAB /* MongoPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoPredicate.m; sourceTree = "<group>"; };
 		9EBE79B1150006DF000E767D /* gridfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gridfs.c; sourceTree = "<group>"; };
@@ -442,6 +447,7 @@
 		9EFF2B52150D05BD00EDC285 /* Mongo */ = {
 			isa = PBXGroup;
 			children = (
+				9E97CD1316B0A1630035480E /* ObjCMongoDB.h */,
 				9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */,
 				9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */,
 				9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */,
@@ -529,6 +535,9 @@
 				9E3E92B11516A11A00A6F66B /* ObjCBSON.h in Headers */,
 				9EFA29E1152CCD70004F50D2 /* env.h in Headers */,
 				9EFA29EE152D064A004F50D2 /* MongoUpdateRequest.h in Headers */,
+				9E97CD1416B0A1630035480E /* ObjCMongoDB.h in Headers */,
+				9E97CD1516B0A1850035480E /* Mongo_PrivateInterfaces.h in Headers */,
+				9E97CD1616B0A1990035480E /* BSON_PrivateInterfaces.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -548,6 +557,7 @@
 				9E3E92B91516A22700A6F66B /* encoding.h in Headers */,
 				9E3E92BD1516A2EC00A6F66B /* bson.h in Headers */,
 				9EAAB0461613B35B001436B2 /* OrderedDictionary.h in Headers */,
+				9E97CD1716B0A1A10035480E /* BSON_PrivateInterfaces.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

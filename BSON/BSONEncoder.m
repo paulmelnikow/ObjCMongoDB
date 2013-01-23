@@ -18,6 +18,7 @@
 //
 
 #import "ObjCBSON.h"
+#import "BSON_Helper.h"
 #import "BSONEncoder.h"
 #import "bson.h"
 #import "BSON_PrivateInterfaces.h"
