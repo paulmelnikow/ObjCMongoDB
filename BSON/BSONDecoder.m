@@ -72,6 +72,8 @@
     [_keyPathComponents release];
     [_iteratorStack release];
     [_iterator release];
+    [self.managedObjectContext release];
+    [self.delegate release];
     [super dealloc];
 #endif
 }
@@ -230,27 +232,29 @@
 #pragma mark - Decoding exposed internal objects
 
 - (id) decodeExposedCustomObjectWithClassOrNil:(Class) classForDecoder {
-    if (!classForDecoder)
-        return [self decodeExposedDictionaryWithClassOrNil:nil];
-    else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
+    @autoreleasepool {
+        if (!classForDecoder)
+            return [self decodeExposedDictionaryWithClassOrNil:nil];
+        else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
 #if __has_feature (objc_arc)
-        return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
+            return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
 #else
-    return [[[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self] autorelease];
+        return [[[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self] autorelease];
 #endif
-    else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
+        else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
 #if __has_feature (objc_arc)
-        return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
+            return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
 #else
-    return [[[classForDecoder allocWithZone:self.objectZone] initWithCoder:self] autorelease];
+        return [[[classForDecoder allocWithZone:self.objectZone] initWithCoder:self] autorelease];
 #endif
-    else {
-        NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
-                            NSStringFromClass(classForDecoder)];
-        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
+        else {
+            NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
+                                NSStringFromClass(classForDecoder)];
+            id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
+                                             reason:reason
+                                           userInfo:nil];
+            @throw exc;
+        }
     }
 }
 
