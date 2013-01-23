@@ -111,7 +111,7 @@
     [_resultDocument release];
     [_encodingObjectStack release];
     [_keyPathComponents release];
-    [self.delegate release];
+    self.delegate = nil;
     [super dealloc];
 #endif
 }

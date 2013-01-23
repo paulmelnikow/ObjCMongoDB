@@ -72,8 +72,8 @@
     [_keyPathComponents release];
     [_iteratorStack release];
     [_iterator release];
-    [self.managedObjectContext release];
-    [self.delegate release];
+    self.managedObjectContext = nil;
+    self.delegate = nil;
     [super dealloc];
 #endif
 }
@@ -232,21 +232,14 @@
 #pragma mark - Decoding exposed internal objects
 
 - (id) decodeExposedCustomObjectWithClassOrNil:(Class) classForDecoder {
+    id result = nil;
     @autoreleasepool {
         if (!classForDecoder)
-            return [self decodeExposedDictionaryWithClassOrNil:nil];
+            result = [self decodeExposedDictionaryWithClassOrNil:nil];
         else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
-#if __has_feature (objc_arc)
-            return [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
-#else
-        return [[[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self] autorelease];
-#endif
+            result = [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
         else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
-#if __has_feature (objc_arc)
-            return [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
-#else
-        return [[[classForDecoder allocWithZone:self.objectZone] initWithCoder:self] autorelease];
-#endif
+            result = [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
         else {
             NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
                                 NSStringFromClass(classForDecoder)];
@@ -256,6 +249,11 @@
             @throw exc;
         }
     }
+#if __has_feature (objc_arc)
+    return result;
+#else
+    return [result autorelease];
+#endif
 }
 
 - (NSDictionary *) decodeExposedDictionaryWithClassOrNil:(Class) classForDecoder {
