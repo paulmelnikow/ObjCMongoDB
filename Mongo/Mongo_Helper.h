@@ -24,10 +24,10 @@
 #define set_error_and_return_nil   do { if (error) *error = [self error]; return nil; } while(0)
 #define set_error_and_return_BSON_ERROR   do { if (error) *error = [self error]; return BSON_ERROR; } while(0)
 
-NSString * NSStringFromMongoErrorCode(mongo_error_t err);
-NSString * MongoErrorCodeDescription(mongo_error_t err);
-NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err);
-NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err);
+__autoreleasing NSString * NSStringFromMongoErrorCode(mongo_error_t err);
+__autoreleasing NSString * MongoErrorCodeDescription(mongo_error_t err);
+__autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err);
+__autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err);
 
 #define va_addToNSMutableArray(firstObject, array) \
 do { \

@@ -19,8 +19,8 @@
 
 #import "Mongo_Helper.h"
 
-
-NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
+__autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
+__autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
@@ -81,7 +81,7 @@ NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
 #endif
 }
 
-NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
+__autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
@@ -114,18 +114,18 @@ NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL desc
 #endif
 }
 
-NSString * NSStringFromMongoErrorCode(mongo_error_t err) {
+__autoreleasing NSString * NSStringFromMongoErrorCode(mongo_error_t err) {
     return nameOrDescForMongoErrorCode(err, 0);
 }
 
-NSString * MongoErrorCodeDescription(mongo_error_t err) {
+__autoreleasing NSString * MongoErrorCodeDescription(mongo_error_t err) {
     return nameOrDescForMongoErrorCode(err, 1);
 }
 
-NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err) {
+__autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 0);
 }
 
-NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
+__autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 1);
 }
