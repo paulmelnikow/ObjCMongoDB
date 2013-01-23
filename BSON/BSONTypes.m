@@ -18,6 +18,7 @@
 //
 
 #import "BSONTypes.h"
+#import "BSON_Helper.h"
 
 @implementation BSONObjectID
 

@@ -18,6 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "BSONIterator.h"
 
 /**
  Returns an <code>NSString</code> for a UTF-8 C string.

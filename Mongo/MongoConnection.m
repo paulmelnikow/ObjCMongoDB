@@ -17,9 +17,11 @@
 //  limitations under the License.
 //
 
-#import "BSON_Helper.h"
 #import "MongoConnection.h"
 #import "mongo.h"
+#import "BSONDecoder.h"
+#import "BSON_Helper.h"
+#import "Mongo_Helper.h"
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";

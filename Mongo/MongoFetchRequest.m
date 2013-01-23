@@ -18,6 +18,9 @@
 //
 
 #import "MongoFetchRequest.h"
+#import "BSONEncoder.h"
+#import "mongo.h"
+#import "MongoPredicate.h"
 
 NSString * const MongoSliceOperator = @"$slice";
 

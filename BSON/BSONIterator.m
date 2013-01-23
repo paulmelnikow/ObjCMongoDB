@@ -18,6 +18,8 @@
 //
 
 #import "BSONIterator.h"
+#import "BSON_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 NSString * const BSONException = @"BSONException";
 

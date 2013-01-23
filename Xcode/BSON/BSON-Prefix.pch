@@ -18,37 +18,4 @@
 
 #ifdef __OBJC__
 
-#import "bson.h"
-
-#import "BSONDocument.h"
-#import "BSONEncoder.h"
-#import "BSONTypes.h"
-#import "BSONDecoder.h"
-#import "BSONIterator.h"
-#import "BSON_Helper.h"
-#import "BSONCoding.h"
-
-@interface BSONDocument (Project)
-- (const bson *) bsonValue;
-@end
-
-@interface BSONEncoder (Project)
-- (bson *) bsonValue;
-@end
-
-@interface BSONObjectID (Project)
-- (bson_oid_t) oid;
-- (const bson_oid_t *) objectIDPointer;
-@end
-
-@interface BSONTimestamp (Project)
-- (bson_timestamp_t *) timestampPointer;
-@end
-
-@interface BSONIterator (Project)
-- (BSONIterator *) initWithDocument:(BSONDocument *)document
-             keyPathComponentsOrNil:(NSArray *) keyPathComponents;
-- (bson_iterator *) nativeIteratorValue;
-@end
-
 #endif

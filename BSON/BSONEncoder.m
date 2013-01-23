@@ -20,6 +20,7 @@
 #import "ObjCBSON.h"
 #import "BSONEncoder.h"
 #import "bson.h"
+#import "BSON_PrivateInterfaces.h"
 
 @interface BSONBufferWrapper : NSObject
 +(BSONBufferWrapper *) wrapperForNativeDocument:(bson *) b;

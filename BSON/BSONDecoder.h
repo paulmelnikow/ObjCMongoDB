@@ -37,6 +37,8 @@ typedef enum {
 @class BSONIterator;
 @class BSONDocument;
 @class BSONObjectID;
+@class NSManagedObjectContext;
+@class NSImage;
 
 @protocol BSONDecoderDelegate
 @optional

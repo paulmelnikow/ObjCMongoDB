@@ -19,6 +19,8 @@
 
 #import "MongoPredicate.h"
 #import "MongoKeyedPredicate.h"
+#import "BSONEncoder.h"
+#import "Mongo_Helper.h"
 
 NSString * const MongoWhereOperatorKey = @"$where";
 NSString * const MongoOrOperatorKey = @"$or";

@@ -22,8 +22,11 @@
 #import "mongo.h"
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
+#import "BSON_Helper.h"
 #import "MongoFetchRequest.h"
 #import "MongoUpdateRequest.h"
+#import "Mongo_PrivateInterfaces.h"
+#import "Mongo_Helper.h"
 
 @implementation MongoDBCollection
 

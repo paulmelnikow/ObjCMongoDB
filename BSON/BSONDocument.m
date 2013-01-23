@@ -18,6 +18,9 @@
 //
 
 #import "BSONDocument.h"
+#import "BSONDecoder.h"
+#import "BSON_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @implementation BSONDocument
 

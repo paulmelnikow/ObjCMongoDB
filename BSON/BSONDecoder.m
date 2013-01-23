@@ -19,6 +19,10 @@
 
 #import "BSONDecoder.h"
 #import "bson.h"
+#import "BSONIterator.h"
+#import "BSONCoding.h"
+#import "BSON_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @interface BSONDecoder (Private)
 - (id) decodeExposedCustomObjectWithClassOrNil:(Class) classForDecoder;

@@ -20,6 +20,9 @@
 #import <Foundation/Foundation.h>
 #import "OrderedDictionary.h"
 
+@class BSONDocument;
+@class MongoPredicate;
+
 @interface MongoFetchRequest : NSObject {
 @private
     OrderedDictionary *_fields;
