@@ -5,6 +5,10 @@ STATUS
 Mostly complete. Waiting for ensure index, more .h documentation, sample code, write
 concerns, more test cases, and some commands.
 
+INSTALLATION
+
+Refer to the wiki: https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted
+
 FEATURES
 
  * BSON encoding and decoding based on NSCoder's keyed coding scheme. When necessary,
@@ -21,8 +25,8 @@ FEATURES
  * Feels Cocoa-like, not Mongo-like. For example, method names in MongoKeyedPredicate
    and MongoUpdateRequest are quite different from the underlying Mongo keywords.
    
-Sources copyright Paul Melnikow, 10gen, Neon Design Technology, Inc., Matthew
-Gallagher, and other contributors. See NOTICE for acknowledgements.
+Sources copyright Paul Melnikow, 10gen, Matthew Gallagher, and other contributors.
+See NOTICE for acknowledgements.
 
 LICENSE
 
