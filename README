@@ -14,15 +14,15 @@ FEATURES
  * Built-in support for arrays, dictionaries, embedded objects, strings, numbers,
    dates, object IDs, and the miscellaneous MongoDB types.
 
- * Automatically encodes and decodes Core Data entities. The object or the coder's
-   delegate can customize the default behavior.
- 
+ * Automatically encodes and decodes Core Data entities. Using the coder's delegate
+   interface you can customize the default behavior, or simply override it in the
+   entity class.
+
  * Feels Cocoa-like, not Mongo-like. For example, method names in MongoKeyedPredicate
-   and MongoUpdateRequest are significantly different from the underlying Mongo
-   keywords.
+   and MongoUpdateRequest are quite different from the underlying Mongo keywords.
    
-Sources copyright Paul Melnikow, 10gen, Neon Design Technology, Inc., and other
-contributors. See NOTICE for acknowledgements.
+Sources copyright Paul Melnikow, 10gen, Neon Design Technology, Inc., Matthew
+Gallagher, and other contributors. See NOTICE for acknowledgements.
 
 LICENSE
 
