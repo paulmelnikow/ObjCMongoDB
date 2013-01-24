@@ -19,8 +19,8 @@ FEATURES
    dates, object IDs, and the miscellaneous MongoDB types.
 
  * Automatically encodes and decodes Core Data entities. Using the coder's delegate
-   interface you can customize the default behavior, or simply override it in the
-   entity class.
+   interface you can customize the default behavior, or simply implement
+   the alternate behavior it in the entity class.
 
  * Feels Cocoa-like, not Mongo-like. For example, method names in MongoKeyedPredicate
    and MongoUpdateRequest are quite different from the underlying Mongo keywords.
