@@ -42,8 +42,6 @@
 
 @implementation BSONDecoder
 
-@synthesize delegate, managedObjectContext, behaviorOnNull, behaviorOnUndefined, objectZone;
-
 #pragma mark - Initialization
 
 - (BSONDecoder *) initWithDocument:(BSONDocument *) document {

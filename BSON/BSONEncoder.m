@@ -28,7 +28,6 @@
 @property (assign) bson *b;
 @end
 @implementation BSONBufferWrapper
-@synthesize b;
 +(BSONBufferWrapper *) wrapperForNativeDocument:(bson *) b {
     BSONBufferWrapper *result = [[self alloc] init];
     result.b = b;
@@ -80,8 +79,6 @@
 @end
 
 @implementation BSONEncoder
-
-@synthesize delegate, behaviorOnNil, restrictsKeyNamesForMongoDB, managedObjectsShouldEncodeEntityVersionHash;
 
 #pragma mark - Initialization
 

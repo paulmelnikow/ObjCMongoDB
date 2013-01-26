@@ -47,7 +47,6 @@ NSString * const MongoRenameOperator = @"$rename";
 @end
 
 @implementation MongoUpdateRequest
-@synthesize predicate, updatesFirstMatchOnly, insertsIfNoMatches, blocksDuringMultiUpdates;
 
 #pragma mark - Initialization
 
@@ -215,7 +214,7 @@ NSString * const MongoRenameOperator = @"$rename";
 
 - (NSString *) description {
     NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n", [[self class] description], self];
-    [result appendFormat:@"predicate = %@\n", predicate ? predicate : @"{ }"];
+    [result appendFormat:@"predicate = %@\n", self.predicate ? self.predicate : @"{ }"];
     [result appendFormat:@"replacementDocument = %@\n", _replacementDocument ? @"(non-nil)" : @"(nil)"];
     [result appendFormat:@"operations = %@\n", _operDict];
 //    [result appendFormat:@"sort = %@\n", [_sort count] ? _sort : @"{ }"];

@@ -28,9 +28,9 @@
 #import "Mongo_PrivateInterfaces.h"
 #import "Mongo_Helper.h"
 
-@implementation MongoDBCollection
-
-@synthesize connection, name, databaseName, namespaceName;
+@implementation MongoDBCollection {
+    NSString *_name;
+}
 
 #pragma mark - Initialization
 
@@ -42,9 +42,9 @@
 
 - (void) setName:(NSString *) value {
 #if __has_feature(objc_arc)
-    name = [value copy];
+    _name = [value copy];
 #else
-    name = [[value copy] retain];
+    _name = [[value copy] retain];
 #endif
     NSRange firstDot = [value rangeOfString:@"."];
     if (NSNotFound == firstDot.location) {
@@ -60,7 +60,7 @@
 #pragma mark - Insert
 
 - (BOOL) insert:(BSONDocument *) document error:(NSError **) error {
-    if (MONGO_OK == mongo_insert(connection.connValue, self.utf8Name, [document bsonValue]))
+    if (MONGO_OK == mongo_insert(self.connection.connValue, self.utf8Name, [document bsonValue]))
         return YES;
     else
         set_error_and_return_NO;
@@ -91,7 +91,7 @@
         }
         *current++ = document.bsonValue;
     }
-    if (MONGO_OK == mongo_insert_batch(connection.connValue,
+    if (MONGO_OK == mongo_insert_batch(self.connection.connValue,
                                        self.utf8Name,
                                        bsonArray,
                                        documentsToInsert))
@@ -103,7 +103,7 @@
 #pragma mark - Update
 
 - (BOOL) update:(MongoUpdateRequest *) updateRequest error:(NSError **) error {
-    if (MONGO_OK == mongo_update(connection.connValue,
+    if (MONGO_OK == mongo_update(self.connection.connValue,
                                  self.utf8Name,
                                  updateRequest.conditionDocumentValue.bsonValue,
                                  updateRequest.operationDocumentValue.bsonValue,
@@ -116,7 +116,7 @@
 #pragma mark - Remove
 
 - (BOOL) removeWithCond:(BSONDocument *) cond error:(NSError **) error {
-    int result = mongo_remove(connection.connValue, self.utf8Name, cond.bsonValue);
+    int result = mongo_remove(self.connection.connValue, self.utf8Name, cond.bsonValue);
     if (MONGO_OK == result)
         return YES;
     else
@@ -144,7 +144,7 @@
 }
 
 - (MongoCursor *) cursorForFind:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
-    mongo_cursor *cursor = mongo_find(connection.connValue, self.utf8Name,
+    mongo_cursor *cursor = mongo_find(self.connection.connValue, self.utf8Name,
                                       fetchRequest.queryDocument.bsonValue,
                                       fetchRequest.fieldsDocument.bsonValue,
                                       fetchRequest.limitResults,
@@ -161,7 +161,7 @@
 
 - (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error {
     bson *tempBson = malloc(sizeof(bson));
-    int result = mongo_find_one(connection.connValue, self.utf8Name,
+    int result = mongo_find_one(self.connection.connValue, self.utf8Name,
                                 fetchRequest.queryDocument.bsonValue,
                                 fetchRequest.fieldsDocument.bsonValue,
                                 tempBson);
@@ -206,7 +206,7 @@
 
 - (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error {
     if (!predicate) predicate = [MongoPredicate predicate];
-    NSUInteger result = mongo_count(connection.connValue,
+    NSUInteger result = mongo_count(self.connection.connValue,
                                     self.utf8DatabaseName, self.utf8NamespaceName,
                                     predicate.BSONDocument.bsonValue);
     if (BSON_ERROR == result) set_error_and_return_BSON_ERROR;
@@ -221,10 +221,10 @@
 
 #pragma mark - Helper methods
 
-- (BOOL) serverStatusForLastOperation:(NSError **) error { return [connection serverStatusForLastOperation:error]; }
-- (NSDictionary *) serverStatusAsDictionaryForLastOperation { return [connection serverStatusAsDictionaryForLastOperation]; }
-- (NSError *) error { return [connection error]; }
-- (NSError *) serverError { return [connection serverError]; }
+- (BOOL) serverStatusForLastOperation:(NSError **) error { return [self.connection serverStatusForLastOperation:error]; }
+- (NSDictionary *) serverStatusAsDictionaryForLastOperation { return [self.connection serverStatusAsDictionaryForLastOperation]; }
+- (NSError *) error { return [self.connection error]; }
+- (NSError *) serverError { return [self.connection serverError]; }
 
 #pragma mark - Accessors
 

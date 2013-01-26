@@ -161,7 +161,6 @@
 @end
 
 @implementation BSONRegularExpression
-@synthesize pattern, options;
 
 + (BSONRegularExpression *) regularExpressionWithPattern:(NSString *) pattern options:(NSString *) options {
     BSONRegularExpression *obj = [[self alloc] init];
@@ -224,7 +223,6 @@
 @end
 
 @implementation BSONCode
-@synthesize code;
 
 + (BSONCode *) code:(NSString *) code {
     BSONCode *obj = [[self alloc] init];
@@ -239,7 +237,6 @@
 @end
 
 @implementation BSONCodeWithScope
-@synthesize scope;
 
 + (BSONCodeWithScope *) code:(NSString *) code withScope:(BSONDocument *) scope {
     BSONCodeWithScope *obj = [[self alloc] init];
@@ -255,7 +252,6 @@
 @end
 
 @implementation BSONSymbol
-@synthesize symbol;
 
 + (BSONSymbol *) symbol:(NSString *)symbol {
     BSONSymbol *obj = [[self alloc] init];

@@ -37,11 +37,6 @@ NSString * const MongoIndexHintMetaOperator = @"$hint";
 NSString * const MongoCommentMetaOperator = @"$comment";
 
 @implementation MongoFetchRequest
-@synthesize predicate, limitResults, skipResults;
-@synthesize fetchAllResultsImmediately, timeoutEnabled, tailable, tailableQueryBlocksAwaitingData;
-@synthesize allowQueryOfNonPrimaryServer, allowPartialResults;
-@synthesize includeIndexKeyOnly, explain, snapshotMode, showDiskLocation, comment;
-@synthesize maximumDocumentsToScan, lowerIndexBound, upperIndexBound;
 
 #pragma mark - Initialization
 
@@ -184,10 +179,10 @@ NSString * const MongoCommentMetaOperator = @"$comment";
 
 - (NSString *) description {
     NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n", [[self class] description], self];
-    [result appendFormat:@"predicate = %@\n", predicate ? predicate : @"{ }"];
+    [result appendFormat:@"predicate = %@\n", self.predicate ? self.predicate : @"{ }"];
     [result appendFormat:@"fields = %@\n", [_fields count] ? _fields : @"{ }"];
     [result appendFormat:@"sort = %@\n", [_sort count] ? _sort : @"{ }"];
-    [result appendFormat:@"limitResults = %d\nskipResults = %d\n", limitResults, skipResults];
+    [result appendFormat:@"limitResults = %d\nskipResults = %d\n", self.limitResults, self.skipResults];
     [result appendString:@"options = {\n"];
     static NSArray *optionKeys;
     if (!optionKeys)
