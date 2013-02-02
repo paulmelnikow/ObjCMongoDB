@@ -11,8 +11,11 @@ Refer to the installation instructions and sample code on the
 
 ## Features
 
- -   BSON encoding and decoding based on NSCoder's keyed coding scheme. When
-     necessary, encoding and decoding can be implemented entirely outside the model classes with help from robust delegate interfaces.
+ -   Simple BSON encoding and decoding, using dictionaries.
+
+ -   More complex BSON encoding and decoding based on NSCoder's keyed coding
+     scheme. When necessary, encoding and decoding can be implemented entirely
+     outside the model classes with the help of robust delegate interfaces.
    
  -   Built-in support for arrays, dictionaries, embedded objects, strings,
      numbers, dates, object IDs, and the miscellaneous MongoDB types.
