@@ -18,21 +18,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OrderedDictionary.h"
 
 @class BSONDocument;
 @class MongoPredicate;
 
-@interface MongoFetchRequest : NSObject {
-@private
-    OrderedDictionary *_fields;
-    OrderedDictionary *_sort;
-    OrderedDictionary *_hint;
-}
+@interface MongoFindRequest : NSObject
 
 - (id) init;
-+ (MongoFetchRequest *) fetchRequest;
-+ (MongoFetchRequest *) fetchRequestWithPredicate:(MongoPredicate *) predicate;
++ (MongoFindRequest *) findRequest;
++ (MongoFindRequest *) findRequestWithPredicate:(MongoPredicate *) predicate;
 
 // Explain how to use these together
 - (void) includeKey:(NSString *) key;
@@ -46,12 +40,7 @@
 
 - (void) hintIndexKey:(NSString *) key ascending:(BOOL) ascending;
 
-- (BSONDocument *) fieldsDocument;
-- (BSONDocument *) queryDocument;
-- (int) options;
-
 - (NSString *) description;
-- (OrderedDictionary *) queryDictionaryValue;
 
 @property (retain) MongoPredicate *predicate;
 @property (assign) int limitResults;

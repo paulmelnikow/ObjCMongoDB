@@ -18,23 +18,12 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OrderedDictionary.h"
 #import "BSONTypes.h"
-
-extern NSString * const MongoNotOperatorKey;
 
 @class BSONDocument;
 @class MongoKeyedPredicate;
 
-@interface MongoPredicate : NSObject {
-@protected
-    OrderedDictionary *_dict;
-    NSString *_operator;
-}
-
-- (id) init;
-- (id) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates;
-- (MongoPredicate *) initWithWhereExpression:(BSONCode *) whereExpression;
+@interface MongoPredicate : NSObject
 
 + (MongoPredicate *) predicate;
 
@@ -56,7 +45,6 @@ extern NSString * const MongoNotOperatorKey;
 - (void) addSubPredicate:(MongoPredicate *) predicate;
 - (MongoKeyedPredicate *) addKeyedSubPredicate;
 
-- (OrderedDictionary *) dictionary;
 - (BSONDocument *) BSONDocument;
 - (NSString *) description;
 

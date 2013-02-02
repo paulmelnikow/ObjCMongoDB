@@ -21,31 +21,11 @@
 #import "OrderedDictionary.h"
 #import "Mongo_Helper.h"
 #import "ObjCBSON.h"
-
-NSString * const MongoRegularExpressionPatternOperatorKey = @"$regex";
-NSString * const MongoRegularExpressionOptionsOperatorKey = @"$options";
-NSString * const MongoLessThanOperatorKey = @"$lt";
-NSString * const MongoLessThanOrEqualOperatorKey = @"$lte";
-NSString * const MongoGreaterThanOrEqualOperatorKey = @"$gte";
-NSString * const MongoGreaterThanOperatorKey = @"$gt";
-NSString * const MongoNotEqualOperatorKey = @"$ne";
-NSString * const MongoExistsOperatorKey = @"$exists";
-NSString * const MongoInOperatorKey = @"$in";
-NSString * const MongoNotInOperatorKey = @"$nin";
-NSString * const MongoAllOperatorKey = @"$all";
-NSString * const MongoSizeOperatorKey = @"$size";
-NSString * const MongoTypeOperatorKey = @"$type";
-NSString * const MongoModuloOperatorKey = @"$mod";
-NSString * const MongoNearOperatorKey = @"$near";
-NSString * const MongoMaxDistanceOperatorKey = @"$maxDistance";
-NSString * const MongoWithinOperatorKey = @"$within";
-NSString * const MongoWithinBoxOptionKey = @"$box";
-NSString * const MongoWithinCircleOptionKey = @"$circle";
-NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
+#import "OrderedDictionary.h"
+#import "Mongo_PrivateInterfaces.h"
 
 @interface MongoKeyedPredicate (Private)
-- (void) keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object;
-- (void) keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object negated:(BOOL) negated;
+
 @end
 
 @implementation MongoKeyedPredicate
@@ -56,13 +36,6 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
     return [super init];
 }
 
-//- (id) initWithParent:(MongoPredicate *) parent dictionary:(OrderedDictionary *) dictionary {
-//    if (self = [super init]) {
-//        _dict = dictionary;
-//    }
-//    return self;    
-//}
-//
 + (MongoKeyedPredicate *) predicate {
     id result = [[self alloc] init];
 #if !__has_feature(objc_arc)
@@ -78,60 +51,60 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 }
 
 - (void) keyPath:(NSString *) keyPath matches:(id) object {
-    if ([_dict objectForKey:keyPath]) {
+    if ([self.dictionary objectForKey:keyPath]) {
         NSString *reason = [NSString stringWithFormat:@"Criteria alreay set for key path %@", keyPath];
         id exc = [NSException exceptionWithName:NSInvalidArgumentException
                                          reason:reason
                                        userInfo:nil];
         @throw exc;
     }
-    [_dict setObject:object forKey:keyPath];
+    [self.dictionary setObject:object forKey:keyPath];
 }
 
 - (void) keyPath:(NSString *) keyPath matchesRegularExpression:(BSONRegularExpression *) regex {
-    [self keyPath:keyPath addOperation:MongoRegularExpressionPatternOperatorKey object:regex.pattern];
+    [self _keyPath:keyPath addOperation:@"$regex" object:regex.pattern];
     if (regex.options)
-        [self keyPath:keyPath addOperation:MongoRegularExpressionOptionsOperatorKey object:regex.options];
+        [self _keyPath:keyPath addOperation:@"$options" object:regex.options];
 }
 
 - (void) keyPath:(NSString *) keyPath doesNotMatchRegularExpression:(BSONRegularExpression *) regex {
-    [self keyPath:keyPath addOperation:MongoNotOperatorKey object:regex];
+    [self _keyPath:keyPath addOperation:@"$not" object:regex];
 }
 
 - (void) keyPath:(NSString *) keyPath matchesAnyFromArray:(NSArray *) objects {
-    [self keyPath:keyPath addOperation:MongoInOperatorKey object:objects];
+    [self _keyPath:keyPath addOperation:@"$in" object:objects];
 }
 
 - (void) keyPath:(NSString *) keyPath doesNotMatchAnyFromArray:(NSArray *) objects {
-    [self keyPath:keyPath addOperation:MongoNotInOperatorKey object:objects];
+    [self _keyPath:keyPath addOperation:@"$nin" object:objects];
 }
 
 - (void) keyPath:(NSString *) keyPath isLessThan:(id) object {
-    [self keyPath:keyPath addOperation:MongoLessThanOperatorKey object:object];
+    [self _keyPath:keyPath addOperation:@"$lt" object:object];
 }
 
 - (void) keyPath:(NSString *) keyPath isLessThanOrEqualTo:(id) object {
-    [self keyPath:keyPath addOperation:MongoLessThanOrEqualOperatorKey object:object];
+    [self _keyPath:keyPath addOperation:@"$lte" object:object];
 }
 
 - (void) keyPath:(NSString *) keyPath isGreaterThanOrEqualTo:(id) object {
-    [self keyPath:keyPath addOperation:MongoGreaterThanOrEqualOperatorKey object:object];
+    [self _keyPath:keyPath addOperation:@"$gte" object:object];
 }
 
 - (void) keyPath:(NSString *) keyPath isGreaterThan:(id) object {
-    [self keyPath:keyPath addOperation:MongoGreaterThanOperatorKey object:object];
+    [self _keyPath:keyPath addOperation:@"$gt" object:object];
 }
 
 - (void) keyPath:(NSString *) keyPath isNotEqualTo:(id) object {
-    [self keyPath:keyPath addOperation:MongoNotEqualOperatorKey object:object];
+    [self _keyPath:keyPath addOperation:@"$ne" object:object];
 }
 
 - (void) valueExistsForKeyPath:(NSString *) keyPath {
-    [self keyPath:keyPath addOperation:MongoExistsOperatorKey object:[NSNumber numberWithBool:YES]];
+    [self _keyPath:keyPath addOperation:@"$exists" object:[NSNumber numberWithBool:YES]];
 }
 
 - (void) valueDoesNotExistForKeyPath:(NSString *) keyPath {
-    [self keyPath:keyPath addOperation:MongoExistsOperatorKey object:[NSNumber numberWithBool:NO]];
+    [self _keyPath:keyPath addOperation:@"$exists" object:[NSNumber numberWithBool:NO]];
 }
 
 - (void) keyPath:(NSString *) keyPath arrayContainsObject:(id) object {
@@ -139,73 +112,44 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 }
 
 - (void) keyPath:(NSString *) keyPath arrayContainsAllFromArray:(NSArray *) objects negated:(BOOL) negated {
-    [self keyPath:keyPath addOperation:MongoAllOperatorKey object:objects negated:negated];
+    [self _keyPath:keyPath addOperation:@"$all" object:objects negated:negated];
 }
 
 - (void) keyPath:(NSString *) keyPath arrayCountIsEqualTo:(NSUInteger) arrayCount negated:(BOOL) negated {
-    [self keyPath:keyPath addOperation:MongoSizeOperatorKey
-           object:[NSNumber numberWithInteger:arrayCount]
-          negated:negated];
+    [self _keyPath:keyPath addOperation:@"$size" object:@(arrayCount) negated:negated];
 }
 
 - (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType negated:(BOOL) negated {
-    [self keyPath:keyPath addOperation:MongoTypeOperatorKey
-           object:[NSNumber numberWithInt:nativeValueType]
-          negated:negated];
+    [self _keyPath:keyPath addOperation:@"$type" object:@(nativeValueType) negated:negated];
 }
 
 - (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus negated:(BOOL) negated {
-    NSArray *arguments = [NSArray arrayWithObjects:
-                          [NSNumber numberWithInteger:modulus],
-                          [NSNumber numberWithInteger:remainder],
-                          nil];
-    [self keyPath:keyPath addOperation:MongoModuloOperatorKey object:arguments negated:negated];
+    NSArray *arguments = @[ @(modulus), @(remainder) ];
+    [self _keyPath:keyPath addOperation:@"$mod" object:arguments negated:negated];
 }
 
 - (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point negated:(BOOL) negated {
-    NSArray *pointAsArray = [NSArray arrayWithObjects:
-                             [NSNumber numberWithDouble:point.x],
-                             [NSNumber numberWithDouble:point.y],
-                             nil];
-    [self keyPath:keyPath addOperation:MongoNearOperatorKey object:pointAsArray negated:negated];
+    [self _keyPath:keyPath addOperation:@"$near" object:NSArrayFromPoint(point) negated:negated];
 }
 - (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance negated:(BOOL) negated {
-    NSArray *pointAsArray = [NSArray arrayWithObjects:
-                             [NSNumber numberWithDouble:point.x],
-                             [NSNumber numberWithDouble:point.y],
-                             nil];
-    [self keyPath:keyPath addOperation:MongoNearOperatorKey object:pointAsArray negated:negated];
-    [self keyPath:keyPath addOperation:MongoMaxDistanceOperatorKey object:[NSNumber numberWithDouble:maxDistance]];
+    [self _keyPath:keyPath addOperation:@"$near" object:NSArrayFromPoint(point) negated:negated];
+    [self _keyPath:keyPath addOperation:@"$maxDistance" object:@(maxDistance)];
 }
 - (void) keyPath:(NSString *) keyPath isWithinRect:(NSRect) rect negated:(BOOL) negated {
-    id firstCoord = [NSArray arrayWithObjects:
-                           [NSNumber numberWithDouble:NSMinX(rect)],
-                           [NSNumber numberWithDouble:NSMinY(rect)],
-                           nil];
-    id secondCoord = [NSArray arrayWithObjects:
-                            [NSNumber numberWithDouble:NSMaxX(rect)],
-                            [NSNumber numberWithDouble:NSMaxY(rect)],
-                            nil];
-    id coordinates = [NSArray arrayWithObjects:firstCoord, secondCoord, nil];
-    id arguments = [OrderedDictionary dictionaryWithObject:coordinates forKey:MongoWithinBoxOptionKey];
-    [self keyPath:keyPath addOperation:MongoWithinOperatorKey object:arguments negated:negated];
+    id arguments = [OrderedDictionary dictionaryWithObject:NSArrayFromRect(rect) forKey:@"$box"];
+    [self _keyPath:keyPath addOperation:@"$within" object:arguments negated:negated];
 }
 - (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(NSPoint) center radius:(CGFloat) radius negated:(BOOL) negated {
-    id centerAsArray = [NSArray arrayWithObjects:
-                             [NSNumber numberWithDouble:center.x],
-                             [NSNumber numberWithDouble:center.y],
-                             nil];
-    id centerAndRadius = [NSArray arrayWithObjects:centerAsArray, [NSNumber numberWithDouble:radius], nil];
-    id arguments = [OrderedDictionary dictionaryWithObject:centerAndRadius forKey:MongoWithinCircleOptionKey];
-    [self keyPath:keyPath addOperation:MongoWithinOperatorKey object:arguments negated:negated];
+    id centerAndRadius = @[ NSArrayFromPoint(center), @(radius) ];
+    id arguments = [OrderedDictionary dictionaryWithObject:centerAndRadius forKey:@"$circle"];
+    [self _keyPath:keyPath addOperation:@"$within" object:arguments negated:negated];
 }
 
 // Useful for matching a subdocuments which meet multiple criteria which are *inside arrays*
-// $elemMatch
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath negated:(BOOL) negated {
-    MongoKeyedPredicate *subPredicate = [[MongoKeyedPredicate alloc] init];
-    [self keyPath:keyPath addOperation:MongoArrayElementMatchOperatorKey object:subPredicate.dictionary negated:negated];
-    return [subPredicate autorelease];
+    MongoKeyedPredicate *subPredicate = [MongoKeyedPredicate predicate];
+    [self _keyPath:keyPath addOperation:@"$elemMatch" object:subPredicate.dictionary negated:negated];
+    return subPredicate;
 }
 
 #pragma mark - Trampoline methods
@@ -304,15 +248,15 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
 
 #pragma mark - Helper methods
 
-- (void) keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object {
-    [self keyPath:keyPath addOperation:oper object:object negated:NO];
+- (void) _keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object {
+    [self _keyPath:keyPath addOperation:oper object:object negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object negated:(BOOL) negated {
-    OrderedDictionary *dictForKeyPath = [_dict objectForKey:keyPath];
+- (void) _keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object negated:(BOOL) negated {
+    OrderedDictionary *dictForKeyPath = [self.dictionary objectForKey:keyPath];
     if (!dictForKeyPath) {
         dictForKeyPath = [OrderedDictionary dictionary];
-        [_dict setObject:dictForKeyPath forKey:keyPath];
+        [self.dictionary setObject:dictForKeyPath forKey:keyPath];
     } else if (![dictForKeyPath isKindOfClass:[OrderedDictionary class]]) {
         NSString *reason = [NSString stringWithFormat:@"Match object alreay set for key path %@", keyPath];
         id exc = [NSException exceptionWithName:NSInvalidArgumentException
@@ -322,7 +266,7 @@ NSString * const MongoArrayElementMatchOperatorKey = @"$elemMatch";
     }
     
     if (negated)
-        [dictForKeyPath setObject:[OrderedDictionary dictionaryWithObject:object forKey:oper] forKey:MongoNotOperatorKey];
+        [dictForKeyPath setObject:[OrderedDictionary dictionaryWithObject:object forKey:oper] forKey:@"$not"];
     else
         [dictForKeyPath setObject:object forKey:oper];
 }

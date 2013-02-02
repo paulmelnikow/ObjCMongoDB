@@ -102,8 +102,8 @@
 		9EFF2B6E150D5C3500EDC285 /* ObjCMongoDB.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */; };
 		9EFF2B71150D6B3600EDC285 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
 		9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9EFF2B77150D780400EDC285 /* MongoFetchRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */; };
+		9EFF2B76150D780400EDC285 /* MongoFindRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFindRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9EFF2B77150D780400EDC285 /* MongoFindRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFindRequest.m */; };
 		C2891A49150AB6D40065E2E9 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
 		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
@@ -214,8 +214,8 @@
 		9EFF2B68150D5B7B00EDC285 /* MongoTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-Prefix.pch"; sourceTree = "<group>"; };
 		9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OrderedDictionary.m; sourceTree = "<group>"; };
 		9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OrderedDictionary.h; sourceTree = "<group>"; };
-		9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoFetchRequest.h; sourceTree = "<group>"; };
-		9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoFetchRequest.m; sourceTree = "<group>"; };
+		9EFF2B74150D780300EDC285 /* MongoFindRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoFindRequest.h; sourceTree = "<group>"; };
+		9EFF2B75150D780400EDC285 /* MongoFindRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoFindRequest.m; sourceTree = "<group>"; };
 		C2891A44150AB6D40065E2E9 /* encoding.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = encoding.c; sourceTree = "<group>"; };
 		C2891A45150AB6D40065E2E9 /* encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = encoding.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -459,8 +459,8 @@
 				9E9BE870150FBEC600B6FCAB /* MongoPredicate.m */,
 				9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */,
 				9EFF2B54150D081E00EDC285 /* MongoKeyedPredicate.m */,
-				9EFF2B74150D780300EDC285 /* MongoFetchRequest.h */,
-				9EFF2B75150D780400EDC285 /* MongoFetchRequest.m */,
+				9EFF2B74150D780300EDC285 /* MongoFindRequest.h */,
+				9EFF2B75150D780400EDC285 /* MongoFindRequest.m */,
 				9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */,
 				9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */,
 			);
@@ -526,7 +526,7 @@
 				9E2725F2150C34CB009CBE47 /* MongoDBCollection.h in Headers */,
 				9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */,
 				9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */,
-				9EFF2B76150D780400EDC285 /* MongoFetchRequest.h in Headers */,
+				9EFF2B76150D780400EDC285 /* MongoFindRequest.h in Headers */,
 				9E3A0C49150D9C1000BD3933 /* MongoCursor.h in Headers */,
 				9E9BE871150FBEC600B6FCAB /* MongoPredicate.h in Headers */,
 				9EFF2B4E150C455D00EDC285 /* Mongo_Helper.h in Headers */,
@@ -755,7 +755,7 @@
 				9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */,
 				9EFF2B56150D081E00EDC285 /* MongoKeyedPredicate.m in Sources */,
 				9EFF2B71150D6B3600EDC285 /* OrderedDictionary.m in Sources */,
-				9EFF2B77150D780400EDC285 /* MongoFetchRequest.m in Sources */,
+				9EFF2B77150D780400EDC285 /* MongoFindRequest.m in Sources */,
 				9E3A0C4A150D9C1000BD3933 /* MongoCursor.m in Sources */,
 				9E9BE872150FBEC600B6FCAB /* MongoPredicate.m in Sources */,
 				9E3E92B61516A1BC00A6F66B /* ObjCBSON.m in Sources */,

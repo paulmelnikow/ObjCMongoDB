@@ -17,11 +17,9 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
 #import "MongoPredicate.h"
 #import "bson.h"
 #import "BSONTypes.h"
-#import "OrderedDictionary.h"
 
 @interface MongoKeyedPredicate : MongoPredicate
 

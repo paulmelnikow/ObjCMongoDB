@@ -19,7 +19,9 @@
 
 #import "MongoCursor.h"
 
-@implementation MongoCursor
+@implementation MongoCursor {
+    mongo_cursor *_cursor;
+}
 
 #pragma mark - Initialization
 

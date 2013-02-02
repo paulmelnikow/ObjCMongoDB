@@ -129,3 +129,15 @@ __autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t
 __autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 1);
 }
+
+__autoreleasing NSArray * NSArrayFromPoint(NSPoint point) {
+    return @[ @(point.x), @(point.y) ];
+}
+
+__autoreleasing NSArray * NSArrayFromRect(NSRect rect) {
+    id firstCoord = @[ @(NSMinX(rect)), @(NSMinY(rect)) ];
+    id secondCoord = @[ @(NSMaxX(rect)), @(NSMaxY(rect)) ];
+    return @[ firstCoord, secondCoord ];
+}
+
+

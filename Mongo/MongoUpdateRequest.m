@@ -22,28 +22,13 @@
 #import "BSONDocument.h"
 #import "MongoKeyedPredicate.h"
 #import "mongo.h"
+#import "Mongo_PrivateInterfaces.h"
 
-NSString * const MongoAtomicFlag = @"$atomic";
+@interface MongoUpdateRequest ()
 
-NSString * const MongoSetOperatorKey = @"$set";
-NSString * const MongoUnsetOperatorKey = @"$unset";
-NSString * const MongoIncrementOperatorKey = @"$inc";
-NSString * const MongoBitwiseOperatorKey = @"$bit";
-NSString * const MongoBitwiseAnd = @"and";
-NSString * const MongoBitwiseOr = @"or";
-NSString * const MongoAddToSetOperator = @"$addToSet";
-NSString * const MongoAddToSetEachQualifier = @"$each";
-NSString * const MongoPullOperator = @"$pull";
-NSString * const MongoPullAllOperator = @"$pullAll";
-NSString * const MongoPushOperator = @"$push";
-NSString * const MongoPushAllOperator = @"$pushAll";
-NSString * const MongoPopOperator = @"$pop";
-NSString * const MongoRenameOperator = @"$rename";
+@property (retain) BSONDocument *replacementDocument;
+@property (retain) OrderedDictionary *operationDictionary;
 
-@interface MongoUpdateRequest (Private)
-- (void) operation:(NSString *) operation keyPath:(NSString *) keyPath subKey:(NSString *) subKey object:(id) object;
-- (void) operation:(NSString *) operation keyPath:(NSString *) keyPath setObject:(id) object;
-- (void) operation:(NSString *) operation setDictionary:(OrderedDictionary *) dictionary;
 @end
 
 @implementation MongoUpdateRequest
@@ -73,7 +58,8 @@ NSString * const MongoRenameOperator = @"$rename";
     return result;
 }
 
-+ (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate firstMatchOnly:(BOOL) firstMatchOnly {
++ (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate
+                                     firstMatchOnly:(BOOL) firstMatchOnly {
     MongoUpdateRequest *request = [self updateRequestForFirstMatchOnly:firstMatchOnly];
     request.predicate = predicate;
     return request;
@@ -81,98 +67,86 @@ NSString * const MongoRenameOperator = @"$rename";
 
 #pragma mark - Manipulating the request
 
-- (void) replaceDocumentWith:(BSONDocument *) replacementDocument {
-    if (_operDict)
+- (void) replaceDocumentWithDocument:(BSONDocument *) replacementDocument {
+    if (self.operationDictionary)
         [NSException raise:NSInvalidArgumentException
                     format:@"Replacement document can't be combined with other operations"];
-#if __has_feature(objc_arc)
-    _replacementDocument = replacementDocument;
-#else
-    _replacementDocument = [replacementDocument retain];
-#endif
+    self.replacementDocument = replacementDocument;
 }
 
 - (void) replaceDocumentWithDictionary:(NSDictionary *) replacementDictionary {
-    [self replaceDocumentWith:[BSONEncoder documentForDictionary:replacementDictionary]];
+    [self replaceDocumentWithDocument:[BSONEncoder documentForDictionary:replacementDictionary]];
 }
 
 - (void) keyPath:(NSString *) keyPath setValue:(id) value {
-    [self operation:MongoSetOperatorKey keyPath:keyPath setObject:value];
+    [self _operation:@"$set" keyPath:keyPath setObject:value];
 }
 
 - (void) unsetValueForKeyPath:(NSString *) keyPath {
-    [self operation:MongoUnsetOperatorKey keyPath:keyPath setObject:[NSNumber numberWithInt:1]];
+    [self _operation:@"$unset" keyPath:keyPath setObject:@(1)];
 }
 
 - (void) incrementValueForKeyPath:(NSString *) keyPath {
-    [self keyPath:keyPath incrementValueBy:[NSNumber numberWithInt:1]];
+    [self keyPath:keyPath incrementValueBy:@(1)];
 }
 
 - (void) keyPath:(NSString *) keyPath incrementValueBy:(NSNumber *) increment {
-    [self operation:MongoIncrementOperatorKey keyPath:keyPath setObject:increment];
+    [self _operation:@"$inc" keyPath:keyPath setObject:increment];
 }
 
 - (void) keyPath:(NSString *) keyPath bitwiseAndWithValue:(NSInteger) value {
-    [self operation:MongoBitwiseOperatorKey
-            keyPath:keyPath
-             subKey:MongoBitwiseAnd
-             object:[NSNumber numberWithInteger:value]];
+    [self _operation:@"$bit" keyPath:keyPath subKey:@"and" object:@(value)];
 }
 
 - (void) keyPath:(NSString *) keyPath bitwiseOrWithValue:(NSInteger) value {
-    [self operation:MongoBitwiseOperatorKey
-            keyPath:keyPath
-             subKey:MongoBitwiseOr
-             object:[NSNumber numberWithInteger:value]];
+    [self _operation:@"$bit" keyPath:keyPath subKey:@"or" object:@(value)];
 }
 
 - (void) setForKeyPath:(NSString *) keyPath addValue:(NSString *) value {
-    [self operation:MongoAddToSetOperator keyPath:keyPath setObject:value];
+    [self _operation:@"$addToSet" keyPath:keyPath setObject:value];
 }
 
 - (void) setForKeyPath:(NSString *) keyPath addValuesFromArray:(NSArray *) values {
-    [self operation:MongoAddToSetOperator
-            keyPath:keyPath
-             subKey:MongoAddToSetEachQualifier
-             object:values];
+    [self _operation:@"$addToSet" keyPath:keyPath subKey:@"$each" object:values];
 }
 
 - (void) arrayForKeyPath:(NSString *) keyPath removeItemsMatchingValue:(id) value {
-    [self operation:MongoPullOperator keyPath:keyPath setObject:value];
+    [self _operation:@"$pull" keyPath:keyPath setObject:value];
 }
 
 - (void) arrayForKeyPath:(NSString *) keyPath removeItemsMatchingAnyFromArray:(NSArray *) array {
-    [self operation:MongoPullAllOperator keyPath:keyPath setObject:array];
+    [self _operation:@"$pullAll" keyPath:keyPath setObject:array];
 }
 
 - (void) removeMatchingValuesFromArrayUsingKeyedPredicate:(MongoKeyedPredicate *) keyedPredicate {
-    [self operation:MongoPullOperator setDictionary:keyedPredicate.dictionary];
+    [self _operation:@"$pull" setDictionary:keyedPredicate.dictionary];
 }
 
 - (void) arrayForKeyPath:(NSString *) keyPath appendValue:(id) value {
-    [self operation:MongoPushOperator keyPath:keyPath setObject:value];
+    [self _operation:@"$push" keyPath:keyPath setObject:value];
 }
 
 - (void) arrayForKeyPath:(NSString *) keyPath appendValuesFromArray:(NSArray *) values {
-    [self operation:MongoPushAllOperator keyPath:keyPath setObject:values];
+    [self _operation:@"$pushAll" keyPath:keyPath setObject:values];
 }
 
 - (void) removeLastValueFromArrayForKeyPath:(NSString *) keyPath {
-    [self operation:MongoPopOperator keyPath:keyPath setObject:[NSNumber numberWithInt:1]];
+    [self _operation:@"$pop" keyPath:keyPath setObject:@(1)];
 }
 
 - (void) removeFirstValueFromArrayForKeyPath:(NSString *) keyPath {
-    [self operation:MongoPopOperator keyPath:keyPath setObject:[NSNumber numberWithInt:-1]];
+    [self _operation:@"$pop" keyPath:keyPath setObject:@(-1)];
 }
 
 - (void) keyPath:(NSString *) oldKey renameToKey:(NSString *) newKey {
-    [self operation:MongoRenameOperator keyPath:oldKey setObject:newKey];
+    [self _operation:@"$rename" keyPath:oldKey setObject:newKey];
 }
 
 #pragma mark - Getting the result
 
 - (BSONDocument *) conditionDocumentValue {
-    return [BSONEncoder documentForObject:[self conditionDictionaryValue] restrictsKeyNamesForMongoDB:NO];
+    return [BSONEncoder documentForObject:[self conditionDictionaryValue]
+              restrictsKeyNamesForMongoDB:NO];
 }
 
 - (OrderedDictionary *) conditionDictionaryValue {
@@ -184,16 +158,16 @@ NSString * const MongoRenameOperator = @"$rename";
         result = [OrderedDictionary dictionary];
     
     if (self.blocksDuringMultiUpdates)
-        [result setObject:[NSNumber numberWithBool:YES] forKey:MongoAtomicFlag];
+        [result setObject:[NSNumber numberWithBool:YES] forKey:@"$atomic"];
     
     return result;
 }
 
 - (BSONDocument *) operationDocumentValue {
-    if (_replacementDocument)
-        return _replacementDocument;
-    else if (_operDict)
-        return [BSONEncoder documentForDictionary:_operDict restrictsKeyNamesForMongoDB:NO];
+    if (self.replacementDocument)
+        return self.replacementDocument;
+    else if (self.operationDictionary)
+        return [BSONEncoder documentForDictionary:self.operationDictionary restrictsKeyNamesForMongoDB:NO];
     else
 #if __has_feature(objc_arc)
         return [[BSONDocument alloc] init];
@@ -213,42 +187,47 @@ NSString * const MongoRenameOperator = @"$rename";
 #pragma mark - Debugging
 
 - (NSString *) description {
-    NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n", [[self class] description], self];
-    [result appendFormat:@"predicate = %@\n", self.predicate ? self.predicate : @"{ }"];
-    [result appendFormat:@"replacementDocument = %@\n", _replacementDocument ? @"(non-nil)" : @"(nil)"];
-    [result appendFormat:@"operations = %@\n", _operDict];
-//    [result appendFormat:@"sort = %@\n", [_sort count] ? _sort : @"{ }"];
+    NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n",
+                               [[self class] description],
+                               self
+                               ];
+    [result appendFormat:@"predicate = %@\n",
+     self.predicate ? self.predicate : @"{ }"];
+    [result appendFormat:@"replacementDocument = %@\n",
+     self.replacementDocument ? @"(not nil)" : @"(nil)"];
+    [result appendFormat:@"operations = %@\n",
+     self.operationDictionary];
     return result;
 }
 
 #pragma mark - Helper methods
      
-- (void) ensureOperDict {
-    if (_operDict) return;
+- (void) _ensureOperDict {
+    if (self.operationDictionary) return;
     
     // Can have an operation dictionary or a replacement document, but not both
-    if (!_replacementDocument)
-#if __has_feature(objc_arc)
-        _operDict = [OrderedDictionary dictionary];
-#else
-        _operDict = [[OrderedDictionary dictionary] retain];
-#endif
+    if (!self.replacementDocument)
+        self.operationDictionary = [OrderedDictionary dictionary];
     else
         [NSException raise:NSInvalidArgumentException
                     format:@"Operation can't be combined with replacement document"];
 }
 
 - (OrderedDictionary *) dictForOperation:(NSString *) operation {
-    [self ensureOperDict];    
-    OrderedDictionary *dictForThisOper = [_operDict objectForKey:operation];
+    [self _ensureOperDict];
+    OrderedDictionary *dictForThisOper = [self.operationDictionary objectForKey:operation];
     if (!dictForThisOper) {
         dictForThisOper = [OrderedDictionary dictionary];
-        [_operDict setObject:dictForThisOper forKey:operation];
+        [self.operationDictionary setObject:dictForThisOper forKey:operation];
     }
     return dictForThisOper;
 }
     
-- (void) operation:(NSString *) operation keyPath:(NSString *) keyPath subKey:(NSString *) subKey object:(id) object {
+- (void) _operation:(NSString *) operation
+            keyPath:(NSString *) keyPath
+             subKey:(NSString *) subKey
+             object:(id) object {
+    
     OrderedDictionary *dictForOperation = [self dictForOperation:operation];
     OrderedDictionary *dictForKeyPath = [dictForOperation objectForKey:keyPath];
     if (!dictForKeyPath) {
@@ -258,16 +237,16 @@ NSString * const MongoRenameOperator = @"$rename";
     [dictForKeyPath setObject:object forKey:subKey];
 }
 
-- (void) operation:(NSString *) operation keyPath:(NSString *) keyPath setObject:(id) object {
+- (void) _operation:(NSString *) operation keyPath:(NSString *) keyPath setObject:(id) object {
     [[self dictForOperation:operation] setObject:object forKey:keyPath];
 }
      
-- (void) operation:(NSString *) operation setDictionary:(OrderedDictionary *) dictionary {
-    [self ensureOperDict];
-    if ([_operDict objectForKey:operation])
+- (void) _operation:(NSString *) operation setDictionary:(OrderedDictionary *) dictionary {
+    [self _ensureOperDict];
+    if ([self.operationDictionary objectForKey:operation])
         [NSException raise:NSInvalidArgumentException
                     format:@"Operations already set using %@", operation];
-    [_operDict setObject:dictionary forKey:operation];
+    [self.operationDictionary setObject:dictionary forKey:operation];
 }
 
 @end

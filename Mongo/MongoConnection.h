@@ -19,24 +19,27 @@
 
 #import <Foundation/Foundation.h>
 #import "MongoDBCollection.h"
-#import "mongo.h"
+
+FOUNDATION_EXPORT NSString * const MongoDBErrorDomain;
+FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
 
 /**
  Encapsulates a Mongo connection object.
  */
-@interface MongoConnection : NSObject {
-@private
-    mongo *_conn;
-}
+@interface MongoConnection : NSObject
 
 - (MongoConnection *) init;
 
-+ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError **) error;
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort
+                                    error:(NSError * __autoreleasing *) error;
 
-- (BOOL) connectToServer:(NSString *) hostWithPort error:(NSError **) error;
-- (BOOL) connectToReplicaSet:(NSString *) replicaSet seed:(NSArray *) seed error:(NSError **) error;
-- (BOOL) checkConnectionWithError:(NSError **) error;
-- (BOOL) reconnectWithError:(NSError **) error;
+- (BOOL) connectToServer:(NSString *) hostWithPort
+                   error:(NSError * __autoreleasing *) error;
+- (BOOL) connectToReplicaSet:(NSString *) replicaSet
+                        seed:(NSArray *) seed
+                       error:(NSError * __autoreleasing *) error;
+- (BOOL) checkConnectionWithError:(NSError * __autoreleasing *) error;
+- (BOOL) reconnectWithError:(NSError * __autoreleasing *) error;
 - (void) disconnect;
 
 - (MongoDBCollection *) collection:(NSString *) name;
@@ -44,8 +47,8 @@
 - (BOOL) dropDatabase:(NSString *) database;
 //- (BOOL) dropCollection:(MongoDBNamespace *) collection;
 
-- (BOOL) serverStatusForLastOperation:(NSError **) error;
-- (NSDictionary *) serverStatusAsDictionaryForLastOperation;
+- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
+- (NSDictionary *) lastOperationDictionary;
 - (NSError *) error;
 - (NSError *) serverError;
 

@@ -19,7 +19,7 @@
 
 #import "FindTest.h"
 #import "MongoKeyedPredicate.h"
-#import "MongoFetchRequest.h"
+#import "MongoFindRequest.h"
 
 @implementation FindTest
 
@@ -99,11 +99,11 @@
     STAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"], nil);
     STAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"], nil);
     
-    MongoFetchRequest *req1 = [MongoFetchRequest fetchRequestWithPredicate:pred1];
+    MongoFindRequest *req1 = [MongoFindRequest findRequestWithPredicate:pred1];
     [req1 includeKey:@"description"];
     [req1 includeKey:@"price"];
     error = nil;
-    resultDoc = [coll findOne:req1 error:&error];
+    resultDoc = [coll findOneWithRequest:req1 error:&error];
     STAssertNotNil(resultDoc, nil); STAssertNil(error, error.localizedDescription);
     resultDict = [resultDoc dictionaryValue];
     STAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"], nil);

@@ -20,39 +20,43 @@
 #import <Foundation/Foundation.h>
 #import "MongoPredicate.h"
 #import "MongoCursor.h"
-#import "MongoFetchRequest.h"
+#import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
 
 @class MongoConnection;
 
 @interface MongoDBCollection : NSObject
 
-- (BOOL) insert:(BSONDocument *) document error:(NSError **) error;
-- (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError **) error;
-- (BOOL) insertObject:(id) object error:(NSError **) error;
-- (BOOL) insertBatch:(NSArray *) documentArray error:(NSError **) error;
+- (BOOL) insertDocument:(BSONDocument *) document error:(NSError * __autoreleasing *) error;
+- (BOOL) insertDocuments:(NSArray *) documentArray error:(NSError * __autoreleasing *) error;
+- (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError * __autoreleasing *) error;
+- (BOOL) insertObject:(id) object error:(NSError * __autoreleasing *) error;
 
-- (BOOL) update:(MongoUpdateRequest *) updateRequest error:(NSError **) error;
+- (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest error:(NSError * __autoreleasing *) error;
 
-- (NSArray *) find:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
-- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
-- (NSArray *) findAllWithError:(NSError **) error;
+- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
 
-- (MongoCursor *) cursorForFind:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
-- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
-- (MongoCursor *) cursorForFindAllWithError:(NSError **) error;
+// Returns an array of BSONDocument objects
+- (NSArray *) findWithRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
+- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (NSArray *) findAllWithError:(NSError * __autoreleasing *) error;
 
-- (BSONDocument *) findOne:(MongoFetchRequest *) fetchRequest error:(NSError **) error;
-- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
-- (BSONDocument *) findOneWithError:(NSError **) error;
+- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
+- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error;
 
-- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError **) error;
+// Designed for high-volume fetches when you don't want to fetch all the documents before you start
+// working with them.
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (MongoCursor *) cursorForFindAllWithError:(NSError * __autoreleasing *) error;
 
-- (BOOL) remove:(MongoPredicate *) predicate error:(NSError **) error;
-- (BOOL) removeAllWithError:(NSError **) error;
+- (BOOL) removeWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (BOOL) removeAllWithError:(NSError * __autoreleasing *) error;
 
-- (BOOL) serverStatusForLastOperation:(NSError **) error;
-- (NSDictionary *) serverStatusAsDictionaryForLastOperation;
+// These are shared across all collections for the connection
+- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
+- (NSDictionary *) lastOperationDictionary;
 - (NSError *) error;
 - (NSError *) serverError;
 
@@ -60,8 +64,5 @@
 @property (copy, nonatomic) NSString * name;
 @property (copy, nonatomic) NSString * databaseName;
 @property (copy, nonatomic) NSString * namespaceName;
-@property (readonly, assign) const char * utf8Name;
-@property (readonly, assign) const char * utf8DatabaseName;
-@property (readonly, assign) const char * utf8NamespaceName;
 
 @end

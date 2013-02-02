@@ -21,10 +21,7 @@
 #import "mongo.h"
 #import "BSONDocument.h"
 
-@interface MongoCursor : NSEnumerator {
-@private
-    mongo_cursor *_cursor;
-}
+@interface MongoCursor : NSEnumerator
 
 - (id) initWithNativeCursor:(mongo_cursor *) cursor;
 

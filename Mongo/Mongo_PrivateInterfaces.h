@@ -19,12 +19,34 @@
 
 
 //
-// This file is imported internally by classes in the framework to interact with each other. Don't use it in
-// your application. Use the classes' public interfaces instead.
+// This file is imported internally by classes in the framework to interact with each other. Avoid using it
+// in your application. Use the classes' public interfaces instead.
 //
 
 #import "BSON_PrivateInterfaces.h"
+#import "MongoConnection.h"
+#import "MongoFindRequest.h"
+#import "MongoUpdateRequest.h"
+#import "MongoPredicate.h"
 
 @interface MongoConnection (Project)
 - (mongo *) connValue;
+@end
+
+@interface MongoFindRequest (Project)
+- (BSONDocument *) fieldsDocument;
+- (BSONDocument *) queryDocument;
+- (int) options;
+- (OrderedDictionary *) queryDictionaryValue;
+@end
+
+@interface MongoUpdateRequest (Project)
+- (BSONDocument *) conditionDocumentValue;
+- (BSONDocument *) operationDocumentValue;
+- (int) flags;
+- (OrderedDictionary *) conditionDictionaryValue;
+@end
+
+@interface MongoPredicate (Project)
+@property (retain) OrderedDictionary *dictionary;
 @end

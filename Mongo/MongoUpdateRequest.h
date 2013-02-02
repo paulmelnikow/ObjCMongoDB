@@ -21,17 +21,14 @@
 #import "MongoPredicate.h"
 #import "OrderedDictionary.h"
 
-@interface MongoUpdateRequest : NSObject {
-@private
-    BSONDocument *_replacementDocument;
-    OrderedDictionary *_operDict;
-}
+@interface MongoUpdateRequest : NSObject
 
 - (id) initForFirstMatchOnly:(BOOL) firstMatchOnly;
 + (MongoUpdateRequest *) updateRequestForFirstMatchOnly:(BOOL) firstMatchOnly;
-+ (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate firstMatchOnly:(BOOL) firstMatchOnly;
++ (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate
+                                     firstMatchOnly:(BOOL) firstMatchOnly;
 
-- (void) replaceDocumentWith:(BSONDocument *) replacementDocument;
+- (void) replaceDocumentWithDocument:(BSONDocument *) replacementDocument;
 - (void) replaceDocumentWithDictionary:(NSDictionary *) replacementDictionary;
 
 - (void) keyPath:(NSString *) keyPath setValue:(id) value;
@@ -54,13 +51,6 @@
 - (void) removeFirstValueFromArrayForKeyPath:(NSString *) keyPath;
 
 - (void) keyPath:(NSString *) oldKey renameToKey:(NSString *) newKey;
-
-- (NSString *) description;
-- (BSONDocument *) conditionDocumentValue;
-- (BSONDocument *) operationDocumentValue;
-- (int) flags;
-
-- (OrderedDictionary *) conditionDictionaryValue;
 
 @property (retain) MongoPredicate *predicate;
 @property (assign) BOOL updatesFirstMatchOnly;

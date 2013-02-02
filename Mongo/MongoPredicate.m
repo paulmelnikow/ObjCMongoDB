@@ -21,29 +21,29 @@
 #import "MongoKeyedPredicate.h"
 #import "BSONEncoder.h"
 #import "Mongo_Helper.h"
+#import "OrderedDictionary.h"
 
-NSString * const MongoWhereOperatorKey = @"$where";
-NSString * const MongoOrOperatorKey = @"$or";
-NSString * const MongoNorOperatorKey = @"$nor";
-NSString * const MongoAndOperatorKey = @"$and";
-NSString * const MongoNotOperatorKey = @"$not";
+@interface MongoPredicate ()
+@property (retain) OrderedDictionary *dictionary;
+@property (retain) NSString *operator;
+@end
 
 @implementation MongoPredicate
 
 - (id) init {
     if (self = [super init]) {
-        _dict = [OrderedDictionary dictionary];
+        self.dictionary = [OrderedDictionary dictionary];
     }
     return self;
 }
 
-- (MongoPredicate *) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates {
+- (id) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates {
     if (self = [self init]) {
         _operator = operator;
         NSMutableArray *dictionaries = [NSMutableArray array];
         for (MongoPredicate *predicate in subPredicates)
             [dictionaries addObject:predicate.dictionary];
-        [_dict setObject:dictionaries forKey:operator];
+        [self.dictionary setObject:dictionaries forKey:operator];
     }
     return self;
 }
@@ -58,12 +58,9 @@ NSString * const MongoNotOperatorKey = @"$not";
 
 #pragma mark - Getting the result
 
-- (OrderedDictionary *) dictionary {
-    return _dict;
-}
-
 - (BSONDocument *) BSONDocument {
-    return [BSONEncoder documentForDictionary:[self dictionary] restrictsKeyNamesForMongoDB:NO];
+    return [BSONEncoder documentForDictionary:self.dictionary
+                  restrictsKeyNamesForMongoDB:NO];
 }
 
 - (NSString *) description {
@@ -84,7 +81,7 @@ NSString * const MongoNotOperatorKey = @"$not";
 }
 
 + (MongoPredicate *) orPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:MongoOrOperatorKey subPredicates:array];
+    id result = [[self alloc] initWithOperator:@"$or" subPredicates:array];
 #if !__has_feature(objc_arc)
     [result autorelease];
 #endif
@@ -102,7 +99,7 @@ NSString * const MongoNotOperatorKey = @"$not";
 }
 
 + (MongoPredicate *) norPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:MongoNorOperatorKey subPredicates:array];
+    id result = [[self alloc] initWithOperator:@"$nor" subPredicates:array];
 #if !__has_feature(objc_arc)
     [result autorelease];
 #endif
@@ -120,7 +117,7 @@ NSString * const MongoNotOperatorKey = @"$not";
 }
 
 + (MongoPredicate *) andPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:MongoAndOperatorKey subPredicates:array];
+    id result = [[self alloc] initWithOperator:@"$and" subPredicates:array];
 #if !__has_feature(objc_arc)
     [result autorelease];
 #endif
@@ -130,23 +127,20 @@ NSString * const MongoNotOperatorKey = @"$not";
 #pragma mark - And and Or predicates - Mutability and convenience
 
 - (void) addSubPredicate:(MongoPredicate *) predicate {
-    [(NSMutableArray *) [_dict objectForKey:_operator] addObject:predicate.dictionary];
+    [(NSMutableArray *) [self.dictionary objectForKey:_operator] addObject:predicate.dictionary];
 }
 
 - (MongoKeyedPredicate *) addKeyedSubPredicate {
-    id subPredicate = [[MongoKeyedPredicate alloc] init];
+    id subPredicate = [MongoKeyedPredicate predicate];
     [self addSubPredicate:subPredicate];
-#if !__has_feature(objc_arc)
-    [subPredicate autorelease];
-#endif
     return subPredicate;
 }
 
 #pragma mark - Where predicate
 
-- (MongoPredicate *) initWithWhereExpression:(BSONCode *) whereExpression {
+- (id) initWithWhereExpression:(BSONCode *) whereExpression {
     if (self = [self init]) {
-        [_dict setObject:whereExpression forKey:MongoWhereOperatorKey];
+        [self.dictionary setObject:whereExpression forKey:@"$where"];
     }
     return self;
 }
@@ -160,60 +154,3 @@ NSString * const MongoNotOperatorKey = @"$not";
 }
 
 @end
-
-//@implementation MongoOrPredicate
-//
-//#pragma mark - Initializtion
-//
-//- (MongoOrPredicate *) initWithSubPredicate:(MongoPredicate *) predicate {
-//    return [self initWithArray:[NSMutableArray arrayWithObject:predicate]];
-//}
-//
-//- (MongoOrPredicate *) initWithSubPredicates:(MongoPredicate *) predicate, ... {
-//    NSMutableArray *objects = [NSMutableArray array];
-//    va_addToNSMutableArray(predicate, objects);
-//    return [self initWithArray:objects];
-//}
-//
-//- (MongoOrPredicate *) initWithArray:(NSArray *) array {
-//    return self = [super initWithOperator:MongoOrOperatorKey subPredicates:array];
-//}
-//
-//+ (MongoOrPredicate *) orPredicateWithSubPredicate:(MongoPredicate *) predicate {
-//    id result = [[self alloc] initWithSubPredicate:predicate];
-//#if !__has_feature(objc_arc)
-//    [result autorelease];
-//#endif
-//    return result;
-//}
-//
-//+ (MongoOrPredicate *) orPredicateWithSubPredicates:(MongoPredicate *) predicate, ... {
-//    NSMutableArray *objects = [NSMutableArray array];
-//    va_addToNSMutableArray(predicate, objects);
-//    return [self orPredicateWithArray:objects];
-//}
-//
-//+ (MongoOrPredicate *) orPredicateWithArray:(NSArray *) array {
-//    id result = [[self alloc] initWithArray:array];
-//#if !__has_feature(objc_arc)
-//    [result autorelease];
-//#endif
-//    return result;
-//}
-//
-//#pragma mark - Mutability
-//
-//- (void) addSubPredicate:(MongoPredicate *) predicate {
-//    [(NSMutableArray *) [_dict objectForKey:MongoOrOperatorKey] addObject:predicate.dictionary];
-//}
-//
-//#pragma mark - Convenience
-//
-//- (MongoKeyedPredicate *) addKeyedSubPredicate {
-//    id subPredicate = [[MongoKeyedPredicate alloc] init];
-//    [self addSubPredicate:subPredicate];
-//    return subPredicate;
-//}
-//
-//@end
-//

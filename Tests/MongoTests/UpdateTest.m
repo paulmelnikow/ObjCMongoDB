@@ -71,7 +71,7 @@
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req replaceDocumentWithDictionary:replacementDoc];
     NSError *error = nil;
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
 
     MongoKeyedPredicate *predAfterUpdate = [MongoKeyedPredicate predicate];
@@ -91,7 +91,7 @@
 
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"quantity" setValue:[NSNumber numberWithInt:25]];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
 
@@ -112,7 +112,7 @@
 
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req unsetValueForKeyPath:@"quantity"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
 }
@@ -129,7 +129,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req incrementValueForKeyPath:@"quantity"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -150,7 +150,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"quantity" incrementValueBy:[NSNumber numberWithInt:-3]];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -171,7 +171,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"quantity" bitwiseAndWithValue:6];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -192,7 +192,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"quantity" bitwiseOrWithValue:6];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -214,7 +214,7 @@
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"quantity" bitwiseOrWithValue:18];
     [req keyPath:@"quantity" bitwiseAndWithValue:28];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -235,7 +235,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req setForKeyPath:@"ingredients" addValue:@"citric acid"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -256,7 +256,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req setForKeyPath:@"ingredients" addValuesFromArray:[NSArray arrayWithObjects:@"citric acid", @"monosodium glutamate", @"cucumbers", nil]];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -277,7 +277,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req arrayForKeyPath:@"ingredients" removeItemsMatchingValue:@"cucumbers"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -298,7 +298,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req arrayForKeyPath:@"ingredients" removeItemsMatchingAnyFromArray:[NSArray arrayWithObjects:@"cucumbers", @"water", nil]];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -321,7 +321,7 @@
     MongoKeyedPredicate *predForRemove = [MongoKeyedPredicate predicate];
     [predForRemove keyPath:@"sizes" isLessThan:[NSNumber numberWithInt:20]];
     [req removeMatchingValuesFromArrayUsingKeyedPredicate:predForRemove];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -342,7 +342,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req arrayForKeyPath:@"ingredients" appendValue:@"cucumbers"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -363,7 +363,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req arrayForKeyPath:@"ingredients" appendValuesFromArray:[NSArray arrayWithObjects:@"citric acid", @"monosodium glutamate", nil]];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -384,7 +384,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req removeLastValueFromArrayForKeyPath:@"ingredients"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -405,7 +405,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req removeFirstValueFromArrayForKeyPath:@"ingredients"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -426,7 +426,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req keyPath:@"ingredients" renameToKey:@"contents"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -451,7 +451,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req incrementValueForKeyPath:@"quantity"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertTrue([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     
@@ -460,7 +460,7 @@
     STAssertTrue([self collection:coll boolForPredicate:predAfterUpdate], @"");
     
     req.updatesFirstMatchOnly = NO;
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForOriginalDoc], @"");
     STAssertTrue([self collection:coll boolForPredicate:predAfterUpdate], @"");
@@ -477,7 +477,7 @@
     
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForTestDoc firstMatchOnly:YES];
     [req incrementValueForKeyPath:@"quantity"];
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     
     STAssertFalse([self collection:coll boolForPredicate:predForTestDoc], @"");
     
@@ -486,14 +486,14 @@
     STAssertFalse([self collection:coll boolForPredicate:predAfterUpdate], @"");
     
     req.insertsIfNoMatches = YES;
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     STAssertFalse([self collection:coll boolForPredicate:predForTestDoc], @"");
     STAssertTrue([self collection:coll boolForPredicate:predAfterUpdate], @"");
 
     [self insertTestDocument:coll];
     STAssertTrue([self collection:coll boolForPredicate:predForTestDoc], @"");
 
-    STAssertTrue([coll update:req error:&error], @"");
+    STAssertTrue([coll updateWithRequest:req error:&error], @"");
     STAssertFalse([self collection:coll boolForPredicate:predForTestDoc], @"");
     STAssertTrue([self collection:coll boolForPredicate:predAfterUpdate], @"");
 }

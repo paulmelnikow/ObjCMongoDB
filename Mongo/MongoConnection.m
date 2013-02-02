@@ -26,7 +26,9 @@
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
-@implementation MongoConnection
+@implementation MongoConnection {
+    mongo *_conn;
+}
 
 #pragma mark - Initialization
 
@@ -38,7 +40,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
     return self;
 }
 
-+ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError **) error {
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError * __autoreleasing *) error {
     MongoConnection *conn = [[self alloc] init];
     BOOL success = [conn connectToServer:hostWithPort error:error];
     if (!success) {
@@ -65,7 +67,8 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 #pragma mark - Connecting to a single server or a replica set
 
-- (BOOL) connectToServer:(NSString *) hostWithPort error:(NSError **) error {
+- (BOOL) connectToServer:(NSString *) hostWithPort
+                   error:(NSError * __autoreleasing *) error {
     mongo_host_port host_port;
     mongo_parse_host(BSONStringFromNSString(hostWithPort), &host_port);
     if (MONGO_OK == mongo_connect(_conn, host_port.host, host_port.port))
@@ -74,7 +77,9 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         set_error_and_return_NO;
 }
 
-- (BOOL) connectToReplicaSet:(NSString *) replicaSet seed:(NSArray *) seed error:(NSError **) error {
+- (BOOL) connectToReplicaSet:(NSString *) replicaSet
+                        seed:(NSArray *) seed
+                       error:(NSError * __autoreleasing *) error {
     mongo_replset_init(_conn, BSONStringFromNSString(replicaSet));
     mongo_host_port host_port;
     for (NSString *hostWithPort in seed) {
@@ -90,14 +95,14 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 // FIXME see if this is implemented
 // int mongo_set_op_timeout( mongo *conn, int millis );
 
-- (BOOL) checkConnectionWithError:(NSError **) error {
+- (BOOL) checkConnectionWithError:(NSError * __autoreleasing *) error {
     if (MONGO_OK == mongo_check_connection(_conn))
         return YES;
     else
         set_error_and_return_NO;
 }
 
-- (BOOL) reconnectWithError:(NSError **) error {
+- (BOOL) reconnectWithError:(NSError * __autoreleasing *) error {
     if (MONGO_OK == mongo_reconnect(_conn))
         return YES;
     else
@@ -134,6 +139,31 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
                          
 #pragma mark - Error handling
 
+- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
+    int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
+    if (error) *error = [self serverError];
+    if (MONGO_OK == status)
+        return YES;
+    else
+        return NO;
+}
+
+- (NSDictionary *) lastOperationDictionary {
+    bson *tempBson = bson_create();
+    bson_init(tempBson);
+    mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
+    if (!bson_size(tempBson)) {
+        bson_destroy(tempBson);
+        bson_dispose(tempBson);
+        return nil;
+    }
+    
+    id result = [BSONDecoder decodeDictionaryWithData:NSDataFromBSON(tempBson, NO)];
+    bson_destroy(tempBson);
+    bson_dispose(tempBson);
+    return result;
+}
+
 - (NSError *) error {
     if (!_conn->err) return nil;
     NSString *description = [NSString stringWithFormat:@"%@ [%@]",
@@ -157,31 +187,6 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
     return [NSError errorWithDomain:MongoDBServerErrorDomain
                                code:_conn->lasterrcode
                            userInfo:userInfo];
-}
-
-- (BOOL) serverStatusForLastOperation:(NSError **) error {
-    int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
-    if (error) *error = [self serverError];
-    if (MONGO_OK == status)
-        return YES;
-    else
-        return NO;
-}
-
-- (NSDictionary *) serverStatusAsDictionaryForLastOperation {
-    bson *tempBson = bson_create();
-    bson_init(tempBson);
-    mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
-    if (!bson_size(tempBson)) {
-        bson_destroy(tempBson);
-        bson_dispose(tempBson);
-        return nil;
-    }
-    
-    id result = [BSONDecoder decodeDictionaryWithData:NSDataFromBSON(tempBson, NO)];
-    bson_destroy(tempBson);
-    bson_dispose(tempBson);
-    return result;
 }
 
 @end

@@ -45,10 +45,10 @@
     
     NSError *error = nil;
     [coll insertDictionary:entry error:&error];
-    STAssertTrue([coll serverStatusForLastOperation:&error], @"shouldn't be an error");
+    STAssertTrue([coll lastOperationWasSuccessful:&error], @"shouldn't be an error");
 
     [coll insertDictionary:entry error:&error];
-    STAssertFalse([coll serverStatusForLastOperation:&error], @"should be a duplicate key");
+    STAssertFalse([coll lastOperationWasSuccessful:&error], @"should be a duplicate key");
 }
 
 - (void) testUpdateCount {
@@ -62,17 +62,17 @@
     
     NSError *error = nil;
     [coll insertDictionary:entry error:&error];
-    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
 
     MongoKeyedPredicate *matchingPredicate = [MongoKeyedPredicate predicate];
     [matchingPredicate keyPath:@"_id" matches:objectID];
     MongoUpdateRequest *request1 = [MongoUpdateRequest updateRequestWithPredicate:matchingPredicate firstMatchOnly:YES];
     [request1 keyPath:@"addedValue" setValue:@"more test"];
     
-    [coll update:request1 error:&error];
-    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+    [coll updateWithRequest:request1 error:&error];
+    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
     
-    NSDictionary *dict = [coll serverStatusAsDictionaryForLastOperation];
+    NSDictionary *dict = [coll lastOperationDictionary];
     STAssertNotNil(dict, nil);
     if (dict) {
         STAssertEqualObjects([NSNumber numberWithInt:1], [dict objectForKey:@"n"], nil);
@@ -84,10 +84,10 @@
     MongoUpdateRequest *request2 = [MongoUpdateRequest updateRequestWithPredicate:noMatchPredicate firstMatchOnly:YES];
     [request2 keyPath:@"addedValue" setValue:@"more test"];
     
-    [coll update:request2 error:&error];
-    STAssertTrue([coll serverStatusForLastOperation:&error], nil);
+    [coll updateWithRequest:request2 error:&error];
+    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
     
-    dict = [coll serverStatusAsDictionaryForLastOperation];
+    dict = [coll lastOperationDictionary];
     STAssertNotNil(dict, nil);
     if (dict) {
         STAssertEqualObjects([NSNumber numberWithInt:0], [dict objectForKey:@"n"], nil);
