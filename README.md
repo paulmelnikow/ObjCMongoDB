@@ -1,19 +1,6 @@
 ObjCMongoDB is an Objective-C library for BSON and MongoDB based on the [10gen
 C driver](https://github.com/mongodb/mongo-c-driver).
 
-## Status
-
-Based on v0.5 of the 10gen C driver. Mostly complete. Tested under OS X 10.6+
-with and without ARC. Should work fine under iOS.
-
-Some missing pieces:
-
- -   Ensure index
- -   More .h documentation
- -   Write concerns
- -   Upgrade to v0.7.1 of the Mongo C driver
- -   Some commands
-
 ## Getting started
 
 Refer to the installation instructions and sample code on the wiki:
@@ -34,6 +21,19 @@ Refer to the installation instructions and sample code on the wiki:
 
  -   Aims to feel Cocoa-like, not Mongo-like. For example, method names in
      MongoKeyedPredicate and MongoUpdateRequest are meant to be natural in Cocoa, rather than conform to the underlying Mongo keywords.
+
+## Status
+
+Based on v0.5 of the 10gen C driver. Mostly complete. Tested under OS X 10.6+
+with and without ARC. Should work fine under iOS.
+
+Some missing pieces:
+
+ -   Ensure index
+ -   More .h documentation
+ -   Write concerns
+ -   Upgrade to v0.7.1 of the Mongo C driver
+ -   Some commands
 
 ## License
 
