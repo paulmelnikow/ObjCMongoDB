@@ -47,9 +47,6 @@ in this repository as APACHE-2.0.txt.
 ## Acknowledgements
 
  -  Originally based on [NuMongoDB](https://github.com/timburks/NuMongoDB) by Tim Burks: Copyright 2010 Neon Design Technology, Inc.
-
  -  Includes enhancements by [Diederik Hoogenboom](https://github.com/dhoogenb/NuMongoDB) and [Rob Elkin](https://github.com/robelkin/NuMongoDB)
-
  -  [Official MongoDB C driver](http://github.com/mongodb/mongo-c-driver): Copyright 2009, 2010 10gen Inc.
-
  -  [OrderedDictionary](http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html) by Matt Gallagher: Copyright 2008 Matt Gallagher
