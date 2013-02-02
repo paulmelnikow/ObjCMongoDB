@@ -3,9 +3,10 @@ C driver](https://github.com/mongodb/mongo-c-driver).
 
 ## Getting started
 
-Refer to the installation instructions and sample code on the wiki:
+Refer to the installation instructions and sample code on the
+[wiki](https://github.com/noa--/ObjCMongoDB/wiki):
 
- -   [Getting started using ObjCMongoDB in your Mac OS project](https://github.com/noa--/ObjCMongoDB/wiki)
+ -   [Getting started using ObjCMongoDB in your Mac OS project](https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted)
  -   [The basics of using ObjCMongoDB](https://github.com/noa--/ObjCMongoDB/wiki/TheBasics)
 
 ## Features
