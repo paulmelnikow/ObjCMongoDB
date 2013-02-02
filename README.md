@@ -1,5 +1,6 @@
-ObjCMongoDB is an Objective-C library for BSON and MongoDB based on the [10gen
-C driver](https://github.com/mongodb/mongo-c-driver).
+ObjCMongoDB is an Objective-C library for [BSON](http://bsonspec.org) and
+[MongoDB](http://www.mongodb.org/) based on the
+[10gen C driver](https://github.com/mongodb/mongo-c-driver).
 
 ## Getting started
 
