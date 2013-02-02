@@ -201,7 +201,6 @@
 		9EFA29D7152CC65A004F50D2 /* UpdateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateTest.h; sourceTree = "<group>"; };
 		9EFA29D8152CC65A004F50D2 /* UpdateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateTest.m; sourceTree = "<group>"; };
 		9EFA29DA152CCD70004F50D2 /* env_default.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = env_default.c; sourceTree = "<group>"; };
-		9EFA29DB152CCD70004F50D2 /* env_posix.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = env_posix.c; sourceTree = "<group>"; };
 		9EFA29DC152CCD70004F50D2 /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = env.h; sourceTree = "<group>"; };
 		9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoUpdateRequest.h; sourceTree = "<group>"; };
 		9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoUpdateRequest.m; sourceTree = "<group>"; };
@@ -297,7 +296,6 @@
 				C2891A45150AB6D40065E2E9 /* encoding.h */,
 				9EFA29DC152CCD70004F50D2 /* env.h */,
 				9EFA29DA152CCD70004F50D2 /* env_default.c */,
-				9EFA29DB152CCD70004F50D2 /* env_posix.c */,
 				9EBE79B1150006DF000E767D /* gridfs.c */,
 				9EBE79B2150006DF000E767D /* gridfs.h */,
 				22ED5B3E11DF1A7200410529 /* md5.c */,
