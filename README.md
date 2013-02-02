@@ -1,14 +1,13 @@
-ObjCMongoDB is an Objective-C library for [BSON](http://bsonspec.org) and
-[MongoDB](http://www.mongodb.org/) based on the
-[10gen C driver](https://github.com/mongodb/mongo-c-driver).
+ObjCMongoDB is an Objective-C library for [BSON][] and [MongoDB][] based on
+the [10gen C driver][mongo-c-driver].
 
 ## Getting started
 
 Refer to the installation instructions and sample code on the
-[wiki](https://github.com/noa--/ObjCMongoDB/wiki):
+[wiki][]:
 
- -   [Getting started using ObjCMongoDB in your Mac OS project](https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted)
- -   [The basics of using ObjCMongoDB](https://github.com/noa--/ObjCMongoDB/wiki/TheBasics)
+ -   [Getting started using ObjCMongoDB in your Mac OS project][GettingStarted]
+ -   [The basics of using ObjCMongoDB][TheBasics]
 
 ## Features
 
@@ -48,7 +47,18 @@ in this repository as APACHE-2.0.txt.
 
 ## Acknowledgements
 
- -  Originally based on [NuMongoDB](https://github.com/timburks/NuMongoDB) by Tim Burks: Copyright 2010 Neon Design Technology, Inc.
- -  Includes enhancements by [Diederik Hoogenboom](https://github.com/dhoogenb/NuMongoDB) and [Rob Elkin](https://github.com/robelkin/NuMongoDB)
- -  [Official MongoDB C driver](http://github.com/mongodb/mongo-c-driver): Copyright 2009, 2010 10gen Inc.
- -  [OrderedDictionary](http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html) by Matt Gallagher: Copyright 2008 Matt Gallagher
+ -  Originally based on [NuMongoDB][] by Tim Burks: Copyright 2010 Neon Design Technology, Inc.
+ -  Includes enhancements by [Diederik Hoogenboom][] and [Rob Elkin][]
+ -  [Official MongoDB C driver][mongo-c-driver]: Copyright 2009, 2010 10gen Inc.
+ -  [OrderedDictionary][] by Matt Gallagher: Copyright 2008 Matt Gallagher
+
+[BSON]: http://bsonspec.org/
+[MongoDB]: http://www.mongodb.org/
+[mongo-c-driver]: https://github.com/mongodb/mongo-c-driver
+[Wiki]: https://github.com/noa--/ObjCMongoDB/wiki
+[GettingStarted]: https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted
+[TheBasics]: https://github.com/noa--/ObjCMongoDB/wiki/TheBasics
+[NuMongoDB]: https://github.com/timburks/NuMongoDB
+[Diederik Hoogenboom]: https://github.com/dhoogenb/NuMongoDB
+[Rob Elkin]: https://github.com/robelkin/NuMongoDB
+[OrderedDictionary]: http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html
