@@ -24,35 +24,56 @@
 #import "MongoUpdateRequest.h"
 
 @class MongoConnection;
+@class MongoWriteConcern;
 
 @interface MongoDBCollection : NSObject
 
-- (BOOL) insertDocument:(BSONDocument *) document error:(NSError * __autoreleasing *) error;
-- (BOOL) insertDocuments:(NSArray *) documentArray error:(NSError * __autoreleasing *) error;
-- (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError * __autoreleasing *) error;
-- (BOOL) insertObject:(id) object error:(NSError * __autoreleasing *) error;
+- (BOOL) insertDocument:(BSONDocument *) document
+           writeConcern:(MongoWriteConcern *) writeConcern
+                  error:(NSError * __autoreleasing *) error;
+- (BOOL) insertDocuments:(NSArray *) documentArray
+         continueOnError:(BOOL) continueOnError
+            writeConcern:(MongoWriteConcern *) writeConcern
+                   error:(NSError * __autoreleasing *) error;
+- (BOOL) insertDictionary:(NSDictionary *) dictionary
+             writeConcern:(MongoWriteConcern *) writeConcern
+                    error:(NSError * __autoreleasing *) error;
+- (BOOL) insertObject:(id) object
+         writeConcern:(MongoWriteConcern *) writeConcern
+                error:(NSError * __autoreleasing *) error;
 
-- (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest error:(NSError * __autoreleasing *) error;
+- (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest
+                     error:(NSError * __autoreleasing *) error;
 
-- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate
+                            error:(NSError * __autoreleasing *) error;
 
 // Returns an array of BSONDocument objects
-- (NSArray *) findWithRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
-- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (NSArray *) findWithRequest:(MongoFindRequest *) fetchRequest
+                        error:(NSError * __autoreleasing *) error;
+- (NSArray *) findWithPredicate:(MongoPredicate *) predicate
+                          error:(NSError * __autoreleasing *) error;
 - (NSArray *) findAllWithError:(NSError * __autoreleasing *) error;
 
-- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
-- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) fetchRequest
+                                error:(NSError * __autoreleasing *) error;
+- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
+                                  error:(NSError * __autoreleasing *) error;
 - (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error;
 
 // Designed for high-volume fetches when you don't want to fetch all the documents before you start
 // working with them.
-- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) fetchRequest error:(NSError * __autoreleasing *) error;
-- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) fetchRequest
+                                 error:(NSError * __autoreleasing *) error;
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate
+                                       error:(NSError * __autoreleasing *) error;
 - (MongoCursor *) cursorForFindAllWithError:(NSError * __autoreleasing *) error;
 
-- (BOOL) removeWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error;
-- (BOOL) removeAllWithError:(NSError * __autoreleasing *) error;
+- (BOOL) removeWithPredicate:(MongoPredicate *) predicate
+                writeConcern:(MongoWriteConcern *) writeConcern
+                       error:(NSError * __autoreleasing *) error;
+- (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
+                             error:(NSError * __autoreleasing *) error;
 
 // These are shared across all collections for the connection
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;

@@ -56,24 +56,36 @@
 
 #pragma mark - Insert
 
-- (BOOL) insertDocument:(BSONDocument *) document error:(NSError * __autoreleasing *) error {
-    if (MONGO_OK == mongo_insert(self.connection.connValue, self.utf8Name, [document bsonValue]))
+- (BOOL) insertDocument:(BSONDocument *) document
+           writeConcern:(MongoWriteConcern *) writeConcern
+                  error:(NSError * __autoreleasing *) error {
+    if (MONGO_OK == mongo_insert(self.connection.connValue,
+                                 self.utf8Name,
+                                 document.bsonValue,
+                                 writeConcern.nativeWriteConcern))
         return YES;
     else
         set_error_and_return_NO;
 }
 
-- (BOOL) insertDictionary:(NSDictionary *) dictionary error:(NSError * __autoreleasing *) error {
+- (BOOL) insertDictionary:(NSDictionary *) dictionary
+             writeConcern:(MongoWriteConcern *) writeConcern
+                    error:(NSError * __autoreleasing *) error {
     BSONDocument *document = [BSONEncoder documentForDictionary:dictionary];
-    return [self insertDocument:document error:error];
+    return [self insertDocument:document writeConcern:writeConcern error:error];
 }
 
-- (BOOL) insertObject:(id) object error:(NSError * __autoreleasing *) error {
+- (BOOL) insertObject:(id) object
+         writeConcern:(MongoWriteConcern *) writeConcern
+                error:(NSError * __autoreleasing *) error {
     BSONDocument *document = [BSONEncoder documentForObject:object];
-    return [self insertDocument:document error:error];
+    return [self insertDocument:document writeConcern:writeConcern error:error];
 }
 
-- (BOOL) insertDocuments:(NSArray *) documentArray error:(NSError * __autoreleasing *) error {
+- (BOOL) insertDocuments:(NSArray *) documentArray
+         continueOnError:(BOOL) continueOnError
+            writeConcern:(MongoWriteConcern *) writeConcern
+                   error:(NSError * __autoreleasing *) error {
     if (documentArray.count > INT_MAX)
         [NSException raise:NSInvalidArgumentException
                     format:@"That's a lot of documents! Keep it to %i",
@@ -88,10 +100,13 @@
         }
         *current++ = document.bsonValue;
     }
+    int flags = continueOnError ? MONGO_CONTINUE_ON_ERROR : 0;
     if (MONGO_OK == mongo_insert_batch(self.connection.connValue,
                                        self.utf8Name,
                                        bsonArray,
-                                       documentsToInsert))
+                                       documentsToInsert,
+                                       writeConcern.nativeWriteConcern,
+                                       flags))
         return YES;
     else
         set_error_and_return_NO;
@@ -99,12 +114,14 @@
 
 #pragma mark - Update
 
-- (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest error:(NSError * __autoreleasing *) error {
+- (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest
+                     error:(NSError * __autoreleasing *) error {
     if (MONGO_OK == mongo_update(self.connection.connValue,
                                  self.utf8Name,
                                  updateRequest.conditionDocumentValue.bsonValue,
                                  updateRequest.operationDocumentValue.bsonValue,
-                                 updateRequest.flags))
+                                 updateRequest.flags,
+                                 updateRequest.writeConcern.nativeWriteConcern))
         return YES;
     else
         set_error_and_return_NO;
@@ -112,22 +129,35 @@
 
 #pragma mark - Remove
 
-- (BOOL) removeWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
+- (BOOL) removeWithPredicate:(MongoPredicate *) predicate
+                writeConcern:(MongoWriteConcern *) writeConcern
+                       error:(NSError * __autoreleasing *) error {
     if (!predicate)
-        [NSException raise:NSInvalidArgumentException format:@"For safety, remove with nil predicate is not allowed - use removeAllWithError: instead"];
-    return [self _removeWithCond:predicate.BSONDocument error:error];
+        [NSException raise:NSInvalidArgumentException
+                    format:@"For safety, remove with nil predicate is not allowed - use removeAllWithWriteConcern:error: instead"];
+    return [self _removeWithCond:predicate.BSONDocument
+                    writeConcern:writeConcern
+                           error:error];
 }
 
-- (BOOL) removeAllWithError:(NSError * __autoreleasing *) error {
+- (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
+                             error:(NSError * __autoreleasing *) error {
     BSONDocument *document = [[BSONDocument alloc] init];
 #if !__has_feature(objc_arc)
     [document autorelease];
 #endif
-    return [self _removeWithCond:document error:error];
+    return [self _removeWithCond:document
+                    writeConcern:writeConcern
+                           error:error];
 }
 
-- (BOOL) _removeWithCond:(BSONDocument *) cond error:(NSError * __autoreleasing *) error {
-    int result = mongo_remove(self.connection.connValue, self.utf8Name, cond.bsonValue);
+- (BOOL) _removeWithCond:(BSONDocument *) cond
+            writeConcern:(MongoWriteConcern *) writeConcern
+                   error:(NSError * __autoreleasing *) error {
+    int result = mongo_remove(self.connection.connValue,
+                              self.utf8Name,
+                              cond.bsonValue,
+                              writeConcern.nativeWriteConcern);
     if (MONGO_OK == result)
         return YES;
     else
@@ -136,11 +166,13 @@
 
 #pragma mark - Find
 
-- (NSArray *) findWithRequest:(MongoFindRequest *) findRequest error:(NSError * __autoreleasing *) error {
+- (NSArray *) findWithRequest:(MongoFindRequest *) findRequest
+                        error:(NSError * __autoreleasing *) error {
     return [[self cursorForFindRequest:findRequest error:error] allObjects];
 }
 
-- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest error:(NSError * __autoreleasing *) error {
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest
+                                 error:(NSError * __autoreleasing *) error {
     mongo_cursor *cursor = mongo_find(self.connection.connValue, self.utf8Name,
                                       findRequest.queryDocument.bsonValue,
                                       findRequest.fieldsDocument.bsonValue,
@@ -151,7 +183,8 @@
     return [MongoCursor cursorWithNativeCursor:cursor];
 }
 
-- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest error:(NSError * __autoreleasing *) error {
+- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
+                                error:(NSError * __autoreleasing *) error {
     bson *tempBson = bson_create();
     int result = mongo_find_one(self.connection.connValue, self.utf8Name,
                                 findRequest.queryDocument.bsonValue,
@@ -167,15 +200,18 @@
     return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
 }
 
-- (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
+- (NSArray *) findWithPredicate:(MongoPredicate *) predicate
+                          error:(NSError * __autoreleasing *) error {
     return [[self cursorForFindWithPredicate:predicate error:error] allObjects];
 }
 
-- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate
+                                       error:(NSError * __autoreleasing *) error {
     return [self cursorForFindRequest:[MongoFindRequest findRequestWithPredicate:predicate] error:error];
 }
 
-- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
+- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
+                                  error:(NSError * __autoreleasing *) error {
     return [self findOneWithRequest:[MongoFindRequest findRequestWithPredicate:predicate] error:error];
 }
 
@@ -191,7 +227,8 @@
     return [self findOneWithPredicate:[MongoPredicate predicate] error:error];
 }
 
-- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
+- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate
+                            error:(NSError * __autoreleasing *) error {
     if (!predicate) predicate = [MongoPredicate predicate];
     NSUInteger result = mongo_count(self.connection.connValue,
                                     self.utf8DatabaseName, self.utf8NamespaceName,
