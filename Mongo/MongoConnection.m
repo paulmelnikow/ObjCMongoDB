@@ -37,6 +37,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         _conn = mongo_create();
         mongo_init(_conn);
         self.writeConcern = [MongoWriteConcern writeConcern];
+        self.maxBSONSize = MONGO_DEFAULT_MAX_BSON_SIZE;
     }
     return self;
 }
@@ -64,7 +65,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 - (mongo *) connValue { return _conn; }
 
-#pragma mark - Configuring default write concern
+#pragma mark - Configuring the connection
 
 - (MongoWriteConcern *) writeConcern { return _writeConcern; }
 - (void) setWriteConcern:(MongoWriteConcern *) writeConcern {
@@ -73,6 +74,16 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 #endif
     _writeConcern = [writeConcern copy];
     mongo_set_write_concern(_conn, _writeConcern.nativeWriteConcern);
+}
+
+- (NSUInteger) maxBSONSize { return _maxBSONSize; }
+- (void) setMaxBSONSize:(NSUInteger) maxBSONSize {
+    if (maxBSONSize > INT_MAX) {
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Value is larger than what the driver supports. Keep it to %i",
+         INT_MAX];
+    }
+    mongo->max_bson_size = _maxBSONSize = maxBSONSize;
 }
 
 #pragma mark - Connecting to a single server or a replica set

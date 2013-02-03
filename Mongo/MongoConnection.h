@@ -48,6 +48,9 @@ FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
     propagate to the driver. Create and pass in a new one instead.
  */
 @property (copy) MongoWriteConcern *writeConcern;
+/*! Max BSON size for this connection. When attempting to insert a document larger than
+    this, the driver will generate an error. */
+@property (assign) NSUInteger maxBSONSize;
 
 - (MongoDBCollection *) collectionWithName:(NSString *) name;
 
