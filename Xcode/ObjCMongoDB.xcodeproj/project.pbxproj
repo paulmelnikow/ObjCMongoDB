@@ -22,6 +22,10 @@
 		9E0A7C6016BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */; };
 		9E0A7C6116BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */; };
 		9E0A7C6216BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */; };
+		9E0A7C6516BF10A000832C86 /* MongoWriteConcern.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */; };
+		9E0A7C6616BF10A000832C86 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */; };
+		9E0A7C6716BF10A000832C86 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */; };
+		9E0A7C6816BF10A000832C86 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */; };
 		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -143,6 +147,8 @@
 		9E0A7C5916BEE04100832C86 /* env.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = env.c; sourceTree = "<group>"; };
 		9E0A7C5B16BF0AE200832C86 /* NSString+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+BSONAdditions.h"; sourceTree = "<group>"; };
 		9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+BSONAdditions.m"; sourceTree = "<group>"; };
+		9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoWriteConcern.h; sourceTree = "<group>"; };
+		9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoWriteConcern.m; sourceTree = "<group>"; };
 		9E1054411503EE5800805F26 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		9E1054441503EEEA00805F26 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "APACHE-2.0.txt"; sourceTree = "<group>"; };
 		9E1054461503F05000805F26 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
@@ -472,6 +478,8 @@
 				9EFF2B75150D780400EDC285 /* MongoFindRequest.m */,
 				9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */,
 				9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */,
+				9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */,
+				9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */,
 			);
 			path = Mongo;
 			sourceTree = "<group>";
@@ -546,6 +554,7 @@
 				9E97CD1516B0A1850035480E /* Mongo_PrivateInterfaces.h in Headers */,
 				9E97CD1616B0A1990035480E /* BSON_PrivateInterfaces.h in Headers */,
 				9E0A7C5D16BF0AE300832C86 /* NSString+BSONAdditions.h in Headers */,
+				9E0A7C6516BF10A000832C86 /* MongoWriteConcern.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -773,6 +782,7 @@
 				9EFA29EF152D064A004F50D2 /* MongoUpdateRequest.m in Sources */,
 				9E0A7C5A16BEE04100832C86 /* env.c in Sources */,
 				9E0A7C5F16BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */,
+				9E0A7C6616BF10A000832C86 /* MongoWriteConcern.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -785,6 +795,7 @@
 				9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */,
 				9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */,
 				9E0A7C6116BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */,
+				9E0A7C6716BF10A000832C86 /* MongoWriteConcern.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -817,6 +828,7 @@
 				9EFA29D9152CC65A004F50D2 /* UpdateTest.m in Sources */,
 				9EE59A6815837B5800040FE7 /* FindTest.m in Sources */,
 				9E0A7C6216BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */,
+				9E0A7C6816BF10A000832C86 /* MongoWriteConcern.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

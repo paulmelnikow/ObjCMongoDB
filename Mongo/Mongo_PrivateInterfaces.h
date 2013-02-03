@@ -28,6 +28,7 @@
 #import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
 #import "MongoPredicate.h"
+#import "MongoWriteConcern.h"
 
 @interface MongoConnection (Project)
 - (mongo *) connValue;
@@ -49,4 +50,8 @@
 
 @interface MongoPredicate (Project)
 @property (retain) OrderedDictionary *dictionary;
+@end
+
+@interface MongoWriteConcern (Project)
+- (mongo_write_concern *) nativeWriteConcern;
 @end
