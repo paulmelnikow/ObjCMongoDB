@@ -23,24 +23,24 @@
 
 NSString * const BSONException = @"BSONException";
 
-@interface BSONIterator (Private)
-- (void) assertSupportsKeyedSearching;
+@interface BSONIterator ()
+@property (retain) id parent;
+@property (retain) NSArray *privateKeyPathComponents;
 @end
 
-@implementation BSONIterator
+@implementation BSONIterator {
+    bson_iterator *_iter;
+    const bson *_b;
+    bson_type _type;
+}
 
 #pragma mark - Initialization
 
 - (id) initWithDocument:(BSONDocument *)document
  keyPathComponentsOrNil:(NSArray *) keyPathComponents {
     if (self = [super init]) {
-#if __has_feature(objc_arc)
-        _parent = document;
-        _keyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
-#else
-        _parent = [document retain];
-        _keyPathComponents = keyPathComponents ? [keyPathComponents retain] : [[NSArray array] retain];
-#endif
+        self.parent = document;
+        self.privateKeyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
         _b = [document bsonValue];
         _iter = malloc(sizeof(bson_iterator));
         bson_iterator_init(_iter, _b);
@@ -57,13 +57,8 @@ NSString * const BSONException = @"BSONException";
                        parent:(id) parent
             keyPathComponents:(NSArray *) keyPathComponents {
     if (self = [super init]) {
-#if __has_feature(objc_arc)
-        _parent = parent;
-        _keyPathComponents = keyPathComponents;
-#else
-        _parent = [parent retain];
-        _keyPathComponents = [keyPathComponents retain];
-#endif
+        self.parent = parent;
+        self.privateKeyPathComponents = keyPathComponents;
         _iter = bsonIter;
         _type = bson_iterator_type(_iter);
         
@@ -74,8 +69,8 @@ NSString * const BSONException = @"BSONException";
 - (void) dealloc {
     free(_iter);
 #if !__has_feature(objc_arc)
-    [_parent release];
-    [_keyPathComponents release];
+    self.parent = nil;
+    self.privateKeyPathComponents = nil;
     [super dealloc];
 #endif
 }
@@ -129,14 +124,11 @@ NSString * const BSONException = @"BSONException";
 - (NSString *) key { return NSStringFromBSONString(bson_iterator_key(_iter)); }
 - (NSArray *) keyPathComponents {
 #if __has_feature(objc_arc)
-    return [_keyPathComponents arrayByAddingObject:self.key];
+    return [self.privateKeyPathComponents arrayByAddingObject:self.key];
 #else
-    return [[[_keyPathComponents arrayByAddingObject:self.key] retain] autorelease];
+    return [[[self.privateKeyPathComponents arrayByAddingObject:self.key] retain] autorelease];
 #endif
 }
-
-//not implemeneted
-//const char * bson_iterator_value( const bson_iterator * i );
 
 #pragma mark - Values for collections
 

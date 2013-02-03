@@ -29,11 +29,7 @@
  
  @seealso http://www.mongodb.org/display/DOCS/Object+IDs
  */
-@interface BSONObjectID : NSObject {
-@private
-    bson_oid_t _oid;
-    NSString *_stringValue;
-}
+@interface BSONObjectID : NSObject
 
 /**
  Creates a new, unique object ID.
@@ -102,9 +98,7 @@
 /**
  A wrapper and convenience encapsulating a BSON timestamp.
  */
-@interface BSONTimestamp : NSObject {
-    bson_timestamp_t _timestamp;
-}
+@interface BSONTimestamp : NSObject
 
 + (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t)timestamp;
 + (BSONTimestamp *) timestampWithIncrement:(int) increment timeInSeconds:(int) time;

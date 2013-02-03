@@ -38,9 +38,9 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.fields = [[OrderedDictionary alloc] init];
-        self.sort = [[OrderedDictionary alloc] init];
-        self.hint = [[OrderedDictionary alloc] init];
+        self.fields = [OrderedDictionary dictionary];
+        self.sort = [OrderedDictionary dictionary];
+        self.hint = [OrderedDictionary dictionary];
         self.timeoutEnabled = YES;
     }
     return self;

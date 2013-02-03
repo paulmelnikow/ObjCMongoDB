@@ -30,16 +30,7 @@
  Each instance creates a bson object during initialization and destoys it on
  deallocation.
  */
-@interface BSONDocument : NSObject {
-@private
-    id _source;
-    NSData *_data;
-    /**
-     The <code>bson</code> structure.
-     */
-    const bson *_bson;
-    BOOL _destroyOnDealloc;
-}
+@interface BSONDocument : NSObject
 
 /**
  Initializes an empty BSON document.

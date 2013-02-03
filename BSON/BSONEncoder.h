@@ -185,13 +185,7 @@ typedef enum {
  Objects can automatically encode their entity hash if desired. Set
  <code>managedObjectsShouldEncodeEntityVersionHash</code> to enable this behavior.
  */
-@interface BSONEncoder : NSCoder {
-@private
-    bson *_bson;
-    NSMutableArray *_encodingObjectStack;
-    NSMutableArray *_keyPathComponents;
-    BSONDocument *_resultDocument;
-}
+@interface BSONEncoder : NSCoder
 
 - (BSONEncoder *) initForWriting;
 

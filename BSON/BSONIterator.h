@@ -48,14 +48,7 @@ FOUNDATION_EXPORT NSString * const BSONException;
  Each instance of <code>BSONIterator</code> creates a <code>bson_iterator</code> structure during
  initialization and destoys it on deallocation. Each instance retains its associated document.
  */
-@interface BSONIterator : NSObject {
-@private
-    bson_iterator *_iter;
-    id _parent;
-    const bson *_b;
-    bson_type _type;
-    NSArray *_keyPathComponents;
-}
+@interface BSONIterator : NSObject
 
 /**
  Returns the object which iterators return for undefined values (type 0x06).

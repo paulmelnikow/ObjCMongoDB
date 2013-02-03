@@ -20,7 +20,10 @@
 #import "BSONTypes.h"
 #import "BSON_Helper.h"
 
-@implementation BSONObjectID
+@implementation BSONObjectID {
+    bson_oid_t _oid;
+    NSString *_stringValue;
+}
 
 #pragma mark - Initialization
 
@@ -175,7 +178,9 @@
 
 @end
 
-@implementation  BSONTimestamp
+@implementation  BSONTimestamp {
+    bson_timestamp_t _timestamp;
+}
 
 - (BSONTimestamp *) initWithNativeTimestamp:(bson_timestamp_t) timestamp {
     if (self = [super init]) {

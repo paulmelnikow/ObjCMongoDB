@@ -22,18 +22,28 @@
 #import "BSON_PrivateInterfaces.h"
 #import "BSON_Helper.h"
 
-@implementation BSONDocument
+@interface BSONDocument ()
+@property (retain) id source;
+@property (retain) NSData *data;
+@property (assign) BOOL destroyOnDealloc;
+@end
+
+@implementation BSONDocument {
+    /**
+     The <code>bson</code> structure.
+     */
+    const bson *_bson;
+}
 
 - (id) init {
     if (self = [super init]) {
         bson * newBson = bson_create();
         bson_empty(newBson);
         _bson = newBson;
-        _destroyOnDealloc = NO;
-        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(newBson) length:bson_size(newBson) freeWhenDone:NO];
-#if !__has_feature(objc_arc)
-        [_data retain];
-#endif
+        self.destroyOnDealloc = NO;
+        self.data = [NSData dataWithBytesNoCopy:(void *)bson_data(newBson)
+                                         length:bson_size(newBson)
+                                   freeWhenDone:NO];
     }
     return self;
 }
@@ -43,14 +53,11 @@
         bson * newBson = bson_create();
         bson_iterator_subobject([iterator nativeIteratorValue], newBson);
         _bson = newBson;
-        _destroyOnDealloc = NO;
-        _data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson) length:bson_size(_bson) freeWhenDone:NO];
-#if __has_feature(objc_arc)
-        _source = parent;
-#else
-        _source = [parent retain];
-        [_data retain];
-#endif
+        self.destroyOnDealloc = NO;
+        self.data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson)
+                                         length:bson_size(_bson)
+                                   freeWhenDone:NO];
+        self.source = parent;
     }
     return self;
 }
@@ -62,18 +69,14 @@
     if (self = [super init]) {
         bson * newBson = bson_create();
         if (BSON_ERROR == bson_init_data(newBson, (char *)data.bytes)) {
-#if !__has_feature(objc_arc)
             bson_dispose(newBson);
+#if !__has_feature(objc_arc)
             [self release];
 #endif
             return nil;
         }
         _bson = newBson;
-#if __has_feature(objc_arc)
-        _data = data;
-#else
-        _data = [data retain];
-#endif
+        self.data = data;
     }
     return self;
 }
@@ -87,24 +90,21 @@
     }
     if (self = [super init]) {
         _bson = b;
-        _destroyOnDealloc = destroyOnDealloc;
+        self.destroyOnDealloc = destroyOnDealloc;
         // Copy the buffer into a new NSData. That way, objects which invoke -dataValue can retain the
         // NSData object without also retaining the BSONDocument object.
-        _data = NSDataFromBSON(_bson, YES);
-#if !__has_feature(objc_arc)
-        [_data retain];
-#endif
+        self.data = NSDataFromBSON(_bson, YES);
     }
     return self;
 }
 
 - (void) dealloc {
     // override const qualifier
-    if (_destroyOnDealloc) bson_destroy((bson *)_bson);
+    if (self.destroyOnDealloc) bson_destroy((bson *)_bson);
     bson_dispose((bson *)_bson);
 #if !__has_feature(objc_arc)
-    [_data release];
-    [_source release];
+    self.data = nil;
+    self.source = nil;
     [super dealloc];
 #endif
 }
@@ -114,7 +114,6 @@
 }
 
 - (id) copy {
-//    bson *newBson = malloc(sizeof(bson));
     bson *newBson = bson_create();
     bson_copy(newBson, _bson);
     BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];

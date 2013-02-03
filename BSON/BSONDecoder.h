@@ -158,12 +158,7 @@ typedef enum {
  applications you may prefer to work with the iterator directly. In that case, don't use
  <code>BSONDecoder</code>, just work directly with tht document's `-iterator`. 
  */
-@interface BSONDecoder : NSCoder {
-    @private
-    BSONIterator *_iterator;
-    NSMutableArray *_iteratorStack;
-    NSMutableArray *_keyPathComponents;
-}
+@interface BSONDecoder : NSCoder
 
 - (BSONDecoder *) initWithDocument:(BSONDocument *) document;
 - (BSONDecoder *) initWithData:(NSData *) data;
