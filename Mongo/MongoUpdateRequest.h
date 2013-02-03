@@ -21,6 +21,8 @@
 #import "MongoPredicate.h"
 #import "OrderedDictionary.h"
 
+@class MongoWriteConcern;
+
 @interface MongoUpdateRequest : NSObject
 
 - (id) initForFirstMatchOnly:(BOOL) firstMatchOnly;
@@ -56,5 +58,6 @@
 @property (assign) BOOL updatesFirstMatchOnly;
 @property (assign) BOOL insertsIfNoMatches;
 @property (assign) BOOL blocksDuringMultiUpdates;
+@property (retain) MongoWriteConcern *writeConcern;
 
 @end

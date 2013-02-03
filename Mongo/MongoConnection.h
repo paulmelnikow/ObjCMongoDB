@@ -23,28 +23,35 @@
 FOUNDATION_EXPORT NSString * const MongoDBErrorDomain;
 FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
 
+@class MongoWriteConcern;
+
 /**
  Encapsulates a Mongo connection object.
  */
 @interface MongoConnection : NSObject
 
 - (MongoConnection *) init;
-
 + (MongoConnection *) connectionForServer:(NSString *) hostWithPort
                                     error:(NSError * __autoreleasing *) error;
 
 - (BOOL) connectToServer:(NSString *) hostWithPort
                    error:(NSError * __autoreleasing *) error;
 - (BOOL) connectToReplicaSet:(NSString *) replicaSet
-                        seed:(NSArray *) seed
+                   seedArray:(NSArray *) seedArray
                        error:(NSError * __autoreleasing *) error;
 - (BOOL) checkConnectionWithError:(NSError * __autoreleasing *) error;
 - (BOOL) reconnectWithError:(NSError * __autoreleasing *) error;
 - (void) disconnect;
 
-- (MongoDBCollection *) collection:(NSString *) name;
+/*! Default write concern for this connection. May be overridden for each insert, update,
+    or delete. Don't mutate the writeConcern after setting it, else your changes won't
+    propagate to the driver. Create and pass in a new one instead.
+ */
+@property (copy) MongoWriteConcern *writeConcern;
 
-- (BOOL) dropDatabase:(NSString *) database;
+- (MongoDBCollection *) collectionWithName:(NSString *) name;
+
+- (BOOL) dropDatabaseWithName:(NSString *) database;
 //- (BOOL) dropCollection:(MongoDBNamespace *) collection;
 
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;

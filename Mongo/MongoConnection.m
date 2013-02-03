@@ -21,6 +21,7 @@
 #import "mongo.h"
 #import "BSONDecoder.h"
 #import "Mongo_Helper.h"
+#import "Mongo_PrivateInterfaces.h"
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
@@ -35,6 +36,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
     if (self = [super init]) {
         _conn = mongo_create();
         mongo_init(_conn);
+        self.writeConcern = [MongoWriteConcern writeConcern];
     }
     return self;
 }
@@ -54,12 +56,24 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (void) dealloc {
     mongo_destroy(_conn);
     mongo_dispose(_conn);
+    self.writeConcern = nil;
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
 }
 
 - (mongo *) connValue { return _conn; }
+
+#pragma mark - Configuring default write concern
+
+- (MongoWriteConcern *) writeConcern { return _writeConcern; }
+- (void) setWriteConcern:(MongoWriteConcern *) writeConcern {
+#if !__has_feature(objc_arc)
+    [_writeConcern release];
+#endif
+    _writeConcern = [writeConcern copy];
+    mongo_set_write_concern(_conn, _writeConcern.nativeWriteConcern);
+}
 
 #pragma mark - Connecting to a single server or a replica set
 
@@ -74,11 +88,11 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 }
 
 - (BOOL) connectToReplicaSet:(NSString *) replicaSet
-                        seed:(NSArray *) seed
+                   seedArray:(NSArray *) seedArray
                        error:(NSError * __autoreleasing *) error {
     mongo_replica_set_init(_conn, replicaSet.bsonString);
     mongo_host_port host_port;
-    for (NSString *hostWithPort in seed) {
+    for (NSString *hostWithPort in seedArray) {
         mongo_parse_host(hostWithPort.bsonString, &host_port);
         mongo_replica_set_add_seed(_conn, host_port.host, host_port.port);
     }
@@ -109,7 +123,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 #pragma mark - Collection access
 
-- (MongoDBCollection *) collection:(NSString *) name {
+- (MongoDBCollection *) collectionWithName:(NSString *) name {
 #if __has_feature(objc_arc)
     MongoDBCollection *collection = [[MongoDBCollection alloc] init];
 #else
@@ -122,7 +136,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 #pragma mark - Database administration
 
-- (BOOL) dropDatabase:(NSString *) database {
+- (BOOL) dropDatabaseWithName:(NSString *) database {
     return mongo_cmd_drop_db(_conn, database.bsonString);
 }
 
