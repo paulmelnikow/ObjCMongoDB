@@ -24,6 +24,7 @@
 @interface MongoCursor : NSEnumerator
 
 - (id) initWithNativeCursor:(mongo_cursor *) cursor;
++ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor;
 
 - (BSONDocument *) nextObject;
 - (BSONDocument *) nextObjectNoCopy;

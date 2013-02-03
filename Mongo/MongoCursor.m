@@ -18,6 +18,7 @@
 //
 
 #import "MongoCursor.h"
+#import "Mongo_Helper.h"
 
 @implementation MongoCursor {
     mongo_cursor *_cursor;
@@ -32,6 +33,11 @@
     return self;
 }
 
++ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor {
+    MongoCursor *result = [[self alloc] initWithNativeCursor:cursor];
+    maybe_autorelease_and_return(result);
+}
+
 - (void) dealloc {
     mongo_cursor_destroy(_cursor);
 #if !__has_feature(objc_arc)
@@ -42,22 +48,15 @@
 #pragma mark - Enumeration
 
 - (BSONDocument *) nextObjectNoCopy {
-#if __has_feature(objc_arc)
-    return [[BSONDocument alloc] initWithNativeDocument:mongo_cursor_bson(_cursor) destroyOnDealloc:NO];
-#else
-    return [[[BSONDocument alloc] initWithNativeDocument:mongo_cursor_bson(_cursor) destroyOnDealloc:NO] autorelease];
-#endif
+    return [BSONDocument documentWithNativeDocument:mongo_cursor_bson(_cursor)
+                                    destroyWhenDone:NO];
 }
 
 - (BSONDocument *) nextObject {
     if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
-    bson *newBson = malloc(sizeof(bson));
+    bson *newBson = bson_create();
     bson_copy(newBson, mongo_cursor_bson(_cursor));
-#if __has_feature(objc_arc)
-    return [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
-#else
-    return [[[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES] autorelease];
-#endif
+    return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
 }
 
 - (NSArray *) allObjects {

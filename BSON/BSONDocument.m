@@ -23,7 +23,7 @@
 #import "BSON_Helper.h"
 
 @interface BSONDocument ()
-@property (retain) id source;
+@property (retain) id dependentOn; // An object which retains the bson we're using
 @property (retain) NSData *data;
 @property (assign) BOOL destroyWhenDone;
 @end
@@ -47,7 +47,7 @@
     return self;
 }
 
-- (BSONDocument *)initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator parent:(id) parent {
+- (id) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator dependentOn:(id) dependentOn {
     if (self = [super init]) {
         _bson = bson_create();
         // _bson is const-qualified
@@ -56,12 +56,12 @@
         self.data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson)
                                          length:bson_size(_bson)
                                    freeWhenDone:NO];
-        self.source = parent;
+        self.dependentOn = dependentOn;
     }
     return self;
 }
 
-- (BSONDocument *) initWithData:(NSData *) data {
+- (id) initWithData:(NSData *) data {
     if (!data || !data.length) return [self init];
     if ([data isKindOfClass:[NSMutableData class]])
         data = [NSData dataWithData:data];
@@ -79,7 +79,12 @@
     return self;
 }
 
-- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone {
++ (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone {
+    BSONDocument *result = [[self alloc] initWithNativeDocument:b destroyWhenDone:destroyWhenDone];
+    maybe_autorelease_and_return(result);
+}
+
+- (id) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone {
     if (!b) {
 #if !__has_feature(objc_arc)
         [self release];
@@ -102,7 +107,7 @@
     bson_dispose((bson *)_bson);
 #if !__has_feature(objc_arc)
     self.data = nil;
-    self.source = nil;
+    self.dependentOn = nil;
     [super dealloc];
 #endif
 }
@@ -123,11 +128,9 @@
 }
 
 - (BSONIterator *) iterator {
-#if __has_feature(objc_arc)
-    return [[BSONIterator alloc] initWithDocument:self keyPathComponentsOrNil:nil];
-#else
-    return [[[BSONIterator alloc] initWithDocument:self keyPathComponentsOrNil:nil] autorelease];
-#endif
+    BSONIterator *result = [[BSONIterator alloc] initWithDocument:self
+                                           keyPathComponentsOrNil:nil];
+    maybe_autorelease_and_return(result);
 }
 
 - (NSDictionary *) dictionaryValue {

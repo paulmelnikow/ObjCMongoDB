@@ -17,6 +17,12 @@
 //  limitations under the License.
 //
 
+#define mongo_error_case(typeParam, descParam) \
+    case type: \
+        name = @"typeParam";  \
+        desc = desc; \
+    break;
+
 #import "Mongo_Helper.h"
 
 __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
@@ -24,10 +30,12 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
-        case MONGO_CONN_SUCCESS:
-            name = @"MONGO_CONN_SUCCESS";
-            desc = @"Connection success!";
-            break;
+        mongo_error_case(MONGO_CONN_SUCCESS, @"Connection success!");
+        FIXME
+        // case MONGO_CONN_SUCCESS:
+        //     name = @"MONGO_CONN_SUCCESS";
+        //     desc = @"Connection success!";
+        //     break;
         case MONGO_CONN_NO_SOCKET:
             name = @"MONGO_CONN_NO_SOCKET";
             desc = @"Could not create a socket";
@@ -64,6 +72,14 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
             name = @"MONGO_COMMAND_FAILED";
             desc = @"The command returned with 'ok' value of 0";
             break;
+        case MONGO_WRITE_ERROR:
+            name = @"MONGO_WRITE_ERROR";
+            desc = @"Write with given write_concern returned an error";
+            break;
+        case MONGO_NS_INVALID:
+            name = @"MONGO_NS_INVALID";
+            desc = @"The name for the ns (database or collection) is invalid";
+            break;
         case MONGO_BSON_INVALID:
             name = @"MONGO_BSON_INVALID";
             desc = @"BSON not valid for the specified op";
@@ -72,6 +88,13 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
             name = @"MONGO_BSON_NOT_FINISHED";
             desc = @"BSON object has not been finished";
             break;
+        case MONGO_BSON_TOO_LARGE:
+            name = @"MONGO_BSON_TOO_LARGE";
+            desc = @"BSON object exceeds max BSON size";
+            break;
+        case MONGO_WRITE_CONCERN_INVALID:
+            name = @"MONGO_WRITE_CONCERN_INVALID";
+            desc = @"MONGO_WRITE_CONCERN_INVALID";
     }
     NSString *result = description ? desc : name;
 #if __has_feature(objc_arc)

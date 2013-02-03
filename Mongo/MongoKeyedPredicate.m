@@ -24,10 +24,6 @@
 #import "OrderedDictionary.h"
 #import "Mongo_PrivateInterfaces.h"
 
-@interface MongoKeyedPredicate (Private)
-
-@end
-
 @implementation MongoKeyedPredicate
 
 #pragma mark - Initialization

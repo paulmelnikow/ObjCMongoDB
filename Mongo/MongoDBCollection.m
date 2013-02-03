@@ -36,16 +36,13 @@
 
 - (void) dealloc {
 #if !__has_feature(objc_arc)
+    [_name release];
     [super dealloc];
 #endif
 }
 
 - (void) setName:(NSString *) value {
-#if __has_feature(objc_arc)
     _name = [value copy];
-#else
-    _name = [[value copy] retain];
-#endif
     NSRange firstDot = [value rangeOfString:@"."];
     if (NSNotFound == firstDot.location) {
         id exc = [NSException exceptionWithName:NSInvalidArgumentException
@@ -151,33 +148,23 @@
                                       findRequest.skipResults,
                                       findRequest.options);
     if (!cursor) set_error_and_return_nil;
-    MongoCursor *result = [[MongoCursor alloc] initWithNativeCursor:cursor];
-#if __has_feature(objc_arc)
-    return result;
-#else
-    return [result autorelease];
-#endif
+    return [MongoCursor cursorWithNativeCursor:cursor];
 }
 
 - (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest error:(NSError * __autoreleasing *) error {
-    bson *tempBson = malloc(sizeof(bson));
+    bson *tempBson = bson_create();
     int result = mongo_find_one(self.connection.connValue, self.utf8Name,
                                 findRequest.queryDocument.bsonValue,
                                 findRequest.fieldsDocument.bsonValue,
                                 tempBson);
     if (BSON_OK != result) {
-        free(tempBson);
+        bson_dispose(tempBson);
         set_error_and_return_nil;
     }
-    bson *newBson = malloc(sizeof(bson));
+    bson *newBson = bson_create();
     bson_copy(newBson, tempBson);
-    free(tempBson);
-    BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:YES];
-#if __has_feature(objc_arc)
-    return document;
-#else
-    return [document autorelease];
-#endif
+    bson_dispose(tempBson);
+    return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
 }
 
 - (NSArray *) findWithPredicate:(MongoPredicate *) predicate error:(NSError * __autoreleasing *) error {
@@ -236,8 +223,8 @@
 
 #pragma mark - Accessors
 
-- (const char *) utf8Name { return BSONStringFromNSString(self.name); }
-- (const char *) utf8DatabaseName { return BSONStringFromNSString(self.databaseName); }
-- (const char *) utf8NamespaceName { return BSONStringFromNSString(self.namespaceName); }
+- (const char *) utf8Name { return self.name.bsonString; }
+- (const char *) utf8DatabaseName { return self.databaseName.bsonString; }
+- (const char *) utf8NamespaceName { return self.namespaceName.bsonString; }
 
 @end

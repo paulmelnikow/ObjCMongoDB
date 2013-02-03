@@ -20,7 +20,6 @@
 #import "MongoConnection.h"
 #import "mongo.h"
 #import "BSONDecoder.h"
-#import "BSON_Helper.h"
 #import "Mongo_Helper.h"
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
@@ -34,30 +33,27 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 - (id) init {
     if (self = [super init]) {
-        _conn = malloc(sizeof(mongo));
+        _conn = mongo_create();
         mongo_init(_conn);
     }
     return self;
 }
 
 + (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError * __autoreleasing *) error {
-    MongoConnection *conn = [[self alloc] init];
-    BOOL success = [conn connectToServer:hostWithPort error:error];
+    MongoConnection *result = [[self alloc] init];
+    BOOL success = [result connectToServer:hostWithPort error:error];
     if (!success) {
 #if !__has_feature(objc_arc)
-        [conn release];
+        [result release];
 #endif
         return nil;
     }
-#if !__has_feature(objc_arc)
-    [conn autorelease];
-#endif
-    return conn;
+    maybe_autorelease_and_return(result);
 }
 
 - (void) dealloc {
     mongo_destroy(_conn);
-    free(_conn);
+    mongo_dispose(_conn);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -70,8 +66,8 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (BOOL) connectToServer:(NSString *) hostWithPort
                    error:(NSError * __autoreleasing *) error {
     mongo_host_port host_port;
-    mongo_parse_host(BSONStringFromNSString(hostWithPort), &host_port);
-    if (MONGO_OK == mongo_connect(_conn, host_port.host, host_port.port))
+    mongo_parse_host(hostWithPort.bsonString, &host_port);
+    if (MONGO_OK == mongo_client(_conn, host_port.host, host_port.port))
         return YES;
     else
         set_error_and_return_NO;
@@ -80,13 +76,13 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (BOOL) connectToReplicaSet:(NSString *) replicaSet
                         seed:(NSArray *) seed
                        error:(NSError * __autoreleasing *) error {
-    mongo_replset_init(_conn, BSONStringFromNSString(replicaSet));
+    mongo_replica_set_init(_conn, replicaSet.bsonString);
     mongo_host_port host_port;
     for (NSString *hostWithPort in seed) {
-        mongo_parse_host(BSONStringFromNSString(hostWithPort), &host_port);
-        mongo_replset_add_seed(_conn, host_port.host, host_port.port);
+        mongo_parse_host(hostWithPort.bsonString, &host_port);
+        mongo_replica_set_add_seed(_conn, host_port.host, host_port.port);
     }
-    if (MONGO_OK == mongo_replset_connect(_conn))
+    if (MONGO_OK == mongo_replica_set_connect(_conn))
         return YES;
     else
         set_error_and_return_NO;
@@ -127,7 +123,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 #pragma mark - Database administration
 
 - (BOOL) dropDatabase:(NSString *) database {
-    return mongo_cmd_drop_db(_conn, BSONStringFromNSString(database));
+    return mongo_cmd_drop_db(_conn, database.bsonString);
 }
 
 //- (BOOL) dropCollection:(id) collection {
@@ -181,9 +177,9 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 - (NSError *) serverError {
     if (!_conn->lasterrcode) return nil;
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                              NSStringFromBSONString(_conn->lasterrstr), NSLocalizedDescriptionKey,
-                              nil];
+    NSDictionary *userInfo = @{
+                              NSLocalizedDescriptionKey : [NSString stringWithBSONString:_conn->lasterrstr]
+                             };
     return [NSError errorWithDomain:MongoDBServerErrorDomain
                                code:_conn->lasterrcode
                            userInfo:userInfo];

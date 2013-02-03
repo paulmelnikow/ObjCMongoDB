@@ -24,7 +24,7 @@
 NSString * const BSONException = @"BSONException";
 
 @interface BSONIterator ()
-@property (retain) id parent;
+@property (retain) id dependentOn; // An object which retains the bson we're using
 @property (retain) NSArray *privateKeyPathComponents;
 @end
 
@@ -39,7 +39,7 @@ NSString * const BSONException = @"BSONException";
 - (id) initWithDocument:(BSONDocument *)document
  keyPathComponentsOrNil:(NSArray *) keyPathComponents {
     if (self = [super init]) {
-        self.parent = document;
+        self.dependentOn = document;
         self.privateKeyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
         _b = [document bsonValue];
         _iter = bson_iterator_create();
@@ -54,10 +54,10 @@ NSString * const BSONException = @"BSONException";
  Takes ownership of the bson_iterator it's passed
  */
 - (id) initWithNativeIterator:(bson_iterator *) bsonIter
-                       parent:(id) parent
+                  dependentOn:(id) dependentOn
             keyPathComponents:(NSArray *) keyPathComponents {
     if (self = [super init]) {
-        self.parent = parent;
+        self.dependentOn = dependentOn;
         self.privateKeyPathComponents = keyPathComponents;
         _iter = bsonIter;
         _type = bson_iterator_type(_iter);
@@ -69,7 +69,7 @@ NSString * const BSONException = @"BSONException";
 - (void) dealloc {
     bson_iterator_dispose(_iter);
 #if !__has_feature(objc_arc)
-    self.parent = nil;
+    self.dependentOn = nil;
     self.privateKeyPathComponents = nil;
     [super dealloc];
 #endif
@@ -82,7 +82,7 @@ NSString * const BSONException = @"BSONException";
 - (bson_type) nativeValueTypeForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
-    return _type = bson_find(_iter, _b, BSONStringFromNSString(key));
+    return _type = bson_find(_iter, _b, key.bsonString);
 }
 
 - (BOOL) containsValueForKey:(NSString *) key {
@@ -121,13 +121,10 @@ NSString * const BSONException = @"BSONException";
 - (BOOL) isEmbeddedDocument { return BSON_OBJECT == _type; }
 - (BOOL) isArray { return BSON_ARRAY == _type; }
 
-- (NSString *) key { return NSStringFromBSONString(bson_iterator_key(_iter)); }
+- (NSString *) key { return [NSString stringWithBSONString:bson_iterator_key(_iter)]; }
 - (NSArray *) keyPathComponents {
-#if __has_feature(objc_arc)
-    return [self.privateKeyPathComponents arrayByAddingObject:self.key];
-#else
-    return [[[self.privateKeyPathComponents arrayByAddingObject:self.key] retain] autorelease];
-#endif
+    NSArray *result = [self.privateKeyPathComponents arrayByAddingObject:self.key];
+    maybe_retain_autorelease_and_return(result);
 }
 
 #pragma mark - Values for collections
@@ -136,32 +133,21 @@ NSString * const BSONException = @"BSONException";
     bson_iterator *subIter = bson_iterator_create();
     bson_iterator_subiterator(_iter, subIter);
     BSONIterator *iterator = [[BSONIterator alloc] initWithNativeIterator:subIter
-                                                                   parent:_parent
+                                                              dependentOn:self.dependentOn
                                                         keyPathComponents:self.keyPathComponents];
-#if __has_feature(objc_arc)
-    return iterator;
-#else
-    return [iterator autorelease];
-#endif
+    maybe_autorelease_and_return(iterator);
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    BSONDocument *document = [[BSONDocument alloc] initForEmbeddedDocumentWithIterator:self parent:_parent];
-#if __has_feature(objc_arc)
-    return document;
-#else
-    return [document autorelease];
-#endif
+    BSONDocument *document = [[BSONDocument alloc] initForEmbeddedDocumentWithIterator:self
+                                                                           dependentOn:self.dependentOn];
+    maybe_autorelease_and_return(document);
 }
 
 - (BSONIterator *) embeddedDocumentIteratorValue {
     BSONIterator *iterator = [[BSONIterator alloc] initWithDocument:self.embeddedDocumentValue
                                              keyPathComponentsOrNil:self.keyPathComponents];
-#if __has_feature(objc_arc)
-    return iterator;
-#else
-    return [iterator autorelease];
-#endif
+    maybe_autorelease_and_return(iterator);
 }
 
 - (NSArray *) arrayValue {
@@ -227,20 +213,25 @@ NSString * const BSONException = @"BSONException";
     return [BSONObjectID objectIDWithNativeOID:bson_iterator_oid(_iter)];
 }
 
-- (NSString *) stringValue { return NSStringFromBSONString(bson_iterator_string(_iter)); }
-- (int) stringLength { return bson_iterator_string_len(_iter); }
-- (BSONSymbol *) symbolValue { return [BSONSymbol symbol:[self stringValue]]; }
+- (NSString *) stringValue {
+    return [NSString stringWithBSONString:bson_iterator_string(_iter)];
+}
+- (int) stringLength {
+    return bson_iterator_string_len(_iter);
+}
+- (BSONSymbol *) symbolValue {
+    return [BSONSymbol symbol:[self stringValue]];
+}
 
-- (BSONCode *) codeValue { return [BSONCode code:NSStringFromBSONString(bson_iterator_code(_iter))]; }
+- (BSONCode *) codeValue {
+    return [BSONCode code:[NSString stringWithBSONString:bson_iterator_code(_iter)]];
+}
 - (BSONCodeWithScope *) codeWithScopeValue {
     bson *newBson = bson_create();
     bson_iterator_code_scope(_iter, newBson);
-#if __has_feature(objc_arc)
-    BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyWhenDone:NO];
-#else
-    BSONDocument *document = [[[BSONDocument alloc] initWithNativeDocument:newBson destroyWhenDone:NO] autorelease];
-#endif
-    return [BSONCodeWithScope code:NSStringFromBSONString(bson_iterator_code(_iter)) withScope:document];
+    BSONDocument *document = [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:NO];
+    return [BSONCodeWithScope code:[NSString stringWithBSONString:bson_iterator_code(_iter)]
+                         withScope:document];
 }
 
 - (NSDate *) dateValue {
@@ -256,10 +247,10 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (NSString *) regularExpressionPatternValue { 
-    return NSStringFromBSONString(bson_iterator_regex(_iter));
+    return [NSString stringWithBSONString:bson_iterator_regex(_iter)];
 }
 - (NSString *) regularExpressionOptionsValue { 
-    return NSStringFromBSONString(bson_iterator_regex_opts(_iter));
+    return [NSString stringWithBSONString:bson_iterator_regex_opts(_iter)];
 }
 - (BSONRegularExpression *) regularExpressionValue {
     return [BSONRegularExpression regularExpressionWithPattern:[self regularExpressionPatternValue]
@@ -305,11 +296,7 @@ void objc_bson_error_handler(const char * message) {
         [string appendFormat:@"\n        %@", keyPath];
     [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self nativeValueType])];
     [string appendString:@"\n"];
-#if __has_feature(objc_arc)
-    return string;
-#else
-    return [[string retain] autorelease];
-#endif
+    maybe_retain_autorelease_and_return(string);
 }
 
 @end

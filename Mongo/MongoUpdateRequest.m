@@ -25,10 +25,8 @@
 #import "Mongo_PrivateInterfaces.h"
 
 @interface MongoUpdateRequest ()
-
 @property (retain) BSONDocument *replacementDocument;
 @property (retain) OrderedDictionary *operationDictionary;
-
 @end
 
 @implementation MongoUpdateRequest
@@ -52,10 +50,7 @@
 
 + (MongoUpdateRequest *) updateRequestForFirstMatchOnly:(BOOL) firstMatchOnly {
     MongoUpdateRequest *result = [[self alloc] initForFirstMatchOnly:firstMatchOnly];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 + (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate

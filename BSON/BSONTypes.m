@@ -63,7 +63,7 @@ int block_based_inc_func() { return incrementGenerator(); }
         [NSException raise:NSInvalidArgumentException format:@"String should be 24 characters long"];
     }
     if (self = [super init]) {
-        bson_oid_from_string(&_oid, BSONStringFromNSString(s));
+        bson_oid_from_string(&_oid, s.bsonString);
     }
     return self;
 }
@@ -96,36 +96,20 @@ int block_based_inc_func() { return incrementGenerator(); }
 }
 
 + (BSONObjectID *) objectID {
-#if __has_feature(objc_arc)
-    return [[self alloc] init];
-#else
-    return [[[self alloc] init] autorelease];
-#endif
+    maybe_autorelease_and_return([[self alloc] init]);
 }
 
 + (BSONObjectID *) objectIDWithString:(NSString *) s {
     if (s.length != 24) return nil;
-#if __has_feature(objc_arc)
-    return [[self alloc] initWithString:s];
-#else
-    return [[[self alloc] initWithString:s] autorelease];
-#endif
+    maybe_autorelease_and_return([[self alloc] initWithString:s]);
 }
 
 + (BSONObjectID *) objectIDWithData:(NSData *) data {
-#if __has_feature(objc_arc)
-    return [[self alloc] initWithData:data];
-#else
-    return [[[self alloc] initWithData:data] autorelease];
-#endif
+    maybe_autorelease_and_return([[self alloc] initWithData:data]);
 }
 
 + (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer {
-#if __has_feature(objc_arc)
-    return [[self alloc] initWithNativeOID:objectIDPointer];
-#else
-    return [[[self alloc] initWithNativeOID:objectIDPointer] autorelease];
-#endif
+    maybe_autorelease_and_return([[self alloc] initWithNativeOID:objectIDPointer]);
 }
 
 - (id) copyWithZone:(NSZone *) zone {
@@ -158,9 +142,9 @@ int block_based_inc_func() { return incrementGenerator(); }
     char buffer[25];
     bson_oid_to_string(&_oid, buffer);
 #if __has_feature(objc_arc)
-    return _stringValue = NSStringFromBSONString(buffer);
+    return _stringValue = [NSString stringWithBSONString:buffer];
 #else
-    return _stringValue = [NSStringFromBSONString(buffer) retain];
+    return _stringValue = [[NSString stringWithBSONString:buffer] retain];
 #endif
 }
 
@@ -189,11 +173,7 @@ int block_based_inc_func() { return incrementGenerator(); }
     BSONRegularExpression *obj = [[self alloc] init];
     obj.pattern = pattern;
     obj.options = options;
-#if __has_feature(objc_arc)
-    return obj;
-#else
-    return [obj autorelease];
-#endif
+    maybe_autorelease_and_return(obj);
 }
 
 @end
@@ -210,22 +190,14 @@ int block_based_inc_func() { return incrementGenerator(); }
 }
 
 + (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t) timestamp {
-#if __has_feature(objc_arc)
-    return [[self alloc] initWithNativeTimestamp:timestamp];
-#else
-    return [[[self alloc] initWithNativeTimestamp:timestamp] autorelease];
-#endif
+    maybe_autorelease_and_return([[self alloc] initWithNativeTimestamp:timestamp]);
 }
 
 + (BSONTimestamp *) timestampWithIncrement:(int) increment timeInSeconds:(int) time {
     BSONTimestamp *obj = [[self alloc] init];
     obj.increment = increment;
     obj.timeInSeconds = time;
-#if __has_feature(objc_arc)
-    return obj;
-#else
-    return [obj autorelease];
-#endif
+    maybe_autorelease_and_return(obj);
 }
 
 - (bson_timestamp_t *) timestampPointer {
@@ -252,11 +224,7 @@ int block_based_inc_func() { return incrementGenerator(); }
 + (BSONCode *) code:(NSString *) code {
     BSONCode *obj = [[self alloc] init];
     obj.code = code;
-#if __has_feature(objc_arc)
-    return obj;
-#else
-    return [obj autorelease];
-#endif
+    maybe_autorelease_and_return(obj);
 }
 
 @end
@@ -267,11 +235,7 @@ int block_based_inc_func() { return incrementGenerator(); }
     BSONCodeWithScope *obj = [[self alloc] init];
     obj.code = code;
     obj.scope = scope;
-#if __has_feature(objc_arc)
-    return obj;
-#else
-    return [obj autorelease];
-#endif
+    maybe_autorelease_and_return(obj);
 }
 
 @end
@@ -281,11 +245,7 @@ int block_based_inc_func() { return incrementGenerator(); }
 + (BSONSymbol *) symbol:(NSString *)symbol {
     BSONSymbol *obj = [[self alloc] init];
     obj.symbol = symbol;
-#if __has_feature(objc_arc)
-    return obj;
-#else
-    return [obj autorelease];
-#endif
+    maybe_autorelease_and_return(obj);
 }
 
 @end

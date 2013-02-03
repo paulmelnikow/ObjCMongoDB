@@ -46,11 +46,8 @@
 }
 
 - (BSONDecoder *) initWithData:(NSData *)data {
-#if __has_feature(objc_arc)
-    return [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
-#else
-    return [self initWithDocument:[[[BSONDocument alloc] initWithData:data] autorelease]];
-#endif
+    BSONDecoder *result = [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
+    maybe_autorelease_and_return(result);
 }
 
 - (void) dealloc {
@@ -74,10 +71,9 @@
     BSONDecoder *decoder = [[self alloc] initWithDocument:document];
     NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
 #if !__has_feature(objc_arc)
-    [[result retain] autorelease];
     [decoder release];
 #endif
-    return result;
+    maybe_retain_autorelease_and_return(result);
 }
 
 + (NSDictionary *) decodeDictionaryWithData:(NSData *)data {
@@ -88,30 +84,27 @@
     BSONDecoder *decoder = [[self alloc] initWithData:data];
     NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
 #if !__has_feature(objc_arc)
-    [[result retain] autorelease];
     [decoder release];
 #endif
-    return result;
+    maybe_retain_autorelease_and_return(result);
 }
 
 + (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document {
     BSONDecoder *decoder = [[self alloc] initWithDocument:document];
     NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
 #if !__has_feature(objc_arc)
-    [[result retain] autorelease];
     [decoder release];
 #endif
-    return result;
+    maybe_retain_autorelease_and_return(result);
 }
 
 + (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data {
     BSONDecoder *decoder = [[self alloc] initWithData:data];
     NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
 #if !__has_feature(objc_arc)
-    [[result retain] autorelease];
     [decoder release];
 #endif
-    return result;
+    maybe_retain_autorelease_and_return(result);
 }
 
 #pragma mark - Decoding top-level objects
@@ -229,11 +222,7 @@
             @throw exc;
         }
     }
-#if __has_feature (objc_arc)
-    return result;
-#else
-    return [result autorelease];
-#endif
+    maybe_autorelease_and_return(result);
 }
 
 - (NSDictionary *) _decodeExposedDictionaryWithClassOrNil:(Class) classForDecoder {
@@ -378,11 +367,7 @@
 - (NSImage *) decodeImageForKey:(NSString *) key {
     NSData *data = [self decodeDataForKey:key];
     if (data)
-#if __has_feature(objc_arc)
-        return [[NSImage alloc] initWithData:data];
-#else
-        return [[[NSImage alloc] initWithData:data] autorelease];
-#endif
+        return maybe_autorelease_and_return([[NSImage alloc] initWithData:data]);
     else
         return nil;
 }
@@ -565,11 +550,7 @@
 }
 
 - (NSArray *) keyPathComponents {
-#if __has_feature(objc_arc)
-    return [self.privateKeyPathComponents copy];
-#else
-    return [[self.privateKeyPathComponents copy] autorelease];
-#endif
+    return maybe_autorelease_and_return([self.privateKeyPathComponents copy]);
 }
 
 - (NSArray *) _keyPathComponentsAddingKeyOrNil:(NSString *) key {

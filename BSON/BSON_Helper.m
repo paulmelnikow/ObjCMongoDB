@@ -18,15 +18,7 @@
 //
 
 #import "BSON_Helper.h"
-
-__autoreleasing NSString * NSStringFromBSONString (const char *cString) {
-    if (!cString) return nil;
-    return [NSString stringWithCString:cString encoding:NSUTF8StringEncoding];
-}
-
-const char * BSONStringFromNSString (NSString * key) {
-    return [key cStringUsingEncoding:NSUTF8StringEncoding];
-}
+#import "NSString+BSONAdditions.h"
 
 void BSONAssertKeyNonNil(NSString *key) {
     if (key) return;
@@ -159,7 +151,8 @@ int substitute_for_printf(const char *format, ...) {
     
     va_list args;
     va_start(args, format);
-    NSString *stringToAppend = [[NSString alloc] initWithFormat:NSStringFromBSONString(format) arguments:args];
+    NSString *stringToAppend = [[NSString alloc] initWithFormat:[NSString stringWithBSONString:format]
+                                                      arguments:args];
     va_end(args);    
     
     [target_for_bson_substitute_for_printf appendString:stringToAppend];

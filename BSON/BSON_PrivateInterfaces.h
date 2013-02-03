@@ -24,13 +24,15 @@
 //
 
 #import "bson.h"
+#import "NSString+BSONAdditions.h"
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
 #import "BSONIterator.h"
 #import "BSONTypes.h"
 
 @interface BSONDocument (Project)
-- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
+- (id) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
++ (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
 - (const bson *) bsonValue;
 @end
 
@@ -47,6 +49,7 @@
 @interface BSONObjectID (Project)
 - (bson_oid_t) oid;
 - (const bson_oid_t *) objectIDPointer;
++ (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer;
 @end
 
 @interface BSONTimestamp (Project)

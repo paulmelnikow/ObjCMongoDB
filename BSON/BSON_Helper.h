@@ -20,19 +20,13 @@
 #import <Foundation/Foundation.h>
 #import "BSONIterator.h"
 
-/**
- Returns an <code>NSString</code> for a UTF-8 C string.
- @param cString A UTF-8 C string
- @return An <code>NSString</code> representation of the string
- */
-__autoreleasing NSString * NSStringFromBSONString (const char * cString);
-
-/**
- Returns a UTF-8 C string for an <code>NSString</code>.
- @param key A string
- @return A UTF-8 C string representation of the string
- */
-const char * BSONStringFromNSString (NSString * key);
+#if __has_feature(objc_arc)
+#define maybe_autorelease_and_return(x) return x
+#define maybe_retain_autorelease_and_return(x) return x;
+#else
+#define maybe_autorelease_and_return(x) return [x autorelease];
+#define maybe_retain_autorelease_and_return(x) return [[x retain] autorelease];
+#endif
 
 /**
  Raises an exception for a nil key.
