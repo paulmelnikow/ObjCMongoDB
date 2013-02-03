@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import "BSONIterator.h"
-#import "bson.h"
 
 @class BSONEncoder;
 
@@ -55,14 +54,6 @@
  document.
  */
 -(BSONDocument *) initWithData:(NSData *) data;
-
-/**
- Initializes a BSON document by taking ownership of an existing native BSON document. This
- allows you to create a bson directly and then bridge it into the ObjCMongoDB framework,
- but there's usually no need to do this directly.
- @param b A pointer to a <code>bson</code> structure
- */
-- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyOnDealloc:(BOOL) destroyOnDealloc;
 
 /**
  Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make

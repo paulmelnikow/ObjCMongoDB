@@ -18,7 +18,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "bson.h"
 
 /**
  Encapsulates an immutable BSON object ID, as a wrapper around a <code>bson_oid_t</code>
@@ -51,13 +50,6 @@
 + (BSONObjectID *) objectIDWithData:(NSData *) data;
 
 /**
- Creates a object ID by copying a native <code>bson_oid_t</code> structure.
- @param objectIDPointer A bson_oid_t structure
- */
-+ (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer;
-
-
-/**
  Returns the 24-digit hexadecimal string value of the receiver.
  @return The hex string value of an object ID.
  */
@@ -80,6 +72,14 @@
 
 /*! Test for equality with another object ID. */
 - (BOOL)isEqual:(id)other;
+
+/*! Provide your own code to generate the second four bytes of the object ID. */
++ (void) generateFuzzUsingBlock:(^ int (void)) block;
+/*! Provide your own code to generate the incrementing part of the object ID (the
+    last four bytes). You should do this if you need thread-safety in generating
+    object IDs, for example.
+    */
++ (void) generateIncrementUsingBlock:(^ int (void)) block;
 
 @end
 

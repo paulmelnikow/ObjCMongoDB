@@ -19,10 +19,31 @@
 
 #import "BSONTypes.h"
 #import "BSON_Helper.h"
+#import "bson.h"
+#import "BSON_PrivateInterfaces.h"
+
+static int ^(void)(void) fuzzGenerator;
+static int ^(void)(void) incrementGenerator;
+int block_based_fuzz_func();
+int block_based_fuzz_func() { return fuzzGenerator(); }
+int block_based_inc_func();
+int block_based_inc_func() { return incrementGenerator(); }
 
 @implementation BSONObjectID {
     bson_oid_t _oid;
     NSString *_stringValue;
+}
+
+#pragma mark - Overriding OID generation
+
++ (void) generateFuzzUsingBlock:(^ int (void)) block {
+    fuzzGenerator = [block copy];
+    bson_set_oid_fuzz(block_based_fuzz_func);
+}
+
++ (void) generateIncrementUsingBlock:(^ int (void)) block {
+    incrementGenerator = [block copy];
+    bson_set_oid_int(block_based_inc_func);
 }
 
 #pragma mark - Initialization
@@ -115,7 +136,6 @@
 
 - (bson_oid_t) oid { return _oid; }
 
-
 - (NSData *) dataValue {
     return [NSData dataWithBytes:_oid.bytes length:12];
 }
@@ -129,7 +149,7 @@
 }
 
 - (NSString *) description {
-    return [NSString stringWithFormat:@"Object ID \"%@\"", [self stringValue]];
+    return [self stringValue];
 }
 
 - (NSString *) stringValue {

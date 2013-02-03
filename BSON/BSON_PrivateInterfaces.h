@@ -23,15 +23,25 @@
 // your application. Use the classes' public interfaces instead.
 //
 
+#import "bson.h"
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
+#import "BSONIterator.h"
+#import "BSONTypes.h"
 
 @interface BSONDocument (Project)
+- (BSONDocument *) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
 - (const bson *) bsonValue;
 @end
 
 @interface BSONEncoder (Project)
 - (bson *) bsonValue;
+@end
+
+@interface BSONIterator (Project)
+- (BSONIterator *) initWithDocument:(BSONDocument *)document
+             keyPathComponentsOrNil:(NSArray *) keyPathComponents;
+- (bson_iterator *) nativeIteratorValue;
 @end
 
 @interface BSONObjectID (Project)
@@ -41,10 +51,4 @@
 
 @interface BSONTimestamp (Project)
 - (bson_timestamp_t *) timestampPointer;
-@end
-
-@interface BSONIterator (Project)
-- (BSONIterator *) initWithDocument:(BSONDocument *)document
-             keyPathComponentsOrNil:(NSArray *) keyPathComponents;
-- (bson_iterator *) nativeIteratorValue;
 @end

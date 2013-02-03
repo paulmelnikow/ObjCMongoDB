@@ -1,5 +1,17 @@
 # TODO - C Driver 0.5 to 0.7.1
 
+## Test cases
+
+ - generateFuzzUsingBlock
+ - generateIncrementUsingBlock
+
+## Other changes
+
+ -  ~~BSONObjectID instance method for MONGO_EXPORT time_t bson_oid_generated_time( bson_oid_t *oid );~~
+ -  ~~BSONObjectID class method for MONGO_EXPORT void bson_set_oid_fuzz( int ( *func )( void ) );~~
+ -  ~~BSONObjectID class method for MONGO_EXPORT void bson_set_oid_inc( int ( *func )( void ) );~~
+
+
 ## 0.7.1
 2013-1-7
 

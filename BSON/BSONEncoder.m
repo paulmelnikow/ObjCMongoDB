@@ -57,7 +57,7 @@
 
 - (BSONEncoder *) initForWriting {
     if (self = [super init]) {
-        _bson = malloc(sizeof(bson));
+        _bson = bson_create();
         bson_init(_bson);
         self.restrictsKeyNamesForMongoDB = YES;
         self.encodingObjectStack = [NSMutableArray array];
@@ -69,7 +69,7 @@
 - (void) dealloc {
     // In case object is deallocated in the middle of encoding
     bson_destroy(_bson);
-    free(_bson);
+    bson_dispose(_bson);
 #if !__has_feature(objc_arc)
     self.resultDocument = nil;
     self.encodingObjectStack = nil;
@@ -123,7 +123,7 @@
 
     if (BSON_ERROR == bson_finish(_bson)) [self _raiseBSONError];
     
-    self.resultDocument = [[BSONDocument alloc] initWithNativeDocument:_bson destroyOnDealloc:YES];
+    self.resultDocument = [[BSONDocument alloc] initWithNativeDocument:_bson destroyWhenDone:YES];
     _bson = NULL;
 
     if ([self.delegate respondsToSelector:@selector(encoderDidFinish:)])

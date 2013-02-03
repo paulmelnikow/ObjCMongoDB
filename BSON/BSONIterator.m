@@ -42,7 +42,7 @@ NSString * const BSONException = @"BSONException";
         self.parent = document;
         self.privateKeyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
         _b = [document bsonValue];
-        _iter = malloc(sizeof(bson_iterator));
+        _iter = bson_iterator_create();
         bson_iterator_init(_iter, _b);
         _type = bson_iterator_type(_iter);
     }
@@ -67,7 +67,7 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (void) dealloc {
-    free(_iter);
+    bson_iterator_dispose(_iter);
 #if !__has_feature(objc_arc)
     self.parent = nil;
     self.privateKeyPathComponents = nil;
@@ -133,7 +133,7 @@ NSString * const BSONException = @"BSONException";
 #pragma mark - Values for collections
 
 - (BSONIterator *) sequentialSubIteratorValue {
-    bson_iterator *subIter = malloc(sizeof(bson_iterator));
+    bson_iterator *subIter = bson_iterator_create();
     bson_iterator_subiterator(_iter, subIter);
     BSONIterator *iterator = [[BSONIterator alloc] initWithNativeIterator:subIter
                                                                    parent:_parent
@@ -233,12 +233,12 @@ NSString * const BSONException = @"BSONException";
 
 - (BSONCode *) codeValue { return [BSONCode code:NSStringFromBSONString(bson_iterator_code(_iter))]; }
 - (BSONCodeWithScope *) codeWithScopeValue {
-    bson *newBson = malloc(sizeof(bson));
+    bson *newBson = bson_create();
     bson_iterator_code_scope(_iter, newBson);
 #if __has_feature(objc_arc)
-    BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:NO];
+    BSONDocument *document = [[BSONDocument alloc] initWithNativeDocument:newBson destroyWhenDone:NO];
 #else
-    BSONDocument *document = [[[BSONDocument alloc] initWithNativeDocument:newBson destroyOnDealloc:NO] autorelease];
+    BSONDocument *document = [[[BSONDocument alloc] initWithNativeDocument:newBson destroyWhenDone:NO] autorelease];
 #endif
     return [BSONCodeWithScope code:NSStringFromBSONString(bson_iterator_code(_iter)) withScope:document];
 }
