@@ -28,5 +28,5 @@
 #import "MongoDBCollection.h"
 #import "MongoPredicate.h"
 #import "MongoKeyedPredicate.h"
-#import "MongoFetchRequest.h"
+#import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
