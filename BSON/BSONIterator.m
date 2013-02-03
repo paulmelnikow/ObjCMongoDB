@@ -80,13 +80,13 @@ NSString * const BSONException = @"BSONException";
 #pragma mark - Searching
 
 - (bson_type) nativeValueTypeForKey:(NSString *) key {
-    [self assertSupportsKeyedSearching];
+    [self _assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
     return _type = bson_find(_iter, _b, BSONStringFromNSString(key));
 }
 
 - (BOOL) containsValueForKey:(NSString *) key {
-    [self assertSupportsKeyedSearching];
+    [self _assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
     return BSON_EOO != [self nativeValueTypeForKey:key];
 }
@@ -278,7 +278,7 @@ NSString * const BSONException = @"BSONException";
     return singleton;
 }
 
-- (void) assertSupportsKeyedSearching {
+- (void) _assertSupportsKeyedSearching {
     if (!_b) {
         id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
                                          reason:@"Can't perform keyed searching on a sequential iterator; use -embeddedDocumentIterator instead"
