@@ -20,6 +20,7 @@
 #import "MongoConnection.h"
 #import "mongo.h"
 #import "BSONDecoder.h"
+#import "BSON_Helper.h"
 #import "Mongo_Helper.h"
 #import "Mongo_PrivateInterfaces.h"
 

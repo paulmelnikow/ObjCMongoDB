@@ -13,7 +13,9 @@
 
 - (void) testNSStringFromBSONType {
     STAssertEqualObjects(@"BSONTypeLong",
-                         NSStringFromBSONType(BSONTypeLong);
+                         NSStringFromBSONType(BSONTypeLong),
+                         nil
+                         );
 }
 
 @end

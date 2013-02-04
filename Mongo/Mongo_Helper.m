@@ -18,7 +18,7 @@
 //
 
 #define mongo_error_case(typeParam, descParam) \
-    case type: \
+    case typeParam: \
         name = @"typeParam";  \
         desc = desc; \
     break;

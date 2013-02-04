@@ -54,10 +54,10 @@ __autoreleasing NSString * NSStringFromBSONType (BSONType t) {
 
 static int (^fuzzGenerator)(void);
 static int (^incrementGenerator)(void);
-int block_based_fuzz_func();
-int block_based_fuzz_func() { return fuzzGenerator(); }
-int block_based_inc_func();
-int block_based_inc_func() { return incrementGenerator(); }
+int block_based_fuzz_func(void);
+int block_based_fuzz_func(void) { return fuzzGenerator(); }
+int block_based_inc_func(void);
+int block_based_inc_func(void) { return incrementGenerator(); }
 
 @implementation BSONObjectID {
     bson_oid_t _oid;
