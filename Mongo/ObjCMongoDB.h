@@ -19,9 +19,10 @@
 //
 
 
-//
-// Convenience header file imports the headers for the library's public interface
-//
+/*
+ Convenience header for the library's public interface
+ */
+
 
 #import "ObjCBSON.h"
 #import "MongoConnection.h"

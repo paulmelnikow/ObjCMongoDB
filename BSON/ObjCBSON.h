@@ -18,6 +18,12 @@
 //  limitations under the License.
 //
 
+
+/*
+ Convenience header for the library's public interface
+ */
+
+
 #import "BSONTypes.h"
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
@@ -26,4 +32,3 @@
 #import "NSManagedObject+BSONCoding.h"
 
 FOUNDATION_EXPORT NSString * const MongoDBObjectIDKey;
-FOUNDATION_EXPORT const char * const MongoDBObjectIDBSONKey;
