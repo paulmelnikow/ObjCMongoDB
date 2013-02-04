@@ -23,6 +23,7 @@
 #import "MongoKeyedPredicate.h"
 #import "mongo.h"
 #import "Mongo_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @interface MongoUpdateRequest ()
 @property (retain) BSONDocument *replacementDocument;

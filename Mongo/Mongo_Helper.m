@@ -32,77 +32,25 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
     NSString *desc = nil;
     switch(err) {
         mongo_error_case(MONGO_CONN_SUCCESS, @"Connection success!");
-        FIXME
-        // case MONGO_CONN_SUCCESS:
-        //     name = @"MONGO_CONN_SUCCESS";
-        //     desc = @"Connection success!";
-        //     break;
-        case MONGO_CONN_NO_SOCKET:
-            name = @"MONGO_CONN_NO_SOCKET";
-            desc = @"Could not create a socket";
-            break;
-        case MONGO_CONN_FAIL:
-            name = @"MONGO_CONN_FAIL";
-            desc = @"An error occurred while calling connect()";
-            break;
-        case MONGO_CONN_ADDR_FAIL:
-            name = @"MONGO_CONN_ADDR_FAIL";
-            desc = @"An error occured while calling getaddrinfo()";
-            break;
-        case MONGO_CONN_NOT_MASTER:
-            name = @"MONGO_CONN_NOT_MASTER";
-            desc = @"Warning: connected to a non-master node (read-only)";
-            break;
-        case MONGO_CONN_BAD_SET_NAME:
-            name = @"MONGO_CONN_BAD_SET_NAME";
-            desc = @"Given rs name doesn't match this replica set";
-            break;
-        case MONGO_CONN_NO_PRIMARY:
-            name = @"MONGO_CONN_NO_PRIMARY";
-            desc = @"Can't find primary in replica set. Connection closed.";
-            break;
-        case MONGO_IO_ERROR:
-            name = @"MONGO_IO_ERROR";
-            desc = @"An error occurred while reading or writing on socket";
-            break;
-        case MONGO_READ_SIZE_ERROR:
-            name = @"MONGO_READ_SIZE_ERROR";
-            desc = @"The response is not the expected length";
-            break;
-        case MONGO_COMMAND_FAILED:
-            name = @"MONGO_COMMAND_FAILED";
-            desc = @"The command returned with 'ok' value of 0";
-            break;
-        case MONGO_WRITE_ERROR:
-            name = @"MONGO_WRITE_ERROR";
-            desc = @"Write with given write_concern returned an error";
-            break;
-        case MONGO_NS_INVALID:
-            name = @"MONGO_NS_INVALID";
-            desc = @"The name for the ns (database or collection) is invalid";
-            break;
-        case MONGO_BSON_INVALID:
-            name = @"MONGO_BSON_INVALID";
-            desc = @"BSON not valid for the specified op";
-            break;
-        case MONGO_BSON_NOT_FINISHED:
-            name = @"MONGO_BSON_NOT_FINISHED";
-            desc = @"BSON object has not been finished";
-            break;
-        case MONGO_BSON_TOO_LARGE:
-            name = @"MONGO_BSON_TOO_LARGE";
-            desc = @"BSON object exceeds max BSON size";
-            break;
-        case MONGO_WRITE_CONCERN_INVALID:
-            name = @"MONGO_WRITE_CONCERN_INVALID";
-            desc = @"MONGO_WRITE_CONCERN_INVALID";
+        mongo_error_case(MONGO_CONN_NO_SOCKET, @"Could not create a socket");
+        mongo_error_case(MONGO_CONN_FAIL, @"An error occurred while calling connect()");
+        mongo_error_case(MONGO_CONN_ADDR_FAIL, @"An error occured while calling getaddrinfo()");
+        mongo_error_case(MONGO_CONN_NOT_MASTER, @"Warning: connected to a non-master node (read-only)");
+        mongo_error_case(MONGO_CONN_BAD_SET_NAME, @"Given rs name doesn't match this replica set");
+        mongo_error_case(MONGO_CONN_NO_PRIMARY, @"Can't find primary in replica set. Connection closed.");
+        mongo_error_case(MONGO_IO_ERROR, @"An error occurred while reading or writing on socket");
+        mongo_error_case(MONGO_SOCKET_ERROR, @"Other socket error");
+        mongo_error_case(MONGO_READ_SIZE_ERROR, @"The response is not the expected length");
+        mongo_error_case(MONGO_COMMAND_FAILED, @"The command returned with 'ok' value of 0");
+        mongo_error_case(MONGO_WRITE_ERROR, @"Write with given write_concern returned an error");
+        mongo_error_case(MONGO_NS_INVALID, @"The name for the ns (database or collection) is invalid");
+        mongo_error_case(MONGO_BSON_INVALID, @"BSON not valid for the specified op");
+        mongo_error_case(MONGO_BSON_NOT_FINISHED, @"BSON object has not been finished");
+        mongo_error_case(MONGO_BSON_TOO_LARGE, @"BSON object exceeds max BSON size");
+        mongo_error_case(MONGO_WRITE_CONCERN_INVALID, @"Supplied write concern object is invalid");
     }
     NSString *result = description ? desc : name;
-#if __has_feature(objc_arc)
     return result;
-#else
-    return [result autorelease];
-#endif
 }
 __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description);
 __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {

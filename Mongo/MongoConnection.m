@@ -27,6 +27,12 @@
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
+@interface MongoConnection ()
+// Use this to support implementation of public properties, which need custom setters
+@property (copy) MongoWriteConcern *writeConcern2;
+@property (assign) NSUInteger maxBSONSize2;
+@end
+
 @implementation MongoConnection {
     mongo *_conn;
 }
@@ -58,7 +64,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (void) dealloc {
     mongo_destroy(_conn);
     mongo_dispose(_conn);
-    self.writeConcern = nil;
+    self.writeConcern2 = nil;
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -68,23 +74,23 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 #pragma mark - Configuring the connection
 
-- (MongoWriteConcern *) writeConcern { return _writeConcern; }
+- (MongoWriteConcern *) writeConcern { return self.writeConcern2; }
 - (void) setWriteConcern:(MongoWriteConcern *) writeConcern {
-#if !__has_feature(objc_arc)
-    [_writeConcern release];
-#endif
-    _writeConcern = [writeConcern copy];
-    mongo_set_write_concern(_conn, _writeConcern.nativeWriteConcern);
+    if (!writeConcern)
+        [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
+    self.writeConcern2 = writeConcern;
+    mongo_set_write_concern(_conn, self.writeConcern2.nativeWriteConcern);
 }
 
-- (NSUInteger) maxBSONSize { return _maxBSONSize; }
+- (NSUInteger) maxBSONSize { return self.maxBSONSize2; }
 - (void) setMaxBSONSize:(NSUInteger) maxBSONSize {
     if (maxBSONSize > INT_MAX) {
         [NSException raise:NSInvalidArgumentException
                     format:@"Value is larger than what the driver supports. Keep it to %i",
          INT_MAX];
     }
-    mongo->max_bson_size = _maxBSONSize = maxBSONSize;
+    self.maxBSONSize2 = (int) maxBSONSize;
+    _conn->max_bson_size = (int) maxBSONSize;
 }
 
 #pragma mark - Connecting to a single server or a replica set
@@ -108,7 +114,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         mongo_parse_host(hostWithPort.bsonString, &host_port);
         mongo_replica_set_add_seed(_conn, host_port.host, host_port.port);
     }
-    if (MONGO_OK == mongo_replica_set_connect(_conn))
+    if (MONGO_OK == mongo_replica_set_client(_conn))
         return YES;
     else
         set_error_and_return_NO;

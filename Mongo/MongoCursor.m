@@ -18,7 +18,9 @@
 //
 
 #import "MongoCursor.h"
+#import "BSON_Helper.h"
 #import "Mongo_Helper.h"
+#import "BSON_PrivateInterfaces.h"
 
 @implementation MongoCursor {
     mongo_cursor *_cursor;

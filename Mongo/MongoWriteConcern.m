@@ -8,6 +8,7 @@
 
 #import "MongoWriteConcern.h"
 #import "Mongo_Helper.h"
+#import "BSON_Helper.h"
 #import "mongo.h"
 
 @interface MongoWriteConcern ()
@@ -46,7 +47,7 @@
 }
 
 - (id) copy {
-    MongoWriteConcern *result = [[self alloc] init];
+    MongoWriteConcern *result = [[self.class alloc] init];
     result.writeAcknowledgementBehavior = self.writeAcknowledgementBehavior;
     result.replicationTimeout = self.replicationTimeout;
     result.synchronizeToDisk = self.synchronizeToDisk;
