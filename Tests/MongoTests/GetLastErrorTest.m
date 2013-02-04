@@ -36,7 +36,7 @@
 }
 
 - (void) testServerStatus {
-    MongoDBCollection *coll = [_mongo collection:@"objcmongodbtest.getlasterror.testServerStatus"];
+    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.getlasterror.testServerStatus"];
     
     NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
                            [BSONObjectID objectID], @"_id",
@@ -44,15 +44,15 @@
                            nil];
     
     NSError *error = nil;
-    [coll insertDictionary:entry error:&error];
+    [coll insertDictionary:entry writeConcern:nil error:&error];
     STAssertTrue([coll lastOperationWasSuccessful:&error], @"shouldn't be an error");
 
-    [coll insertDictionary:entry error:&error];
+    [coll insertDictionary:entry writeConcern:nil error:&error];
     STAssertFalse([coll lastOperationWasSuccessful:&error], @"should be a duplicate key");
 }
 
 - (void) testUpdateCount {
-    MongoDBCollection *coll = [_mongo collection:@"objcmongodbtest.getlasterror.testUpdateCount"];
+    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.getlasterror.testUpdateCount"];
     
     BSONObjectID *objectID = [BSONObjectID objectID];
     NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -61,7 +61,7 @@
                            nil];
     
     NSError *error = nil;
-    [coll insertDictionary:entry error:&error];
+    [coll insertDictionary:entry writeConcern:nil error:&error];
     STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
 
     MongoKeyedPredicate *matchingPredicate = [MongoKeyedPredicate predicate];

@@ -43,7 +43,7 @@
                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                              nil];
     NSError *error = nil;
-    [collection insertDictionary:testDoc error:&error];
+    [collection insertDictionary:testDoc writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
 }
 
@@ -51,7 +51,7 @@
     // Test basic instance of -findOneWithError:, -findOneWithPredicate:error:, and -findOne:error:
     NSError *error = nil; BSONDocument *resultDoc = nil; NSDictionary *resultDict = nil;
     
-    MongoDBCollection *coll = [_mongo collection:@"objcmongodbtest.DBCollection.testFindOne"];    
+    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.DBCollection.testFindOne"];    
     NSDictionary *testDoc1 = [NSDictionary dictionaryWithObjectsAndKeys:
                              @"pickles1", @"description",
                              [NSNumber numberWithInt:5], @"quantity",
@@ -59,7 +59,7 @@
                              [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                              nil];
-    [coll insertDictionary:testDoc1 error:&error];
+    [coll insertDictionary:testDoc1 writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
     
     error = nil;
@@ -70,7 +70,7 @@
                              [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                              nil];
-    [coll insertDictionary:testDoc2 error:&error];
+    [coll insertDictionary:testDoc2 writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
 
     error = nil;
@@ -81,7 +81,7 @@
                               [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
                               [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                               nil];
-    [coll insertDictionary:testDoc3 error:&error];
+    [coll insertDictionary:testDoc3 writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
     
     error = nil;

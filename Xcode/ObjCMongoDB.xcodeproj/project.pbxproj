@@ -66,6 +66,7 @@
 		9E0A7C9D16BF3AD600832C86 /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9E0A7CA016BF484D00832C86 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
 		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -894,6 +895,7 @@
 				9E0A7C9D16BF3AD600832C86 /* gridfs.c in Sources */,
 				9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */,
 				9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */,
+				9E0A7CA016BF484D00832C86 /* OrderedDictionary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
