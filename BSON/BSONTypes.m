@@ -22,7 +22,7 @@
 #import "bson.h"
 #import "BSON_PrivateInterfaces.h"
 
-#define bson_type_case(type) case type: name = @"type"; break
+#define bson_type_case(type) case type: name = NSStringize(type); break
 
 __autoreleasing NSString * NSStringFromBSONType (BSONType t) {
     NSString *name = nil;

@@ -28,6 +28,10 @@
 #define maybe_retain_autorelease_and_return(x) do { return [[x retain] autorelease]; } while(0)
 #endif
 
+// For macros bson_type_case in BSONTypes.m, mongo_error_case in Mongo_Helper.m
+#define NSStringize_helper(x) #x
+#define NSStringize(x) @NSStringize_helper(x)
+
 /**
  Raises an exception for a nil key.
  @param key The key to test

@@ -17,13 +17,14 @@
 //  limitations under the License.
 //
 
+#import "Mongo_Helper.h"
+#import "BSON_Helper.h"
+
 #define mongo_error_case(typeParam, descParam) \
     case typeParam: \
-        name = @"typeParam";  \
+        name = NSStringize(typeParam);  \
         desc = desc; \
     break;
-
-#import "Mongo_Helper.h"
 
 __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
 __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
