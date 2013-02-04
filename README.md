@@ -43,8 +43,6 @@ Some missing pieces:
 
  -   Ensure index
  -   More .h documentation
- -   Write concerns
- -   Upgrade to v0.7.1 of the Mongo C driver
  -   Some commands
 
 ## License
@@ -74,3 +72,4 @@ in this repository as APACHE-2.0.txt.
 [Diederik Hoogenboom]: https://github.com/dhoogenb/NuMongoDB
 [Rob Elkin]: https://github.com/robelkin/NuMongoDB
 [OrderedDictionary]: http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html
+
