@@ -57,26 +57,11 @@ __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
-        case MONGO_CURSOR_EXHAUSTED:
-            name = @"MONGO_CURSOR_EXHAUSTED";
-            desc = @"The cursor has no more results";
-            break;
-        case MONGO_CURSOR_INVALID:
-            name = @"MONGO_CURSOR_INVALID";
-            desc = @"The cursor has timed out or is not recognized";
-            break;
-        case MONGO_CURSOR_PENDING:
-            name = @"MONGO_CURSOR_PENDING";
-            desc = @"Tailable cursor still alive but no data";
-            break;
-        case MONGO_CURSOR_QUERY_FAIL:
-            name = @"MONGO_CURSOR_QUERY_FAIL";
-            desc = @"The server returned an '$err' object, indicating query failure. See conn->lasterrcode and conn->lasterrstr for details.";
-            break;
-        case MONGO_CURSOR_BSON_ERROR:
-            name = @"MONGO_CURSOR_BSON_ERROR";
-            desc = @"Something is wrong with the BSON provided. See conn->err for details.";
-            break;            
+        mongo_error_case(MONGO_CURSOR_EXHAUSTED, @"The cursor has no more results");
+        mongo_error_case(MONGO_CURSOR_INVALID, @"The cursor has timed out or is not recognized");
+        mongo_error_case(MONGO_CURSOR_PENDING, @"Tailable cursor still alive but no data");
+        mongo_error_case(MONGO_CURSOR_QUERY_FAIL, @"The server returned an '$err' object, indicating query failure. See conn->lasterrcode and conn->lasterrstr for details.");
+        mongo_error_case(MONGO_CURSOR_BSON_ERROR, @"Something is wrong with the BSON provided. See conn->err for details.");
     }
     NSString *result = description ? desc : name;
 #if __has_feature(objc_arc)
@@ -101,15 +86,3 @@ __autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t
 __autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 1);
 }
-
-__autoreleasing NSArray * NSArrayFromPoint(NSPoint point) {
-    return @[ @(point.x), @(point.y) ];
-}
-
-__autoreleasing NSArray * NSArrayFromRect(NSRect rect) {
-    id firstCoord = @[ @(NSMinX(rect)), @(NSMinY(rect)) ];
-    id secondCoord = @[ @(NSMaxX(rect)), @(NSMaxY(rect)) ];
-    return @[ firstCoord, secondCoord ];
-}
-
-

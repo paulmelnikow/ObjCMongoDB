@@ -25,9 +25,6 @@ __autoreleasing NSString * MongoErrorCodeDescription(mongo_error_t err);
 __autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err);
 __autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err);
 
-__autoreleasing NSArray * NSArrayFromPoint(NSPoint point);
-__autoreleasing NSArray * NSArrayFromRect(NSRect rect);
-
 #define set_error_and_return_NO   do { if (error) *error = [self error]; return NO; } while(0)
 #define set_error_and_return_nil   do { if (error) *error = [self error]; return nil; } while(0)
 #define set_error_and_return_BSON_ERROR   do { if (error) *error = [self error]; return BSON_ERROR; } while(0)

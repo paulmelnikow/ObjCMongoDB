@@ -23,6 +23,7 @@
 // in your application. Use the classes' public interfaces instead.
 //
 
+#import "NSArray+MongoAdditions.h"
 #import "BSON_PrivateInterfaces.h"
 #import "MongoConnection.h"
 #import "MongoFindRequest.h"

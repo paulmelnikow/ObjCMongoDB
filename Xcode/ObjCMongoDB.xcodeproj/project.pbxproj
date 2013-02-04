@@ -67,6 +67,9 @@
 		9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9E0A7CA016BF484D00832C86 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
+		9E0A7CA316BF5F4500832C86 /* NSArray+MongoAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7CA116BF5F4400832C86 /* NSArray+MongoAdditions.h */; };
+		9E0A7CA416BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */; };
+		9E0A7CA516BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */; };
 		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -175,6 +178,8 @@
 		9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONHelperTest.m; sourceTree = "<group>"; };
 		9E0A7C6C16BF358D00832C86 /* NSData+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+BSONAdditions.h"; sourceTree = "<group>"; };
 		9E0A7C6D16BF358E00832C86 /* NSData+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+BSONAdditions.m"; sourceTree = "<group>"; };
+		9E0A7CA116BF5F4400832C86 /* NSArray+MongoAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+MongoAdditions.h"; sourceTree = "<group>"; };
+		9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+MongoAdditions.m"; sourceTree = "<group>"; };
 		9E1054411503EE5800805F26 /* README */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
 		9E1054441503EEEA00805F26 /* APACHE-2.0.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "APACHE-2.0.txt"; sourceTree = "<group>"; };
 		9E1054461503F05000805F26 /* NOTICE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = NOTICE; sourceTree = "<group>"; };
@@ -490,6 +495,8 @@
 			children = (
 				9E97CD1316B0A1630035480E /* ObjCMongoDB.h */,
 				9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */,
+				9E0A7CA116BF5F4400832C86 /* NSArray+MongoAdditions.h */,
+				9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */,
 				9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */,
 				9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */,
 				9E2725B7150AF1CD009CBE47 /* MongoConnection.h */,
@@ -584,6 +591,7 @@
 				9E0A7C5D16BF0AE300832C86 /* NSString+BSONAdditions.h in Headers */,
 				9E0A7C6516BF10A000832C86 /* MongoWriteConcern.h in Headers */,
 				9E0A7C6E16BF359000832C86 /* NSData+BSONAdditions.h in Headers */,
+				9E0A7CA316BF5F4500832C86 /* NSArray+MongoAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -812,6 +820,7 @@
 				9EBE79B3150006DF000E767D /* gridfs.c in Sources */,
 				C2891A49150AB6D40065E2E9 /* encoding.c in Sources */,
 				9E0A7C5A16BEE04100832C86 /* env.c in Sources */,
+				9E0A7CA416BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -896,6 +905,7 @@
 				9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */,
 				9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */,
 				9E0A7CA016BF484D00832C86 /* OrderedDictionary.m in Sources */,
+				9E0A7CA516BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
