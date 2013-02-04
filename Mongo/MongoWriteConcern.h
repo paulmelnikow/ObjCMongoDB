@@ -21,8 +21,10 @@ typedef enum {
 
 /*! Default is MongoWriteAcknowledged */
 @property (assign) MongoWriteAcknowledgementBehavior writeAcknowledgementBehavior;
+
 /*! Default is 0, meaning do not timeout. Value in seconds, will be rounded to the nearest millisecond. */
 @property (assign) NSTimeInterval replicationTimeout;
+
 /*! Default is NO */
 @property (assign) BOOL synchronizeToDisk;
 
