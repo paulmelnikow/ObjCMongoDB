@@ -3,9 +3,9 @@ the [10gen C driver][mongo-c-driver].
 
 ## Latest release
 
-The latest release is v0.9, which is based on v0.5 of the driver.
+The latest release is v0.9.5, which is based on v0.7.1 of the driver.
 
-    git checkout v0.9     # since master may be a work in process
+    git checkout v0.9.5     # since master may be a work in process
 
 See what's changed in [History][].
 
