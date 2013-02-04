@@ -26,12 +26,12 @@ NSString * const BSONException = @"BSONException";
 @interface BSONIterator ()
 @property (retain) id dependentOn; // An object which retains the bson we're using
 @property (retain) NSArray *privateKeyPathComponents;
+@property (assign) BSONType type;
 @end
 
 @implementation BSONIterator {
     bson_iterator *_iter;
     const bson *_b;
-    BSONType _type;
 }
 
 #pragma mark - Initialization
@@ -44,7 +44,7 @@ NSString * const BSONException = @"BSONException";
         _b = [document bsonValue];
         _iter = bson_iterator_create();
         bson_iterator_init(_iter, _b);
-        _type = bson_iterator_type(_iter);
+        self.type = bson_iterator_type(_iter);
     }
     return self;
 }
@@ -60,7 +60,7 @@ NSString * const BSONException = @"BSONException";
         self.dependentOn = dependentOn;
         self.privateKeyPathComponents = keyPathComponents;
         _iter = bsonIter;
-        _type = bson_iterator_type(_iter);
+        self.type = bson_iterator_type(_iter);
         
     }
     return self;
@@ -81,14 +81,14 @@ NSString * const BSONException = @"BSONException";
 
 - (BSONType) valueTypeForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
-    BSONAssertKeyNonNil(key);
-    return _type = bson_find(_iter, _b, key.bsonString);
+    NSParameterAssert(key != nil);
+    return self.type = bson_find(_iter, _b, key.bsonString);
 }
 
 - (BOOL) containsValueForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
-    BSONAssertKeyNonNil(key);
-    return BSON_EOO != [self valueTypeForKey:key];
+    NSParameterAssert(key != nil);
+    return BSONTypeEndOfObject != [self valueTypeForKey:key];
 }
 
 - (id) objectForKey:(NSString *)key {
@@ -117,9 +117,14 @@ NSString * const BSONException = @"BSONException";
 
 #pragma mark - Information about the current key
 
-- (BSONType) valueType { return _type; }
-- (BOOL) isEmbeddedDocument { return BSON_OBJECT == _type; }
-- (BOOL) isArray { return BSON_ARRAY == _type; }
+- (BSONType) valueType { return self.type; }
+- (BOOL) isEmbeddedDocument { return BSONTypeEmbeddedDocument == self.type; }
+- (BOOL) isArray { return BSONTypeArray == self.type; }
+- (BOOL) valueTypeIsInArray:(NSArray *) allowedTypes {
+    for (NSNumber *cur in allowedTypes) if (self.valueType == [cur intValue])
+        return YES;
+    return NO;
+}
 
 - (NSString *) key { return [NSString stringWithBSONString:bson_iterator_key(_iter)]; }
 - (NSArray *) keyPathComponents {
@@ -159,41 +164,41 @@ NSString * const BSONException = @"BSONException";
 
 - (id) objectValue {
     switch([self valueType]) {
-        case BSON_EOO:
+        case BSONTypeEndOfObject:
             return nil;
-        case BSON_DOUBLE:
+        case BSONTypeDouble:
             return [NSNumber numberWithDouble:[self doubleValue]];
-        case BSON_STRING:
+        case BSONTypeString:
             return [self stringValue];
-        case BSON_OBJECT:
+        case BSONTypeEmbeddedDocument:
             return [self embeddedDocumentValue];
-        case BSON_ARRAY:
+        case BSONTypeArray:
             return [self sequentialSubIteratorValue];
-        case BSON_BINDATA:
+        case BSONTypeBinaryData:
             return [self dataValue];
-        case BSON_UNDEFINED:
+        case BSONTypeUndefined:
             return [BSONIterator objectForUndefined];
-        case BSON_OID:
+        case BSONTypeObjectID:
             return [self objectIDValue];
-        case BSON_BOOL:
+        case BSONTypeBoolean:
             return [NSNumber numberWithBool:[self boolValue]];
-        case BSON_DATE:
+        case BSONTypeDate:
             return [self dateValue];
-        case BSON_NULL:
+        case BSONTypeNull:
             return [NSNull null];
-        case BSON_REGEX:
+        case BSONTypeRegularExpression:
             return [self regularExpressionValue];
-        case BSON_CODE:
+        case BSONTypeCode:
             return [self codeValue];
-        case BSON_SYMBOL:
+        case BSONTypeSymbol:
             return [self symbolValue];
-        case BSON_CODEWSCOPE:
+        case BSONTypeCodeWithScope:
             return [self codeWithScopeValue];
-        case BSON_INT:
+        case BSONTypeInteger:
             return [NSNumber numberWithInt:[self intValue]];
-        case BSON_TIMESTAMP:
+        case BSONTypeTimestamp:
             return [self timestampValue];
-        case BSON_LONG:
+        case BSONTypeLong:
             return [NSNumber numberWithLongLong:[self int64Value]];
         default:
             [NSException raise:NSInvalidUnarchiveOperationException
@@ -294,7 +299,7 @@ void objc_bson_error_handler(const char * message) {
     [string appendFormat:@"\n    keyPathComponents:"];
     for (NSString *keyPath in [self keyPathComponents])
         [string appendFormat:@"\n        %@", keyPath];
-    [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self valueType])];
+    [string appendFormat:@"\n\n    valueType:\n        %@", NSStringFromBSONType([self valueType])];
     [string appendString:@"\n"];
     maybe_retain_autorelease_and_return(string);
 }

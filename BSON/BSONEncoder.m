@@ -23,18 +23,6 @@
 #import "bson.h"
 #import "BSON_PrivateInterfaces.h"
 
-@interface BSONBufferWrapper : NSObject
-+(BSONBufferWrapper *) wrapperForNativeDocument:(bson *) b;
-@property (assign) bson *b;
-@end
-@implementation BSONBufferWrapper
-+(BSONBufferWrapper *) wrapperForNativeDocument:(bson *) b {
-    BSONBufferWrapper *result = [[self alloc] init];
-    result.b = b;
-    maybe_autorelease_and_return(result);
-}
-@end
-
 @interface BSONEncoder ()
 @property (retain) NSMutableArray *encodingObjectStack;
 @property (retain) NSMutableArray *privateKeyPathComponents;
@@ -115,7 +103,7 @@
     if ([self.delegate respondsToSelector:@selector(encoderWillFinish:)])
         [self.delegate encoderWillFinish:self];
 
-    if (BSON_ERROR == bson_finish(_bson)) [self _raiseBSONError];
+    if (BSON_ERROR == bson_finish(_bson)) [self _raiseBSONException];
     
     self.resultDocument = [BSONDocument documentWithNativeDocument:_bson
                                                    destroyWhenDone:YES];
@@ -255,8 +243,9 @@
 #pragma mark - Exposing internal objects
 
 - (void) _exposeKey:(NSString *) key asArray:(BOOL)asArray forObject:(id) object {
-    BSONAssertKeyNonNil(key);
-    if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
+    NSParameterAssert(key != nil);
+    if (self.restrictsKeyNamesForMongoDB)
+        NSParameterAssert([key isValidKeyNameForMongoDB:nil]);
     
     if ([self.encodingObjectStack containsObject:object]) {
         id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
@@ -397,44 +386,44 @@
 - (void) _encodeObjectID:(BSONObjectID *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self _encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:NO]) return;
     if (BSON_ERROR == bson_append_oid(_bson, key.bsonString, [objv objectIDPointer]))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) encodeInt:(int) intv forKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_int(_bson, key.bsonString, intv))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) encodeInt64:(int64_t) intv forKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_long(_bson, key.bsonString, intv))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) encodeBool:(BOOL) boolv forKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_bool(_bson, key.bsonString, boolv))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) encodeDouble:(double) realv forKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_double(_bson, key.bsonString, realv))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) encodeNullForKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_null(_bson, key.bsonString))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) encodeUndefinedForKey:(NSString *) key {
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_undefined(_bson, key.bsonString))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) _encodeNumber:(NSNumber *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -474,14 +463,14 @@
     if (BSON_ERROR == bson_append_date (_bson,
                                         key.bsonString,
                                         1000.0 * [objv timeIntervalSince1970]))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
 - (void) _encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self _encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:NO]) return;
     if (BSON_ERROR == bson_append_timestamp(_bson, key.bsonString, [objv timestampPointer]))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -498,7 +487,7 @@
     if (BSON_ERROR == bson_append_string(_bson,
                                          key.bsonString,
                                          objv.bsonString))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -507,7 +496,7 @@
     if (BSON_ERROR == bson_append_symbol(_bson,
                                          key.bsonString,
                                          objv.symbol.bsonString))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -516,14 +505,14 @@
         [self _encodingHelper:nil key:key withSubstitutions:NO withObjectIDSubstitution:NO];
         return;
     } else {
-        BSONAssertValueNonNil(pattern);
+        NSParameterAssert(pattern != nil);
         [self _encodingHelperForKey:key];
     }
     if (BSON_ERROR == bson_append_regex(_bson,
                                         key.bsonString,
                                         pattern.bsonString,
                                         options ? options.bsonString : ""))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) _encodeRegularExpression:(BSONRegularExpression *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -537,7 +526,7 @@
     if (BSON_ERROR == bson_append_bson(_bson,
                                        key.bsonString,
                                        [objv bsonValue]))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -550,7 +539,7 @@
                                          0,
                                          objv.bytes,
                                          (int) objv.length))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -559,7 +548,7 @@
     if (BSON_ERROR == bson_append_code(_bson,
                                        key.bsonString,
                                        objv.bsonString))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
@@ -574,14 +563,14 @@
         [self _encodingHelper:nil key:key withSubstitutions:NO withObjectIDSubstitution:NO];
         return;
     }
-    BSONAssertValueNonNil(code);
-    BSONAssertValueNonNil(scope);
+    NSParameterAssert(code != nil);
+    NSParameterAssert(scope != nil);
     [self _encodingHelperForKey:key];
     if (BSON_ERROR == bson_append_code_w_scope(_bson,
                                                key.bsonString,
                                                code.bsonString,
                                                [scope bsonValue]))
-        [self _raiseBSONError];
+        [self _raiseBSONException];
 }
 
 - (void) _encodeCodeWithScope:(BSONCodeWithScope *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
@@ -603,8 +592,9 @@
 
 - (void) _encodingHelperForKey:(NSString *) key {
     [self _encodingHelper];
-    BSONAssertKeyNonNil(key);
-    if (self.restrictsKeyNamesForMongoDB) BSONAssertKeyLegalForMongoDB(key);
+    NSParameterAssert(key != nil);
+    if (self.restrictsKeyNamesForMongoDB)
+        NSParameterAssert([key isValidKeyNameForMongoDB:nil]);
 }
 
 - (BOOL) _encodingHelper:(id) object withSubstitutions:(BOOL) substitutions withObjectIDSubstitution:(BOOL) substituteObjectID topLevel:(BOOL) topLevel {
@@ -725,11 +715,9 @@
     return object;
 }
 
-- (void) _raiseBSONError {
-    id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                     reason:NSStringFromBSONError(_bson->err)
-                                   userInfo:nil];
-    @throw exc;
+- (void) _raiseBSONException {
+    [NSException raise:NSInvalidArchiveOperationException
+                format:@"%@", NSStringFromBSONError(_bson->err)];
 }
 
 #pragma mark - Unsupported unkeyed encoding methods

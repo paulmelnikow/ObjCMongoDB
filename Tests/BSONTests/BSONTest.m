@@ -417,51 +417,33 @@
     
     encoder = [[BSONEncoder alloc] init];
     
-    STAssertThrowsSpecificNamed([sample encodeWithCoder:encoder],
-                                NSException,
-                                NSInvalidArgumentException,
-                                @"Default dictionary encodeWithCoder produces invalid MongoDB keys, but exception wasn't raised");
+    STAssertThrows([sample encodeWithCoder:encoder], nil);
     
     NSDictionary *badSample1 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"this.is.a.bad.key",
                                 nil];
     encoder = [[BSONEncoder alloc] init];
-    STAssertThrowsSpecificNamed([encoder encodeDictionary:badSample1],
-                                NSException,
-                                NSInvalidArgumentException,
-                                @"Exception wasn't raised for invalid MongoDB key containing '.'");
+    STAssertThrows([encoder encodeDictionary:badSample1], nil);
     
     encoder = [[BSONEncoder alloc] init];
     encoder.restrictsKeyNamesForMongoDB = NO;
-    STAssertNoThrowSpecificNamed([encoder encodeDictionary:badSample1],
-                                 NSException,
-                                 NSInvalidArgumentException,
-                                 @"MongoDB checking disabled, but exception was still raised for invalid key");
-
+    STAssertNoThrow([encoder encodeDictionary:badSample1], nil);
     
     NSDictionary *badSample2 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"$bad$key",
                                 nil];
     encoder = [[BSONEncoder alloc] init];
-    STAssertThrowsSpecificNamed([encoder encodeDictionary:badSample2],
-                                NSException,
-                                NSInvalidArgumentException,
-                                @"Exception wasn't raised for invalid MongoDB key starting with '$'");
+    STAssertThrows([encoder encodeDictionary:badSample2], nil);
     
     NSDictionary *goodSample = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"good$key",
                                 nil];
     encoder = [[BSONEncoder alloc] init];
-    STAssertNoThrow([encoder encodeDictionary:goodSample],
-                                @"Exception was raised for valid MongoDB key containing but not starting with '$'");
+    STAssertNoThrow([encoder encodeDictionary:goodSample], nil);
     
     encoder = [[BSONEncoder alloc] init];
     encoder.restrictsKeyNamesForMongoDB = NO;
-    STAssertNoThrowSpecificNamed([encoder encodeDictionary:badSample2],
-                                 NSException,
-                                 NSInvalidArgumentException,
-                                 @"MongoDB checking disabled, but exception was still raised for invalid key");
-    
+    STAssertNoThrow([encoder encodeDictionary:badSample2], nil);    
 }
 
 - (void)testRepeatability {

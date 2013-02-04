@@ -30,12 +30,12 @@ FOUNDATION_EXPORT NSString * const BSONException;
  
  An iterator starts before the first item in a BSON document, an embedded document, or an array. It
  can move sequentially through the items by calling <code>-next</code>, or find a specific item by
- calling <code>-containsValueForKey:</code> or <code>-nativeValueTypeForKey:</code>.
+ calling <code>-containsValueForKey:</code> or <code>-valueTypeForKey:</code>.
  
  To get an item's object representation, call <code>-objectForKey:</code> or <code>-objectValue</code>,
  which returns an Objective-C type appropriate for the item's native type. You can also call one of
  the type-specific accessors like <code>-intValue</code> or <code>-stringValue</code>. To query the
- item's native type, call <code>-nativeValueType</code>, and to get its key, call <code>-key</code>.
+ item's native type, call <code>-valueType</code>, and to get its key, call <code>-key</code>.
  
  In most cases, you won't need to use <code>BSONIterator</code> directly. <code>BSONDecoder</code>
  provides a higher-level interface for creating an object graph from a BSON document, suitable for
@@ -94,6 +94,13 @@ FOUNDATION_EXPORT NSString * const BSONException;
  @return The native BSON value type of the current item.
  */
 - (BSONType) valueType;
+
+/**
+ Helper method which checks if the type is one of an array of allowed types.
+ @param allowedTypes An array of NSNumber objects with BSONType values.
+ @return The native BSON value type of the current item.
+ */
+- (BOOL) valueTypeIsInArray:(NSArray *) allowedTypes;
 
 /**
  Returns a Boolean indicating whether the current item is an embedded document (<code>bson_object</code>).

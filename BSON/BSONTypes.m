@@ -27,7 +27,7 @@
 __autoreleasing NSString * NSStringFromBSONType (BSONType t) {
     NSString *name = nil;
     switch(t) {
-            bson_type_case(BSONTypeEndOfObjectType);
+            bson_type_case(BSONTypeEndOfObject);
             bson_type_case(BSONTypeDouble);
             bson_type_case(BSONTypeString);
             bson_type_case(BSONTypeEmbeddedDocument);

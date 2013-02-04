@@ -179,7 +179,7 @@
 
 - (NSDictionary *) decodeDictionaryForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_OBJECT result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeEmbeddedDocument result:&result]) return result;
     
     [self _exposeKey:key asArray:NO];
     result = [self _decodeExposedDictionaryWithClassOrNil:classForDecoder];
@@ -193,7 +193,7 @@
 
 - (NSArray *) decodeArrayForKey:(NSString *) key withClass:(Class) classForDecoder {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_ARRAY result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeArray result:&result]) return result;
     
     [self _exposeKey:key asArray:YES];
     result = [self _decodeExposedArrayWithClassOrNil:classForDecoder];
@@ -306,65 +306,96 @@
 
 - (BSONObjectID *) decodeObjectIDForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_OID result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeObjectID result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator objectIDValue] keyOrNil:key topLevel:NO];
 }
 
 - (id) decodeObjectIDForKey:(NSString *) key substituteObjectWithClass:(Class) classForDecoder {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_OID result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeObjectID result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator objectIDValue] keyOrNil:key topLevel:NO substituteClassForObjectID:classForDecoder];
 }
 
 - (int) decodeIntForKey:(NSString *) key {
-    BSONType allowedTypes[3];
-    allowedTypes[0] = BSON_INT;
-    allowedTypes[1] = BSON_LONG;
-    allowedTypes[2] = BSON_DOUBLE;
-    
+    static NSArray *allowedTypes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowedTypes = @[
+                         @(BSONTypeInteger),
+                         @(BSONTypeLong),
+                         @(BSONTypeDouble)
+                         ];
+    });
     id result = nil;
-    if ([self _decodingHelperForKey:key valueTypeArray:allowedTypes result:&result]) return 0;
+    if ([self _decodingHelperForKey:key
+              allowedValueTypeArray:allowedTypes
+                             result:&result])
+        return 0;
     
     return [self.iterator intValue];
 }
 - (int64_t) decodeInt64ForKey:(NSString *) key {
-    BSONType allowedTypes[3];
-    allowedTypes[0] = BSON_INT;
-    allowedTypes[1] = BSON_LONG;
-    allowedTypes[2] = BSON_DOUBLE;
-    
+    static NSArray *allowedTypes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowedTypes = @[
+                         @(BSONTypeInteger),
+                         @(BSONTypeLong),
+                         @(BSONTypeDouble)
+                         ];
+    });
     id result = nil;
-    if ([self _decodingHelperForKey:key valueTypeArray:allowedTypes result:&result]) return 0;
+    if ([self _decodingHelperForKey:key
+              allowedValueTypeArray:allowedTypes
+                             result:&result])
+        return 0;
     
     return [self.iterator int64Value];
 }
 - (BOOL) decodeBoolForKey:(NSString *) key {
-    BSONType allowedTypes[4];
-    allowedTypes[0] = BSON_BOOL;
-    allowedTypes[1] = BSON_INT;
-    allowedTypes[2] = BSON_LONG;
-    allowedTypes[3] = BSON_DOUBLE;
-    
+    static NSArray *allowedTypes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowedTypes = @[
+                         @(BSONTypeBoolean),
+                         @(BSONTypeInteger),
+                         @(BSONTypeLong),
+                         @(BSONTypeDouble)
+                         ];
+    });
     id result = nil;
-    if ([self _decodingHelperForKey:key valueTypeArray:allowedTypes result:&result]) return 0;
+    if ([self _decodingHelperForKey:key
+              allowedValueTypeArray:allowedTypes
+                             result:&result])
+        return 0;
     
     return [self.iterator doubleValue];
 }
 - (double) decodeDoubleForKey:(NSString *) key {
-    BSONType allowedTypes[3];
-    allowedTypes[0] = BSON_INT;
-    allowedTypes[1] = BSON_LONG;
-    allowedTypes[2] = BSON_DOUBLE;
-    
+    static NSArray *allowedTypes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowedTypes = @[
+                         @(BSONTypeInteger),
+                         @(BSONTypeLong),
+                         @(BSONTypeDouble)
+                         ];
+    });
     id result = nil;
-    if ([self _decodingHelperForKey:key valueTypeArray:allowedTypes result:&result]) return 0;
+    if ([self _decodingHelperForKey:key
+              allowedValueTypeArray:allowedTypes
+                             result:&result])
+        return 0;
     
     return [self.iterator doubleValue];
 }
 
 - (NSDate *) decodeDateForKey:(NSString *)key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_DATE result:&result]) return result;
+    if ([self _decodingHelperForKey:key
+                   allowedValueType:BSONTypeDate
+                             result:&result])
+        return result;
     return [self _postDecodingHelper:[self.iterator dateValue] keyOrNil:key topLevel:NO];
 }
 - (NSImage *) decodeImageForKey:(NSString *) key {
@@ -376,56 +407,63 @@
 }
 
 - (NSString *) decodeStringForKey:(NSString *) key {
-    BSONType allowedTypes[3];
-    allowedTypes[0] = BSON_STRING;
-    allowedTypes[1] = BSON_CODE;
-    allowedTypes[2] = BSON_SYMBOL;
-    
+    static NSArray *allowedTypes;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        allowedTypes = @[
+                         @(BSONTypeString),
+                         @(BSONTypeCode),
+                         @(BSONTypeSymbol)
+                         ];
+    });
     id result = nil;
-    if ([self _decodingHelperForKey:key valueTypeArray:allowedTypes result:&result]) return result;
+    if ([self _decodingHelperForKey:key
+              allowedValueTypeArray:allowedTypes
+                             result:&result])
+        return result;
     
     return [self _postDecodingHelper:[self.iterator stringValue] keyOrNil:key topLevel:NO];
 }
 
 - (BSONSymbol *) decodeSymbolForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_SYMBOL result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeSymbol result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator symbolValue] keyOrNil:key topLevel:NO];
 }
 
 - (BSONRegularExpression *) decodeRegularExpressionForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_REGEX result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeRegularExpression result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator regularExpressionValue] keyOrNil:key topLevel:NO];
 }
 
 - (BSONDocument *) decodeBSONDocumentForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_OBJECT result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeEmbeddedDocument result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator embeddedDocumentValue] keyOrNil:key topLevel:NO];
 }
 
 - (NSData *)decodeDataForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_BINDATA result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeBinaryData result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator dataValue] keyOrNil:key topLevel:NO];
 }
 
 - (BSONCode *) decodeCodeForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_CODE result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeCode result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator codeValue] keyOrNil:key topLevel:NO];
 }
 - (BSONCodeWithScope *) decodeCodeWithScopeForKey:(NSString *) key {
     id result = nil;
-    if ([self _decodingHelperForKey:key valueType:BSON_CODEWSCOPE result:&result]) return result;
+    if ([self _decodingHelperForKey:key allowedValueType:BSONTypeCodeWithScope result:&result]) return result;
     return [self _postDecodingHelper:[self.iterator codeWithScopeValue] keyOrNil:key topLevel:NO];
 }
 
 #pragma mark - Helper methods for -decode... methods
 
 - (BOOL) _decodingHelper:(id*) result {
-    if (BSON_NULL == [self.iterator valueType]) {
+    if (BSONTypeNull == [self.iterator valueType]) {
         switch(self.behaviorOnNull) {
             case BSONReturnNSNull:
                 *result = [NSNull null]; return YES;
@@ -436,7 +474,7 @@
                                                reason:@"Tried to decode null value with BSONRaiseExceptionOnNull set"
                                              userInfo:nil];
         }
-    } else if (BSON_UNDEFINED == [self.iterator valueType]) {
+    } else if (BSONTypeUndefined == [self.iterator valueType]) {
         switch(self.behaviorOnUndefined) {
             case BSONReturnBSONUndefined:
                 *result = [BSONDecoder objectForUndefined]; return YES;
@@ -454,22 +492,46 @@
 }
 
 - (BOOL) _decodingHelperForKey:(NSString *) key result:(id*) result {
-    BSONAssertKeyNonNil(key);
+    NSParameterAssert(key != nil);
     if (![self.iterator containsValueForKey:key]) {
         result = nil; return YES;
     }
     return [self _decodingHelper:result];
 }
 
-- (BOOL) _decodingHelperForKey:(NSString *) key valueType:(BSONType) nativeValueType result:(id*) result {
+- (BOOL) _decodingHelperForKey:(NSString *) key
+              allowedValueType:(BSONType) allowedValueType
+                        result:(id*) result {
     if ([self _decodingHelperForKey:key result:result]) return YES;
-    BSONAssertIteratorIsValueType(self.iterator, nativeValueType);
+    
+    if (self.iterator.valueType != allowedValueType) {
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"Operation requires BSON type %@, but has %@ instead",
+         NSStringFromBSONType(allowedValueType),
+         NSStringFromBSONType(self.iterator.valueType),
+         nil];
+    }
+    
     return NO;
 }
 
-- (BOOL) _decodingHelperForKey:(NSString *) key valueTypeArray:(BSONType *) nativeValueTypeArray result:(id*) result {
+- (BOOL) _decodingHelperForKey:(NSString *) key
+         allowedValueTypeArray:(NSArray *) allowedValueTypeArray
+                        result:(id*) result {
     if ([self _decodingHelperForKey:key result:result]) return YES;
-    BSONAssertIteratorIsInValueTypeArray(self.iterator, nativeValueTypeArray);
+    
+    if (![self.iterator valueTypeIsInArray:allowedValueTypeArray]) {
+        NSMutableArray *allowedTypesAsStrings = [NSMutableArray array];
+        for (NSNumber *cur in allowedValueTypeArray)
+            [allowedTypesAsStrings addObject:NSStringFromBSONType([cur intValue])];
+        
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"Operation requires one of BSON types %@, but has %@ instead",
+         allowedTypesAsStrings,
+         NSStringFromBSONType(self.iterator.valueType),
+         nil];
+    }
+
     return NO;
 }
 
@@ -541,11 +603,11 @@
 }
 
 - (BOOL) valueIsEmbeddedDocumentForKey:(NSString *) key {
-    return BSON_OBJECT == [self valueTypeForKey:key];
+    return BSONTypeEmbeddedDocument == [self valueTypeForKey:key];
 }
 
 - (BOOL) valueIsArrayForKey:(NSString *) key {
-    return BSON_ARRAY == [self valueTypeForKey:key];
+    return BSONTypeArray == [self valueTypeForKey:key];
 }
 
 + (id) objectForUndefined {

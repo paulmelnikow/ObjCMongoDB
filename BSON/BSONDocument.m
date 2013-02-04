@@ -61,9 +61,7 @@ int substitute_for_printf(const char *format, ...) {
         _bson = bson_create();
         bson_empty((bson *)_bson); // _bson is const-qualified
         self.destroyWhenDone = NO;
-        self.data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson)
-                                         length:bson_size(_bson)
-                                   freeWhenDone:NO];
+        self.data = [NSData dataWithNativeBSONObject:_bson copy:NO];
     }
     return self;
 }
@@ -74,9 +72,7 @@ int substitute_for_printf(const char *format, ...) {
         // _bson is const-qualified
         bson_iterator_subobject([iterator nativeIteratorValue], (bson *)_bson);
         self.destroyWhenDone = NO;
-        self.data = [NSData dataWithBytesNoCopy:(void *)bson_data(_bson)
-                                         length:bson_size(_bson)
-                                   freeWhenDone:NO];
+        self.data = [NSData dataWithNativeBSONObject:_bson copy:NO];
         self.dependentOn = dependentOn;
     }
     return self;
@@ -177,7 +173,7 @@ int substitute_for_printf(const char *format, ...) {
       _bson->dataSize,
       _bson->stackPos,
       NSStringFromBSONError(_bson->err)] mutableCopy];    
-    // Note: _bson->errstr is omitted. As of driver v0.7.1 it's always NULL.
+    // Note: _bson->errstr has been omitted here, since as of driver v0.7.1 it's always NULL.
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

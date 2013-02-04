@@ -32,38 +32,4 @@
 #define NSStringize_helper(x) #x
 #define NSStringize(x) @NSStringize_helper(x)
 
-/**
- Raises an exception for a nil key.
- @param key The key to test
- */
-void BSONAssertKeyNonNil (NSString *key);
-
-/**
- Raises an exception for key which is illegal in MongoDB.
- @param key The key to test
- */
-void BSONAssertKeyLegalForMongoDB(NSString *key);
-
-/**
- Raises an exception for a nil value.
- @param key The value to test
- */
-void BSONAssertValueNonNil (id key);
-
-/**
- Raises an exception if the iterator's native value type doesn't match the
- expected type.
- @param iterator A BSON iterator
- @param valueType The expected native value type
- */
-void BSONAssertIteratorIsValueType (BSONIterator * iterator, BSONType valueType);
-
-/**
- Raises an exception if the iterator's native value type doesn't match one of the
- expected types.
- @param iterator A BSON iterator
- @param valueType A C array of allowed native value types
- */
-void BSONAssertIteratorIsInValueTypeArray (BSONIterator * iterator, BSONType * valueType);
-
 __autoreleasing NSString * NSStringFromBSONError(int err);

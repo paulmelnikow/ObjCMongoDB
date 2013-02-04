@@ -21,7 +21,7 @@
 
 // We redeclare bson_type here so that users of the framework can access these without importing bson.h
 typedef enum {
-    BSONTypeEndOfObjectType = 0,
+    BSONTypeEndOfObject = 0,
     BSONTypeDouble = 1,
     BSONTypeString = 2,
     BSONTypeEmbeddedDocument = 3,
