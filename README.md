@@ -1,6 +1,14 @@
 ObjCMongoDB is an Objective-C library for [BSON][] and [MongoDB][] based on
 the [10gen C driver][mongo-c-driver].
 
+## Latest release
+
+The latest release is v0.9, which is based on v0.5 of the driver.
+
+    git checkout v0.9     # since master may be a work in process
+
+See what's changed in [History][].
+
 ## Getting started
 
 Refer to the installation instructions and sample code on the
@@ -58,6 +66,7 @@ in this repository as APACHE-2.0.txt.
 [BSON]: http://bsonspec.org/
 [MongoDB]: http://www.mongodb.org/
 [mongo-c-driver]: https://github.com/mongodb/mongo-c-driver
+[History]: https://github.com/noa--/ObjCMongoDB/HISTORY.md
 [Wiki]: https://github.com/noa--/ObjCMongoDB/wiki
 [GettingStarted]: https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted
 [TheBasics]: https://github.com/noa--/ObjCMongoDB/wiki/TheBasics
