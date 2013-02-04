@@ -15,7 +15,7 @@ typedef enum {
     MongoWriteReplicaAcknowledged = 2
 } MongoWriteAcknowledgementBehavior;
 
-@interface MongoWriteConcern : NSObject
+@interface MongoWriteConcern : NSObject <NSCopying>
 
 + (MongoWriteConcern *) writeConcern;
 

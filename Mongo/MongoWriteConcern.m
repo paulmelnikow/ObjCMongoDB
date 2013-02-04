@@ -46,8 +46,8 @@
     maybe_autorelease_and_return([[self alloc] init]);
 }
 
-- (id) copy {
-    MongoWriteConcern *result = [[self.class alloc] init];
+-(id)copyWithZone:(NSZone *) zone {
+    MongoWriteConcern *result = [[self.class allocWithZone:zone] init];
     result.writeAcknowledgementBehavior = self.writeAcknowledgementBehavior;
     result.replicationTimeout = self.replicationTimeout;
     result.synchronizeToDisk = self.synchronizeToDisk;
