@@ -8,7 +8,7 @@ the [10gen C driver][mongo-c-driver].
  -   Tested under OS X 10.6+ with and without ARC
  -   Should work fine under iOS
 
-    git checkout v0.9.5     # since master may be a work in process
+     git checkout v0.9.5     # since master may be a work in process
 
 See what's changed in [History][].
 
