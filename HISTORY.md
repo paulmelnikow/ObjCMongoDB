@@ -49,10 +49,38 @@ Changes:
 ## v0.9
 February 2, 2013
 
+Tweak method and class names in public APIs for clarity, in prepation for
+v1.0 release.
+
+-  `-[MongoDBCollection insert:error:]` is now
+   `-[MongoDBCollection insertDocument:error:]`   
+-  `-[MongoDBCollection insertBatch:error:]` is now
+   `-[MongoDBCollection insertDocuments:error:]`
+-  `-[MongoDBCollection update:error:]` is now
+   `-[MongoDBCollection updateWithRequest:error:]`
+-  `-[MongoDBCollection remove:error:]` is now
+   `-[MongoDBCollection removeWithPredicate:error:]`
+-  `-[MongoDBCollection find:error:]` is now
+   `-[MongoDBCollection findWithRequest:error:]`
+-  `-[MongoDBCollection cursorForFind:error:]` is now
+   `-[MongoDBCollection cursorForFindRequest:error:]`
+-  `-[MongoDBCollection findOne:error:]` is now
+   `-[MongoDBCollection findOneWithRequest:error:]`
+-  MongoFetchRequest is now MongoFindRequest
+-  `-[MongoUpdateRequest replaceDocumentWith:]` is now
+   `-[MongoUpdateRequest replaceDocumentWithDocument:]`
 -  `-serverStatusForLastOperation:error` is now
    `lastOperationWasSuccessful:error`
--  `-serverStatusForLastOperationAsDictionary` is now
+-  `-serverStatusAsDictionaryForLastOperation` is now
    `-lastOperationDictionary`
-
-
-installation - add category files
+-  When encoding NSManagedObjects, instead of raising an exception for fetched
+   properties, just skip them.
+-  Move methods not meant for public consumption to BSON_PrivateInterfaces.h
+   and Mongo_PrivateInterfaces.h
+-  Remove instance variables from .h files and create private properties
+   for Objective-C types
+-  Prepend private methods with underscores and remove private method
+   declarations from top of .m files
+-  Adopt `@(1)` syntax in place of `[NSNUmber numberWithInt:1]`
+-  Remove const strings for Mongo operators
+-  Update for Xcode 4.6
