@@ -3,7 +3,10 @@ the [10gen C driver][mongo-c-driver].
 
 ## Latest release
 
-The latest release is v0.9.5, which is based on v0.7.1 of the driver.
+ -   The latest release is v0.9.5
+ -   Based on v0.7.1 of the driver
+ -   Tested under OS X 10.6+ with and without ARC
+ -   Should work fine under iOS
 
     git checkout v0.9.5     # since master may be a work in process
 
@@ -35,10 +38,6 @@ Refer to the installation instructions and sample code on the
      MongoKeyedPredicate and MongoUpdateRequest are meant to be natural in Cocoa, rather than conform to the underlying Mongo keywords.
 
 ## Status
-
- -   Based on v0.7.1 of the driver
- -   Tested under OS X 10.6+ with and without ARC
- -   Should work fine under iOS
 
 Mostly complete. Some missing pieces:
 
