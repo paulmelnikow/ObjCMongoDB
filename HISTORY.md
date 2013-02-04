@@ -1,7 +1,7 @@
 # ObjCMongoDB Release History
 
 ## v0.9.5
-Pending - February _, 2013
+February 4, 2013
 
 Be sure to add these files to your existing projects:
 
@@ -49,9 +49,14 @@ Changes:
 ## v0.9
 February 2, 2013
 
-Tweak method and class names in public APIs for clarity, in prepation for
-v1.0 release.
+Be sure to update these file references in your existing projects:
 
+ -  MongoFetchRequest.[hm] -> MongoFindRequest.[hm]
+
+In prepation for v1.0 release announcement, tweak method and class names in
+public APIs for clarity.
+
+-  MongoFetchRequest is now MongoFindRequest
 -  `-[MongoDBCollection insert:error:]` is now
    `-[MongoDBCollection insertDocument:error:]`   
 -  `-[MongoDBCollection insertBatch:error:]` is now
@@ -66,7 +71,6 @@ v1.0 release.
    `-[MongoDBCollection cursorForFindRequest:error:]`
 -  `-[MongoDBCollection findOne:error:]` is now
    `-[MongoDBCollection findOneWithRequest:error:]`
--  MongoFetchRequest is now MongoFindRequest
 -  `-[MongoUpdateRequest replaceDocumentWith:]` is now
    `-[MongoUpdateRequest replaceDocumentWithDocument:]`
 -  `-serverStatusForLastOperation:error` is now
@@ -74,11 +78,10 @@ v1.0 release.
 -  `-serverStatusAsDictionaryForLastOperation` is now
    `-lastOperationDictionary`
 -  When encoding NSManagedObjects, instead of raising an exception for fetched
-   properties, just skip them.
+   properties, just skip them
 -  Move methods not meant for public consumption to BSON_PrivateInterfaces.h
    and Mongo_PrivateInterfaces.h
--  Remove instance variables from .h files and create private properties
-   for Objective-C types
+-  Remove instance variables from .h files and declare private properties
 -  Prepend private methods with underscores and remove private method
    declarations from top of .m files
 -  Adopt `@(1)` syntax in place of `[NSNUmber numberWithInt:1]`
