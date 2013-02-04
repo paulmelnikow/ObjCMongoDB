@@ -66,7 +66,7 @@ in this repository as APACHE-2.0.txt.
 [BSON]: http://bsonspec.org/
 [MongoDB]: http://www.mongodb.org/
 [mongo-c-driver]: https://github.com/mongodb/mongo-c-driver
-[History]: https://github.com/noa--/ObjCMongoDB/HISTORY.md
+[History]: HISTORY.md
 [Wiki]: https://github.com/noa--/ObjCMongoDB/wiki
 [GettingStarted]: https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted
 [TheBasics]: https://github.com/noa--/ObjCMongoDB/wiki/TheBasics
