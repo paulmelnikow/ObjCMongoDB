@@ -3,6 +3,15 @@
 ## 0.9.1
 February _, 2013
 
+Be sure to add these files to your existing projects:
+
+ -  NSString+BSONAdditions.[hm]
+ -  NSData+BSONAdditions.[hm]
+ -  NSArray+MongoAdditions.[hm]
+ -  MongoWriteConcern.[hm]
+
+Changes:
+
  -  Upgraded to driver v0.7.1
  -  `-[MongoDBCollection collection:]` is now
     `-[MongoDBCollection collectionWithName:]`
@@ -43,3 +52,5 @@ February _, 2013
 -  `-serverStatusForLastOperationAsDictionary` is now
    `-lastOperationDictionary`
 
+
+installation - add category files

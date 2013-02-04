@@ -30,3 +30,4 @@
 #import "MongoKeyedPredicate.h"
 #import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
+#import "MongoWriteConcern.h"

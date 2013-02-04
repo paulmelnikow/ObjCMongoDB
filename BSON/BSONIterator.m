@@ -112,7 +112,7 @@ NSString * const BSONException = @"BSONException";
 - (BOOL) hasMore { return bson_iterator_more(_iter); }
 
 - (BSONType) next {
-    return _type = bson_iterator_next(_iter);
+    return self.type = bson_iterator_next(_iter);
 }
 
 #pragma mark - Information about the current key
