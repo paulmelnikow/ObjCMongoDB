@@ -25,6 +25,7 @@
 
 #import "bson.h"
 #import "NSString+BSONAdditions.h"
+#import "NSData+BSONAdditions.h"
 #import "BSONDocument.h"
 #import "BSONEncoder.h"
 #import "BSONIterator.h"
@@ -47,11 +48,12 @@
 @end
 
 @interface BSONObjectID (Project)
++ (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer;
 - (bson_oid_t) oid;
 - (const bson_oid_t *) objectIDPointer;
-+ (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer;
 @end
 
 @interface BSONTimestamp (Project)
++ (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t)timestamp;
 - (bson_timestamp_t *) timestampPointer;
 @end

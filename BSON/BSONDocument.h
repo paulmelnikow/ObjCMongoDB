@@ -90,7 +90,8 @@
 - (BOOL) isEqual:(id)object;
 
 /**
- Returns a string representation of the BSON document for debugging purposes.
+ Returns a string representation of the BSON document for debugging purposes. This uses the driver's
+ printing code and requires synchronization. Be aware it's somewhat expensive.
  @returns A string representation of the BSON document.
  */
 - (NSString *) description;

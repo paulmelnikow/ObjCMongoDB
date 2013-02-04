@@ -31,7 +31,7 @@ NSString * const BSONException = @"BSONException";
 @implementation BSONIterator {
     bson_iterator *_iter;
     const bson *_b;
-    bson_type _type;
+    BSONType _type;
 }
 
 #pragma mark - Initialization
@@ -79,7 +79,7 @@ NSString * const BSONException = @"BSONException";
 
 #pragma mark - Searching
 
-- (bson_type) nativeValueTypeForKey:(NSString *) key {
+- (BSONType) valueTypeForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
     return _type = bson_find(_iter, _b, key.bsonString);
@@ -88,11 +88,11 @@ NSString * const BSONException = @"BSONException";
 - (BOOL) containsValueForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
     BSONAssertKeyNonNil(key);
-    return BSON_EOO != [self nativeValueTypeForKey:key];
+    return BSON_EOO != [self valueTypeForKey:key];
 }
 
 - (id) objectForKey:(NSString *)key {
-    [self nativeValueTypeForKey:key];
+    [self valueTypeForKey:key];
     return [self objectValue];
 }
 
@@ -111,13 +111,13 @@ NSString * const BSONException = @"BSONException";
 
 - (BOOL) hasMore { return bson_iterator_more(_iter); }
 
-- (bson_type) next {
+- (BSONType) next {
     return _type = bson_iterator_next(_iter);
 }
 
 #pragma mark - Information about the current key
 
-- (bson_type) nativeValueType { return _type; }
+- (BSONType) valueType { return _type; }
 - (BOOL) isEmbeddedDocument { return BSON_OBJECT == _type; }
 - (BOOL) isArray { return BSON_ARRAY == _type; }
 
@@ -158,7 +158,7 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (id) objectValue {
-    switch([self nativeValueType]) {
+    switch([self valueType]) {
         case BSON_EOO:
             return nil;
         case BSON_DOUBLE:
@@ -197,7 +197,7 @@ NSString * const BSONException = @"BSONException";
             return [NSNumber numberWithLongLong:[self int64Value]];
         default:
             [NSException raise:NSInvalidUnarchiveOperationException
-                        format:@"Unrecognized BSON type: %ld (Is this a BSON document?)", (long)[self nativeValueType]];
+                        format:@"Unrecognized BSON type: %ld (Is this a BSON document?)", (long)[self valueType]];
             return nil;
     }
 }
@@ -294,7 +294,7 @@ void objc_bson_error_handler(const char * message) {
     [string appendFormat:@"\n    keyPathComponents:"];
     for (NSString *keyPath in [self keyPathComponents])
         [string appendFormat:@"\n        %@", keyPath];
-    [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self nativeValueType])];
+    [string appendFormat:@"\n\n    nativeValueType:\n        %@", NSStringFromBSONType([self valueType])];
     [string appendString:@"\n"];
     maybe_retain_autorelease_and_return(string);
 }

@@ -22,8 +22,38 @@
 #import "bson.h"
 #import "BSON_PrivateInterfaces.h"
 
-static int ^(void)(void) fuzzGenerator;
-static int ^(void)(void) incrementGenerator;
+#define bson_type_case(type) case type: name = @"type"; break
+
+__autoreleasing NSString * NSStringFromBSONType (BSONType t) {
+    NSString *name = nil;
+    switch(t) {
+            bson_type_case(BSONTypeEndOfObjectType);
+            bson_type_case(BSONTypeDouble);
+            bson_type_case(BSONTypeString);
+            bson_type_case(BSONTypeEmbeddedDocument);
+            bson_type_case(BSONTypeArray);
+            bson_type_case(BSONTypeBinaryData);
+            bson_type_case(BSONTypeUndefined);
+            bson_type_case(BSONTypeObjectID);
+            bson_type_case(BSONTypeBoolean);
+            bson_type_case(BSONTypeDate);
+            bson_type_case(BSONTypeNull);
+            bson_type_case(BSONTypeRegularExpression);
+            bson_type_case(BSONTypeDBRef);
+            bson_type_case(BSONTypeCode);
+            bson_type_case(BSONTypeSymbol);
+            bson_type_case(BSONTypeCodeWithScope);
+            bson_type_case(BSONTypeInteger);
+            bson_type_case(BSONTypeTimestamp);
+            bson_type_case(BSONTypeLong);
+        default:
+            name = [NSString stringWithFormat:@"(%i) ???", t];
+    }
+    return name;
+}
+
+static int (^fuzzGenerator)(void);
+static int (^incrementGenerator)(void);
 int block_based_fuzz_func();
 int block_based_fuzz_func() { return fuzzGenerator(); }
 int block_based_inc_func();
@@ -36,14 +66,20 @@ int block_based_inc_func() { return incrementGenerator(); }
 
 #pragma mark - Overriding OID generation
 
-+ (void) generateFuzzUsingBlock:(^ int (void)) block {
++ (void) generateFuzzUsingBlock:(int (^)(void)) block {
+#if !__has_feature(objc_arc)
+    [fuzzGenerator release];
+#endif
     fuzzGenerator = [block copy];
     bson_set_oid_fuzz(block_based_fuzz_func);
 }
 
-+ (void) generateIncrementUsingBlock:(^ int (void)) block {
++ (void) generateIncrementUsingBlock:(int (^)(void)) block {
+#if !__has_feature(objc_arc)
+    [incrementGenerator release];
+#endif
     incrementGenerator = [block copy];
-    bson_set_oid_int(block_based_inc_func);
+    bson_set_oid_inc(block_based_inc_func);
 }
 
 #pragma mark - Initialization

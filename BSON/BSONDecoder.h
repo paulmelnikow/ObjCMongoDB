@@ -200,7 +200,7 @@ typedef enum {
 
 // has side effect of moving the iterator
 - (BOOL) containsValueForKey:(NSString *) key;
-- (bson_type) nativeValueTypeForKey:(NSString *) key;
+- (BSONType) valueTypeForKey:(NSString *) key;
 - (BOOL) valueIsEmbeddedDocumentForKey:(NSString *) key;
 - (BOOL) valueIsArrayForKey:(NSString *) key;
 

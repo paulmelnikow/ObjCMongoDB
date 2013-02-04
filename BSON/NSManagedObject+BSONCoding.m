@@ -199,7 +199,7 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
         id value = [decoder decodeObjectForKey:key withClass:destinationClass];
         [self setValue:value forKey:key];
     } else if ([decoder containsValueForKey:key]) {
-        NSString *type = NSStringFromBSONType([decoder nativeValueTypeForKey:key]);
+        NSString *type = NSStringFromBSONType([decoder valueTypeForKey:key]);
         NSString *reason;
         if ([relationship isToMany])
             reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected a BSON array but got type %@",

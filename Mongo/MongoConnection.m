@@ -179,7 +179,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         return nil;
     }
     
-    id result = [BSONDecoder decodeDictionaryWithData:NSDataFromBSON(tempBson, NO)];
+    id result = [BSONDecoder decodeDictionaryWithData:[NSData dataWithNativeBSONObject:tempBson copy:NO]];
     bson_destroy(tempBson);
     bson_dispose(tempBson);
     return result;

@@ -19,6 +19,36 @@
 
 #import <Foundation/Foundation.h>
 
+// We redeclare bson_type here so that users of the framework can access these without importing bson.h
+typedef enum {
+    BSONTypeEndOfObjectType = 0,
+    BSONTypeDouble = 1,
+    BSONTypeString = 2,
+    BSONTypeEmbeddedDocument = 3,
+    BSONTypeArray = 4,
+    BSONTypeBinaryData = 5,
+    BSONTypeUndefined = 6,
+    BSONTypeObjectID = 7,
+    BSONTypeBoolean = 8,
+    BSONTypeDate = 9,
+    BSONTypeNull = 10,
+    BSONTypeRegularExpression = 11,
+    BSONTypeDBRef = 12, /**< Deprecated. */
+    BSONTypeCode = 13,
+    BSONTypeSymbol = 14,
+    BSONTypeCodeWithScope = 15,
+    BSONTypeInteger = 16,
+    BSONTypeTimestamp = 17,
+    BSONTypeLong = 18
+} BSONType;
+
+/**
+ Returns a string representation of a native BSON type.
+ @param t A native BSON type
+ @return A string representation of the BSON type
+ */
+__autoreleasing NSString * NSStringFromBSONType (BSONType t);
+
 /**
  Encapsulates an immutable BSON object ID, as a wrapper around a <code>bson_oid_t</code>
  structure.
@@ -74,12 +104,12 @@
 - (BOOL)isEqual:(id)other;
 
 /*! Provide your own code to generate the second four bytes of the object ID. */
-+ (void) generateFuzzUsingBlock:(^ int (void)) block;
++ (void) generateFuzzUsingBlock:(int (^)(void)) block;
 /*! Provide your own code to generate the incrementing part of the object ID (the
     last four bytes). You should do this if you need thread-safety in generating
     object IDs, for example.
     */
-+ (void) generateIncrementUsingBlock:(^ int (void)) block;
++ (void) generateIncrementUsingBlock:(int (^)(void)) block;
 
 @end
 
@@ -100,7 +130,6 @@
  */
 @interface BSONTimestamp : NSObject
 
-+ (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t)timestamp;
 + (BSONTimestamp *) timestampWithIncrement:(int) increment timeInSeconds:(int) time;
 
 @property (assign) int increment;

@@ -18,7 +18,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "bson.h"
 #import "BSONTypes.h"
 
 FOUNDATION_EXPORT NSString * const BSONException;
@@ -68,13 +67,13 @@ FOUNDATION_EXPORT NSString * const BSONException;
  @param key The key to search for
  @return The native BSON type of the item with key <i>key</i> (<code>bson_eoo</code> if the key is not present)
  */
-- (bson_type) nativeValueTypeForKey:(NSString *)key;
+- (BSONType) valueTypeForKey:(NSString *)key;
 
 /**
  Attempts to advance the iterator to the next item in the document.
  @return The native BSON type of the next item in the document (<code>bson_eoo</code> if there are no more)
  */
-- (bson_type) next;
+- (BSONType) next;
 
 /**
  Returns a Boolean indicating whether there are more items in the document.
@@ -94,7 +93,7 @@ FOUNDATION_EXPORT NSString * const BSONException;
  Returns the BSON value type of the current item.
  @return The native BSON value type of the current item.
  */
-- (bson_type) nativeValueType;
+- (BSONType) valueType;
 
 /**
  Returns a Boolean indicating whether the current item is an embedded document (<code>bson_object</code>).
