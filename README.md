@@ -36,10 +36,11 @@ Refer to the installation instructions and sample code on the
 
 ## Status
 
-Based on v0.5 of the 10gen C driver. Mostly complete. Tested under OS X 10.6+
-with and without ARC. Should work fine under iOS.
+ -   Based on v0.7.1 of the driver
+ -   Tested under OS X 10.6+ with and without ARC
+ -   Should work fine under iOS
 
-Some missing pieces:
+Mostly complete. Some missing pieces:
 
  -   Ensure index
  -   More .h documentation
