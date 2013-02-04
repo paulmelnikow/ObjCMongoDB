@@ -949,8 +949,11 @@
     
     BSONDecoder *decoder = nil;
     decoder = [[BSONDecoder alloc] initWithDocument:encoder.BSONDocument];
-    NSDictionary *lucyAsDictionary = [[decoder decodeDictionary] retain];
-
+    NSDictionary *lucyAsDictionary = [decoder decodeDictionary];
+#if !__has_feature(objc_arc)
+    [lucyAsDictionary retain];
+#endif
+    
     STAssertEqualObjects([lucyAsDictionary objectForKey:@"dob"],
                          [TestEncoderDelegateRedactDates redactedDate],
                          @"Date should have been redacted");
@@ -1231,8 +1234,7 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
     TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
-    PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
-    [lucy2 retain];
+    [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
     resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
@@ -1298,8 +1300,7 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:encoder1.BSONDocument];
     TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
-    NSDictionary *sample2 = [decoder decodeDictionary];
-    [sample2 retain];
+    [decoder decodeDictionary];
     
     resultSet = [NSCountedSet setWithArray:delegate2.decodedKeyPaths];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
@@ -1336,7 +1337,9 @@
     TranslatingTestDecoderDelegate *delegate2 = [[TranslatingTestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
     NSDictionary *sample2 = [decoder decodeDictionary];
+#if !__has_feature(objc_arc)
     [sample2 retain];
+#endif
     
     NSArray *sample2_4 = [sample2 objectForKey:@"four"];
     NSArray *expectedResult = [NSArray arrayWithObjects:@"zero", @"uno", @"dos", @"tres", nil];
@@ -1381,7 +1384,9 @@
     STAssertFalse(delegate2.willFinish, @"Delegate received -decoderWillFinish before encoding finished");
     
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
+#if !__has_feature(objc_arc)
     [lucy2 retain];
+#endif
     
     STAssertTrue(delegate2.willFinish, @"Delegate did not receive -decoderWillFinish");
     
