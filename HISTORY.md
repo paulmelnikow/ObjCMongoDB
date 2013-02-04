@@ -1,8 +1,7 @@
 # ObjCMongoDB Release History
 
-## Pending changes
-0.9.5
-February _, 2013
+## v0.9.5
+Pending - February _, 2013
 
 Be sure to add these files to your existing projects:
 
@@ -47,7 +46,8 @@ Changes:
     BSON document from being deallocated, consistently name these objects
     `dependentOn`
  
-## 0.9
+## v0.9
+February 2, 2013
 
 -  `-serverStatusForLastOperation:error` is now
    `lastOperationWasSuccessful:error`
