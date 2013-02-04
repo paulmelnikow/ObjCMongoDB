@@ -33,6 +33,15 @@
 
 @interface BSONDocument (Project)
 - (id) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
+/**
+ Initializes a BSON document as a sub-object for a given iterator, which retains
+ the object owning its bson* until deallocation.
+ 
+ Since only the root document may is responsible to call bson_destroy, instances created
+ with this method will not call bson_destroy on deallocation.
+ */
+- (BSONDocument *) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator
+                                           dependentOn:(id) dependentOn;
 + (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
 - (const bson *) bsonValue;
 @end

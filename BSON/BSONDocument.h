@@ -37,16 +37,6 @@
 - (id) init;
 
 /**
- Initializes a BSON document as a sub-object for a given iterator, which retains
- the object owning its bson* until deallocation.
- 
- Since only the root document may is responsible to call bson_destroy, instances created
-  with this method will not call bson_destroy on deallocation.
- */
-- (BSONDocument *) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator
-                                           dependentOn:(id) dependentOn;
-
-/**
  Initializes a BSON document.
  
  If <i>data</i> is mutable, it retains a copy instead. Otherwise it retains the

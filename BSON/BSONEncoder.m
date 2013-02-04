@@ -670,7 +670,7 @@
 - (BOOL) allowsKeyedCoding { return YES; }
 
 - (NSArray *) keyPathComponents {
-    return [self.privateKeyPathComponents copy];
+    maybe_autorelease_and_return([self.privateKeyPathComponents copy]);
 }
 
 - (NSArray *) _keyPathComponentsAddingKeyOrNil:(NSString *) key {

@@ -45,9 +45,12 @@
     return self;
 }
 
-- (BSONDecoder *) initWithData:(NSData *)data {
-    BSONDecoder *result = [self initWithDocument:[[BSONDocument alloc] initWithData:data]];
-    maybe_autorelease_and_return(result);
+- (BSONDecoder *) initWithData:(NSData *) data {
+    BSONDocument *document = [[BSONDocument alloc] initWithData:data];
+#if !__has_feature(objc_arc)
+    [document autorelease];
+#endif
+    return [self initWithDocument:document];
 }
 
 - (void) dealloc {
