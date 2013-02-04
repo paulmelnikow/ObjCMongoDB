@@ -3,12 +3,15 @@ the [10gen C driver][mongo-c-driver].
 
 ## Latest release
 
- -   The latest release is v0.9.5
+The latest release is v0.9.5.
+
  -   Based on v0.7.1 of the driver
  -   Tested under OS X 10.6+ with and without ARC
  -   Should work fine under iOS
 
-     git checkout v0.9.5     # since master may be a work in process
+```sh
+git checkout v0.9.5     # since master may be a work in process
+```
 
 See what's changed in [History][].
 
