@@ -185,9 +185,6 @@ typedef enum {
  - <code>-encodeRelationship:withEncoder:</code>
  - <code>-encodeFetchedProperty:withEncoder:</code>
  You can also override <code>-encodeWithBSONEncoder:</code> if necessary.
-
- Objects can automatically encode their entity hash if desired. Set
- <code>managedObjectsShouldEncodeEntityVersionHash</code> to enable this behavior.
  */
 @interface BSONEncoder : NSCoder
 
@@ -251,6 +248,5 @@ typedef enum {
 @property (retain) NSObject<BSONEncoderDelegate> * delegate;
 @property (assign) BSONEncoderBehaviorOnNil behaviorOnNil;
 @property (assign) BOOL restrictsKeyNamesForMongoDB;
-@property (assign) BOOL managedObjectsShouldEncodeEntityVersionHash;
 
 @end

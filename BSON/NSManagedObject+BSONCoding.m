@@ -20,8 +20,6 @@
 #import "NSManagedObject+BSONCoding.h"
 #import "BSON_Helper.h"
 
-NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
-
 @implementation NSManagedObject (BSONCoding)
 
 #pragma mark - Encoding and decoding behavior method
@@ -58,8 +56,6 @@ NSString * const BSONCodingEntityVersionHashKey = @"@$versionHash";
         else if ([property isKindOfClass:[NSFetchedPropertyDescription class]])
             [self encodeFetchedProperty:(NSFetchedPropertyDescription *)property withEncoder:encoder];
     }
-    if (encoder.managedObjectsShouldEncodeEntityVersionHash)
-        [encoder encodeData:[[self entity] versionHash] forKey:BSONCodingEntityVersionHashKey];
 }
 
 + (id) transformedValue:(id) value forAttribute:(NSAttributeDescription *) attribute {

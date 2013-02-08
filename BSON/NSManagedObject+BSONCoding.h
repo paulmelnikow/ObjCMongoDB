@@ -22,8 +22,6 @@
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 
-FOUNDATION_EXPORT NSString * const BSONCodingEntityVersionHashKey;
-
 /**
  Provides BSON encoding and decoding support for NSManagedObjects. The default implementation
  uses the entity description to automatically encode and decode each attribute and
@@ -83,10 +81,6 @@ FOUNDATION_EXPORT NSString * const BSONCodingEntityVersionHashKey;
 /**
  Encodes the receiver with the BSON encoder provided. The receiver may invoke any of the
  encoder's keyed encoding methods to encode its properties and instance variables.
- 
- Depending on the encoder's <code>managedObjectsShouldEncodeEntityVersionHash</code> value,
- the receiver should encoder the entity version hash under
- <code>BSONCodingEntityVersionHashKey</code> (<code>@ObjC_versionHash</code>).
  
  The default implementation iterates over the entity's properties, invoking these methods:
  - <code>-encodeAttribute:withEncoder:</code>
