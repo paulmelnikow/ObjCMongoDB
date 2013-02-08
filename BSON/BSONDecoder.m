@@ -398,10 +398,10 @@
         return result;
     return [self _postDecodingHelper:[self.iterator dateValue] keyOrNil:key topLevel:NO];
 }
-- (NSImage *) decodeImageForKey:(NSString *) key {
+- (ImageClassName *) decodeImageForKey:(NSString *) key {
     NSData *data = [self decodeDataForKey:key];
     if (data)
-        maybe_autorelease_and_return([[NSImage alloc] initWithData:data]);
+        maybe_autorelease_and_return([[ImageClassName alloc] initWithData:data]);
     else
         return nil;
 }
@@ -686,6 +686,11 @@
                                    userInfo:nil];
     @throw exc;
 }
+-(id)decodePropertyList {
+    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    return nil;
+}
+#if !TARGET_OS_IPHONE
 -(NSPoint)decodePoint {
     [BSONDecoder _unsupportedCodingSelector:_cmd];
     return NSZeroPoint;
@@ -693,10 +698,6 @@
 -(NSPoint)decodePointForKey:(NSString *)key {
     [BSONDecoder _unsupportedCodingSelector:_cmd];
     return NSZeroPoint;
-}
--(id)decodePropertyList {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
-    return nil;
 }
 -(NSRect)decodeRect {
     [BSONDecoder _unsupportedCodingSelector:_cmd];
@@ -714,5 +715,6 @@
     [BSONDecoder _unsupportedCodingSelector:_cmd];
     return NSZeroSize;    
 }
+#endif
 
 @end

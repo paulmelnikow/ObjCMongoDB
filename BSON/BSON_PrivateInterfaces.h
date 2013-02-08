@@ -23,6 +23,12 @@
 // your application. Use the classes' public interfaces instead.
 //
 
+#if TARGET_OS_IPHONE
+#define ImageClassName UIImage
+#else
+#define ImageClassName NSImage
+#endif
+
 #import "bson.h"
 #import "NSString+BSONAdditions.h"
 #import "NSData+BSONAdditions.h"

@@ -171,8 +171,8 @@
     
     else if ([objv isKindOfClass:[NSDate class]])
         [self _encodeDate:objv forKey:key withSubstitutions:NO];
-    
-    else if ([objv isKindOfClass:[NSImage class]])
+
+    else if ([objv isKindOfClass:[ImageClassName class]])
         [self _encodeImage:objv forKey:key withSubstitutions:NO];
 
     else if ([objv isKindOfClass:[NSData class]])
@@ -216,7 +216,7 @@
         || [objv isKindOfClass:[NSString class]]
         || [objv isKindOfClass:[NSNumber class]]
         || [objv isKindOfClass:[NSDate class]]
-        || [objv isKindOfClass:[NSImage class]]
+        || [objv isKindOfClass:[ImageClassName class]]
         || [objv isKindOfClass:[NSData class]]
         || [objv isKindOfClass:[NSArray class]]) {
         NSString *reason = [NSString stringWithFormat:@"Encode %@ using encodeObject:forKey: instead", [objv class]];
@@ -348,7 +348,7 @@
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key {
     [self _encodeTimestamp:objv forKey:key withSubstitutions:YES];
 }
-- (void) encodeImage:(NSImage *) objv forKey:(NSString *) key {
+- (void) encodeImage:(ImageClassName *) objv forKey:(NSString *) key {
     [self _encodeImage:objv forKey:key withSubstitutions:YES];
 }
 - (void) encodeString:(NSString *) objv forKey:(NSString *) key {
@@ -474,10 +474,14 @@
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
-- (void) _encodeImage:(NSImage *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
+- (void) _encodeImage:(ImageClassName *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self _encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:NO]) return;
+#if TARGET_OS_IPHONE
+    NSData *data = UIImagePNGRepresentation(objv);
+#else
     NSData *data = [objv TIFFRepresentationUsingCompression:NSTIFFCompressionLZW
                                                      factor:1.0L];
+#endif
     [self encodeObject:data forKey:key];
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
@@ -785,13 +789,14 @@
 - (void) encodeInteger:(NSInteger) intv forKey:(NSString *) key {
     [BSONEncoder _unsupportedCodingSelector:_cmd];    
 }
+- (void) encodePropertyList:(id) object {
+    [BSONEncoder _unsupportedCodingSelector:_cmd];
+}
+#if !TARGET_OS_IPHONE
 - (void) encodePoint:(NSPoint) point {
     [BSONEncoder _unsupportedCodingSelector:_cmd];    
 }
 - (void) encodePoint:(NSPoint) point forKey:(NSString *) key {
-    [BSONEncoder _unsupportedCodingSelector:_cmd];
-}
-- (void) encodePropertyList:(id) object {
     [BSONEncoder _unsupportedCodingSelector:_cmd];
 }
 - (void) encodeRect:(NSRect) rect {
@@ -806,5 +811,6 @@
 - (void) encodeSize:(NSSize) size forKey:(NSString *) key {
     [BSONEncoder _unsupportedCodingSelector:_cmd];
 }
+#endif
 
 @end

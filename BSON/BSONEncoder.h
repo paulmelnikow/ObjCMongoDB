@@ -17,8 +17,12 @@
 //  limitations under the License.
 //
 
-#import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+#else
 #import <AppKit/AppKit.h>
+#endif
+#import <Foundation/Foundation.h>
 #import "BSONTypes.h"
 
 typedef enum {
@@ -103,7 +107,7 @@ typedef enum {
      - <code>NSNumber</code>
      - <code>NSDate</code>
      - <code>NSData</code>
-     - <code>NSImage</code>
+     - <code>NSImage or UIImage</code>
      - <code>NSDictionary</code>
      - <code>NSArray</code>
      - <code>BSONObjectID</code> and the other classes defined in <code>BSONTypes.h</code>
@@ -225,7 +229,11 @@ typedef enum {
 - (void) encodeSymbol:(BSONSymbol *)objv forKey:(NSString *) key;
 
 - (void) encodeDate:(NSDate *) objv forKey:(NSString *) key;
+#if TARGET_OS_IPHONE
+- (void) encodeImage:(UIImage *) objv forKey:(NSString *) key;
+#else
 - (void) encodeImage:(NSImage *) objv forKey:(NSString *) key;
+#endif
 
 - (void) encodeRegularExpression:(BSONRegularExpression *) regex forKey:(NSString *) key;
 - (void) encodeRegularExpressionPattern:(NSString *) pattern options:(NSString *) options forKey:(NSString *) key;
