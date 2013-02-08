@@ -18,6 +18,7 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
+#import <CoreData/CoreData.h>
 
 @interface BSONCoreDataTest : SenTestCase {
     NSManagedObjectModel *_mom;

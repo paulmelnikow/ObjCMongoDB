@@ -47,7 +47,7 @@
     if (![obj isKindOfClass:[CDPerson class]]) return NO;
     
     BOOL equalChildren;
-    if ([self.children isEqualTo:obj.children])
+    if ([self.children isEqual:obj.children])
         equalChildren = YES;
     else if ([self.children count] != [obj.children count])
         equalChildren = NO;
@@ -68,9 +68,9 @@
         }
     }
 
-    return ((!self.name && !obj.name) || [self.name isEqualTo:obj.name])
-    && ((!self.dob && !obj.dob) || [self.dob isEqualTo:obj.dob])
-    && self.numberOfVisits == obj.numberOfVisits
+    return ((!self.name && !obj.name) || [self.name isEqual:obj.name])
+    && ((!self.dob && !obj.dob) || [self.dob isEqual:obj.dob])
+    && ((!self.numberOfVisits && !obj.numberOfVisits) || [self.numberOfVisits isEqual:obj.numberOfVisits])
     && equalChildren;
 }
 

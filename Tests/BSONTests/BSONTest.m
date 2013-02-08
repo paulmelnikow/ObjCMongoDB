@@ -61,10 +61,10 @@
 }
 -(BOOL)isEqual:(Person *) obj {
     if (![obj isKindOfClass:[Person class]]) return NO;
-    return ((!self.name && !obj.name) || [self.name isEqualTo:obj.name])
-    && ((!self.dob && !obj.dob) || [self.dob isEqualTo:obj.dob])
+    return ((!self.name && !obj.name) || [self.name isEqual:obj.name])
+    && ((!self.dob && !obj.dob) || [self.dob isEqual:obj.dob])
     && self.numberOfVisits == obj.numberOfVisits
-    && ((!self.children && !obj.children) || [self.children isEqualTo:obj.children]);
+    && ((!self.children && !obj.children) || [self.children isEqual:obj.children]);
 }
 @end
 @interface PersonWithCoding : Person <NSCoding, BSONCoding>
@@ -313,23 +313,23 @@
 
 -(id)decoder:(BSONDecoder *)decoder didDecodeObject:(id)object forKeyPath:(NSArray *)keyPathComponents {
     [super decoder:decoder didDecodeObject:object forKeyPath:keyPathComponents];
-    if ([object isEqualTo:@"one"])
+    if ([object isEqual:@"one"])
         return @"uno";
-    else if ([object isEqualTo:@"two"])
+    else if ([object isEqual:@"two"])
         return @"dos";
-    else if ([object isEqualTo:@"three"])
+    else if ([object isEqual:@"three"])
         return @"tres";
-    else if ([object isEqualTo:@"four"])
+    else if ([object isEqual:@"four"])
         return @"quattro";
-    else if ([object isEqualTo:@"five"])
+    else if ([object isEqual:@"five"])
         return @"cinco";
-    else if ([object isEqualTo:@"six"])
+    else if ([object isEqual:@"six"])
         return @"seis";
-    else if ([object isEqualTo:@"seven"])
+    else if ([object isEqual:@"seven"])
         return @"siete";
-    else if ([object isEqualTo:@"eight"])
+    else if ([object isEqual:@"eight"])
         return @"ocho";
-    else if ([object isEqualTo:@"nine"])
+    else if ([object isEqual:@"nine"])
         return @"nueve";
     else
         return object;
@@ -488,8 +488,8 @@
     
     BSONEncoder *encoder2 = [[BSONEncoder alloc] init];
     [encoder2 encodeDictionary:sample2];
-        
-    STAssertFalse([[encoder1 BSONDocument] isEqualTo:[encoder2 BSONDocument]],
+    
+    STAssertFalse([[encoder1 BSONDocument] isEqual:[encoder2 BSONDocument]],
                   @"Documents had different data and should not be equal");    
 }
 
@@ -529,7 +529,15 @@
     STAssertThrows([encoder encodeString:@"test" forKey:nil], reason);
     STAssertThrows([encoder encodeSymbol:[BSONSymbol symbol:@"test"] forKey:nil], reason);
     STAssertThrows([encoder encodeDate:[NSDate date] forKey:nil], reason);
+#if TARGET_OS_IPHONE
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(36, 36), NO, 0.0);
+    UIImage *testImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    STAssertNotNil(testImage, nil);
+    STAssertThrows([encoder encodeImage:testImage forKey:nil], reason);
+#else
     STAssertThrows([encoder encodeImage:[NSImage imageNamed:NSImageNameBonjour] forKey:nil], reason);
+#endif
     STAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:@"test" forKey:nil], reason);
     STAssertThrows([encoder encodeRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"test" options:@"test"]
                                               forKey:nil], reason);
@@ -588,7 +596,7 @@
     STAssertNoThrow([encoder encodeDouble:0 forKey:@"testKey"], reason);
     STAssertNoThrow([encoder encodeBool:NO forKey:@"testKey"], reason);
     
-    STAssertFalse([[encoder BSONDocument] isEqualTo:[[BSONDocument alloc] init]],
+    STAssertFalse([[encoder BSONDocument] isEqual:[[BSONDocument alloc] init]],
                          @"With default behavior, encoding zero-value primitives should fill up the document");
     
     encoder = [[BSONEncoder alloc] init];
