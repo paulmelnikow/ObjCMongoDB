@@ -70,16 +70,24 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 #if !__has_feature(objc_arc)
     [fuzzGenerator release];
 #endif
-    fuzzGenerator = [block copy];
-    bson_set_oid_fuzz(block_based_fuzz_func);
+    if (block == nil) {
+        bson_set_oid_fuzz(NULL);
+    } else {
+        fuzzGenerator = [block copy];
+        bson_set_oid_fuzz(block_based_fuzz_func);
+    }
 }
 
 + (void) generateIncrementUsingBlock:(int (^)(void)) block {
 #if !__has_feature(objc_arc)
     [incrementGenerator release];
 #endif
-    incrementGenerator = [block copy];
-    bson_set_oid_inc(block_based_inc_func);
+    if (block == nil) {
+        bson_set_oid_inc(NULL);
+    } else {
+        incrementGenerator = [block copy];
+        bson_set_oid_inc(block_based_inc_func);
+    }
 }
 
 #pragma mark - Initialization

@@ -103,11 +103,12 @@ __autoreleasing NSString * NSStringFromBSONType (BSONType t);
 /*! Test for equality with another object ID. */
 - (BOOL)isEqual:(id)other;
 
-/*! Provide your own code to generate the second four bytes of the object ID. */
+/*! Provide your own code to generate the second four bytes of the object ID.
+    Pass nil to use the default. */
 + (void) generateFuzzUsingBlock:(int (^)(void)) block;
 /*! Provide your own code to generate the incrementing part of the object ID (the
     last four bytes). You should do this if you need thread-safety in generating
-    object IDs, for example.
+    object IDs, for example. Pass nil to use the default.
     */
 + (void) generateIncrementUsingBlock:(int (^)(void)) block;
 
