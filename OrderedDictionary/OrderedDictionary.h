@@ -5,6 +5,9 @@
 //  Created by Matt Gallagher on 19/12/08.
 //  Copyright 2008 Matt Gallagher. All rights reserved.
 //
+//  MODIFIED #import directive
+//  by Paul Melnikow on February 8, 2013
+//
 //  This software is provided 'as-is', without any express or implied
 //  warranty. In no event will the authors be held liable for any damages
 //  arising from the use of this software. Permission is granted to anyone to
@@ -21,7 +24,7 @@
 //     distribution.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 @interface OrderedDictionary : NSMutableDictionary
 {

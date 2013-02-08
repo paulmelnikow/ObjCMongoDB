@@ -21,8 +21,8 @@
 
 @interface NSArray (MongoAdditions)
 
-+ (NSArray *) arrayWithPoint:(NSPoint) point;
-+ (NSArray *) arrayWithRect:(NSRect) rect;
++ (NSArray *) arrayWithPoint:(CGPoint) point;
++ (NSArray *) arrayWithRect:(CGRect) rect;
 
 
 @end

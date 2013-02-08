@@ -124,25 +124,25 @@
     [self _keyPath:keyPath addOperation:@"$mod" object:arguments negated:negated];
 }
 
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point negated:(BOOL) negated {
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point negated:(BOOL) negated {
     [self _keyPath:keyPath addOperation:@"$near"
             object:[NSArray arrayWithPoint:point]
            negated:negated];
 }
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance negated:(BOOL) negated {
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance negated:(BOOL) negated {
     [self _keyPath:keyPath addOperation:@"$near"
             object:[NSArray arrayWithPoint:point]
            negated:negated];
     [self _keyPath:keyPath addOperation:@"$maxDistance"
             object:@(maxDistance)];
 }
-- (void) keyPath:(NSString *) keyPath isWithinRect:(NSRect) rect
+- (void) keyPath:(NSString *) keyPath isWithinRect:(CGRect) rect
          negated:(BOOL) negated {
     id arguments = [OrderedDictionary dictionaryWithObject:[NSArray arrayWithRect:rect]
                                                     forKey:@"$box"];
     [self _keyPath:keyPath addOperation:@"$within" object:arguments negated:negated];
 }
-- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(NSPoint) center
+- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(CGPoint) center
           radius:(CGFloat) radius
          negated:(BOOL) negated {
     id centerAndRadius = @[ [NSArray arrayWithPoint:center], @(radius) ];
@@ -215,35 +215,35 @@
     [self keyPath:keyPath isEquivalentTo:remainder modulo:modulus negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point {
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point {
     [self keyPath:keyPath isNearPoint:point negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(NSPoint) point {
+- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point {
     [self keyPath:keyPath isNearPoint:point negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance {
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
     [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance {
+- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
     [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath isWithinRect:(NSRect) rect {
+- (void) keyPath:(NSString *) keyPath isWithinRect:(CGRect) rect {
     [self keyPath:keyPath isWithinRect:rect negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath isOutsideRect:(NSRect) rect {
+- (void) keyPath:(NSString *) keyPath isOutsideRect:(CGRect) rect {
     [self keyPath:keyPath isWithinRect:rect negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(NSPoint) center radius:(CGFloat) radius {
+- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
     [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(NSPoint) center radius:(CGFloat) radius {
+- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
     [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:YES];
 }
 

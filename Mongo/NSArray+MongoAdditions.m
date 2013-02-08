@@ -21,13 +21,13 @@
 
 @implementation NSArray (MongoAdditions)
 
-+ (NSArray *) arrayWithPoint:(NSPoint) point {
++ (NSArray *) arrayWithPoint:(CGPoint) point {
     return @[ @(point.x), @(point.y) ];
 }
 
-+ (NSArray *) arrayWithRect:(NSRect) rect {
-    id firstCoord = @[ @(NSMinX(rect)), @(NSMinY(rect)) ];
-    id secondCoord = @[ @(NSMaxX(rect)), @(NSMaxY(rect)) ];
++ (NSArray *) arrayWithRect:(CGRect) rect {
+    id firstCoord = @[ @(rect.origin.x), @(rect.origin.y) ];
+    id secondCoord = @[ @(rect.origin.x + rect.size.width), @(rect.origin.y + rect.size.height) ];
     return @[ firstCoord, secondCoord ];
 }
 

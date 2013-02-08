@@ -59,15 +59,15 @@
 - (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;
 - (void) keyPath:(NSString *) keyPath isNotEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;
 
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point;
-- (void) keyPath:(NSString *) keyPath isNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance;
-- (void) keyPath:(NSString *) keyPath isWithinRect:(NSRect) rect;
-- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(NSPoint) center radius:(CGFloat) radius;
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point;
+- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance;
+- (void) keyPath:(NSString *) keyPath isWithinRect:(CGRect) rect;
+- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(CGPoint) center radius:(CGFloat) radius;
 
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(NSPoint) point;
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(NSPoint) point maxDistance:(CGFloat) maxDistance;
-- (void) keyPath:(NSString *) keyPath isOutsideRect:(NSRect) rect;
-- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(NSPoint) center radius:(CGFloat) radius;
+- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point;
+- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance;
+- (void) keyPath:(NSString *) keyPath isOutsideRect:(CGRect) rect;
+- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(CGPoint) center radius:(CGFloat) radius;
 
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath;
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath negated:(BOOL) negated;
