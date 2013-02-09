@@ -408,7 +408,7 @@
 				22ED5B4E11DF1A8600410529 /* Classes */,
 				9E97CC6A16B054900035480E /* Tests */,
 				9E1054431503EE6300805F26 /* Documentation */,
-				9E97CC7616B058CA0035480E /* Framework Target Supporting Files */,
+				9EF8FF7316C61A6F004BBD11 /* Targets */,
 				9EBE79CB15003CF2000E767D /* Frameworks */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -479,15 +479,6 @@
 			name = Tests;
 			path = ../Tests;
 			sourceTree = SOURCE_ROOT;
-		};
-		9E97CC7616B058CA0035480E /* Framework Target Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				9EF20B1A1516892A009D9402 /* BSON */,
-				9E10544E1503F70400805F26 /* ObjCMongoDB */,
-			);
-			name = "Framework Target Supporting Files";
-			sourceTree = "<group>";
 		};
 		9EBE79CB15003CF2000E767D /* Frameworks */ = {
 			isa = PBXGroup;
@@ -585,6 +576,15 @@
 				9EF8FF5016C5C056004BBD11 /* MongoTests-iOS-Prefix.pch */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9EF8FF7316C61A6F004BBD11 /* Targets */ = {
+			isa = PBXGroup;
+			children = (
+				9E10544E1503F70400805F26 /* ObjCMongoDB */,
+				9EF20B1A1516892A009D9402 /* BSON */,
+			);
+			name = Targets;
 			sourceTree = "<group>";
 		};
 		9EFF2B51150D059000EDC285 /* BSON */ = {
