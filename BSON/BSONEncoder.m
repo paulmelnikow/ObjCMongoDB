@@ -83,7 +83,7 @@
 }
 
 + (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary {
-    return [self documentForDictionary:dictionary restrictsKeyNamesForMongoDB:YES];
+    return [self documentForDictionary:dictionary restrictingKeyNamesForMongoDB:YES];
 }
 
 + (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary
@@ -220,11 +220,8 @@
         || [objv isKindOfClass:[ImageClassName class]]
         || [objv isKindOfClass:[NSData class]]
         || [objv isKindOfClass:[NSArray class]]) {
-        NSString *reason = [NSString stringWithFormat:@"Encode %@ using encodeObject:forKey: instead", [objv class]];
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"Encode %@ using encodeObject:forKey: instead", [objv class]];
     }
     
     if ([objv isKindOfClass:[NSDictionary class]])
@@ -249,10 +246,8 @@
         NSParameterAssert([key isValidKeyNameForMongoDB:nil]);
     
     if ([self.encodingObjectStack containsObject:object]) {
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"Attempting to encode objects in a loop"
-                                       userInfo:nil];
-        @throw exc;
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"Attempting to encode objects in a loop"];
     }
     [self.encodingObjectStack addObject:object];
     
@@ -265,10 +260,8 @@
 
 - (void) _closeKey {
     if (![self.privateKeyPathComponents count]) {
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"-closeKey called too many times (without matching call to -_exposeKey:asArray:forObject:)"
-                                       userInfo:nil];
-        @throw exc;
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"-closeKey called too many times (without matching call to -_exposeKey:asArray:forObject:)"];
     }
     bson_append_finish_object(_bson);
     [self.privateKeyPathComponents removeLastObject];
@@ -587,12 +580,9 @@
 #pragma mark - Helper methods for -encode... methods
 
 - (void) _encodingHelper {
-    if (!_bson) {
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"Can't continue to encode after finishEncoding called"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (!_bson)
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"Can't continue to encode after finishEncoding called"];
 }
 
 - (void) _encodingHelperForKey:(NSString *) key {
@@ -605,13 +595,9 @@
 - (BOOL) _encodingHelper:(id) object withSubstitutions:(BOOL) substitutions withObjectIDSubstitution:(BOOL) substituteObjectID topLevel:(BOOL) topLevel {
     [self _encodingHelper];
     
-    if (topLevel) {
-        if ([self.encodingObjectStack count]) {
-            id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                             reason:@"Can only use root object encoding methods for the root object. Use encode...:forKey: methods instead."
-                                           userInfo:nil];
-            @throw exc;
-        }
+    if (topLevel && [self.encodingObjectStack count]) {
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"Can only use root object encoding methods for the root object. Use encode...:forKey: methods instead."];
     }
     
     if (substitutions && object) {
@@ -647,9 +633,8 @@
                 [self encodeNullForKey:key];
                 return YES;
             case BSONRaiseExceptionOnNil:
-                @throw [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                               reason:@"Can't encode nil value with BSONRaiseExceptionOnNil set"
-                                             userInfo:nil];
+                [NSException raise:NSInvalidArchiveOperationException
+                            format:@"Can't encode nil value with BSONRaiseExceptionOnNil set"];
         }
     return NO;
 }
@@ -689,16 +674,12 @@
         else if ([object respondsToSelector:@selector(BSONObjectID)])
             object = [object BSONObjectID];
         else {
-            id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                             reason:@"To encode a custom object by object ID, the object must respond to -BSONObjectID or -BSONObjectIDForEncoder:"
-                                           userInfo:nil];
-            @throw exc;
+            [NSException raise:NSInvalidArchiveOperationException
+                        format:@"To encode a custom object by object ID, the object must respond to -BSONObjectID or -BSONObjectIDForEncoder:"];
         }
         if (!object) {
-            id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                             reason:@"Non-nil object provided a nil -BSONObjectID or -BSONObjectIDForEncoder:"
-                                           userInfo:nil];
-            @throw exc;
+            [NSException raise:NSInvalidArchiveOperationException
+                        format:@"Non-nil object provided a nil -BSONObjectID or -BSONObjectIDForEncoder:"];
         }
     }
     
@@ -728,12 +709,10 @@
 #pragma mark - Unsupported unkeyed encoding methods
 
 + (void) _unsupportedUnkeyedCodingSelector:(SEL) selector {
-    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed encoding methods are not supported. Subclass if unkeyed coding is needed.",
-                        NSStringFromSelector(selector)];
-    id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                     reason:reason
-                                   userInfo:nil];
-    @throw exc;
+    [NSException raise:NSInvalidArchiveOperationException
+                format:@"%@ called, but unkeyed encoding methods are not supported. Subclass if unkeyed coding is needed.",
+     NSStringFromSelector(selector)
+     ];
 }
 
 - (void) encodeArrayOfObjCType:(const char *) itemType count:(NSUInteger) count at:(const void *) address {
@@ -761,12 +740,9 @@
 #pragma mark - Unsupported encoding types
 
 + (void) _unsupportedCodingSelector:(SEL) selector {
-    NSString *reason = [NSString stringWithFormat:@"%@ is not supported. Subclass if coding this type is needed.",
-                        NSStringFromSelector(selector)];
-    id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                     reason:reason
-                                   userInfo:nil];
-    @throw exc;
+    [NSException raise:NSInvalidArchiveOperationException
+                format:@"%@ is not supported. Subclass if coding this type is needed.",
+     NSStringFromSelector(selector)];
 }
 
 - (void) encodeBytes:(const void *) address length:(NSUInteger) numBytes {

@@ -40,12 +40,11 @@
 - (void) setName:(NSString *) value {
     _name = [value copy];
     NSRange firstDot = [value rangeOfString:@"."];
-    if (NSNotFound == firstDot.location) {
-        id exc = [NSException exceptionWithName:NSInvalidArgumentException
-                                         reason:@"Collection name is missing database component (e.g. db.person)"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    
+    if (NSNotFound == firstDot.location)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Collection name must have a database prefix – mydb.mycollection, or mydb.somecollections.mycollection"];
+    
     self.databaseName = [value substringToIndex:firstDot.location];
     self.namespaceName = [value substringFromIndex:1+firstDot.location];
 }

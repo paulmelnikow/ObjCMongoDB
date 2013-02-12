@@ -275,12 +275,9 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (void) _assertSupportsKeyedSearching {
-    if (!_b) {
-        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                         reason:@"Can't perform keyed searching on a sequential iterator; use -embeddedDocumentIterator instead"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (!_b)
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"Can't perform keyed searching on a sequential iterator; use -embeddedDocumentIterator instead"];
 }
 
 #pragma mark - Debugging and error handling

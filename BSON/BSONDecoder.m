@@ -163,12 +163,10 @@
 }
 
 - (void) _closeInternalObject {
-    if (![self.iteratorStack count]) {
-        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                         reason:@"-leaveInternalObject called too many times (without matching call to -enterInternalObjectAsArray:)"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (![self.iteratorStack count])
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"-leaveInternalObject called too many times (without matching call to -enterInternalObjectAsArray:)"];
+    
     self.iterator = [self.iteratorStack lastObject];
     [self.iteratorStack removeLastObject];
     [self.privateKeyPathComponents removeLastObject];
@@ -217,14 +215,10 @@
             result = [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
         else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
             result = [[classForDecoder allocWithZone:self.objectZone] initWithCoder:self];
-        else {
-            NSString *reason = [NSString stringWithFormat:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
-                                NSStringFromClass(classForDecoder)];
-            id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                             reason:reason
-                                           userInfo:nil];
-            @throw exc;
-        }
+        else
+            [NSException raise:NSInvalidUnarchiveOperationException
+                        format:@"Class %@ does not implement initWithCoder: or initWithBSONDecoder:",
+             NSStringFromClass(classForDecoder)];
     }
     maybe_autorelease_and_return(result);
 }
@@ -471,9 +465,8 @@
             case BSONReturnNilForNull:
                 *result = nil; return YES;
             case BSONRaiseExceptionOnNull:
-                @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                               reason:@"Tried to decode null value with BSONRaiseExceptionOnNull set"
-                                             userInfo:nil];
+                [NSException raise:NSInvalidUnarchiveOperationException
+                            format:@"Tried to decode null value with BSONRaiseExceptionOnNull set"];
         }
     } else if (BSONTypeUndefined == [self.iterator valueType]) {
         switch(self.behaviorOnUndefined) {
@@ -484,9 +477,8 @@
             case BSONReturnNilForUndefined:
                 *result = nil; return YES;
             case BSONRaiseExceptionOnUndefined:
-                @throw [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                               reason:@"Tried to decode undefined value with BSONRaiseExceptionOnUndefined set"
-                                             userInfo:nil];
+                [NSException raise:NSInvalidUnarchiveOperationException
+                            format:@"Tried to decode undefined value with BSONRaiseExceptionOnUndefined set"];
         }
     }
     return NO;
@@ -555,14 +547,10 @@
 #else
                 object = [[classForObjectID instanceForObjectID:[object retain] decoder:self] autorelease];
 #endif
-            else {
-                NSString *reason = [NSString stringWithFormat:@"Substituting class %@ for object ID but class doesn't respond to +instanceForObjectID:decoder:",
-                                    NSStringFromClass(classForObjectID)];
-                id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                                 reason:reason
-                                               userInfo:nil];
-                @throw exc;
-            }
+            else
+                [NSException raise:NSInvalidUnarchiveOperationException
+                            format:@"Substituting class %@ for object ID but class doesn't respond to +instanceForObjectID:decoder:",
+                 NSStringFromClass(classForObjectID)];
         }
     }
     
@@ -627,93 +615,86 @@
 
 #pragma mark - Unsupported unkeyed encoding methods
 
-+ (NSException *) _unsupportedUnkeyedCodingSelector:(SEL)selector {
-    NSString *reason = [NSString stringWithFormat:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
-                        NSStringFromSelector(selector)];
-    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                     reason:reason
-                                   userInfo:nil];
-    @throw exc;
++ (void) _raiseUnsupportedUnkeyedCodingSelector:(SEL)selector {
+    [NSException raise:NSInvalidUnarchiveOperationException
+                format:@"%@ called, but unkeyed decoding methods are not supported. Subclass if unkeyed coding is needed.",
+     NSStringFromSelector(selector)];
 }
 
 - (void) decodeArrayOfObjCType:(const char *) itemType count:(NSUInteger) count at:(void *) array {
-    [BSONDecoder _unsupportedUnkeyedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedUnkeyedCodingSelector:_cmd];
 }
 - (NSData *) decodeDataObject {
-    [BSONDecoder _unsupportedUnkeyedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedUnkeyedCodingSelector:_cmd];
     return nil;
 }
 - (void) decodeValueOfObjCType:(const char *) type at:(void *) data {
-    [BSONDecoder _unsupportedUnkeyedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedUnkeyedCodingSelector:_cmd];
 }
 - (void) decodeValuesOfObjCTypes:(const char *)types, ... {
-    [BSONDecoder _unsupportedUnkeyedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedUnkeyedCodingSelector:_cmd];
 }
 
 #pragma mark - Unsupported decoding types
 
-+ (void) _unsupportedCodingSelector:(SEL) selector {
-    NSString *reason = [NSString stringWithFormat:@"%@ is not supported. Subclass if coding this type is needed.",
-                        NSStringFromSelector(selector)];
-    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                     reason:reason
-                                   userInfo:nil];
-    @throw exc;
++ (void) _raiseUnsupportedCodingSelector:(SEL) selector {
+    [NSException raise:NSInvalidUnarchiveOperationException
+                format:@"%@ is not supported. Subclass if coding this type is needed.",
+     NSStringFromSelector(selector)];
 }
 
 - (const uint8_t *) decodeBytesForKey:(NSString *) key returnedLength:(NSUInteger *)lengthp {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NULL;
 }
 - (void *) decodeBytesWithReturnedLength:(NSUInteger *) lengthp {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NULL;
 }
 - (float) decodeFloatForKey:(NSString *) key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return 0;
 }
 - (int32_t) decodeInt32ForKey:(NSString *) key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return 0;
 }
 - (NSInteger) decodeIntegerForKey:(NSString *) key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return 0;
 }
 - (id)decodeObject {
-    id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                     reason:@"Use -decodeObjectWithClass: instead."
-                                   userInfo:nil];
-    @throw exc;
+    [NSException raise:NSInvalidUnarchiveOperationException
+                format:@"Use -decodeObjectWithClass: instead."];
+    return nil;
 }
 -(id)decodePropertyList {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return nil;
 }
 #if !TARGET_OS_IPHONE
 -(NSPoint)decodePoint {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroPoint;
 }
 -(NSPoint)decodePointForKey:(NSString *)key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroPoint;
 }
 -(NSRect)decodeRect {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroRect;    
 }
 -(NSRect)decodeRectForKey:(NSString *)key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroRect;    
 }
 -(NSSize)decodeSize {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroSize;    
 }
 -(NSSize)decodeSizeForKey:(NSString *)key {
-    [BSONDecoder _unsupportedCodingSelector:_cmd];
+    [BSONDecoder _raiseUnsupportedCodingSelector:_cmd];
     return NSZeroSize;    
 }
 #endif

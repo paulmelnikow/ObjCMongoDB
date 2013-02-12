@@ -29,23 +29,15 @@
 #pragma mark - Encoding methods
 
 - (void) encodeWithBSONEncoder:(BSONEncoder *) encoder {
-    if (BSONDoNothingOnNil != encoder.behaviorOnNil) {
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:@"Encoder's behaviorOnNil must be BSONDoNothingOnNil to encode NSManagedObject instances"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (BSONDoNothingOnNil != encoder.behaviorOnNil)
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"Encoder's behaviorOnNil must be BSONDoNothingOnNil to encode NSManagedObject instances"];
+
     NSError *error = nil;
-    if (![self validateForUpdate:&error]) {
-        NSString *reason = [NSString stringWithFormat:@"While trying to encode an object for entity %@, validateForUpdate: failed",
-                            [[self entity] name]];
-        NSDictionary *userInfo = [NSDictionary dictionaryWithObject:error
-                                                             forKey:@"NSError"];
-        id exc = [NSException exceptionWithName:NSInvalidArchiveOperationException
-                                         reason:reason
-                                       userInfo:userInfo];
-        @throw exc;
-    }
+    if (![self validateForUpdate:&error])
+        [NSException raise:NSInvalidArchiveOperationException
+                    format:@"While trying to encode an object for entity %@, validateForUpdate: failed", [[self entity] name]];
+
     for (NSPropertyDescription *property in [self entity]) {
         if ([property isTransient])
             continue;
@@ -127,12 +119,10 @@
 
 - (id) initWithBSONDecoder:(BSONDecoder *) decoder {
     NSManagedObjectContext *moc = decoder.managedObjectContext;
-    if (!moc) {
-        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                         reason:@"Decoder's managed object context is nil"
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if (!moc)
+        [NSException raise:NSInvalidUnarchiveOperationException
+                    format:@"Decoder's managed object context is nil"];
+
     NSEntityDescription *edesc = [NSEntityDescription entityForName:[[self class] description]
                                              inManagedObjectContext:moc];    
     if (self = [self initWithEntity:edesc insertIntoManagedObjectContext:moc]) {
@@ -167,14 +157,11 @@
     Class destinationClass = NSClassFromString([destinationEntity managedObjectClassName]);
     
     if ([decoder valueIsArrayForKey:key]) {
-        if (![relationship isToMany]) {
-            NSString *reason = [NSString stringWithFormat:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got an array",
-                                [relationship name], [[self entity] name]];
-            id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                             reason:reason
-                                           userInfo:nil];
-            @throw exc;
-        }
+        if (![relationship isToMany])
+            [NSException raise:NSInvalidUnarchiveOperationException
+                        format:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got an array",
+             [relationship name], [[self entity] name]];
+
         NSArray *values = [decoder decodeArrayForKey:key withClass:destinationClass];
         
         // Use late binding so the package will work at runtime under 10.6 (which lacks NSOrderedSet) as well as 10.7
@@ -184,29 +171,23 @@
         else
             [self setValue:[NSMutableSet setWithArray:values] forKey:key];
     } else if ([decoder valueIsEmbeddedDocumentForKey:key]) {
-        if ([relationship isToMany]) {
-            NSString *reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected an array but got an embedded document",
-                                [relationship name], [[self entity] name]];
-            id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                             reason:reason
-                                           userInfo:nil];
-            @throw exc;
-        }
+        if ([relationship isToMany])
+            [NSException raise:NSInvalidUnarchiveOperationException
+                        format:@"While initializing to-many entity relationship %@ on entity %@, expected an array but got an embedded document",
+             [relationship name], [[self entity] name]];
+        
         id value = [decoder decodeObjectForKey:key withClass:destinationClass];
         [self setValue:value forKey:key];
     } else if ([decoder containsValueForKey:key]) {
         NSString *type = NSStringFromBSONType([decoder valueTypeForKey:key]);
-        NSString *reason;
+        NSString *reason = nil;
         if ([relationship isToMany])
             reason = [NSString stringWithFormat:@"While initializing to-many entity relationship %@ on entity %@, expected a BSON array but got type %@",
                       [relationship name], [[self entity] name], type];
         else
             reason = [NSString stringWithFormat:@"While initializing to-one entity relationship %@ on entity %@, expected an embedded document but got type %@",
                       [relationship name], [[self entity] name], type];
-        id exc = [NSException exceptionWithName:NSInvalidUnarchiveOperationException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
+        [NSException raise:NSInvalidUnarchiveOperationException format:@"%@", reason];
     }
     // do nothing on nil
 }

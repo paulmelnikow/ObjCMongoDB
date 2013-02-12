@@ -47,13 +47,10 @@
 }
 
 - (void) keyPath:(NSString *) keyPath matches:(id) object {
-    if ([self.dictionary objectForKey:keyPath]) {
-        NSString *reason = [NSString stringWithFormat:@"Criteria alreay set for key path %@", keyPath];
-        id exc = [NSException exceptionWithName:NSInvalidArgumentException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
-    }
+    if ([self.dictionary objectForKey:keyPath])
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Criteria alreay set for key path %@", keyPath];
+
     [self.dictionary setObject:object forKey:keyPath];
 }
 
@@ -262,13 +259,9 @@
     if (!dictForKeyPath) {
         dictForKeyPath = [OrderedDictionary dictionary];
         [self.dictionary setObject:dictForKeyPath forKey:keyPath];
-    } else if (![dictForKeyPath isKindOfClass:[OrderedDictionary class]]) {
-        NSString *reason = [NSString stringWithFormat:@"Match object alreay set for key path %@", keyPath];
-        id exc = [NSException exceptionWithName:NSInvalidArgumentException
-                                         reason:reason
-                                       userInfo:nil];
-        @throw exc;
-    }
+    } else if (![dictForKeyPath isKindOfClass:[OrderedDictionary class]])
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Match object alreay set for key path %@", keyPath];
     
     if (negated)
         [dictForKeyPath setObject:[OrderedDictionary dictionaryWithObject:object forKey:oper] forKey:@"$not"];
