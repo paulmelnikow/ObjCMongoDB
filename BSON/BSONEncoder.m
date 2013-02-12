@@ -68,12 +68,12 @@
 #pragma mark - Convenience methods
 
 + (BSONDocument *) documentForObject:(id) obj {
-    return [self documentForObject:obj restrictsKeyNamesForMongoDB:YES];
+    return [self documentForObject:obj restrictingKeyNamesForMongoDB:YES];
 }
 
-+ (BSONDocument *) documentForObject:(id) obj restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB {
++ (BSONDocument *) documentForObject:(id) obj restrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB {
     BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
-    encoder.restrictsKeyNamesForMongoDB = restrictsKeyNamesForMongoDB;
+    encoder.restrictsKeyNamesForMongoDB = restrictingKeyNamesForMongoDB;
     [encoder encodeObject:obj];
     BSONDocument *result = [encoder BSONDocument];
 #if !__has_feature(objc_arc)
@@ -86,9 +86,10 @@
     return [self documentForDictionary:dictionary restrictsKeyNamesForMongoDB:YES];
 }
 
-+ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB {
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary
+           restrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB {
     BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
-    encoder.restrictsKeyNamesForMongoDB = restrictsKeyNamesForMongoDB;
+    encoder.restrictsKeyNamesForMongoDB = restrictingKeyNamesForMongoDB;
     [encoder encodeDictionary:dictionary];
     BSONDocument *result = [encoder BSONDocument];
 #if !__has_feature(objc_arc)

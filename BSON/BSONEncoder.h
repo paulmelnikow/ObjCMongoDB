@@ -191,9 +191,11 @@ typedef enum {
 - (BSONEncoder *) initForWriting;
 
 + (BSONDocument *) documentForObject:(id) obj;
-+ (BSONDocument *) documentForObject:(id) obj restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB;
++ (BSONDocument *) documentForObject:(id) obj
+       restrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB;
 + (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary;
-+ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary restrictsKeyNamesForMongoDB:(BOOL) restrictsKeyNamesForMongoDB;
++ (BSONDocument *) documentForDictionary:(NSDictionary *) dictionary
+           restrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB;
 
 - (BSONDocument *) BSONDocument;
 - (NSData *) data;
