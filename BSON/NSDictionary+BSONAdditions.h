@@ -18,8 +18,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class BSONDocument;
+#import "BSONDocument.h"
 
 @interface NSDictionary (BSONAdditions)
 
