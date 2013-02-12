@@ -43,11 +43,15 @@
  Initializes a BSON document as a sub-object for a given iterator, which retains
  the object owning its bson* until deallocation.
  
- Since only the root document may is responsible to call bson_destroy, instances created
+ Since only the root document is responsible to call bson_destroy, instances created
  with this method will not call bson_destroy on deallocation.
  */
 - (BSONDocument *) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator
                                            dependentOn:(id) dependentOn;
+/**
+ Will call bson_destroy to deallocate the storage when destroyWhenDone is YES. Always
+ takes ownership of the bson object itself and calls bson_dispose when done.
+ */
 + (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
 - (const bson *) bsonValue;
 @end

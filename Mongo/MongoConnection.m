@@ -19,7 +19,6 @@
 
 #import "MongoConnection.h"
 #import "mongo.h"
-#import "BSONDecoder.h"
 #import "BSON_Helper.h"
 #import "Mongo_Helper.h"
 #import "Mongo_PrivateInterfaces.h"
@@ -182,9 +181,8 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         bson_dispose(tempBson);
         set_error_and_return_nil;
     }
-    // Transfers ownership
-    BSONDocument *resultDocument = [BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES];
-    return [BSONDecoder decodeDictionaryWithDocument:resultDocument];
+    // Transfers ownership of bson and data buffer
+    return [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
 }
 
 #pragma mark - Error handling
@@ -207,11 +205,8 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         bson_dispose(tempBson);
         return nil;
     }
-    
-    id result = [BSONDecoder decodeDictionaryWithData:[NSData dataWithNativeBSONObject:tempBson copy:NO]];
-    bson_destroy(tempBson);
-    bson_dispose(tempBson);
-    return result;
+    // Transfers ownership of bson and data buffer
+    return [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
 }
 
 - (NSError *) error {
