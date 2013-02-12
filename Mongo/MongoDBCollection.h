@@ -75,6 +75,8 @@
 - (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
                              error:(NSError * __autoreleasing *) error;
 
+- (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError;
+
 // These are shared across all collections for the connection
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
 - (NSDictionary *) lastOperationDictionary;

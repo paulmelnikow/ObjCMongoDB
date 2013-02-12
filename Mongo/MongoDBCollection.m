@@ -242,6 +242,20 @@
 //int mongo_create_index( mongo *conn, const char *ns, bson *key, int options, bson *out );
 //bson_bool_t mongo_create_simple_index( mongo *conn, const char *ns, const char *field, int options, bson *out );
 
+#pragma mark - Administration
+
+- (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError {
+    NSError *error = nil;
+    NSDictionary *command = @{ @"drop" : self.namespaceName };
+    [self.connection runCommandWithDictionary:command
+                               onDatabaseName:self.databaseName
+                                        error:&error];
+    if (error) {
+        if (outError) *outError = error;
+        return NO;
+    } else
+        return YES;
+}
 
 #pragma mark - Helper methods
 

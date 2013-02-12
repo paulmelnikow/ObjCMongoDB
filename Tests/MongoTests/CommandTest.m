@@ -93,4 +93,33 @@
     STAssertNotNil([result objectForKey:@"process"], nil);
 }
 
+- (void) testDropCollection {
+    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.CommandTest.testDropCollection"];
+    NSError *error = nil;
+    NSDictionary *testDoc1 = [NSDictionary dictionaryWithObjectsAndKeys:
+                              @"pickles1", @"description",
+                              [NSNumber numberWithInt:5], @"quantity",
+                              [NSNumber numberWithFloat:2.99], @"price",
+                              [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
+                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
+                              nil];
+    [coll insertDictionary:testDoc1 writeConcern:nil error:&error];
+    STAssertNil(error, nil);
+    
+    BSONDocument *resultDoc = [coll findOneWithError:&error];
+    STAssertNotNil(resultDoc, nil);
+    STAssertNil(error, error.localizedDescription);
+
+    error = nil;
+    STAssertTrue([coll dropCollectionWithError:&error], nil);
+    STAssertNil(error, error.localizedDescription);
+    
+    resultDoc = [coll findOneWithError:&error];
+    STAssertNil(resultDoc, nil);
+    
+    error = nil;
+    STAssertFalse([coll dropCollectionWithError:&error], @"Shouldn't be able to drop the collection a second time");
+    STAssertNotNil(error, error.localizedDescription);
+}
+
 @end

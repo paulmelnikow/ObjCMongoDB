@@ -158,13 +158,6 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
     return mongo_cmd_drop_db(_conn, database.bsonString);
 }
 
-//- (BOOL) dropCollection:(id) collection {
-//        return mongo_cmd_drop_collection(_conn,
-//                                         [database cStringUsingEncoding:NSUTF8StringEncoding],
-//                                         [collection cStringUsingEncoding:NSUTF8StringEncoding],
-//                                         NULL);
-//}
-
 #pragma mark - Run commands
 
 - (NSDictionary *) runCommandWithName:(NSString *) commandName
