@@ -23,6 +23,7 @@
 #import "BSONCoding.h"
 #import "BSON_PrivateInterfaces.h"
 #import "BSON_Helper.h"
+#import "OrderedDictionary.h"
 
 @interface BSONDecoder ()
 @property (retain) BSONIterator *iterator;
@@ -229,11 +230,11 @@
 }
 
 - (NSDictionary *) _decodeExposedDictionaryWithClassOrNil:(Class) classForDecoder {
-    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    OrderedDictionary *dictionary = [OrderedDictionary dictionary];
     while ([self.iterator next])
         [dictionary setObject:[self _decodeCurrentObjectWithClassOrNil:classForDecoder]
                        forKey:[self.iterator key]];
-    return [NSDictionary dictionaryWithDictionary:dictionary];
+    return dictionary;
 }
 
 - (NSArray *) _decodeExposedArrayWithClassOrNil:(Class) classForDecoder {

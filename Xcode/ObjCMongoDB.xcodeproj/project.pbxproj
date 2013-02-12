@@ -193,6 +193,8 @@
 		9EF8FF7016C5C45F004BBD11 /* UpdateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29D8152CC65A004F50D2 /* UpdateTest.m */; };
 		9EF8FF7116C5C45F004BBD11 /* GetLastErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF20B04151678FF009D9402 /* GetLastErrorTest.m */; };
 		9EF8FF7216C5C45F004BBD11 /* FindTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE59A6715837B5800040FE7 /* FindTest.m */; };
+		9EF8FF7816C9E67D004BBD11 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
+		9EF8FF7916C9E687004BBD11 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
 		9EFA29D9152CC65A004F50D2 /* UpdateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29D8152CC65A004F50D2 /* UpdateTest.m */; };
 		9EFA29E1152CCD70004F50D2 /* env.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29DC152CCD70004F50D2 /* env.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFA29EE152D064A004F50D2 /* MongoUpdateRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1033,6 +1035,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EF8FF7816C9E67D004BBD11 /* OrderedDictionary.m in Sources */,
 				9EBE79F9150040D5000E767D /* BSONTest.m in Sources */,
 				9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */,
 				9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */,
@@ -1096,6 +1099,7 @@
 				9EF8FF3A16C58BF8004BBD11 /* bson.c in Sources */,
 				9EF8FF3B16C58BFA004BBD11 /* encoding.c in Sources */,
 				9EF8FF3C16C58BFE004BBD11 /* numbers.c in Sources */,
+				9EF8FF7916C9E687004BBD11 /* OrderedDictionary.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
