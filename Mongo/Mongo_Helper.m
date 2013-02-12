@@ -23,7 +23,7 @@
 #define mongo_error_case(typeParam, descParam) \
     case typeParam: \
         name = NSStringize(typeParam);  \
-        desc = desc; \
+        desc = descParam; \
     break;
 
 __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
