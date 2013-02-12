@@ -167,26 +167,19 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 #pragma mark - Run commands
 
-- (BSONDocument *) runCommandWithName:(NSString *) commandName
+- (NSDictionary *) runCommandWithName:(NSString *) commandName
                        onDatabaseName:(NSString *) databaseName
                                 error:(NSError * __autoreleasing *) error {
     if (!commandName)
         [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
     NSDictionary *dictionary = @{ commandName : @(1) };
-    BSONDocument *document = [BSONEncoder documentForDictionary:dictionary];
-    return [self runCommandWithDocument:document onDatabaseName:databaseName error:error];
+    return [self runCommandWithDictionary:dictionary onDatabaseName:databaseName error:error];
 }
 
-- (BSONDocument *) runCommandWithDictionary:(NSDictionary *) dictionary
+- (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
                                       error:(NSError * __autoreleasing *) error {
     BSONDocument *document = [BSONEncoder documentForDictionary:dictionary];
-    return [self runCommandWithDocument:document onDatabaseName:databaseName error:error];
-}
-
-- (BSONDocument *) runCommandWithDocument:(BSONDocument *) document
-                           onDatabaseName:(NSString *) databaseName
-                                    error:(NSError * __autoreleasing *) error {
     bson *tempBson = bson_create();
     int result = mongo_run_command(self.connValue,
                                    databaseName.bsonString,
@@ -196,10 +189,9 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
         bson_dispose(tempBson);
         set_error_and_return_nil;
     }
-    bson *newBson = bson_create();
-    bson_copy(newBson, tempBson);
-    bson_dispose(tempBson);
-    return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
+    // Transfers ownership
+    BSONDocument *resultDocument = [BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES];
+    return [BSONDecoder decodeDictionaryWithDocument:resultDocument];
 }
 
 #pragma mark - Error handling

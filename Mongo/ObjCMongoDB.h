@@ -26,7 +26,7 @@
 
 #import "ObjCBSON.h"
 #import "MongoConnection.h"
-#import "MongoConnection+Commands.h"
+#import "MongoConnection+Diagnostics.h"
 #import "MongoDBCollection.h"
 #import "MongoPredicate.h"
 #import "MongoKeyedPredicate.h"

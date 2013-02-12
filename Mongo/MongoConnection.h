@@ -56,13 +56,10 @@ FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
 - (BOOL) dropDatabaseWithName:(NSString *) database;
 //- (BOOL) dropCollection:(MongoDBNamespace *) collection;
 
-- (BSONDocument *) runCommandWithDocument:(BSONDocument *) document
-                           onDatabaseName:(NSString *) databaseName
-                                    error:(NSError * __autoreleasing *) error;
-- (BSONDocument *) runCommandWithName:(NSString *) commandName
+- (NSDictionary *) runCommandWithName:(NSString *) commandName
                        onDatabaseName:(NSString *) databaseName
                                 error:(NSError * __autoreleasing *) error;
-- (BSONDocument *) runCommandWithDictionary:(NSDictionary *) dictionary
+- (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
                                       error:(NSError * __autoreleasing *) error;
 
