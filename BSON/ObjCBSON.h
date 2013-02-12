@@ -2,8 +2,7 @@
 //  ObjCBSON.h
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 3/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2012 Paul Melnikow and other contributors
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -29,6 +28,7 @@
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 #import "BSONCoding.h"
+#import "NSDictionary+BSONAdditions.h"
 #import "NSManagedObject+BSONCoding.h"
 
 FOUNDATION_EXPORT NSString * const MongoDBObjectIDKey;

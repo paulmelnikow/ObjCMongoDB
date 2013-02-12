@@ -18,11 +18,9 @@
 //
 
 #import "MongoFindRequest.h"
-#import "BSONEncoder.h"
+#import "ObjCMongoDB.h"
 #import "mongo.h"
-#import "MongoPredicate.h"
 #import "Mongo_PrivateInterfaces.h"
-#import "OrderedDictionary.h"
 
 @interface MongoFindRequest ()
 
@@ -112,7 +110,7 @@
 
 - (BSONDocument *) fieldsDocument {
     if (![self.fields count]) return nil;
-    return [BSONEncoder documentForDictionary:self.fields restrictsKeyNamesForMongoDB:NO];
+    return [self.fields BSONDocumentRestrictingKeyNamesForMongoDB:NO];
 }
 
 - (OrderedDictionary *) queryDictionaryValue {
@@ -153,8 +151,7 @@
 }
 
 - (BSONDocument *) queryDocument {
-    return [BSONEncoder documentForObject:[self queryDictionaryValue]
-              restrictsKeyNamesForMongoDB:NO];
+    return [self.queryDictionaryValue BSONDocumentRestrictingKeyNamesForMongoDB:NO];
 }
 
 - (int) options {

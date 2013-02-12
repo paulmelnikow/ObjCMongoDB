@@ -18,13 +18,9 @@
 //
 
 #import "MongoDBCollection.h"
-#import "MongoConnection.h"
+#import "ObjCMongoDB.h"
 #import "mongo.h"
-#import "BSONDocument.h"
-#import "BSONEncoder.h"
 #import "BSON_Helper.h"
-#import "MongoFindRequest.h"
-#import "MongoUpdateRequest.h"
 #import "Mongo_PrivateInterfaces.h"
 #import "Mongo_Helper.h"
 
@@ -71,15 +67,13 @@
 - (BOOL) insertDictionary:(NSDictionary *) dictionary
              writeConcern:(MongoWriteConcern *) writeConcern
                     error:(NSError * __autoreleasing *) error {
-    BSONDocument *document = [BSONEncoder documentForDictionary:dictionary];
-    return [self insertDocument:document writeConcern:writeConcern error:error];
+    return [self insertDocument:[dictionary BSONDocument] writeConcern:writeConcern error:error];
 }
 
 - (BOOL) insertObject:(id) object
          writeConcern:(MongoWriteConcern *) writeConcern
                 error:(NSError * __autoreleasing *) error {
-    BSONDocument *document = [BSONEncoder documentForObject:object];
-    return [self insertDocument:document writeConcern:writeConcern error:error];
+    return [self insertDocument:[BSONEncoder documentForObject:object] writeConcern:writeConcern error:error];
 }
 
 - (BOOL) insertDocuments:(NSArray *) documentArray

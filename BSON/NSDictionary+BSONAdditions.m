@@ -1,8 +1,8 @@
 //
-//  ObjCBSON.m
+//  NSDictionary+BSONAdditions.m
 //  ObjCMongoDB
 //
-//  Copyright 2012 Paul Melnikow and other contributors
+//  Copyright 2013 Paul Melnikow and other contributors
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,6 +17,18 @@
 //  limitations under the License.
 //
 
-#import "ObjCBSON.h"
+#import "NSDictionary+BSONAdditions.h"
+#import "BSONEncoder.h"
 
-NSString * const MongoDBObjectIDKey = @"_id";
+@implementation NSDictionary (BSONAdditions)
+
+- (BSONDocument *) BSONDocument {
+    return [BSONEncoder documentForDictionary:self];
+}
+
+- (BSONDocument *) BSONDocumentRestrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB {
+    return [BSONEncoder documentForDictionary:self
+                restrictingKeyNamesForMongoDB:restrictingKeyNamesForMongoDB];
+}
+
+@end

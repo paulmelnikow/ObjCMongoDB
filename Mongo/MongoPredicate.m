@@ -18,10 +18,8 @@
 //
 
 #import "MongoPredicate.h"
-#import "MongoKeyedPredicate.h"
-#import "BSONEncoder.h"
+#import "ObjCMongoDB.h"
 #import "Mongo_Helper.h"
-#import "OrderedDictionary.h"
 
 @interface MongoPredicate ()
 @property (retain) OrderedDictionary *dictionary;
@@ -59,8 +57,7 @@
 #pragma mark - Getting the result
 
 - (BSONDocument *) BSONDocument {
-    return [BSONEncoder documentForDictionary:self.dictionary
-                  restrictsKeyNamesForMongoDB:NO];
+    return [self.dictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO];
 }
 
 - (NSString *) description {

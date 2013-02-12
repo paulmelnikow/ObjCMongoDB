@@ -18,9 +18,7 @@
 //
 
 #import "MongoUpdateRequest.h"
-#import "BSONEncoder.h"
-#import "BSONDocument.h"
-#import "MongoKeyedPredicate.h"
+#import "ObjCMongoDB.h"
 #import "mongo.h"
 #import "Mongo_PrivateInterfaces.h"
 #import "BSON_Helper.h"
@@ -71,7 +69,7 @@
 }
 
 - (void) replaceDocumentWithDictionary:(NSDictionary *) replacementDictionary {
-    [self replaceDocumentWithDocument:[BSONEncoder documentForDictionary:replacementDictionary]];
+    [self replaceDocumentWithDocument:[replacementDictionary BSONDocument]];
 }
 
 - (void) keyPath:(NSString *) keyPath setValue:(id) value {
@@ -141,8 +139,7 @@
 #pragma mark - Getting the result
 
 - (BSONDocument *) conditionDocumentValue {
-    return [BSONEncoder documentForObject:[self conditionDictionaryValue]
-              restrictsKeyNamesForMongoDB:NO];
+    return [self.conditionDictionaryValue BSONDocumentRestrictingKeyNamesForMongoDB:NO];
 }
 
 - (OrderedDictionary *) conditionDictionaryValue {
@@ -163,7 +160,7 @@
     if (self.replacementDocument)
         return self.replacementDocument;
     else if (self.operationDictionary)
-        return [BSONEncoder documentForDictionary:self.operationDictionary restrictsKeyNamesForMongoDB:NO];
+        return [self.operationDictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO];
     else
 #if __has_feature(objc_arc)
         return [[BSONDocument alloc] init];

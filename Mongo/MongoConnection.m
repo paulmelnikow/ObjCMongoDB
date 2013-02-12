@@ -18,6 +18,7 @@
 //
 
 #import "MongoConnection.h"
+#import "ObjCMongoDB.h"
 #import "mongo.h"
 #import "BSON_Helper.h"
 #import "Mongo_Helper.h"
@@ -171,11 +172,10 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 - (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
                                       error:(NSError * __autoreleasing *) error {
-    BSONDocument *document = [BSONEncoder documentForDictionary:dictionary];
     bson *tempBson = bson_create();
     int result = mongo_run_command(self.connValue,
                                    databaseName.bsonString,
-                                   document.bsonValue,
+                                   [[dictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO] bsonValue],
                                    tempBson);
     if (BSON_OK != result) {
         bson_dispose(tempBson);
