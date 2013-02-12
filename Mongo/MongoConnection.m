@@ -223,11 +223,12 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 - (NSError *) error {
     if (!_conn->err) return nil;
-    NSString *description = [NSString stringWithFormat:@"%@ [%@]",
-                             MongoErrorCodeDescription(_conn->err),
-                             NSStringFromMongoErrorCode(_conn->err)];
-    if (_conn->errstr) description = [description stringByAppendingFormat:@": %s",
-                                      _conn->errstr];
+    NSString *description = [NSString stringWithFormat:@"%@: %@",
+                             NSStringFromMongoErrorCode(_conn->err),
+                             MongoErrorCodeDescription(_conn->err)];
+    NSString *driverString = [NSString stringWithBSONString:_conn->errstr];
+    if (driverString.length) description = [description stringByAppendingFormat:@": %@",
+                                            driverString];
     NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
                               description, NSLocalizedDescriptionKey,
                               nil];
