@@ -209,9 +209,10 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
 
 - (NSError *) serverError {
     if (!_conn->lasterrcode) return nil;
-    NSDictionary *userInfo = @{
-                              NSLocalizedDescriptionKey : [NSString stringWithBSONString:_conn->lasterrstr]
-                             };
+    NSString *message = [NSString stringWithBSONString:_conn->lasterrstr];
+    NSDictionary *userInfo = nil;
+    if (message)
+        userInfo = @{ NSLocalizedDescriptionKey : message };
     return [NSError errorWithDomain:MongoDBServerErrorDomain
                                code:_conn->lasterrcode
                            userInfo:userInfo];
