@@ -62,7 +62,7 @@
     if (MONGO_OK == mongo_insert(self.connection.connValue,
                                  self.utf8Name,
                                  document.bsonValue,
-                                 writeConcern.nativeWriteConcern))
+                                 [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]))
         return YES;
     else
         set_error_and_return_NO;
@@ -105,7 +105,7 @@
                                        self.utf8Name,
                                        bsonArray,
                                        documentsToInsert,
-                                       writeConcern.nativeWriteConcern,
+                                       [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
                                        flags))
         return YES;
     else
@@ -121,7 +121,7 @@
                                  updateRequest.conditionDocumentValue.bsonValue,
                                  updateRequest.operationDocumentValue.bsonValue,
                                  updateRequest.flags,
-                                 updateRequest.writeConcern.nativeWriteConcern))
+                                 [[self _coalesceWriteConcern:updateRequest.writeConcern] nativeWriteConcern]))
         return YES;
     else
         set_error_and_return_NO;
@@ -157,7 +157,7 @@
     int result = mongo_remove(self.connection.connValue,
                               self.utf8Name,
                               cond.bsonValue,
-                              writeConcern.nativeWriteConcern);
+                              [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]);
     if (MONGO_OK == result)
         return YES;
     else
@@ -244,6 +244,10 @@
 
 
 #pragma mark - Helper methods
+
+- (MongoWriteConcern *) _coalesceWriteConcern:(MongoWriteConcern *) writeConcern {
+    return writeConcern ? writeConcern : self.connection.writeConcern;
+}
 
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
     return [self.connection lastOperationWasSuccessful:error];

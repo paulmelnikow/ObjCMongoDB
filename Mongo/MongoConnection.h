@@ -43,11 +43,10 @@ FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
 - (BOOL) reconnectWithError:(NSError * __autoreleasing *) error;
 - (void) disconnect;
 
-/*! Default write concern for this connection. May be overridden for each insert, update,
-    or delete. Don't mutate the writeConcern after setting it, else your changes won't
-    propagate to the driver. Create and pass in a new one instead.
+/*! Write concern for this connection. May be overridden for each insert, update, or
+    delete. The default is acknowledged writes – MongoWriteAcknowledged.
  */
-@property (copy) MongoWriteConcern *writeConcern;
+@property (retain) MongoWriteConcern *writeConcern;
 /*! Max BSON size for this connection. When attempting to insert a document larger than
     this, the driver will generate an error. */
 @property (assign) NSUInteger maxBSONSize;

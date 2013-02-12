@@ -13,7 +13,7 @@
 
 @interface MongoWriteConcern ()
 
-@property (assign) MongoWriteAcknowledgementBehavior previousWriteAcknowledgementBehavior;
+@property (assign) MongoWriteAcknowledgementMode previousWriteAcknowledgementBehavior;
 @property (assign) NSTimeInterval previousReplicationTimeout;
 @property (assign) BOOL previousSynchronizeToDisk;
 
