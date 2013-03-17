@@ -289,7 +289,8 @@
 }
 
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError {
-    return [self _runCommandWithName:@"drop" error:outError];
+    id result = [self _runCommandWithName:@"drop" error:outError];
+    return result ? YES : NO;
 }
 
 #pragma mark - Helper methods
