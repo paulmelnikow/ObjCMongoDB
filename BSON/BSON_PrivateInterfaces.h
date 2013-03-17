@@ -23,6 +23,11 @@
 // your application. Use the classes' public interfaces instead.
 //
 
+// Ensure that we have the modern runtime, since we need it for autosynthesized accessors
+#if !__has_feature(objc_default_synthesize_properties) || defined(__i386__)
+#error ObjCMongoDB requires the modern runtime and will not compile under 32-bit
+#endif
+
 #if TARGET_OS_IPHONE
 #define ImageClassName UIImage
 #else
