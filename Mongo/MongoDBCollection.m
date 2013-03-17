@@ -24,21 +24,16 @@
 #import "Mongo_PrivateInterfaces.h"
 #import "Mongo_Helper.h"
 
-@implementation MongoDBCollection {
-    NSString *_name;
-}
+@interface MongoDBCollection ()
+@property (copy, nonatomic) NSString * privateFullyQualifiedName;
+@end
+
+@implementation MongoDBCollection
 
 #pragma mark - Initialization
 
-- (void) dealloc {
-#if !__has_feature(objc_arc)
-    [_name release];
-    [super dealloc];
-#endif
-}
-
-- (void) setName:(NSString *) value {
-    _name = [value copy];
+- (void) setFullyQualifiedName:(NSString *) value {
+    self.privateFullyQualifiedName = value;
     NSRange firstDot = [value rangeOfString:@"."];
     
     if (NSNotFound == firstDot.location)
@@ -49,13 +44,17 @@
     self.namespaceName = [value substringFromIndex:1+firstDot.location];
 }
 
+- (NSString *) fullyQualifiedName {
+    return self.privateFullyQualifiedName;
+}
+
 #pragma mark - Insert
 
 - (BOOL) insertDocument:(BSONDocument *) document
            writeConcern:(MongoWriteConcern *) writeConcern
                   error:(NSError * __autoreleasing *) error {
     if (MONGO_OK == mongo_insert(self.connection.connValue,
-                                 self.utf8Name,
+                                 self.fullyQualifiedName.bsonString,
                                  document.bsonValue,
                                  [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]))
         return YES;
@@ -95,7 +94,7 @@
     }
     int flags = continueOnError ? MONGO_CONTINUE_ON_ERROR : 0;
     if (MONGO_OK == mongo_insert_batch(self.connection.connValue,
-                                       self.utf8Name,
+                                       self.fullyQualifiedName.bsonString,
                                        bsonArray,
                                        documentsToInsert,
                                        [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
@@ -110,7 +109,7 @@
 - (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest
                      error:(NSError * __autoreleasing *) error {
     if (MONGO_OK == mongo_update(self.connection.connValue,
-                                 self.utf8Name,
+                                 self.fullyQualifiedName.bsonString,
                                  updateRequest.conditionDocumentValue.bsonValue,
                                  updateRequest.operationDocumentValue.bsonValue,
                                  updateRequest.flags,
@@ -148,7 +147,7 @@
             writeConcern:(MongoWriteConcern *) writeConcern
                    error:(NSError * __autoreleasing *) error {
     int result = mongo_remove(self.connection.connValue,
-                              self.utf8Name,
+                              self.fullyQualifiedName.bsonString,
                               cond.bsonValue,
                               [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]);
     if (MONGO_OK == result)
@@ -166,7 +165,8 @@
 
 - (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest
                                  error:(NSError * __autoreleasing *) error {
-    mongo_cursor *cursor = mongo_find(self.connection.connValue, self.utf8Name,
+    mongo_cursor *cursor = mongo_find(self.connection.connValue,
+                                      self.fullyQualifiedName.bsonString,
                                       findRequest.queryDocument.bsonValue,
                                       findRequest.fieldsDocument.bsonValue,
                                       findRequest.limitResults,
@@ -179,7 +179,8 @@
 - (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
                                 error:(NSError * __autoreleasing *) error {
     bson *tempBson = bson_create();
-    int result = mongo_find_one(self.connection.connValue, self.utf8Name,
+    int result = mongo_find_one(self.connection.connValue,
+                                self.fullyQualifiedName.bsonString,
                                 findRequest.queryDocument.bsonValue,
                                 findRequest.fieldsDocument.bsonValue,
                                 tempBson);
@@ -224,7 +225,7 @@
                             error:(NSError * __autoreleasing *) error {
     if (!predicate) predicate = [MongoPredicate predicate];
     NSUInteger result = mongo_count(self.connection.connValue,
-                                    self.utf8DatabaseName, self.utf8NamespaceName,
+                                    self.databaseName.bsonString, self.namespaceName.bsonString,
                                     predicate.BSONDocument.bsonValue);
     if (BSON_ERROR == result) set_error_and_return_BSON_ERROR;
     return result;
@@ -268,11 +269,5 @@
 - (NSError *) serverError {
     return [self.connection serverError];
 }
-
-#pragma mark - Accessors
-
-- (const char *) utf8Name { return self.name.bsonString; }
-- (const char *) utf8DatabaseName { return self.databaseName.bsonString; }
-- (const char *) utf8NamespaceName { return self.namespaceName.bsonString; }
 
 @end

@@ -84,7 +84,7 @@
 - (NSError *) serverError;
 
 @property (retain) MongoConnection * connection;
-@property (copy, nonatomic) NSString * name;
+@property (copy, nonatomic) NSString * fullyQualifiedName;
 @property (copy, nonatomic) NSString * databaseName;
 @property (copy, nonatomic) NSString * namespaceName;
 

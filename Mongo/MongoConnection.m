@@ -148,7 +148,7 @@ NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
     MongoDBCollection *collection = [[[MongoDBCollection alloc] init] autorelease];
 #endif
     collection.connection = self;
-    collection.name = name;
+    collection.fullyQualifiedName = name;
     return collection;
 }
 
