@@ -26,6 +26,7 @@
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
+NSInteger const CreateIndexError = 101;
 
 @interface MongoConnection ()
 // Use this to support implementation of public properties, which need custom setters

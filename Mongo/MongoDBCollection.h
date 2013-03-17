@@ -25,6 +25,7 @@
 
 @class MongoConnection;
 @class MongoWriteConcern;
+@class MongoMutableIndex;
 
 @interface MongoDBCollection : NSObject
 
@@ -74,6 +75,9 @@
                        error:(NSError * __autoreleasing *) error;
 - (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
                              error:(NSError * __autoreleasing *) error;
+
+- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error;
+- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error;
 
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError;
 

@@ -233,8 +233,49 @@
 
 #pragma mark - Create indexes
 
-//int mongo_create_index( mongo *conn, const char *ns, bson *key, int options, bson *out );
-//bson_bool_t mongo_create_simple_index( mongo *conn, const char *ns, const char *field, int options, bson *out );
+- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error {
+    MongoDBCollection *indexesCollection =
+    [self.connection collectionWithName:[self.databaseName stringByAppendingString:@".system.indexes"]];
+    MongoKeyedPredicate *predicate = [MongoKeyedPredicate predicate];
+    [predicate keyPath:@"ns" matches:self.fullyQualifiedName];
+    NSArray *indexDocuments = [indexesCollection findWithPredicate:predicate error:error];
+    
+    if (indexDocuments) {
+        NSMutableArray *result = [NSMutableArray array];
+        for (BSONDocument *indexDocument in indexDocuments) {
+            MongoIndex *index = [[MongoIndex alloc] initWithDictionary:[indexDocument dictionaryValue]];
+            [result addObject:index];
+    #if !__has_feature(objc_arc)
+            [index release];
+    #endif
+        }
+        return result;
+    } else
+        return nil;
+}
+
+- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error {
+    NSParameterAssert(index != nil);
+    NSParameterAssert(index.fields.allKeys.count > 0);
+    bson *tempBson = bson_create();
+    int result = mongo_create_index(self.connection.connValue,
+                                    self.fullyQualifiedName.bsonString,
+                                    index.fields.BSONDocument.bsonValue,
+                                    index.options,
+                                    tempBson);
+    // Transfers ownership of bson and data buffer
+    NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
+    if (BSON_OK != result) {
+        if (error) {
+            NSString *message = [resultDict objectForKey:@"err"];
+            *error = [NSError errorWithDomain:MongoDBErrorDomain
+                                         code:CreateIndexError
+                                     userInfo:message ? @{ NSLocalizedDescriptionKey : message } : nil];
+        }
+        return NO;
+    }
+    return YES;
+}
 
 #pragma mark - Administration
 

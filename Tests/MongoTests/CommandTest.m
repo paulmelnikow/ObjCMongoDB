@@ -121,4 +121,97 @@
     STAssertNotNil(error, error.localizedDescription);
 }
 
+- (void) testGetIndexes {
+    declare_coll_and_error;
+    [coll dropCollectionWithError:nil];
+    
+    NSDictionary *testDoc =
+    @{
+      @"description" : @"pickles",
+      @"quantity" : @(5),
+      @"price" : @(2.99),
+      @"ingredients" : @[ @"cucumbers", @"water", @"salt" ],
+      @"sizes" : @[ @(16), @(32), @(48) ],
+      };
+    [coll insertDictionary:testDoc writeConcern:nil error:&error];
+    STAssertNil(error, nil);
+    
+    NSArray *indexes = [coll allIndexesWithError:&error];
+    STAssertEquals([indexes count], (NSUInteger)1, nil);
+    
+    MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
+    [index addField:@"foo" ascending:YES];
+    STAssertTrue([coll ensureIndex:index error:&error], nil);
+    STAssertNil(error, nil);
+    
+    indexes = [coll allIndexesWithError:&error];
+    STAssertEquals([indexes count], (NSUInteger)2, nil);
+}
+
+- (void) testEnsureIndex {
+    declare_coll_and_error;
+    [coll dropCollectionWithError:nil];
+
+    NSDictionary *testDoc =
+    @{
+      @"description" : @"pickles",
+      @"quantity" : @(5),
+      @"price" : @(2.99),
+      @"ingredients" : @[ @"cucumbers", @"water", @"salt" ],
+      @"sizes" : @[ @(16), @(32), @(48) ],
+      };
+    [coll insertDictionary:testDoc writeConcern:nil error:&error];
+    STAssertNil(error, nil);
+
+    MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
+    [index addField:@"description" ascending:YES];
+    STAssertTrue([coll ensureIndex:index error:&error], nil);
+    STAssertNil(error, nil);
+
+    NSArray *indexes = [coll allIndexesWithError:&error];
+    STAssertEquals([indexes count], (NSUInteger)2, nil);
+    BOOL ok = NO;
+    for (MongoIndex *item in indexes) {
+        if ([@"_id_" isEqual:item.name] &&
+            1 == item.fields.allKeys.count &&
+            [@(1) isEqual:[item.fields objectForKey:@"_id"]]) {
+            ok = YES;
+            break;
+        }
+    }
+    STAssertTrue(ok, nil);
+    ok = NO;
+    for (MongoIndex *item in indexes) {
+        if ([@"_description" isEqual:item.name] &&
+            1 == item.fields.allKeys.count &&
+            [@(1) isEqual:[item.fields objectForKey:@"description"]]) {
+            ok = YES;
+            break;
+        }
+    }
+    STAssertTrue(ok, nil);
+}
+
+- (void) testEnsureIndexFailure {
+    declare_coll_and_error;
+    [coll dropCollectionWithError:nil];
+
+    MongoMutableIndex *nullIndex = [MongoMutableIndex mutableIndex];
+    STAssertThrows([coll ensureIndex:nullIndex error:&error], nil);
+    
+    // Attempt to create 64 indexes, which should cause the database to throw an error, since indexes are limited
+    // to 64 per collection. They start with one on _id.
+    for (NSUInteger i = 1; i<=64; ++i) {
+        MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
+        [index addField:[NSString stringWithFormat:@"field%lu", (unsigned long) i] ascending:YES];
+        if (i < 64)
+            STAssertTrue([coll ensureIndex:index error:&error], nil);
+        else {
+            error = nil;
+            STAssertFalse([coll ensureIndex:index error:&error], nil);
+            STAssertNotNil(error, nil);
+        }
+    }
+}
+
 @end

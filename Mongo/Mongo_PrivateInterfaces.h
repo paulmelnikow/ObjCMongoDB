@@ -25,11 +25,20 @@
 
 #import "NSArray+MongoAdditions.h"
 #import "BSON_PrivateInterfaces.h"
+#import "MongoTypes.h"
 #import "MongoConnection.h"
 #import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
 #import "MongoPredicate.h"
 #import "MongoWriteConcern.h"
+
+@interface MongoIndex (Project)
+- (id) initWithDictionary:(NSDictionary *) dictionary;
+@end
+
+@interface MongoMutableIndex (Projec)
+- (int) options;
+@end
 
 @interface MongoConnection (Project)
 - (mongo *) connValue;

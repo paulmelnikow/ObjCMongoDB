@@ -70,6 +70,10 @@
 		9E0A7CA516BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */; };
 		9E105451150408DF00805F26 /* BSON_Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E10544F150408DE00805F26 /* BSON_Helper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E105452150408DF00805F26 /* BSON_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E105450150408DE00805F26 /* BSON_Helper.m */; };
+		9E1694C116F0F99B00AD96C1 /* MongoTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E1694BF16F0F99B00AD96C1 /* MongoTypes.h */; };
+		9E1694C216F0F99B00AD96C1 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1694C016F0F99B00AD96C1 /* MongoTypes.m */; };
+		9E1694C316F0F99B00AD96C1 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1694C016F0F99B00AD96C1 /* MongoTypes.m */; };
+		9E1694C416F0F99B00AD96C1 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1694C016F0F99B00AD96C1 /* MongoTypes.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725BA150AF1CD009CBE47 /* MongoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725B8150AF1CD009CBE47 /* MongoConnection.m */; };
 		9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
@@ -279,6 +283,8 @@
 		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredicateTest.h; sourceTree = "<group>"; };
 		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E74B2BF16F55CE000AFB1CA /* MongoTests_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTests_Helper.h; sourceTree = "<group>"; };
+		9E74B2C016F55EA200AFB1CA /* MongoTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTest.h; sourceTree = "<group>"; };
+		9E74B2C116F55EA200AFB1CA /* MongoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoTest.m; sourceTree = "<group>"; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9E97CC9916B0629A0035480E /* BSON_PrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSON_PrivateInterfaces.h; sourceTree = "<group>"; };
 		9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Mongo_PrivateInterfaces.h; sourceTree = "<group>"; };
@@ -652,6 +658,8 @@
 				9E97CC9A16B063530035480E /* Mongo_PrivateInterfaces.h */,
 				9E0A7CA116BF5F4400832C86 /* NSArray+MongoAdditions.h */,
 				9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */,
+				9E1694BF16F0F99B00AD96C1 /* MongoTypes.h */,
+				9E1694C016F0F99B00AD96C1 /* MongoTypes.m */,
 				9EFF2B4C150C455D00EDC285 /* Mongo_Helper.h */,
 				9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */,
 				9E2725B7150AF1CD009CBE47 /* MongoConnection.h */,
@@ -756,6 +764,7 @@
 				9E0A7CA316BF5F4500832C86 /* NSArray+MongoAdditions.h in Headers */,
 				9EF8FF7C16C9E875004BBD11 /* MongoConnection+Diagnostics.h in Headers */,
 				9EF8FF8216CA9AA4004BBD11 /* NSDictionary+BSONAdditions.h in Headers */,
+				9E1694C116F0F99B00AD96C1 /* MongoTypes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1067,6 +1076,7 @@
 				9E0A7CA416BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */,
 				9EF8FF7D16C9E875004BBD11 /* MongoConnection+Diagnostics.m in Sources */,
 				9EF8FF8416CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
+				9E1694C216F0F99B00AD96C1 /* MongoTypes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1182,6 +1192,7 @@
 				9EF8FF7716C9DEE9004BBD11 /* CommandTest.m in Sources */,
 				9EF8FF7F16C9E875004BBD11 /* MongoConnection+Diagnostics.m in Sources */,
 				9EF8FF8916CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
+				9E1694C416F0F99B00AD96C1 /* MongoTypes.m in Sources */,
 				9E74B2C316F55EA200AFB1CA /* MongoTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1223,6 +1234,7 @@
 				9EF8FF7616C9DEE9004BBD11 /* CommandTest.m in Sources */,
 				9EF8FF7E16C9E875004BBD11 /* MongoConnection+Diagnostics.m in Sources */,
 				9EF8FF8716CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
+				9E1694C316F0F99B00AD96C1 /* MongoTypes.m in Sources */,
 				9E74B2C216F55EA200AFB1CA /* MongoTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1324,7 +1336,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = "";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -1338,7 +1350,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks";
-				SDKROOT = "";
+				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
