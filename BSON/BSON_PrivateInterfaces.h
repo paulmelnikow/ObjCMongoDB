@@ -24,8 +24,9 @@
 //
 
 // Ensure that we have the modern runtime, since we need it for autosynthesized accessors
-#if !( __has_feature(objc_default_synthesize_properties) && \
-    ( TARGET_OS_IPHONE || ( NSAppKitVersionNumber10_5 && !defined(__i386__) ) ) )
+#if !( defined(__clang__) && __has_feature(objc_default_synthesize_properties) && \
+       ( TARGET_OS_IPHONE || \
+         ( MAC_OS_X_VERSION_MIN_REQUIRED >= NSAppKitVersionNumber10_5 && !defined(__i386__) ) ) )
 #error ObjCMongoDB requires autosynthesized properties
 #endif
 
