@@ -1,5 +1,34 @@
 # ObjCMongoDB Release History
 
+## v0.9.6
+March 16, 2013
+
+Be sure to add these files to your existing projects:
+
+ -  NSDictionary+BSONAdditions.[hm]
+ -  MongoTypes.[hm]
+ -  MongoConnection+Diagnosics.[hm]
+
+Changes:
+
+ -  Add support for iOS
+ -  Add streamlined interface `[dict BSONDocument]` to replace
+    `[BSONEncoder documentForDictionary:dict]`
+ -  `+[BSONDocument documentForObject:restrictsKeyNamesForMongoDB:]` is now
+    `+[BSONDocument documentForObject:restrictingKeyNamesForMongoDB:]`
+ -  `+[BSONDocument documentForDictionary:restrictsKeyNamesForMongoDB:]` is now
+    `+[BSONDocument documentForDictionary:restrictingKeyNamesForMongoDB:]`
+ -  Allow mutating the write concern on MongoConnection
+ -  Add support to MongoDBCollection for creating and listing indexes
+ -  Add support for dropping collections
+ -  Add support for diagnostic commands
+ -  Fix a bug that prevented driver error descriptions from populating NSError
+    objects
+ -  Allow passing nil blocks to reset the default fuzz and increment functions
+ -  Standardize exception throwing using [NSException raise:format:]
+ -  Prevent compilation on platforms using the legacy runtime
+ -  Remove support for automatically encoding the Core Data model version hash
+
 ## v0.9.5
 February 4, 2013
 

@@ -1,16 +1,17 @@
-ObjCMongoDB is an Objective-C library for [BSON][] and [MongoDB][] based on
+ObjCMongoDB is a Mac OS and iOS library for [MongoDB][] and [BSON][] based on
 the [10gen C driver][mongo-c-driver].
 
 ## Latest release
 
-The latest release is v0.9.5.
+The latest release is v0.9.6.
 
  -   Based on v0.7.1 of the driver
- -   Tested under OS X 10.6+, both with and without ARC
- -   Should work fine under iOS
-
+ -   Now supports iOS!
+ -   Works under OS X 10.6 – 10.8 and iOS 6.1 (probably early versions too)
+ -   Works both with and without support for ARC
+ 
 ```sh
-git checkout v0.9.5     # since master may be a work in process
+git checkout v0.9.6     # since master may be a work in process
 ```
 
 See what's changed in [History][].
@@ -27,26 +28,20 @@ Refer to the installation instructions and sample code on the
 
  -   Simple BSON encoding and decoding, using dictionaries.
 
- -   More complex BSON encoding and decoding based on NSCoder's keyed coding
-     scheme. When necessary, encoding and decoding can be implemented entirely
-     outside the model classes with the help of robust delegate interfaces.
-   
  -   Built-in support for arrays, dictionaries, embedded objects, strings,
      numbers, dates, object IDs, and the miscellaneous MongoDB types.
 
+ -   More complex encoding and decoding based on NSCoder's keyed coding
+     scheme. A robust delegate interface lets you implement encoding and
+     decoding entirely outside the model classes if necessary.
+   
  -   Automatically encodes and decodes Core Data entities. Using the coder's
-     delegate interface you can customize the default behavior, or simply implement the alternate behavior it in the entity class.
+     delegate interface you can customize the default behavior, or simply
+     implement alternate behavior it in the entity class.
 
  -   Aims to feel Cocoa-like, not Mongo-like. For example, method names in
-     MongoKeyedPredicate and MongoUpdateRequest are meant to be natural in Cocoa, rather than conform to the underlying Mongo keywords.
-
-## Status
-
-Mostly complete. Some missing pieces:
-
- -   Ensure index
- -   More .h documentation
- -   Some commands
+     MongoKeyedPredicate and MongoUpdateRequest are natural in Cocoa, though
+     they don't conform to the underlyin Mongo keywords.
 
 ## License
 
