@@ -22,19 +22,9 @@
 #import "MongoPredicate.h"
 #import "MongoKeyedPredicate.h"
 #import "BSONTypes.h"
+#import "MongoTests_Helper.h"
 
 @implementation PredicateTest
-
--(void) setUp {
-    NSError *error = nil;
-    _mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-    STAssertNil(error, error.localizedDescription);
-}
-
-- (void) tearDown {
-    [_mongo disconnect];
-    _mongo = nil;
-}
 
 - (void) insertTestDocument:(MongoDBCollection *) collection key:(NSString *) key value: (id) value {
     id dict = [NSDictionary dictionaryWithObject:value forKey:key];
@@ -52,7 +42,7 @@
 
 - (void) testGreaterThan {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testGreaterThan"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:0]];
     
@@ -67,7 +57,7 @@
 
 - (void) testGreaterThanOrEqualTo {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testGreaterThanOrEqualTo"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:0]];
     
@@ -86,7 +76,7 @@
 
 - (void) testLessThan {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testLessThan"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:0]];
     
@@ -101,7 +91,7 @@
 
 - (void) testLessThanOrEqualTo {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testLessThanOrEqualTo"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:0]];
     
@@ -120,7 +110,7 @@
 
 - (void) testMatches {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testMatches"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"test"];
     
@@ -132,7 +122,7 @@
     [pred2 keyPath:key matches:@"test1"];
     STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
 
-    coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testMatches2"];
+    coll = [self.mongo collectionWithName:[NSString stringWithFormat:@"%@2", coll.fullyQualifiedName]];
     
     id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     [self insertTestDocument:coll key:key value:value];
@@ -148,7 +138,7 @@
 
 - (void) testIsNotEqualTo {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testIsNotEqualTo"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"test"];
     
@@ -163,7 +153,7 @@
 
 - (void) testModulus {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testModulus"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:9]];
     
@@ -178,7 +168,7 @@
 
 - (void) testMatchesAny {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testMatchesAny"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"a"];
     
@@ -201,7 +191,7 @@
 
 - (void) testDoesNotMatchAny {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testDoesNotMatchAny"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"a"];
     
@@ -224,7 +214,7 @@
 
 - (void) testArrayContainsAll {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testArrayContainsAll"];
+    declare_coll;
     
     id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     [self insertTestDocument:coll key:key value:value];
@@ -248,7 +238,7 @@
 
 - (void) testArrayDoesNotContainAll {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testArrayDoesNotContainAll"];
+    declare_coll;
     
     id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     [self insertTestDocument:coll key:key value:value];
@@ -272,7 +262,7 @@
 
 - (void) testArraySize {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testArraySize"];
+    declare_coll;
     
     id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     [self insertTestDocument:coll key:key value:value];
@@ -304,7 +294,7 @@
 
 - (void) testRegexMatches {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testRegexMatches"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"test"];
     
@@ -327,7 +317,7 @@
 
 - (void) testRange {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testRange"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:[NSNumber numberWithInt:4]];
     
@@ -346,7 +336,7 @@
     NSString *key1 = @"x";
     NSString *key2 = @"y";
     NSString *value = @"val";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testMultipleKeys"];
+    declare_coll;
 
     id dict = [NSDictionary dictionaryWithObjectsAndKeys:
                value, key1,
@@ -364,7 +354,7 @@
 
 - (void) testArrayMultiCond {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testArrayMultiCond"];
+    declare_coll;
     
     id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
     [self insertTestDocument:coll key:key value:value];
@@ -387,7 +377,7 @@
 
 - (void) testArrayElemMatch {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testArrayElemMatch"];
+    declare_coll;
     
     id dict1 = [OrderedDictionary dictionaryWithObjectsAndKeys:
                @"apple", @"item",
@@ -439,7 +429,7 @@
 
 - (void) testType {
     NSString *key = @"x";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testType"];
+    declare_coll;
     
     [self insertTestDocument:coll key:key value:@"test"];
     
@@ -463,7 +453,7 @@
 - (void) testOr {
     NSString *key1 = @"x";
     NSString *key2 = @"y";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testOr"];
+    declare_coll;
     
     id dict = [NSDictionary dictionaryWithObjectsAndKeys:
                [NSNumber numberWithInt:5], key1,
@@ -498,7 +488,7 @@
 - (void) testNor {
     NSString *key1 = @"x";
     NSString *key2 = @"y";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testNor"];
+    declare_coll;
     
     id dict = [NSDictionary dictionaryWithObjectsAndKeys:
                [NSNumber numberWithInt:5], key1,
@@ -533,7 +523,7 @@
 - (void) testAnd {
     NSString *key1 = @"x";
     NSString *key2 = @"y";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testAnd"];
+    declare_coll;
     
     id dict = [NSDictionary dictionaryWithObjectsAndKeys:
                [NSNumber numberWithInt:5], key1,
@@ -568,7 +558,7 @@
 - (void) testWhere {
     NSString *key1 = @"x";
     NSString *key2 = @"y";
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.predicate.testWhere"];
+    declare_coll;
     
     id dict = [NSDictionary dictionaryWithObjectsAndKeys:
                [NSNumber numberWithInt:5], key1,

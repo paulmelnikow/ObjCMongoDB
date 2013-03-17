@@ -18,10 +18,8 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "MongoConnection.h"
+#import "MongoTest.h"
 
-@interface FindTest : SenTestCase {
-    MongoConnection *_mongo;
-}
+@interface FindTest : MongoTest
 
 @end

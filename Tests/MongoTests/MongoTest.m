@@ -1,5 +1,5 @@
 //
-//  GetLastErrorTest.h
+//  MongoTest.m
 //  ObjCMongoDB
 //
 //  Copyright 2012 Paul Melnikow and other contributors
@@ -17,9 +17,19 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
 #import "MongoTest.h"
+#import "MongoConnection.h"
 
-@interface GetLastErrorTest : MongoTest
+@implementation MongoTest
+
+-(void) setUp {
+    NSError *error = nil;
+    self.mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
+    STAssertNil(error, error.localizedDescription);
+}
+
+- (void) tearDown {
+    [self.mongo disconnect];
+}
 
 @end

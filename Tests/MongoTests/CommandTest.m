@@ -2,33 +2,32 @@
 //  CommandTest.m
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 2/11/13.
+//  Copyright 2012 Paul Melnikow and other contributors
 //
+//  Licensed under the Apache License, Version 2.0 (the "License");
+//  you may not use this file except in compliance with the License.
+//  You may obtain a copy of the License at
+//
+//  http://www.apache.org/licenses/LICENSE-2.0
+//
+//  Unless required by applicable law or agreed to in writing, software
+//  distributed under the License is distributed on an "AS IS" BASIS,
+//  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//  See the License for the specific language governing permissions and
+//  limitations under the License.
 //
 
 #import "CommandTest.h"
 #import "ObjCMongoDB.h"
+#import "MongoTests_Helper.h"
 
-@implementation CommandTest {
-    MongoConnection *_mongo;
-}
-
--(void) setUp {
-    NSError *error = nil;
-    _mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-    STAssertNil(error, error.localizedDescription);
-}
-
-- (void) tearDown {
-    [_mongo disconnect];
-    _mongo = nil;
-}
+@implementation CommandTest
 
 - (void) testBuildInfo {
     NSError *error = nil;
-    NSDictionary *result = [_mongo runCommandWithName:@"buildInfo"
-                                       onDatabaseName:@"admin"
-                                                error:&error];
+    NSDictionary *result = [self.mongo runCommandWithName:@"buildInfo"
+                                           onDatabaseName:@"admin"
+                                                    error:&error];
     NSString *version = [result objectForKey:@"version"];
     STAssertNotNil(version, nil);
     STAssertTrue(version.length > 3, nil);
@@ -36,74 +35,74 @@
 
 - (void) testServerVersion {
     NSError *error = nil;
-    NSDictionary *result = [_mongo runCommandWithName:@"buildInfo"
-                                       onDatabaseName:@"admin"
-                                                error:&error];
+    NSDictionary *result = [self.mongo runCommandWithName:@"buildInfo"
+                                           onDatabaseName:@"admin"
+                                                    error:&error];
     NSString *myVersion = [result objectForKey:@"version"];
 
-    NSString *version = [_mongo serverVersion];
+    NSString *version = [self.mongo serverVersion];
     
     STAssertEqualObjects(myVersion, version, nil);
 }
 
 - (void) testMaxBSONSize {
-    NSUInteger maxSize = [_mongo serverMaxBSONObjectSize];
+    NSUInteger maxSize = [self.mongo serverMaxBSONObjectSize];
     // Let's make sure it's in a realistic range - 4 MB to 1024 MB
     STAssertTrue(maxSize > 4 * 1024 * 1024, nil);
     STAssertTrue(maxSize < 1024 * 1024 * 1024, nil);
 }
 
 - (void) testStorageStats {
-    NSDictionary *result = [_mongo storageStatisticsForDatabaseName:@"admin" scale:1024];
+    NSDictionary *result = [self.mongo storageStatisticsForDatabaseName:@"admin" scale:1024];
     STAssertEqualObjects([result objectForKey:@"db"], @"admin", nil);
     STAssertEqualObjects([result objectForKey:@"ok"], @(1), nil);    
 }
 
 - (void) testServerLog {
-    NSArray *result = [_mongo serverLogMessagesWithFilter:MongoLogFilterOptionGlobal];
+    NSArray *result = [self.mongo serverLogMessagesWithFilter:MongoLogFilterOptionGlobal];
     // There should be some stuff in this result
     STAssertTrue(result.count > 10, nil);
 }
 
 - (void) testAllDatabases {
-    NSArray *list = [_mongo allDatabases];
+    NSArray *list = [self.mongo allDatabases];
     STAssertTrue([list containsObject:@"admin"], nil);
     STAssertTrue([list containsObject:@"local"], nil);
 }
 
 - (void) testPing {
-    STAssertTrue([_mongo pingWithError:nil], nil);
+    STAssertTrue([self.mongo pingWithError:nil], nil);
 }
 
 - (void) testListCommands {
-    id commands = [_mongo allCommands];
+    id commands = [self.mongo allCommands];
     STAssertTrue([[commands allKeys] containsObject:@"dropDatabase"], nil);
     STAssertTrue([[commands allKeys] containsObject:@"getLastError"], nil);
 }
 
 - (void) testIsMaster {
-    id result = [_mongo serverReplicationInfo];
+    id result = [self.mongo serverReplicationInfo];
     STAssertEqualObjects([result objectForKey:@"ok"], @(1), nil);
 }
 
 - (void) testServerStatus {
-    id result = [_mongo serverStatus];
+    id result = [self.mongo serverStatus];
     STAssertNotNil([result objectForKey:@"version"], nil);
     STAssertNotNil([result objectForKey:@"host"], nil);
     STAssertNotNil([result objectForKey:@"process"], nil);
 }
 
 - (void) testDropCollection {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.CommandTest.testDropCollection"];
-    NSError *error = nil;
-    NSDictionary *testDoc1 = [NSDictionary dictionaryWithObjectsAndKeys:
-                              @"pickles1", @"description",
-                              [NSNumber numberWithInt:5], @"quantity",
-                              [NSNumber numberWithFloat:2.99], @"price",
-                              [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
-                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
-                              nil];
-    [coll insertDictionary:testDoc1 writeConcern:nil error:&error];
+    declare_coll_and_error;
+    NSDictionary *testDoc =
+    @{
+      @"description" : @"pickles",
+      @"quantity" : @(5),
+      @"price" : @(2.99),
+      @"ingredients" : @[ @"cucumbers", @"water", @"salt" ],
+      @"sizes" : @[ @(16), @(32), @(48) ],
+      };
+    [coll insertDictionary:testDoc writeConcern:nil error:&error];
     STAssertNil(error, nil);
     
     BSONDocument *resultDoc = [coll findOneWithError:&error];

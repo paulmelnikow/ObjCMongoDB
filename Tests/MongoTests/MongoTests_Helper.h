@@ -1,8 +1,8 @@
 //
-//  GetLastErrorTest.h
+//  MongoTests_Helper.h
 //  ObjCMongoDB
 //
-//  Copyright 2012 Paul Melnikow and other contributors
+//  Copyright 2013 Paul Melnikow and other contributors
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -17,9 +17,12 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
-#import "MongoTest.h"
+#ifndef ObjCMongoDB_MongoTests_Helper_h
+#define ObjCMongoDB_MongoTests_Helper_h
 
-@interface GetLastErrorTest : MongoTest
+#define TEST_DATABASE @"objcmongodbtest"
+#define _coll_name [NSString stringWithFormat:@"%@.%@.%@", TEST_DATABASE, NSStringFromClass([self class]), NSStringFromSelector(_cmd)]
+#define declare_coll MongoDBCollection *coll = [self.mongo collectionWithName:_coll_name]
+#define declare_coll_and_error declare_coll; NSError *error = nil
 
-@end
+#endif

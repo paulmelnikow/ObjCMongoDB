@@ -20,28 +20,19 @@
 #import "FindTest.h"
 #import "MongoKeyedPredicate.h"
 #import "MongoFindRequest.h"
+#import "MongoTests_Helper.h"
 
 @implementation FindTest
 
-- (void) setUp {
-    NSError *error = nil;
-    _mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-    STAssertNil(error, error.localizedDescription);
-}
-
-- (void) tearDown {
-    [_mongo disconnect];
-    _mongo = nil;
-}
-
 - (void) insertTestDocument:(MongoDBCollection *) collection {
-    NSDictionary *testDoc = [NSDictionary dictionaryWithObjectsAndKeys:
-                             @"pickles", @"description",
-                             [NSNumber numberWithInt:5], @"quantity",
-                             [NSNumber numberWithFloat:2.99], @"price",
-                             [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
-                             [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
-                             nil];
+    NSDictionary *testDoc =
+    @{
+      @"description" : @"pickles",
+      @"quantity" : @(5),
+      @"price" : @(2.99),
+      @"ingredients" : @[ @"cucumbers", @"water", @"salt" ],
+      @"sizes" : @[ @(16), @(32), @(48) ],
+      };
     NSError *error = nil;
     [collection insertDictionary:testDoc writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
@@ -49,9 +40,9 @@
 
 - (void) testFindOne {
     // Test basic instance of -findOneWithError:, -findOneWithPredicate:error:, and -findOne:error:
-    NSError *error = nil; BSONDocument *resultDoc = nil; NSDictionary *resultDict = nil;
+    BSONDocument *resultDoc = nil; NSDictionary *resultDict = nil;
     
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.DBCollection.testFindOne"];    
+    declare_coll_and_error;
     NSDictionary *testDoc1 = [NSDictionary dictionaryWithObjectsAndKeys:
                              @"pickles1", @"description",
                              [NSNumber numberWithInt:5], @"quantity",

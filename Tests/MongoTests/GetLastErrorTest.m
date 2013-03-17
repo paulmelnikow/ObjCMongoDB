@@ -21,29 +21,18 @@
 #import "MongoDBCollection.h"
 #import "MongoKeyedPredicate.h"
 #import "MongoUpdateRequest.h"
+#import "MongoTests_Helper.h"
 
 @implementation GetLastErrorTest
 
--(void) setUp {
-    NSError *error = nil;
-    _mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-    STAssertNil(error, error.localizedDescription);
-}
-
-- (void) tearDown {
-    [_mongo disconnect];
-    _mongo = nil;
-}
-
 - (void) testServerStatus {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.getlasterror.testServerStatus"];
+    declare_coll_and_error;
     
     NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
                            [BSONObjectID objectID], @"_id",
                            @"test", @"name",
                            nil];
     
-    NSError *error = nil;
     [coll insertDictionary:entry writeConcern:nil error:&error];
     STAssertTrue([coll lastOperationWasSuccessful:&error], @"shouldn't be an error");
 
@@ -52,7 +41,7 @@
 }
 
 - (void) testUpdateCount {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.getlasterror.testUpdateCount"];
+    declare_coll_and_error;
     
     BSONObjectID *objectID = [BSONObjectID objectID];
     NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -60,7 +49,6 @@
                            @"test", @"name",
                            nil];
     
-    NSError *error = nil;
     [coll insertDictionary:entry writeConcern:nil error:&error];
     STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
 

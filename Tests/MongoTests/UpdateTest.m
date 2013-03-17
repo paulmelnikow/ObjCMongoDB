@@ -21,28 +21,19 @@
 #import "MongoKeyedPredicate.h"
 #import "MongoUpdateRequest.h"
 #import "BSONTypes.h"
+#import "MongoTests_Helper.h"
 
 @implementation UpdateTest
 
--(void) setUp {
-    NSError *error = nil;
-    _mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
-    STAssertNil(error, error.localizedDescription);
-}
-
-- (void) tearDown {
-    [_mongo disconnect];
-    _mongo = nil;
-}
-
 - (void) insertTestDocument:(MongoDBCollection *) collection {
-    NSDictionary *testDoc = [NSDictionary dictionaryWithObjectsAndKeys:
-                                 @"pickles", @"description",
-                                 [NSNumber numberWithInt:5], @"quantity",
-                                 [NSNumber numberWithFloat:2.99], @"price",
-                                 [NSArray arrayWithObjects:@"cucumbers", @"water", @"salt", nil], @"ingredients",
-                                 [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
-                                 nil];
+    NSDictionary *testDoc =
+    @{
+      @"description" : @"pickles",
+      @"quantity" : @(5),
+      @"price" : @(2.99),
+      @"ingredients" : @[ @"cucumbers", @"water", @"salt" ],
+      @"sizes" : @[ @(16), @(32), @(48) ],
+      };
     NSError *error = nil;
     [collection insertDictionary:testDoc writeConcern:nil error:&error];
     STAssertNil(error, error.localizedDescription);
@@ -56,7 +47,7 @@
 }
 
 - (void) testReplaceDocument {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testReplaceDocument"];    
+    declare_coll_and_error;
     [self insertTestDocument:coll];
     
     MongoKeyedPredicate *predForOriginalDoc = [MongoKeyedPredicate predicate];
@@ -70,7 +61,6 @@
                              nil];
     MongoUpdateRequest *req = [MongoUpdateRequest updateRequestWithPredicate:predForOriginalDoc firstMatchOnly:YES];
     [req replaceDocumentWithDictionary:replacementDoc];
-    NSError *error = nil;
     STAssertTrue([coll updateWithRequest:req error:&error], @"");
     STAssertFalse([self collectionWithName:coll boolForPredicate:predForOriginalDoc], @"");
 
@@ -80,8 +70,7 @@
 }
 
 - (void) testSetValue {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testSetValue"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
 
@@ -101,8 +90,7 @@
 }
 
 - (void) testUnsetValue {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testUnsetValue"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
 
@@ -118,8 +106,7 @@
 }
 
 - (void) testIncrementValue {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testIncrementValue"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -139,8 +126,7 @@
 }
 
 - (void) testIncrementByValue {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testIncrementByValue"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -160,8 +146,7 @@
 }
 
 - (void) testBitwiseAnd {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testBitwiseAnd"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
 
@@ -181,8 +166,7 @@
 }
 
 - (void) testBitwiseOr {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testBitwiseOr"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -202,8 +186,7 @@
 }
 
 - (void) testBitwiseCombo {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testBitwiseCombo"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -224,8 +207,7 @@
 }
 
 - (void) testAddToSet {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testAddToSet"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -245,8 +227,7 @@
 }
 
 - (void) testAddToSetMulti {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testAddToSetMulti"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -266,8 +247,7 @@
 }
 
 - (void) testPull {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPull"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -287,8 +267,7 @@
 }
 
 - (void) testPullAll {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPullAll"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -308,8 +287,7 @@
 }
 
 - (void) testPullMatching {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPullMatching"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -331,8 +309,7 @@
 }
 
 - (void) testPush {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPush"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -352,8 +329,7 @@
 }
 
 - (void) testPushMulti {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPushMulti"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -373,8 +349,7 @@
 }
 
 - (void) testPopLast {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPopLast"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -394,8 +369,7 @@
 }
 
 - (void) testPopFirst {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testPopFirst"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -415,8 +389,7 @@
 }
 
 - (void) testRename {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testRename"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     
@@ -436,8 +409,7 @@
 }
 
 - (void) testUpdateMulti {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testUpdateMulti"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     [self insertTestDocument:coll];
     [self insertTestDocument:coll];
@@ -467,8 +439,7 @@
 }
 
 - (void) testUpsert {
-    MongoDBCollection *coll = [_mongo collectionWithName:@"objcmongodbtest.update.testUpsert"];    
-    NSError *error = nil;
+    declare_coll_and_error;
     STAssertTrue([coll removeAllWithWriteConcern:nil error:&error], @"");
     
     MongoKeyedPredicate *predForTestDoc = [MongoKeyedPredicate predicate];
