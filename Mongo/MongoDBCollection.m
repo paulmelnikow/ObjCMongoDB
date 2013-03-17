@@ -238,17 +238,17 @@
 
 #pragma mark - Administration
 
+// Handle commands of the form { "commandName" : "namespace.collection" }
+- (NSDictionary *) _runCommandWithName:(NSString *) commandName
+                                error:(NSError * __autoreleasing *) outError {
+    if (commandName == nil) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
+    return [self.connection runCommandWithDictionary:@{ commandName : self.namespaceName }
+                                      onDatabaseName:self.databaseName
+                                               error:outError];
+}
+
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError {
-    NSError *error = nil;
-    NSDictionary *command = @{ @"drop" : self.namespaceName };
-    [self.connection runCommandWithDictionary:command
-                               onDatabaseName:self.databaseName
-                                        error:&error];
-    if (error) {
-        if (outError) *outError = error;
-        return NO;
-    } else
-        return YES;
+    return [self _runCommandWithName:@"drop" error:outError];
 }
 
 #pragma mark - Helper methods
