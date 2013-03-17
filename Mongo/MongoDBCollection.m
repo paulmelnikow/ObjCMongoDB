@@ -281,7 +281,7 @@
 
 // Handle commands of the form { "commandName" : "namespace.collection" }
 - (NSDictionary *) _runCommandWithName:(NSString *) commandName
-                                error:(NSError * __autoreleasing *) outError {
+                                 error:(NSError * __autoreleasing *) outError {
     if (commandName == nil) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
     return [self.connection runCommandWithDictionary:@{ commandName : self.namespaceName }
                                       onDatabaseName:self.databaseName

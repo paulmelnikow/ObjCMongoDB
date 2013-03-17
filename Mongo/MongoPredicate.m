@@ -37,7 +37,7 @@
 
 - (id) initWithOperator:(NSString *) operator subPredicates:(NSArray *) subPredicates {
     if (self = [self init]) {
-        _operator = operator;
+        self.operator = operator;
         NSMutableArray *dictionaries = [NSMutableArray array];
         for (MongoPredicate *predicate in subPredicates)
             [dictionaries addObject:predicate.dictionary];
@@ -124,7 +124,7 @@
 #pragma mark - And and Or predicates - Mutability and convenience
 
 - (void) addSubPredicate:(MongoPredicate *) predicate {
-    [(NSMutableArray *) [self.dictionary objectForKey:_operator] addObject:predicate.dictionary];
+    [(NSMutableArray *) [self.dictionary objectForKey:self.operator] addObject:predicate.dictionary];
 }
 
 - (MongoKeyedPredicate *) addKeyedSubPredicate {

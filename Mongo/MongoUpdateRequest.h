@@ -56,7 +56,7 @@
 
 @property (retain) MongoPredicate *predicate;
 @property (assign) BOOL updatesFirstMatchOnly;
-@property (assign) BOOL insertsIfNoMatches;
+@property (assign) BOOL insertsIfNoMatches; // This is upsert
 @property (assign) BOOL blocksDuringMultiUpdates;
 @property (retain) MongoWriteConcern *writeConcern;
 
