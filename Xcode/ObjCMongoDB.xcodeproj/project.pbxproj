@@ -7,15 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		22ED5B4511DF1A7200410529 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		22ED5B4611DF1A7200410529 /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22ED5B4711DF1A7200410529 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		22ED5B4711DF1A7200410529 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; };
 		22ED5B4811DF1A7200410529 /* md5.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3F11DF1A7200410529 /* md5.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22ED5B4911DF1A7200410529 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		22ED5B4911DF1A7200410529 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; };
 		22ED5B4A11DF1A7200410529 /* mongo.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B4111DF1A7200410529 /* mongo.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		22ED5B4C11DF1A7200410529 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		22ED5B4C11DF1A7200410529 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
 		22ED5BDC11DF1AC400410529 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
-		9E0A7C5A16BEE04100832C86 /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5916BEE04100832C86 /* env.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9E0A7C5A16BEE04100832C86 /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5916BEE04100832C86 /* env.c */; };
 		9E0A7C5D16BF0AE300832C86 /* NSString+BSONAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C5B16BF0AE200832C86 /* NSString+BSONAdditions.h */; };
 		9E0A7C5E16BF0AE300832C86 /* NSString+BSONAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C5B16BF0AE200832C86 /* NSString+BSONAdditions.h */; };
 		9E0A7C5F16BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */; };
@@ -55,15 +55,15 @@
 		9E0A7C8B16BF3A0A00832C86 /* MongoKeyedPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B54150D081E00EDC285 /* MongoKeyedPredicate.m */; };
 		9E0A7C8C16BF3A0A00832C86 /* MongoFindRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFindRequest.m */; };
 		9E0A7C8D16BF3A0A00832C86 /* MongoUpdateRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */; };
-		9E0A7C9616BF3ACB00832C86 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9716BF3ACB00832C86 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9816BF3ACB00832C86 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9916BF3ACC00832C86 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9A16BF3ACC00832C86 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9B16BF3ACC00832C86 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9C16BF3AD600832C86 /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5916BEE04100832C86 /* env.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9E0A7C9616BF3ACB00832C86 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
+		9E0A7C9716BF3ACB00832C86 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
+		9E0A7C9816BF3ACB00832C86 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
+		9E0A7C9916BF3ACC00832C86 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
+		9E0A7C9A16BF3ACC00832C86 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
+		9E0A7C9B16BF3ACC00832C86 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
+		9E0A7C9C16BF3AD600832C86 /* env.c in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C5916BEE04100832C86 /* env.c */; };
+		9E0A7C9E16BF3AD600832C86 /* md5.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3E11DF1A7200410529 /* md5.c */; };
+		9E0A7C9F16BF3AD600832C86 /* mongo.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4011DF1A7200410529 /* mongo.c */; };
 		9E0A7CA016BF484D00832C86 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
 		9E0A7CA316BF5F4500832C86 /* NSArray+MongoAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7CA116BF5F4400832C86 /* NSArray+MongoAdditions.h */; };
 		9E0A7CA416BF5F4500832C86 /* NSArray+MongoAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7CA216BF5F4500832C86 /* NSArray+MongoAdditions.m */; };
@@ -106,10 +106,10 @@
 		9E3E92B21516A11A00A6F66B /* ObjCBSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E3E92B61516A1BC00A6F66B /* ObjCBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */; };
 		9E3E92B71516A1BC00A6F66B /* ObjCBSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */; };
-		9E3E92B81516A21500A6F66B /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9E3E92B81516A21500A6F66B /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		9E3E92B91516A22700A6F66B /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9E3E92BA1516A24300A6F66B /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; settings = {COMPILER_FLAGS = "-w"; }; };
-		9E3E92BC1516A2C100A6F66B /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		9E3E92BA1516A24300A6F66B /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
+		9E3E92BC1516A2C100A6F66B /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
 		9E3E92BD1516A2EC00A6F66B /* bson.h in Headers */ = {isa = PBXBuildFile; fileRef = 22ED5B3D11DF1A7200410529 /* bson.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E72DC92150EBC7E00217439 /* PredicateTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E72DC91150EBC7E00217439 /* PredicateTest.m */; };
 		9E74B2C216F55EA200AFB1CA /* MongoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E74B2C116F55EA200AFB1CA /* MongoTest.m */; };
@@ -230,7 +230,7 @@
 		9EFF2B72150D6B3600EDC285 /* OrderedDictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B70150D6B3600EDC285 /* OrderedDictionary.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B76150D780400EDC285 /* MongoFindRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B74150D780300EDC285 /* MongoFindRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B77150D780400EDC285 /* MongoFindRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B75150D780400EDC285 /* MongoFindRequest.m */; };
-		C2891A49150AB6D40065E2E9 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; settings = {COMPILER_FLAGS = "-w"; }; };
+		C2891A49150AB6D40065E2E9 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
 		C2891A4A150AB6D40065E2E9 /* encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = C2891A45150AB6D40065E2E9 /* encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
