@@ -134,11 +134,7 @@
 
 - (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
                              error:(NSError * __autoreleasing *) error {
-    BSONDocument *document = [[BSONDocument alloc] init];
-#if !__has_feature(objc_arc)
-    [document autorelease];
-#endif
-    return [self _removeWithCond:document
+    return [self _removeWithCond:[BSONDocument document]
                     writeConcern:writeConcern
                            error:error];
 }
@@ -178,20 +174,18 @@
 
 - (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
                                 error:(NSError * __autoreleasing *) error {
-    bson *tempBson = bson_create();
+    bson *newBson = bson_create();
     int result = mongo_find_one(self.connection.connValue,
                                 self.fullyQualifiedName.bsonString,
                                 findRequest.queryDocument.bsonValue,
                                 findRequest.fieldsDocument.bsonValue,
-                                tempBson);
+                                newBson);
     if (BSON_OK != result) {
-        bson_dispose(tempBson);
+        bson_dispose(newBson);
         set_error_and_return_nil;
     }
-    bson *newBson = bson_create();
-    bson_copy(newBson, tempBson);
-    bson_dispose(tempBson);
-    return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
+    // newBson contains a copy of the data
+    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
 }
 
 - (NSArray *) findWithPredicate:(MongoPredicate *) predicate
@@ -259,9 +253,9 @@
                                     index.name ? index.name.bsonString : NULL,
                                     index.options,
                                     tempBson);
-    // Transfers ownership of bson and data buffer
-    NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
-    if (BSON_OK != result) {
+    // BSON object is destroyed and deallocated when document is autoreleased
+    NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
+    if (MONGO_OK != result) {
         if (error) {
             NSString *message = [resultDict objectForKey:@"err"];
             *error = [NSError errorWithDomain:MongoDBErrorDomain

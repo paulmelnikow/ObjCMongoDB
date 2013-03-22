@@ -50,15 +50,18 @@
 #pragma mark - Enumeration
 
 - (BSONDocument *) nextObjectNoCopy {
-    return [BSONDocument documentWithNativeDocument:mongo_cursor_bson(_cursor)
-                                    destroyWhenDone:NO];
+    if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
+    bson *newBson = bson_create();
+    // ownsData = 0 means this is effectively const
+    bson_init_finished_data(newBson, (char *) mongo_cursor_data(_cursor), 0);
+    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
 }
 
 - (BSONDocument *) nextObject {
     if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
     bson *newBson = bson_create();
     bson_copy(newBson, mongo_cursor_bson(_cursor));
-    return [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:YES];
+    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
 }
 
 - (NSArray *) allObjects {

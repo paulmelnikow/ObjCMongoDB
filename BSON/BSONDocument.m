@@ -45,88 +45,76 @@ int substitute_for_printf(const char *format, ...) {
 
 @interface BSONDocument ()
 @property (retain) id dependentOn; // An object which retains the bson we're using
-@property (retain) NSData *data;
-@property (assign) BOOL destroyWhenDone;
+@property (retain) NSData *privateData;
 @end
 
 @implementation BSONDocument {
     /**
      The <code>bson</code> structure.
      */
-    const bson *_bson;
+    bson *_bson;
 }
 
 - (id) init {
-    if (self = [super init]) {
-        _bson = bson_create();
-        bson_empty((bson *)_bson); // _bson is const-qualified
-        self.destroyWhenDone = NO;
-        self.data = [NSData dataWithNativeBSONObject:_bson copy:NO];
-    }
-    return self;
+    bson * newBson = bson_create();
+    bson_init_empty(newBson);
+    id result = [self initWithNativeDocument:newBson dependentOn:nil];
+    if (nil == result) bson_dispose(newBson);
+    return result;
 }
 
-- (id) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator dependentOn:(id) dependentOn {
+- (id) initWithNativeDocument:(bson *) b dependentOn:(id) dependentOn {
+    if (!b) {
+#if !__has_feature(objc_arc)
+        [self release];
+#endif
+        return self = nil;
+    }
     if (self = [super init]) {
-        _bson = bson_create();
-        // _bson is const-qualified
-        bson_iterator_subobject([iterator nativeIteratorValue], (bson *)_bson);
-        self.destroyWhenDone = NO;
-        self.data = [NSData dataWithNativeBSONObject:_bson copy:NO];
+        _bson = b;
         self.dependentOn = dependentOn;
     }
     return self;
 }
 
 - (id) initWithData:(NSData *) data {
-    if (!data || !data.length) return [self init];
-    if ([data isKindOfClass:[NSMutableData class]])
-        data = [NSData dataWithData:data];
+    if (!data.length) return [self init];
     if (self = [super init]) {
+        self.privateData = [data isKindOfClass:[NSMutableData class]] ? [NSData dataWithData:data] : data;
         _bson = bson_create();
-        if (BSON_ERROR == bson_init_finished_data((bson *)_bson, (char *)data.bytes)) {
-            bson_dispose((bson *)_bson);
+        if (BSON_ERROR == bson_init_finished_data(_bson, (char *) self.privateData.bytes, 0)) {
+            bson_dispose(_bson);
 #if !__has_feature(objc_arc)
             [self release];
 #endif
-            return nil;
+            return self = nil;
         }
-        self.data = data;
-    }
-    return self;
-}
-
-+ (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone {
-    BSONDocument *result = [[self alloc] initWithNativeDocument:b destroyWhenDone:destroyWhenDone];
-    maybe_autorelease_and_return(result);
-}
-
-- (id) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone {
-    if (!b) {
-#if !__has_feature(objc_arc)
-        [self release];
-#endif
-        return nil;
-    }
-    if (self = [super init]) {
-        _bson = b;
-        self.destroyWhenDone = destroyWhenDone;
-        // Copy the buffer into a new NSData we own. That way, objects which invoke -dataValue can
-        // retain the NSData object without needing to retain the document object too.
-        self.data = [NSData dataWithNativeBSONObject:_bson copy:YES];
     }
     return self;
 }
 
 - (void) dealloc {
-    // override const qualifier
-    if (self.destroyWhenDone) bson_destroy((bson *)_bson);
-    bson_dispose((bson *)_bson);
+    bson_destroy(_bson);
+    bson_dispose(_bson);
+    _bson = NULL;
 #if !__has_feature(objc_arc)
-    self.data = nil;
-    self.dependentOn = nil;
     [super dealloc];
 #endif
+}
+
++ (BSONDocument *) document {
+    BSONDocument *result = [[self alloc] init];
+    maybe_autorelease_and_return(result);
+}
+
++ (BSONDocument *) documentWithNativeDocument:(bson *) b dependentOn:(id) dependentOn {
+    BSONDocument *result = [[self alloc] initWithNativeDocument:b dependentOn:dependentOn];
+    maybe_autorelease_and_return(result);
+}
+
++ (BSONDocument *) documentWithData:(NSData *) data {
+    BSONDocument *result = [[self alloc] initWithData:data];
+    maybe_autorelease_and_return(result);    
 }
 
 - (const bson *) bsonValue {
@@ -136,12 +124,16 @@ int substitute_for_printf(const char *format, ...) {
 - (id) copy {
     bson *newBson = bson_create();
     bson_copy(newBson, _bson);
-    BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson destroyWhenDone:YES];
+    BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson dependentOn:nil];
     return copy;
 }
 
 - (NSData *) dataValue {
-    return _data;
+    @synchronized (self) {
+        if (nil == self.privateData)
+            self.privateData = [NSData dataWithNativeBSONObject:_bson copy:YES];
+        return self.privateData;
+    }
 }
 
 - (BSONIterator *) iterator {

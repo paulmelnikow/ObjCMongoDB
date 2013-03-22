@@ -103,7 +103,7 @@
     if (BSON_ERROR == bson_finish(_bson)) [self _raiseBSONException];
     
     self.resultDocument = [BSONDocument documentWithNativeDocument:_bson
-                                                   destroyWhenDone:YES];
+                                                       dependentOn:nil];
     _bson = NULL;
 
     if ([self.delegate respondsToSelector:@selector(encoderDidFinish:)])

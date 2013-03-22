@@ -142,9 +142,9 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    BSONDocument *document = [[BSONDocument alloc] initForEmbeddedDocumentWithIterator:self
-                                                                           dependentOn:self.dependentOn];
-    maybe_autorelease_and_return(document);
+    bson * newBson = bson_create();
+    bson_iterator_subobject_init(_iter, newBson, 0);
+    return [BSONDocument documentWithNativeDocument:newBson dependentOn:self.dependentOn];
 }
 
 - (BSONIterator *) embeddedDocumentIteratorValue {
@@ -230,11 +230,11 @@ NSString * const BSONException = @"BSONException";
     return [BSONCode code:[NSString stringWithBSONString:bson_iterator_code(_iter)]];
 }
 - (BSONCodeWithScope *) codeWithScopeValue {
+    // Does not copy the scope, but retains the document we depend on
     bson *newBson = bson_create();
-    bson_iterator_code_scope(_iter, newBson);
-    BSONDocument *document = [BSONDocument documentWithNativeDocument:newBson destroyWhenDone:NO];
+    bson_iterator_code_scope_init(_iter, newBson, 0);
     return [BSONCodeWithScope code:[NSString stringWithBSONString:bson_iterator_code(_iter)]
-                         withScope:document];
+                         withScope:[BSONDocument documentWithNativeDocument:newBson dependentOn:self.dependentOn]];
 }
 
 - (NSDate *) dateValue {

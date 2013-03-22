@@ -51,6 +51,11 @@
 - (OrderedDictionary *) queryDictionaryValue;
 @end
 
+@interface MongoCursor (Project)
+- (id) initWithNativeCursor:(mongo_cursor *) cursor;
++ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor;
+@end
+
 @interface MongoUpdateRequest (Project)
 - (BSONDocument *) conditionDocumentValue;
 - (BSONDocument *) operationDocumentValue;

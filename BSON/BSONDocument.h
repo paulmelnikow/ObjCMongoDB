@@ -23,32 +23,38 @@
 @class BSONEncoder;
 
 /**
- Encapsulates an immutable BSON document, as a wrapper around a <code>bson</code>
- structure.
+ Encapsulates a finished, immutable BSON document, as a wrapper around a
+ <code>bson</code> structure.
  
- Each instance creates a bson object during initialization and destoys it on
- deallocation.
+ Each instance creates or takes ownership of a bson object during
+ initialization and destoys it on deallocation.
+ 
+ For a mutable document, instantiate a BSONEncoder.
  */
 @interface BSONDocument : NSObject
 
 /**
- Initializes an empty BSON document.
+ Returns an empty BSON document.
  */
-- (id) init;
++ (BSONDocument *) document;
 
 /**
- Initializes a BSON document.
+ Returns an empty BSON document created using the given data block, which it
+ retains and accesses directly.
  
- If <i>data</i> is mutable, it retains a copy instead. Otherwise it retains the
- object itself and accesses its buffer directly.
+ If <i>data</i> is mutable, it retains a copy instead.
+ 
  @param data An instance of <code>NSData</code> with the binary data for the new
  document.
  */
--(BSONDocument *) initWithData:(NSData *) data;
++ (BSONDocument *) documentWithData:(NSData *) data;
 
 /**
- Returns an immutable <code>NSData</code> object pointing to the document's BSON data buffer. Does not make
- a copy of the buffer, and will stop working if the document is deallocated.
+ Returns an immutable <code>NSData</code> object with the contents of the document's
+ BSON data buffer.
+ 
+ The NSData object is guaranteed to remain valid even if the receiver is deallocated.
+ 
  @returns An immutable <code>NSData</code> object pointing to the BSON data buffer.
  */
 - (NSData *) dataValue;
@@ -57,7 +63,7 @@
  Returns a new BSON iterator initialized for the document.
  
  The iterator retains the document.
- @returns A BSON iterator initialized for the document with its retain count set to 1.
+ @returns An autoreleased BSON iterator initialized for the document
  */
 - (BSONIterator *) iterator;
 

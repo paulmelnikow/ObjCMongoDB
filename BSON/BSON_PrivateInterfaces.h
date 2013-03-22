@@ -45,21 +45,10 @@
 #import "BSONTypes.h"
 
 @interface BSONDocument (Project)
-- (id) initWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
 /**
- Initializes a BSON document as a sub-object for a given iterator, which retains
- the object owning its bson* until deallocation.
- 
- Since only the root document is responsible to call bson_destroy, instances created
- with this method will not call bson_destroy on deallocation.
+ Takes ownership of the given BSON object and retains dependentOn.
  */
-- (BSONDocument *) initForEmbeddedDocumentWithIterator:(BSONIterator *) iterator
-                                           dependentOn:(id) dependentOn;
-/**
- Will call bson_destroy to deallocate the storage when destroyWhenDone is YES. Always
- takes ownership of the bson object itself and calls bson_dispose when done.
- */
-+ (BSONDocument *) documentWithNativeDocument:(const bson *) b destroyWhenDone:(BOOL) destroyWhenDone;
++ (BSONDocument *) documentWithNativeDocument:(bson *) b dependentOn:(id) dependentOn;
 - (const bson *) bsonValue;
 @end
 

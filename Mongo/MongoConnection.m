@@ -181,8 +181,8 @@ NSInteger const CreateIndexError = 101;
         bson_dispose(tempBson);
         set_error_and_return_nil;
     }
-    // Transfers ownership of bson and data buffer
-    return [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
+    // BSON object is destroyed and deallocated when document is autoreleased
+    return [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
 }
 
 #pragma mark - Error handling
@@ -190,23 +190,20 @@ NSInteger const CreateIndexError = 101;
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
     int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
     if (error) *error = [self serverError];
-    if (MONGO_OK == status)
-        return YES;
-    else
-        return NO;
+    return MONGO_OK == status;
 }
 
 - (NSDictionary *) lastOperationDictionary {
     bson *tempBson = bson_create();
-    bson_init(tempBson);
+    bson_init_empty(tempBson);
+    int emptySize = bson_size(tempBson);
     mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
-    if (!bson_size(tempBson)) {
-        bson_destroy(tempBson);
+    if (emptySize == bson_size(tempBson)) {
         bson_dispose(tempBson);
         return nil;
     }
-    // Transfers ownership of bson and data buffer
-    return [[BSONDocument documentWithNativeDocument:tempBson destroyWhenDone:YES] dictionaryValue];
+    // BSON object is destroyed and deallocated when document is autoreleased
+    return [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
 }
 
 - (NSError *) error {

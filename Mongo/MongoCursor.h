@@ -23,10 +23,11 @@
 
 @interface MongoCursor : NSEnumerator
 
-- (id) initWithNativeCursor:(mongo_cursor *) cursor;
-+ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor;
-
 - (BSONDocument *) nextObject;
+/* This method is optimized for efficiency, not safety. In particular subobjects
+ (including code scope documents) may become invalid when the cursor advances or
+ is deallocated. When in doubt, invoke -nextObject instead which makes a safe
+ copy of the document. */
 - (BSONDocument *) nextObjectNoCopy;
 - (NSArray *) allObjects;
 
