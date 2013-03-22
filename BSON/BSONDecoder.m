@@ -47,22 +47,7 @@
 }
 
 - (BSONDecoder *) initWithData:(NSData *) data {
-    BSONDocument *document = [[BSONDocument alloc] initWithData:data];
-#if !__has_feature(objc_arc)
-    [document autorelease];
-#endif
-    return [self initWithDocument:document];
-}
-
-- (void) dealloc {
-#if !__has_feature(objc_arc)
-    self.privateKeyPathComponents = nil;
-    self.iteratorStack = nil;
-    self.iterator = nil;
-    self.managedObjectContext = nil;
-    self.delegate = nil;
-    [super dealloc];
-#endif
+    return [self initWithDocument:[BSONDocument documentWithData:data]];
 }
 
 #pragma mark - Convenience methods

@@ -33,7 +33,7 @@
 #import "MongoWriteConcern.h"
 
 @interface MongoIndex (Project)
-- (id) initWithDictionary:(NSDictionary *) dictionary;
++ (MongoIndex *) indexWithDictionary:(NSDictionary *) dictionary;
 @end
 
 @interface MongoMutableIndex (Projec)

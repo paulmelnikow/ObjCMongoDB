@@ -59,9 +59,12 @@ int block_based_fuzz_func(void) { return fuzzGenerator(); }
 int block_based_inc_func(void);
 int block_based_inc_func(void) { return incrementGenerator(); }
 
+@interface BSONObjectID ()
+@property (retain) NSString *privateStringValue;
+@end
+
 @implementation BSONObjectID {
     bson_oid_t _oid;
-    NSString *_stringValue;
 }
 
 #pragma mark - Overriding OID generation
@@ -132,13 +135,6 @@ int block_based_inc_func(void) { return incrementGenerator(); }
     return self;
 }
 
-- (void) dealloc {
-#if !__has_feature(objc_arc)
-    [_stringValue release];
-    [super dealloc];
-#endif
-}
-
 + (BSONObjectID *) objectID {
     maybe_autorelease_and_return([[self alloc] init]);
 }
@@ -177,19 +173,15 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 }
 
 - (NSString *) description {
-    return [self stringValue];
+    return self.privateStringValue;
 }
 
 - (NSString *) stringValue {
-    if (_stringValue) return _stringValue;
+    if (self.privateStringValue) return self.privateStringValue;
     // str must be at least 24 hex chars + null byte
     char buffer[25];
     bson_oid_to_string(&_oid, buffer);
-#if __has_feature(objc_arc)
-    return _stringValue = [NSString stringWithBSONString:buffer];
-#else
-    return _stringValue = [[NSString stringWithBSONString:buffer] retain];
-#endif
+    return self.privateStringValue = [NSString stringWithBSONString:buffer];
 }
 
 - (NSComparisonResult)compare:(BSONObjectID *) other {

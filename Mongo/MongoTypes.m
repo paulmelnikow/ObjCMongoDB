@@ -19,6 +19,7 @@
 
 #import "MongoTypes.h"
 #import "Mongo_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @interface MongoIndex ()
 @property (nonatomic, retain, readwrite) NSString *name;
@@ -43,6 +44,11 @@
     return self;
 }
 
++ (MongoIndex *) indexWithDictionary:(NSDictionary *) dictionary {
+    MongoIndex *result = [[self alloc] initWithDictionary:dictionary];
+    maybe_autorelease_and_return(result);
+}
+
 - (NSString *) description {
     NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n", [[self class] description], self];
     [result appendFormat:@"name = %@\n", self.name];
@@ -64,11 +70,8 @@
 }
 
 + (MongoMutableIndex *) mutableIndex {
-#if __has_feature(objc_arc)
-    return [[self alloc] init];
-#else
-    return [[[self alloc] init] autorelease];
-#endif
+    MongoMutableIndex *result = [[self alloc] init];
+    maybe_autorelease_and_return(result);
 }
 
 - (OrderedDictionary *) mutableFields {

@@ -69,8 +69,6 @@ NSString * const BSONException = @"BSONException";
 - (void) dealloc {
     bson_iterator_dispose(_iter);
 #if !__has_feature(objc_arc)
-    self.dependentOn = nil;
-    self.privateKeyPathComponents = nil;
     [super dealloc];
 #endif
 }

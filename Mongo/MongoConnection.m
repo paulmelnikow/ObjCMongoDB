@@ -65,7 +65,6 @@ NSInteger const CreateIndexError = 101;
 - (void) dealloc {
     mongo_destroy(_conn);
     mongo_dispose(_conn);
-    self.writeConcern2 = nil;
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif

@@ -25,7 +25,6 @@
 #import "BSONTypes.h"
 #import "BSONCoding.h"
 
-
 @implementation BSONCoreDataTest
 
 @synthesize df;

@@ -242,13 +242,8 @@
     
     if (indexDocuments) {
         NSMutableArray *result = [NSMutableArray array];
-        for (BSONDocument *indexDocument in indexDocuments) {
-            MongoIndex *index = [[MongoIndex alloc] initWithDictionary:[indexDocument dictionaryValue]];
-            [result addObject:index];
-    #if !__has_feature(objc_arc)
-            [index release];
-    #endif
-        }
+        for (BSONDocument *indexDocument in indexDocuments)
+            [result addObject:[MongoIndex indexWithDictionary:[indexDocument dictionaryValue]]];
         return result;
     } else
         return nil;

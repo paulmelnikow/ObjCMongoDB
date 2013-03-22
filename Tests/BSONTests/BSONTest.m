@@ -33,7 +33,6 @@
 @property (assign) BOOL awakeAfterCoder;
 @end
 @implementation Person
-@synthesize name, dob, numberOfVisits, children, parent, awakeAfterCoder;
 -(void)encodeWithCoder:(NSCoder *)coder {
     id exc = [NSException exceptionWithName:@"encodeWithCoder: was called"
                                    reason:@"encodeWithCoder: was called"
@@ -54,9 +53,9 @@
     NSMutableString *string = [NSMutableString stringWithFormat:@"<%@: %p>", [[self class] description], self];
     [string appendFormat:@"  name: %@", self.name];
     [string appendFormat:@"  dob: %@", [df stringFromDate:self.dob]];
-    [string appendFormat:@"  numberOfVisits: %ld", (long)numberOfVisits];
-    [string appendFormat:@"  parent: %@", parent];
-    [string appendFormat:@"  children: %@", children];
+    [string appendFormat:@"  numberOfVisits: %ld", (long)self.numberOfVisits];
+    [string appendFormat:@"  parent: %@", self.parent];
+    [string appendFormat:@"  children: %@", self.children];
     return string;
 }
 -(BOOL)isEqual:(Person *) obj {
@@ -71,7 +70,6 @@
 @property (retain) BSONObjectID *BSONObjectID;
 @end
 @implementation PersonWithCoding
-@synthesize BSONObjectID;
 
 -(void)encodeWithCoder:(BSONEncoder *)coder {
     if (![coder isKindOfClass:[BSONEncoder class]]) {
@@ -155,7 +153,6 @@
 @property (assign) BOOL didFinish;
 @end
 @implementation TestEncoderDelegate
-@synthesize encodedObjects, willEncodeKeyPaths, encodedKeyPaths, encodedNilKeyPath, willFinish, didFinish;
 
 -(id)init {
     self.encodedObjects = [NSMutableArray array];
@@ -165,9 +162,9 @@
 }
 
 -(void)encoder:(BSONEncoder *)encoder didEncodeObject:(id) obj forKeyPath:(NSString *) keyPathComponents {
-    [encodedObjects addObject:obj];
+    [self.encodedObjects addObject:obj];
     if (keyPathComponents)
-        [encodedKeyPaths addObject:keyPathComponents];
+        [self.encodedKeyPaths addObject:keyPathComponents];
     else
         self.encodedNilKeyPath = self.encodedNilKeyPath + 1;
 }
@@ -199,7 +196,7 @@
 }
 
 -(id)encoder:(BSONEncoder *)encoder willEncodeObject:(id)obj forKeyPath:(NSArray *)keyPathComponents {
-    if (keyPathComponents) [willEncodeKeyPaths addObject:keyPathComponents];
+    if (keyPathComponents) [self.willEncodeKeyPaths addObject:keyPathComponents];
     return obj;
 }
 
@@ -211,7 +208,6 @@
 @property (retain) NSMutableArray *replacedKeyPaths;
 @end
 @implementation TestEncoderDelegateRedactDates
-@synthesize replacedObjects, replacedKeyPaths;
 
 -(id)init {
     if (self = [super init]) {
@@ -276,7 +272,6 @@
 @property (assign) BOOL didFinish;
 @end
 @implementation TestDecoderDelegate
-@synthesize decodedObjects, decodedKeyPaths, decodedNilKeyPath, replacedObjects, willFinish, didFinish;
 
 -(id)init {
     self.decodedObjects = [NSMutableArray array];
@@ -285,15 +280,15 @@
     return self;
 }
 -(id)decoder:(BSONDecoder *)decoder didDecodeObject:(id) object forKeyPath:(NSArray *) keyPathComponents {
-    [decodedObjects addObject:object];
+    [self.decodedObjects addObject:object];
     if (keyPathComponents)
-        [decodedKeyPaths addObject:keyPathComponents];
+        [self.decodedKeyPaths addObject:keyPathComponents];
     else
         self.decodedNilKeyPath = self.decodedNilKeyPath + 1;
     return object;
 }
 -(void)decoder:(BSONDecoder *)decoder willReplaceObject:(id)object withObject:(id)newObject forKeyPath:(NSArray *)keyPathComponents {
-    [replacedObjects addObject:object];
+    [self.replacedObjects addObject:object];
 }
 -(void)decoderWillFinish:(BSONDecoder *)decoder {
     if (self.willFinish) {
@@ -337,7 +332,6 @@
 @end
 
 @implementation BSONTest
-@synthesize df;
 
 + (NSCountedSet *) missingValuesInResultSet:(NSCountedSet *) one expectedSet:(NSCountedSet *) two {
     if (!one && !two) return [NSCountedSet set];

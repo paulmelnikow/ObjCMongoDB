@@ -55,10 +55,6 @@
     bson_destroy(_bson);
     bson_dispose(_bson);
 #if !__has_feature(objc_arc)
-    self.resultDocument = nil;
-    self.encodingObjectStack = nil;
-    self.privateKeyPathComponents = nil;
-    self.delegate = nil;
     [super dealloc];
 #endif
 }
