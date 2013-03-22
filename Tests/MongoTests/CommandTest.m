@@ -164,6 +164,7 @@
     STAssertNil(error, nil);
 
     MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
+    index.name = @"desc";
     [index addField:@"description" ascending:YES];
     STAssertTrue([coll ensureIndex:index error:&error], nil);
     STAssertNil(error, nil);
@@ -182,7 +183,7 @@
     STAssertTrue(ok, nil);
     ok = NO;
     for (MongoIndex *item in indexes) {
-        if ([@"_description" isEqual:item.name] &&
+        if ([@"desc" isEqual:item.name] &&
             1 == item.fields.allKeys.count &&
             [@(1) isEqual:[item.fields objectForKey:@"description"]]) {
             ok = YES;

@@ -34,6 +34,7 @@
 
 + (MongoMutableIndex *) mutableIndex;
 
+@property (nonatomic, readwrite, retain) NSString *name;
 @property (assign) BOOL unique;
 @property (assign) BOOL sparse;
 @property (assign) BOOL createInBackground;

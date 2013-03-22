@@ -261,6 +261,7 @@
     int result = mongo_create_index(self.connection.connValue,
                                     self.fullyQualifiedName.bsonString,
                                     index.fields.BSONDocument.bsonValue,
+                                    index.name ? index.name.bsonString : NULL,
                                     index.options,
                                     tempBson);
     // Transfers ownership of bson and data buffer
