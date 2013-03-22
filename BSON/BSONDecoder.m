@@ -305,6 +305,9 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
+#if !__has_feature(objc_arc)
+        [allowedTypes retain];
+#endif
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -323,6 +326,9 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
+#if !__has_feature(objc_arc)
+        [allowedTypes retain];
+#endif
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -342,6 +348,9 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
+#if !__has_feature(objc_arc)
+        [allowedTypes retain];
+#endif
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -360,6 +369,9 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
+#if !__has_feature(objc_arc)
+        [allowedTypes retain];
+#endif
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -395,6 +407,9 @@
                          @(BSONTypeCode),
                          @(BSONTypeSymbol)
                          ];
+#if !__has_feature(objc_arc)
+        [allowedTypes retain];
+#endif
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
