@@ -41,7 +41,7 @@
 
 - (BSONEncoder *) initForWriting {
     if (self = [super init]) {
-        _bson = bson_create();
+        _bson = bson_alloc();
         bson_init(_bson);
         self.restrictsKeyNamesForMongoDB = YES;
         self.encodingObjectStack = [NSMutableArray array];
@@ -53,7 +53,7 @@
 - (void) dealloc {
     // In case object is deallocated in the middle of encoding
     bson_destroy(_bson);
-    bson_dispose(_bson);
+    bson_dealloc(_bson);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif

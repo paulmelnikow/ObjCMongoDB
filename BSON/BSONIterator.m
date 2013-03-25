@@ -42,7 +42,7 @@ NSString * const BSONException = @"BSONException";
         self.dependentOn = document;
         self.privateKeyPathComponents = keyPathComponents ? keyPathComponents : [NSArray array];
         _b = [document bsonValue];
-        _iter = bson_iterator_create();
+        _iter = bson_iterator_alloc();
         bson_iterator_init(_iter, _b);
         self.type = bson_iterator_type(_iter);
     }
@@ -67,7 +67,7 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (void) dealloc {
-    bson_iterator_dispose(_iter);
+    bson_iterator_dealloc(_iter);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -133,7 +133,7 @@ NSString * const BSONException = @"BSONException";
 #pragma mark - Values for collections
 
 - (BSONIterator *) sequentialSubIteratorValue {
-    bson_iterator *subIter = bson_iterator_create();
+    bson_iterator *subIter = bson_iterator_alloc();
     bson_iterator_subiterator(_iter, subIter);
     BSONIterator *iterator = [[BSONIterator alloc] initWithNativeIterator:subIter
                                                               dependentOn:self.dependentOn
@@ -142,7 +142,7 @@ NSString * const BSONException = @"BSONException";
 }
 
 - (BSONDocument *) embeddedDocumentValue {
-    bson * newBson = bson_create();
+    bson * newBson = bson_alloc();
     bson_iterator_subobject_init(_iter, newBson, 0);
     return [BSONDocument documentWithNativeDocument:newBson dependentOn:self.dependentOn];
 }
@@ -231,7 +231,7 @@ NSString * const BSONException = @"BSONException";
 }
 - (BSONCodeWithScope *) codeWithScopeValue {
     // Does not copy the scope, but retains the document we depend on
-    bson *newBson = bson_create();
+    bson *newBson = bson_alloc();
     bson_iterator_code_scope_init(_iter, newBson, 0);
     return [BSONCodeWithScope code:[NSString stringWithBSONString:bson_iterator_code(_iter)]
                          withScope:[BSONDocument documentWithNativeDocument:newBson dependentOn:self.dependentOn]];

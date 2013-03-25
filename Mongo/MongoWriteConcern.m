@@ -35,7 +35,7 @@
 - (void) dealloc {
     if (_nativeWriteConcern ) {
         mongo_write_concern_destroy(_nativeWriteConcern);
-        mongo_write_concern_dispose(_nativeWriteConcern);
+        mongo_write_concern_dealloc(_nativeWriteConcern);
     }
 #if !__has_feature(objc_arc)
     [super dealloc];
@@ -66,7 +66,7 @@
             mongo_write_concern_destroy(_nativeWriteConcern);
         }
     } else {
-        _nativeWriteConcern = mongo_write_concern_create();
+        _nativeWriteConcern = mongo_write_concern_alloc();
     }
     mongo_write_concern_init(_nativeWriteConcern);
     _nativeWriteConcern->w = self.writeAcknowledgementBehavior;

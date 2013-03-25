@@ -174,14 +174,14 @@
 
 - (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
                                 error:(NSError * __autoreleasing *) error {
-    bson *newBson = bson_create();
+    bson *newBson = bson_alloc();
     int result = mongo_find_one(self.connection.connValue,
                                 self.fullyQualifiedName.bsonString,
                                 findRequest.queryDocument.bsonValue,
                                 findRequest.fieldsDocument.bsonValue,
                                 newBson);
     if (BSON_OK != result) {
-        bson_dispose(newBson);
+        bson_dealloc(newBson);
         set_error_and_return_nil;
     }
     // newBson contains a copy of the data
@@ -246,7 +246,7 @@
 - (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error {
     NSParameterAssert(index != nil);
     NSParameterAssert(index.fields.allKeys.count > 0);
-    bson *tempBson = bson_create();
+    bson *tempBson = bson_alloc();
     int result = mongo_create_index(self.connection.connValue,
                                     self.fullyQualifiedName.bsonString,
                                     index.fields.BSONDocument.bsonValue,

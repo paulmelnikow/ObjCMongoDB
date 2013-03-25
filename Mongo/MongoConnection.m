@@ -42,7 +42,7 @@ NSInteger const CreateIndexError = 101;
 
 - (id) init {
     if (self = [super init]) {
-        _conn = mongo_create();
+        _conn = mongo_alloc();
         mongo_init(_conn);
         self.writeConcern = [MongoWriteConcern writeConcern];
         self.maxBSONSize = MONGO_DEFAULT_MAX_BSON_SIZE;
@@ -64,7 +64,7 @@ NSInteger const CreateIndexError = 101;
 
 - (void) dealloc {
     mongo_destroy(_conn);
-    mongo_dispose(_conn);
+    mongo_dealloc(_conn);
 #if !__has_feature(objc_arc)
     [super dealloc];
 #endif
@@ -172,13 +172,13 @@ NSInteger const CreateIndexError = 101;
 - (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
                                       error:(NSError * __autoreleasing *) error {
-    bson *tempBson = bson_create();
+    bson *tempBson = bson_alloc();
     int result = mongo_run_command(self.connValue,
                                    databaseName.bsonString,
                                    [[dictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO] bsonValue],
                                    tempBson);
     if (BSON_OK != result) {
-        bson_dispose(tempBson);
+        bson_dealloc(tempBson);
         set_error_and_return_nil;
     }
     // BSON object is destroyed and deallocated when document is autoreleased
@@ -194,12 +194,12 @@ NSInteger const CreateIndexError = 101;
 }
 
 - (NSDictionary *) lastOperationDictionary {
-    bson *tempBson = bson_create();
+    bson *tempBson = bson_alloc();
     bson_init_empty(tempBson);
     int emptySize = bson_size(tempBson);
     mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
     if (emptySize == bson_size(tempBson)) {
-        bson_dispose(tempBson);
+        bson_dealloc(tempBson);
         return nil;
     }
     // BSON object is destroyed and deallocated when document is autoreleased

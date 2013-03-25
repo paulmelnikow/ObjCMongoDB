@@ -56,10 +56,10 @@ int substitute_for_printf(const char *format, ...) {
 }
 
 - (id) init {
-    bson * newBson = bson_create();
+    bson * newBson = bson_alloc();
     bson_init_empty(newBson);
     id result = [self initWithNativeDocument:newBson dependentOn:nil];
-    if (nil == result) bson_dispose(newBson);
+    if (nil == result) bson_dealloc(newBson);
     return result;
 }
 
@@ -81,9 +81,9 @@ int substitute_for_printf(const char *format, ...) {
     if (!data.length) return [self init];
     if (self = [super init]) {
         self.privateData = [data isKindOfClass:[NSMutableData class]] ? [NSData dataWithData:data] : data;
-        _bson = bson_create();
+        _bson = bson_alloc();
         if (BSON_ERROR == bson_init_finished_data(_bson, (char *) self.privateData.bytes, 0)) {
-            bson_dispose(_bson);
+            bson_dealloc(_bson);
 #if !__has_feature(objc_arc)
             [self release];
 #endif
@@ -95,7 +95,7 @@ int substitute_for_printf(const char *format, ...) {
 
 - (void) dealloc {
     bson_destroy(_bson);
-    bson_dispose(_bson);
+    bson_dealloc(_bson);
     _bson = NULL;
 #if !__has_feature(objc_arc)
     [super dealloc];
@@ -122,7 +122,7 @@ int substitute_for_printf(const char *format, ...) {
 }
 
 - (id) copy {
-    bson *newBson = bson_create();
+    bson *newBson = bson_alloc();
     bson_copy(newBson, _bson);
     BSONDocument *copy = [[BSONDocument alloc] initWithNativeDocument:newBson dependentOn:nil];
     return copy;
