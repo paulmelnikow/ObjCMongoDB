@@ -32,6 +32,20 @@
 
 #pragma mark - Initialization
 
+- (id) initWithConnection:(MongoConnection *) connectionParam fullyQualifiedName:(NSString *) nameParam {
+    if (self = [super init]) {
+        self.connection = connectionParam;
+        self.fullyQualifiedName = nameParam;
+    }
+    return self;
+}
+
++ (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
+                              fullyQualifiedName:(NSString *) name {
+    MongoDBCollection *result = [[self alloc] initWithConnection:connection fullyQualifiedName:name];
+    maybe_autorelease_and_return(result);
+}
+
 - (void) setFullyQualifiedName:(NSString *) value {
     self.privateFullyQualifiedName = value;
     NSRange firstDot = [value rangeOfString:@"."];

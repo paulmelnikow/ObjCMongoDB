@@ -142,14 +142,7 @@ NSInteger const CreateIndexError = 101;
 #pragma mark - Collection access
 
 - (MongoDBCollection *) collectionWithName:(NSString *) name {
-#if __has_feature(objc_arc)
-    MongoDBCollection *collection = [[MongoDBCollection alloc] init];
-#else
-    MongoDBCollection *collection = [[[MongoDBCollection alloc] init] autorelease];
-#endif
-    collection.connection = self;
-    collection.fullyQualifiedName = name;
-    return collection;
+    return [MongoDBCollection collectionWithConnection:self fullyQualifiedName:name];
 }
 
 #pragma mark - Database administration

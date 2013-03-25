@@ -32,6 +32,11 @@
 #import "MongoPredicate.h"
 #import "MongoWriteConcern.h"
 
+@interface MongoDBCollection (Project)
++ (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
+                              fullyQualifiedName:(NSString *) name;
+@end
+
 @interface MongoIndex (Project)
 + (MongoIndex *) indexWithDictionary:(NSDictionary *) dictionary;
 @end
