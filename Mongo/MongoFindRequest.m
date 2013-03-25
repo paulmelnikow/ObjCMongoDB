@@ -44,15 +44,6 @@
     return self;
 }
 
-- (void) dealloc {
-#if !__has_feature(objc_arc)
-    self.fields = nil;
-    self.sort = nil;
-    self.hint = nil;
-    [super dealloc];
-#endif
-}
-
 + (MongoFindRequest *) findRequest {
     return [self findRequestWithPredicate:nil];
 }

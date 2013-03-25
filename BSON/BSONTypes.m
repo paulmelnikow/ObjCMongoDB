@@ -117,12 +117,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 
 - (id) initWithData:(NSData *) data {
     if ((self = [super init])) {
-        if ([data length] != 12) {
-#if !__has_feature(objc_arc)
-            [self release];
-#endif
-            return nil;
-        }
+        if ([data length] != 12) nullify_self_and_return;
         memcpy(_oid.bytes, [data bytes], 12);
     }
     return self;

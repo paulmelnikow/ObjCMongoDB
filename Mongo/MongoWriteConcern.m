@@ -47,10 +47,9 @@
     if (_nativeWriteConcern ) {
         mongo_write_concern_destroy(_nativeWriteConcern);
         mongo_write_concern_dealloc(_nativeWriteConcern);
+        _nativeWriteConcern = NULL;
     }
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
+    super_dealloc;
 }
 
 + (MongoWriteConcern *) writeConcern {

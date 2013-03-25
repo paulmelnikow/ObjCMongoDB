@@ -65,9 +65,8 @@ NSInteger const CreateIndexError = 101;
 - (void) dealloc {
     mongo_destroy(_conn);
     mongo_dealloc(_conn);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
+    _conn = NULL;
+    super_dealloc;
 }
 
 - (mongo *) connValue { return _conn; }

@@ -57,7 +57,6 @@
 @end
 
 @interface MongoCursor (Project)
-- (id) initWithNativeCursor:(mongo_cursor *) cursor;
 + (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor;
 @end
 

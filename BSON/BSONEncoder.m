@@ -54,9 +54,7 @@
     // In case object is deallocated in the middle of encoding
     bson_destroy(_bson);
     bson_dealloc(_bson);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
+    super_dealloc;
 }
 
 - (bson *) bsonValue { return _bson; }

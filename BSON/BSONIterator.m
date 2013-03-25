@@ -68,9 +68,7 @@ NSString * const BSONException = @"BSONException";
 
 - (void) dealloc {
     bson_iterator_dealloc(_iter);
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
+    super_dealloc;
 }
 
 - (bson_iterator *) nativeIteratorValue { return _iter; }

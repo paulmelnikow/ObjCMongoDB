@@ -64,12 +64,7 @@ int substitute_for_printf(const char *format, ...) {
 }
 
 - (id) initWithNativeDocument:(bson *) b dependentOn:(id) dependentOn {
-    if (!b) {
-#if !__has_feature(objc_arc)
-        [self release];
-#endif
-        return self = nil;
-    }
+    if (!b) nullify_self_and_return;
     if (self = [super init]) {
         _bson = b;
         self.dependentOn = dependentOn;
@@ -84,10 +79,7 @@ int substitute_for_printf(const char *format, ...) {
         _bson = bson_alloc();
         if (BSON_ERROR == bson_init_finished_data(_bson, (char *) self.privateData.bytes, 0)) {
             bson_dealloc(_bson);
-#if !__has_feature(objc_arc)
-            [self release];
-#endif
-            return self = nil;
+            nullify_self_and_return;
         }
     }
     return self;
@@ -97,9 +89,7 @@ int substitute_for_printf(const char *format, ...) {
     bson_destroy(_bson);
     bson_dealloc(_bson);
     _bson = NULL;
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
+    super_dealloc;
 }
 
 + (BSONDocument *) document {

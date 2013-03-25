@@ -41,12 +41,6 @@
     return self;
 }
 
-- (void) dealloc {
-#if !__has_feature(objc_arc)
-    [super dealloc];
-#endif
-}
-
 + (MongoUpdateRequest *) updateRequestForFirstMatchOnly:(BOOL) firstMatchOnly {
     MongoUpdateRequest *result = [[self alloc] initForFirstMatchOnly:firstMatchOnly];
     maybe_autorelease_and_return(result);
