@@ -46,7 +46,7 @@
 @end
 
 @interface MongoConnection (Project)
-- (mongo *) connValue;
+- (mongo *) connValue NS_RETURNS_INNER_POINTER;
 @end
 
 @interface MongoFindRequest (Project)
@@ -72,5 +72,5 @@
 @end
 
 @interface MongoWriteConcern (Project)
-- (mongo_write_concern *) nativeWriteConcern;
+- (mongo_write_concern *) nativeWriteConcern NS_RETURNS_INNER_POINTER;
 @end

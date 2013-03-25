@@ -49,26 +49,26 @@
  Takes ownership of the given BSON object and retains dependentOn.
  */
 + (BSONDocument *) documentWithNativeDocument:(bson *) b dependentOn:(id) dependentOn;
-- (const bson *) bsonValue;
+- (const bson *) bsonValue NS_RETURNS_INNER_POINTER;
 @end
 
 @interface BSONEncoder (Project)
-- (bson *) bsonValue;
+- (bson *) bsonValue NS_RETURNS_INNER_POINTER;
 @end
 
 @interface BSONIterator (Project)
 - (BSONIterator *) initWithDocument:(BSONDocument *)document
              keyPathComponentsOrNil:(NSArray *) keyPathComponents;
-- (bson_iterator *) nativeIteratorValue;
+- (bson_iterator *) nativeIteratorValue NS_RETURNS_INNER_POINTER;
 @end
 
 @interface BSONObjectID (Project)
 + (BSONObjectID *) objectIDWithNativeOID:(const bson_oid_t *) objectIDPointer;
 - (bson_oid_t) oid;
-- (const bson_oid_t *) objectIDPointer;
+- (const bson_oid_t *) objectIDPointer NS_RETURNS_INNER_POINTER;
 @end
 
 @interface BSONTimestamp (Project)
 + (BSONTimestamp *) timestampWithNativeTimestamp:(bson_timestamp_t)timestamp;
-- (bson_timestamp_t *) timestampPointer;
+- (bson_timestamp_t *) timestampPointer NS_RETURNS_INNER_POINTER;
 @end
