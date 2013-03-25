@@ -25,6 +25,7 @@ FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
 FOUNDATION_EXPORT NSInteger const CreateIndexError;
 
 @class MongoWriteConcern;
+@class GridFSBucket;
 
 /**
  Encapsulates a Mongo connection object.
@@ -53,6 +54,9 @@ FOUNDATION_EXPORT NSInteger const CreateIndexError;
 @property (assign) NSUInteger maxBSONSize;
 
 - (MongoDBCollection *) collectionWithName:(NSString *) name;
+/* Pass nil for bucketName to use "fs", the default bucket */
+- (GridFSBucket *) gridFSBucketWithDatabaseName:(NSString *) databaseName
+                                     bucketName:(NSString *) bucketName;
 
 - (BOOL) dropDatabaseWithName:(NSString *) database;
 

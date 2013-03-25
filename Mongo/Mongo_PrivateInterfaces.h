@@ -31,6 +31,10 @@
 #import "MongoUpdateRequest.h"
 #import "MongoPredicate.h"
 #import "MongoWriteConcern.h"
+#import "GridFSBucket.h"
+#import "GridFileHandle.h"
+#import "GridFileWriter.h"
+#import "gridfs.h"
 
 @interface MongoDBCollection (Project)
 + (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
@@ -73,4 +77,20 @@
 
 @interface MongoWriteConcern (Project)
 - (mongo_write_concern *) nativeWriteConcern NS_RETURNS_INNER_POINTER;
+@end
+
+@interface GridFSBucket (Project)
++ (GridFSBucket *) bucketWithConnection:(MongoConnection *) connection
+                           databaseName:(NSString *) databaseName
+                             bucketName:(NSString *) bucketName;
+@end
+
+@interface GridFileHandle (Project)
++ (GridFileHandle *) fileHandleWithNativeGridFile:(gridfile *) gf;
+- (id) initWithNativeGridFile:(gridfile *) gf;
+- (gridfile *) nativeGridFile NS_RETURNS_INNER_POINTER;
+@end
+
+@interface GridFileWriter (Project)
++ (GridFileWriter *) writerWithNativeGridFile:(gridfile *) gf;
 @end
