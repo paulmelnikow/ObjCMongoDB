@@ -59,9 +59,7 @@
 + (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder document:(BSONDocument *) document {
     BSONDecoder *decoder = [[self alloc] initWithDocument:document];
     NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
+    maybe_release(decoder);
     maybe_retain_autorelease_and_return(result);
 }
 
@@ -72,27 +70,21 @@
 + (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder data:(NSData *) data {
     BSONDecoder *decoder = [[self alloc] initWithData:data];
     NSDictionary *result = [decoder decodeDictionaryWithClass:classForDecoder];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
+    maybe_release(decoder);
     maybe_retain_autorelease_and_return(result);
 }
 
 + (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document {
     BSONDecoder *decoder = [[self alloc] initWithDocument:document];
     NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
+    maybe_release(decoder);
     maybe_retain_autorelease_and_return(result);
 }
 
 + (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data {
     BSONDecoder *decoder = [[self alloc] initWithData:data];
     NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
-#if !__has_feature(objc_arc)
-    [decoder release];
-#endif
+    maybe_release(decoder);
     maybe_retain_autorelease_and_return(result);
 }
 
@@ -109,11 +101,8 @@
     }
     @catch (NSException *exception) {
         if (BSONException == exception.name) {
+            // result will not be set
             NSLog(@"Raised while decoding: %@", exception);
-#if !__has_feature(objc_arc)
-            [result release];
-#endif
-            result = nil;
         } else @throw;
     }
     return [self _postDecodingHelper:result keyOrNil:nil topLevel:YES];
@@ -126,11 +115,8 @@
     }
     @catch (NSException *exception) {
         if (BSONException == exception.name) {
+            // result will not be set
             NSLog(@"Raised while decoding: %@", exception);
-#if !__has_feature(objc_arc)
-            [result release];
-#endif
-            result = nil;
         } else @throw;
     }
     return [self _postDecodingHelper:result keyOrNil:nil topLevel:YES];
@@ -191,11 +177,7 @@
     id result = nil;
     @autoreleasepool {
         if (!classForDecoder)
-#if __has_feature(objc_arc)
-            result = [self _decodeExposedDictionaryWithClassOrNil:nil];
-#else
-            result = [[self _decodeExposedDictionaryWithClassOrNil:nil] retain];
-#endif
+            result = maybe_retain([self _decodeExposedDictionaryWithClassOrNil:nil]);
         else if ([classForDecoder instancesRespondToSelector:@selector(initWithBSONDecoder:)])
             result = [[classForDecoder allocWithZone:self.objectZone] initWithBSONDecoder:self];
         else if ([classForDecoder instancesRespondToSelector:@selector(initWithCoder:)])
@@ -305,9 +287,7 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
-#if !__has_feature(objc_arc)
-        [allowedTypes retain];
-#endif
+        maybe_retain_void(allowedTypes);
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -326,9 +306,7 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
-#if !__has_feature(objc_arc)
-        [allowedTypes retain];
-#endif
+        maybe_retain_void(allowedTypes);
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -348,9 +326,7 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
-#if !__has_feature(objc_arc)
-        [allowedTypes retain];
-#endif
+        maybe_retain_void(allowedTypes);
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -369,9 +345,7 @@
                          @(BSONTypeLong),
                          @(BSONTypeDouble)
                          ];
-#if !__has_feature(objc_arc)
-        [allowedTypes retain];
-#endif
+        maybe_retain_void(allowedTypes);
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -407,9 +381,7 @@
                          @(BSONTypeCode),
                          @(BSONTypeSymbol)
                          ];
-#if !__has_feature(objc_arc)
-        [allowedTypes retain];
-#endif
+        maybe_retain_void(allowedTypes);
     });
     id result = nil;
     if ([self _decodingHelperForKey:key
@@ -542,11 +514,7 @@
         
         if (classForObjectID) {
             if ([classForObjectID respondsToSelector:@selector(instanceForObjectID:decoder:)])
-#if __has_feature(objc_arc)
-                object = [classForObjectID instanceForObjectID:object decoder:self];
-#else
-                object = [[classForObjectID instanceForObjectID:[object retain] decoder:self] autorelease];
-#endif
+                object = maybe_autorelease([classForObjectID instanceForObjectID:maybe_retain(object) decoder:self]);
             else
                 [NSException raise:NSInvalidUnarchiveOperationException
                             format:@"Substituting class %@ for object ID but class doesn't respond to +instanceForObjectID:decoder:",
@@ -554,17 +522,10 @@
         }
     }
     
-#if __has_feature(objc_arc)
     if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
-        object = [object awakeAfterUsingBSONDecoder:self];
+        object = maybe_autorelease([maybe_retain(object) awakeAfterUsingBSONDecoder:self]);
     else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
-        object = [object awakeAfterUsingCoder:self];
-#else
-    if ([object respondsToSelector:@selector(awakeAfterUsingBSONDecoder:)])
-        object = [[[object retain] awakeAfterUsingBSONDecoder:self] autorelease];
-    else if ([object respondsToSelector:@selector(awakeAfterUsingCoder:)])
-        object = [[[object retain] awakeAfterUsingCoder:self] autorelease];
-#endif
+        object = maybe_autorelease([maybe_retain(object) awakeAfterUsingCoder:self]);
     
     if ([self.delegate respondsToSelector:@selector(decoder:didDecodeObject:forKeyPath:)])
         object = [self.delegate decoder:self didDecodeObject:object forKeyPath:[self _keyPathComponentsAddingKeyOrNil:key]];
