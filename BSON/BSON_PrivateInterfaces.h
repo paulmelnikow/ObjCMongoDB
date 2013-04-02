@@ -31,9 +31,9 @@
 #endif
 
 #if TARGET_OS_IPHONE
-#define ImageClassName UIImage
+#define BSONImageClassName UIImage
 #else
-#define ImageClassName NSImage
+#define BSONImageClassName NSImage
 #endif
 
 #import "bson.h"

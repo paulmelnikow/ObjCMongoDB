@@ -364,10 +364,10 @@
         return result;
     return [self _postDecodingHelper:[self.iterator dateValue] keyOrNil:key topLevel:NO];
 }
-- (ImageClassName *) decodeImageForKey:(NSString *) key {
+- (BSONImageClassName *) decodeImageForKey:(NSString *) key {
     NSData *data = [self decodeDataForKey:key];
     if (data)
-        maybe_autorelease_and_return([[ImageClassName alloc] initWithData:data]);
+        maybe_autorelease_and_return([[BSONImageClassName alloc] initWithData:data]);
     else
         return nil;
 }

@@ -167,7 +167,7 @@
     else if ([objv isKindOfClass:[NSDate class]])
         [self _encodeDate:objv forKey:key withSubstitutions:NO];
 
-    else if ([objv isKindOfClass:[ImageClassName class]])
+    else if ([objv isKindOfClass:[BSONImageClassName class]])
         [self _encodeImage:objv forKey:key withSubstitutions:NO];
 
     else if ([objv isKindOfClass:[NSData class]])
@@ -211,7 +211,7 @@
         || [objv isKindOfClass:[NSString class]]
         || [objv isKindOfClass:[NSNumber class]]
         || [objv isKindOfClass:[NSDate class]]
-        || [objv isKindOfClass:[ImageClassName class]]
+        || [objv isKindOfClass:[BSONImageClassName class]]
         || [objv isKindOfClass:[NSData class]]
         || [objv isKindOfClass:[NSArray class]]) {
         [NSException raise:NSInvalidArchiveOperationException
@@ -336,7 +336,7 @@
 - (void) encodeTimestamp:(BSONTimestamp *) objv forKey:(NSString *) key {
     [self _encodeTimestamp:objv forKey:key withSubstitutions:YES];
 }
-- (void) encodeImage:(ImageClassName *) objv forKey:(NSString *) key {
+- (void) encodeImage:(BSONImageClassName *) objv forKey:(NSString *) key {
     [self _encodeImage:objv forKey:key withSubstitutions:YES];
 }
 - (void) encodeString:(NSString *) objv forKey:(NSString *) key {
@@ -462,7 +462,7 @@
     [self _postEncodingHelper:objv keyOrNil:key topLevel:NO];
 }
 
-- (void) _encodeImage:(ImageClassName *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
+- (void) _encodeImage:(BSONImageClassName *) objv forKey:(NSString *) key withSubstitutions:(BOOL) substitutions {
     if ([self _encodingHelper:objv key:key withSubstitutions:substitutions withObjectIDSubstitution:NO]) return;
 #if TARGET_OS_IPHONE
     NSData *data = UIImagePNGRepresentation(objv);
