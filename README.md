@@ -41,7 +41,7 @@ Refer to the installation instructions and sample code on the
 
  -   Aims to feel Cocoa-like, not Mongo-like. For example, method names in
      MongoKeyedPredicate and MongoUpdateRequest are natural in Cocoa, though
-     they don't conform to the underlyin Mongo keywords.
+     they don't conform to the underlying Mongo keywords.
 
 ## License
 
