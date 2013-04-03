@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import <ObjCMongoDB/ObjCMongoDB.h>
+#import "ObjCMongoDB.h"
 
 // See http://docs.mongodb.org/manual/reference/command/getLog/#getLog
 typedef enum {
