@@ -170,6 +170,9 @@ typedef enum {
 
 + (id) decodeObjectWithClass:(Class) classForDecoder document:(BSONDocument *) document;
 + (id) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data;
++ (id) decodeManagedObjectWithClass:(Class) classForDecoder
+                            context:(NSManagedObjectContext *) context
+                               data:(NSData *) data;
 
 - (NSDictionary *) decodeDictionary;
 - (NSDictionary *) decodeDictionaryWithClass:(Class) classForDecoder;

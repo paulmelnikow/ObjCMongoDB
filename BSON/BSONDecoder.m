@@ -81,8 +81,19 @@
     maybe_retain_autorelease_and_return(result);
 }
 
-+ (NSDictionary *) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data {
++ (id) decodeObjectWithClass:(Class) classForDecoder data:(NSData *) data {
     BSONDecoder *decoder = [[self alloc] initWithData:data];
+    id result = [decoder decodeObjectWithClass:classForDecoder];
+    maybe_release(decoder);
+    maybe_retain_autorelease_and_return(result);
+}
+
++ (id) decodeManagedObjectWithClass:(Class) classForDecoder
+                            context:(NSManagedObjectContext *) context
+                               data:(NSData *) data {
+    BSONDecoder *decoder = [[self alloc] initWithData:data];
+    decoder.managedObjectContext = context;
+    decoder.behaviorOnNull = BSONReturnNilForNull;
     NSDictionary *result = [decoder decodeObjectWithClass:classForDecoder];
     maybe_release(decoder);
     maybe_retain_autorelease_and_return(result);
