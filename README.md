@@ -12,6 +12,7 @@ The latest release is v0.9.6.
  
 ```sh
 git checkout v0.9.6     # since master may be a work in process
+git submodule update --init
 ```
 
 See what's changed in [History][].
