@@ -40,6 +40,12 @@
     return self;
 }
 
+- (void) dealloc {
+    maybe_release(self.privateFullyQualifiedName);
+    maybe_release(self.connection);
+    super_dealloc;
+}
+
 + (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
                               fullyQualifiedName:(NSString *) name {
     MongoDBCollection *result = [[self alloc] initWithConnection:connection fullyQualifiedName:name];

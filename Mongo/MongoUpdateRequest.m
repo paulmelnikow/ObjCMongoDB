@@ -41,6 +41,14 @@
     return self;
 }
 
+- (void) dealloc {
+    maybe_release(self.predicate);
+    maybe_release(self.writeConcern);
+    maybe_release(self.replacementDocument);
+    maybe_release(self.operationDictionary);
+    super_dealloc;
+}
+
 + (MongoUpdateRequest *) updateRequestForFirstMatchOnly:(BOOL) firstMatchOnly {
     MongoUpdateRequest *result = [[self alloc] initForFirstMatchOnly:firstMatchOnly];
     maybe_autorelease_and_return(result);

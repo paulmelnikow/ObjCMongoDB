@@ -54,6 +54,10 @@
     // In case object is deallocated in the middle of encoding
     bson_destroy(_bson);
     bson_dealloc(_bson);
+    maybe_release(self.delegate);
+    maybe_release(self.encodingObjectStack);
+    maybe_release(self.privateKeyPathComponents);
+    maybe_release(self.resultDocument);
     super_dealloc;
 }
 

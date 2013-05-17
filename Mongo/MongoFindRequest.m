@@ -21,6 +21,7 @@
 #import "ObjCMongoDB.h"
 #import "mongo.h"
 #import "Mongo_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @interface MongoFindRequest ()
 
@@ -42,6 +43,16 @@
         self.timeoutEnabled = YES;
     }
     return self;
+}
+
+- (void) dealloc {
+    maybe_release(self.predicate);
+    maybe_release(self.lowerIndexBound);
+    maybe_release(self.upperIndexBound);
+    maybe_release(self.fields);
+    maybe_release(self.sort);
+    maybe_release(self.hint);
+    super_dealloc;
 }
 
 + (MongoFindRequest *) findRequest {

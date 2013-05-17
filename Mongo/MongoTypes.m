@@ -49,6 +49,15 @@
     maybe_autorelease_and_return(result);
 }
 
+- (void) dealloc {
+    maybe_release(self.name);
+    maybe_release(self.namespaceContext);
+    maybe_release(self.version);
+    maybe_release(self.fields);
+    maybe_release(self.dictionaryValue);
+    super_dealloc;
+}
+
 - (NSString *) description {
     NSMutableString *result = [NSMutableString stringWithFormat:@"%@ <%p>\n", [[self class] description], self];
     [result appendFormat:@"name = %@\n", self.name];

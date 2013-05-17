@@ -19,6 +19,7 @@
 
 #import "MongoPredicate.h"
 #import "ObjCMongoDB.h"
+#import "BSON_Helper.h"
 #import "Mongo_Helper.h"
 
 @interface MongoPredicate ()
@@ -44,6 +45,12 @@
         [self.dictionary setObject:dictionaries forKey:operator];
     }
     return self;
+}
+
+- (void) dealloc {
+    maybe_release(self.dictionary);
+    maybe_release(self.operator);
+    super_dealloc;
 }
 
 + (MongoPredicate *) predicate {

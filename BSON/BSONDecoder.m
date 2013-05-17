@@ -50,6 +50,15 @@
     return [self initWithDocument:[BSONDocument documentWithData:data]];
 }
 
+- (void) dealloc {
+    maybe_release(self.delegate);
+    maybe_release(self.managedObjectContext);
+    maybe_release(self.iterator);
+    maybe_release(self.iteratorStack);
+    maybe_release(self.privateKeyPathComponents);
+    super_dealloc;
+}
+
 #pragma mark - Convenience methods
 
 + (NSDictionary *) decodeDictionaryWithDocument:(BSONDocument *)document {

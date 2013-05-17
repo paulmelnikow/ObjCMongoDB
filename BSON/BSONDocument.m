@@ -89,6 +89,8 @@ int substitute_for_printf(const char *format, ...) {
     bson_destroy(_bson);
     bson_dealloc(_bson);
     _bson = NULL;
+    maybe_release(self.dependentOn);
+    maybe_release(self.privateData);
     super_dealloc;
 }
 

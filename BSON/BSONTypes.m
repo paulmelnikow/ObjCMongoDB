@@ -200,6 +200,12 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 
 @implementation BSONRegularExpression
 
+- (void) dealloc {
+    maybe_release(self.pattern);
+    maybe_release(self.options);
+    super_dealloc;
+}
+
 + (BSONRegularExpression *) regularExpressionWithPattern:(NSString *) pattern options:(NSString *) options {
     BSONRegularExpression *obj = [[self alloc] init];
     obj.pattern = pattern;
@@ -252,6 +258,11 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 
 @implementation BSONCode
 
+- (void) dealloc {
+    maybe_release(self.code);
+    super_dealloc;
+}
+
 + (BSONCode *) code:(NSString *) code {
     BSONCode *obj = [[self alloc] init];
     obj.code = code;
@@ -261,6 +272,11 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @end
 
 @implementation BSONCodeWithScope
+
+- (void) dealloc {
+    maybe_release(self.scope);
+    super_dealloc;
+}
 
 + (BSONCodeWithScope *) code:(NSString *) code withScope:(BSONDocument *) scope {
     BSONCodeWithScope *obj = [[self alloc] init];
@@ -272,6 +288,11 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @end
 
 @implementation BSONSymbol
+
+- (void) dealloc {
+    maybe_release(self.symbol);
+    super_dealloc;
+}
 
 + (BSONSymbol *) symbol:(NSString *)symbol {
     BSONSymbol *obj = [[self alloc] init];
