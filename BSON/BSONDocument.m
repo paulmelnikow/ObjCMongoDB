@@ -156,8 +156,9 @@ int substitute_for_printf(const char *format, ...) {
       _bson->cur,
       _bson->dataSize,
       _bson->stackPos,
-      NSStringFromBSONError(_bson->err)] mutableCopy];    
+      NSStringFromBSONError(_bson->err)] mutableCopy];
     // Note: _bson->errstr has been omitted here, since as of driver v0.7.1 it's always NULL.
+    maybe_autorelease(result);
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -171,7 +172,7 @@ int substitute_for_printf(const char *format, ...) {
         bson_errprintf = bson_printf = printf;
         target_for_substitute_for_printf = nil;
     }
-    
+
     return [result stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
