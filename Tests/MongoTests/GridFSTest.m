@@ -17,9 +17,12 @@
 //  limitations under the License.
 //
 
-#import "GridFSTest.h"
+#import "MongoTest.h"
 #import "ObjCMongoDB.h"
 #import "MongoTests_Helper.h"
+
+@interface GridFSTest : MongoTest
+@end
 
 @implementation GridFSTest
 

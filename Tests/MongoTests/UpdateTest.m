@@ -17,11 +17,15 @@
 //  limitations under the License.
 //
 
-#import "UpdateTest.h"
+#import "MongoTest.h"
 #import "MongoKeyedPredicate.h"
 #import "MongoUpdateRequest.h"
 #import "BSONTypes.h"
 #import "MongoTests_Helper.h"
+
+@interface UpdateTest : MongoTest
+
+@end
 
 @implementation UpdateTest
 

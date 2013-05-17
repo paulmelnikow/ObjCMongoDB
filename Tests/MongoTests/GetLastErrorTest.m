@@ -17,11 +17,15 @@
 //  limitations under the License.
 //
 
-#import "GetLastErrorTest.h"
+#import "MongoTest.h"
 #import "MongoDBCollection.h"
 #import "MongoKeyedPredicate.h"
 #import "MongoUpdateRequest.h"
 #import "MongoTests_Helper.h"
+
+@interface GetLastErrorTest : MongoTest
+
+@end
 
 @implementation GetLastErrorTest
 

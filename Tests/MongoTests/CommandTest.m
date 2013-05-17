@@ -17,9 +17,13 @@
 //  limitations under the License.
 //
 
-#import "CommandTest.h"
+#import <SenTestingKit/SenTestingKit.h>
+#import "MongoTest.h"
 #import "ObjCMongoDB.h"
 #import "MongoTests_Helper.h"
+
+@interface CommandTest : MongoTest
+@end
 
 @implementation CommandTest
 

@@ -18,11 +18,16 @@
 //  limitations under the License.
 //
 
-#import "PredicateTest.h"
+#import "MongoTest.h"
 #import "MongoPredicate.h"
 #import "MongoKeyedPredicate.h"
 #import "BSONTypes.h"
 #import "MongoTests_Helper.h"
+
+@interface PredicateTest : MongoTest
+
+@end
+
 
 @implementation PredicateTest
 

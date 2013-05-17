@@ -17,10 +17,13 @@
 //  limitations under the License.
 //
 
-#import "FindTest.h"
+#import "MongoTest.h"
 #import "MongoKeyedPredicate.h"
 #import "MongoFindRequest.h"
 #import "MongoTests_Helper.h"
+
+@interface FindTest : MongoTest
+@end
 
 @implementation FindTest
 
