@@ -19,6 +19,7 @@
 
 #import "MongoTest.h"
 #import "MongoConnection.h"
+#import "BSON_Helper.h"
 
 @implementation MongoTest
 
@@ -30,6 +31,7 @@
 
 - (void) tearDown {
     [self.mongo disconnect];
+    maybe_release(_mongo);
 }
 
 @end
