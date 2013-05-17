@@ -25,7 +25,6 @@
 		9E0A7C6516BF10A000832C86 /* MongoWriteConcern.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */; };
 		9E0A7C6616BF10A000832C86 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */; };
 		9E0A7C6816BF10A000832C86 /* MongoWriteConcern.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */; };
-		9E0A7C6B16BF353900832C86 /* BSONHelperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */; };
 		9E0A7C6E16BF359000832C86 /* NSData+BSONAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C6C16BF358D00832C86 /* NSData+BSONAdditions.h */; };
 		9E0A7C6F16BF359000832C86 /* NSData+BSONAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E0A7C6C16BF358D00832C86 /* NSData+BSONAdditions.h */; };
 		9E0A7C7016BF359000832C86 /* NSData+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6D16BF358E00832C86 /* NSData+BSONAdditions.m */; };
@@ -76,9 +75,7 @@
 		9E1694C416F0F99B00AD96C1 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1694C016F0F99B00AD96C1 /* MongoTypes.m */; };
 		9E2725B9150AF1CD009CBE47 /* MongoConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725B7150AF1CD009CBE47 /* MongoConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725BA150AF1CD009CBE47 /* MongoConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725B8150AF1CD009CBE47 /* MongoConnection.m */; };
-		9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
 		9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C4150B1743009CBE47 /* CoreDataTests.xcdatamodeld */; };
-		9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
 		9E2725E0150B2131009CBE47 /* NSManagedObject+BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E2725DE150B2131009CBE47 /* NSManagedObject+BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E2725E1150B2131009CBE47 /* NSManagedObject+BSONCoding.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725DF150B2131009CBE47 /* NSManagedObject+BSONCoding.m */; };
 		9E2725E3150B2301009CBE47 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2725E2150B2301009CBE47 /* CoreData.framework */; };
@@ -157,6 +154,10 @@
 		9EE605F916FFF23400427BD8 /* GridFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605F516FFF23300427BD8 /* GridFileWriter.m */; };
 		9EE605FD16FFFB1200427BD8 /* GridFSTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605FC16FFFB1200427BD8 /* GridFSTest.m */; };
 		9EE605FE16FFFB1200427BD8 /* GridFSTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605FC16FFFB1200427BD8 /* GridFSTest.m */; };
+		9EED177F1746B5A900CEC6AA /* BSONHelperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */; };
+		9EED17801746EF6600CEC6AA /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
+		9EED17811746EF9E00CEC6AA /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
+		9EED17821746F11800CEC6AA /* BSONHelperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */; };
 		9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF20B04151678FF009D9402 /* GetLastErrorTest.m */; };
 		9EF20B151516892A009D9402 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EF20B1F1516892A009D9402 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EF20B1D1516892A009D9402 /* InfoPlist.strings */; };
@@ -266,7 +267,6 @@
 		9E0A7C5C16BF0AE200832C86 /* NSString+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+BSONAdditions.m"; sourceTree = "<group>"; };
 		9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoWriteConcern.h; sourceTree = "<group>"; };
 		9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoWriteConcern.m; sourceTree = "<group>"; };
-		9E0A7C6916BF353900832C86 /* BSONHelperTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONHelperTest.h; sourceTree = "<group>"; };
 		9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONHelperTest.m; sourceTree = "<group>"; };
 		9E0A7C6C16BF358D00832C86 /* NSData+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+BSONAdditions.h"; sourceTree = "<group>"; };
 		9E0A7C6D16BF358E00832C86 /* NSData+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+BSONAdditions.m"; sourceTree = "<group>"; };
@@ -282,7 +282,6 @@
 		9E1694C016F0F99B00AD96C1 /* MongoTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoTypes.m; sourceTree = "<group>"; };
 		9E2725B7150AF1CD009CBE47 /* MongoConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoConnection.h; sourceTree = "<group>"; };
 		9E2725B8150AF1CD009CBE47 /* MongoConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoConnection.m; sourceTree = "<group>"; };
-		9E2725C0150B16EB009CBE47 /* BSONCoreDataTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoreDataTest.h; sourceTree = "<group>"; };
 		9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONCoreDataTest.m; sourceTree = "<group>"; };
 		9E2725C5150B1743009CBE47 /* CoreDataTests.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataTests.xcdatamodel; sourceTree = "<group>"; };
 		9E2725C7150B17C4009CBE47 /* CDPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CDPerson.h; sourceTree = "<group>"; };
@@ -322,7 +321,6 @@
 		9EBE79EB150040D4000E767D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		9EBE79F3150040D5000E767D /* BSONTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSONTest-Info.plist"; sourceTree = "<group>"; };
 		9EBE79F5150040D5000E767D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		9EBE79F7150040D5000E767D /* BSONTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSONTest.h; sourceTree = "<group>"; };
 		9EBE79F8150040D5000E767D /* BSONTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BSONTest.m; sourceTree = "<group>"; };
 		9EBE79FA150040D5000E767D /* BSONTest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BSONTest-Prefix.pch"; sourceTree = "<group>"; };
 		9EBE7A021500463F000E767D /* BSONDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDecoder.h; sourceTree = "<group>"; };
@@ -556,16 +554,13 @@
 		9EBE79F1150040D4000E767D /* BSONTests */ = {
 			isa = PBXGroup;
 			children = (
-				9EBE79F7150040D5000E767D /* BSONTest.h */,
 				9EBE79F8150040D5000E767D /* BSONTest.m */,
-				9E2725C0150B16EB009CBE47 /* BSONCoreDataTest.h */,
 				9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */,
 				9E2725C4150B1743009CBE47 /* CoreDataTests.xcdatamodeld */,
 				9E2725C7150B17C4009CBE47 /* CDPerson.h */,
 				9E2725C8150B17C4009CBE47 /* CDPerson.m */,
-				9EBE79F2150040D5000E767D /* Supporting Files */,
-				9E0A7C6916BF353900832C86 /* BSONHelperTest.h */,
 				9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */,
+				9EBE79F2150040D5000E767D /* Supporting Files */,
 			);
 			path = BSONTests;
 			sourceTree = "<group>";
@@ -1134,11 +1129,8 @@
 			files = (
 				9EF8FF7816C9E67D004BBD11 /* OrderedDictionary.m in Sources */,
 				9EBE79F9150040D5000E767D /* BSONTest.m in Sources */,
-				9E2725C2150B16EB009CBE47 /* BSONCoreDataTest.m in Sources */,
 				9E2725C6150B1743009CBE47 /* CoreDataTests.xcdatamodeld in Sources */,
-				9E2725C9150B17C4009CBE47 /* CDPerson.m in Sources */,
 				9E0A7C6116BF0AE300832C86 /* NSString+BSONAdditions.m in Sources */,
-				9E0A7C6B16BF353900832C86 /* BSONHelperTest.m in Sources */,
 				9E0A7C7216BF359000832C86 /* NSData+BSONAdditions.m in Sources */,
 				9E0A7C7616BF39F800832C86 /* ObjCBSON.m in Sources */,
 				9E0A7C7716BF39F800832C86 /* BSONTypes.m in Sources */,
@@ -1152,6 +1144,9 @@
 				9E0A7C9716BF3ACB00832C86 /* encoding.c in Sources */,
 				9E0A7C9816BF3ACB00832C86 /* numbers.c in Sources */,
 				9EF8FF8616CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
+				9EED17801746EF6600CEC6AA /* BSONCoreDataTest.m in Sources */,
+				9EED17811746EF9E00CEC6AA /* CDPerson.m in Sources */,
+				9EED17821746F11800CEC6AA /* BSONHelperTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1200,6 +1195,7 @@
 				9EF8FF3C16C58BFE004BBD11 /* numbers.c in Sources */,
 				9EF8FF7916C9E687004BBD11 /* OrderedDictionary.m in Sources */,
 				9EF8FF8816CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
+				9EED177F1746B5A900CEC6AA /* BSONHelperTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

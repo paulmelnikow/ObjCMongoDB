@@ -17,17 +17,26 @@
 //  limitations under the License.
 //
 
-#import "BSONCoreDataTest.h"
+#import <SenTestingKit/SenTestingKit.h>
+#import <CoreData/CoreData.h>
 #import "CDPerson.h"
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
 #import "BSONDocument.h"
 #import "BSONTypes.h"
 #import "BSONCoding.h"
+#import "BSON_Helper.h"
+
+@interface BSONCoreDataTest : SenTestCase
+
+@property (retain) NSManagedObjectModel *mom;
+@property (retain) NSPersistentStoreCoordinator *psc;
+@property (retain) NSManagedObjectContext *moc;
+@property (retain) NSDateFormatter *df;
+
+@end
 
 @implementation BSONCoreDataTest
-
-@synthesize df;
 
 -(void)setUp {
     self.df = [[NSDateFormatter alloc] init];
@@ -36,10 +45,17 @@
     [self.df setDateStyle:NSDateFormatterShortStyle];
 
     // Set up managed object context
-    _mom = [NSManagedObjectModel mergedModelFromBundles:[NSArray arrayWithObject:[NSBundle bundleForClass:[self class]]]];
-    _psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_mom];
-    _moc = [[NSManagedObjectContext alloc] init];
-    _moc.persistentStoreCoordinator = _psc;
+    self.mom = [NSManagedObjectModel mergedModelFromBundles:[NSArray arrayWithObject:[NSBundle bundleForClass:[self class]]]];
+    self.psc = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:_mom];
+    self.moc = [[NSManagedObjectContext alloc] init];
+    self.moc.persistentStoreCoordinator = self.psc;
+}
+
+-(void)tearDown {
+    maybe_release(_mom);
+    maybe_release(_psc);
+    maybe_release(_moc);
+    [super tearDown];
 }
 
 - (void) testEncodeCDPerson {
@@ -65,7 +81,7 @@
     [encoder encodeObject:lucy];
     
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:[encoder BSONDocument]];
-    decoder.managedObjectContext = _moc;
+    decoder.managedObjectContext = self.moc;
     CDPerson *lucy2 = [decoder decodeObjectWithClass:[CDPerson class]];
     CDPerson *littleRicky2 = [[[lucy2 children] allObjects] objectAtIndex:0];
     CDPerson *littlerRicky2 = [[[littleRicky2 children] allObjects] objectAtIndex:0];
@@ -73,6 +89,9 @@
     STAssertTrue([littlerRicky2 isEqualForTesting:littlerRicky], @"Objects should be equal");
     STAssertTrue([littleRicky2 isEqualForTesting:littleRicky], @"Objects should be equal");
     STAssertTrue([lucy2 isEqualForTesting:lucy], @"Objects should be equal");
+    
+    maybe_release(encoder);
+    maybe_release(decoder);
 }
 
 @end

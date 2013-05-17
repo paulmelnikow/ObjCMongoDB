@@ -74,13 +74,4 @@
     && equalChildren;
 }
 
-//NSString *parentName = [decoder decodeStringForKey:key];
-//if (parentName) {
-//    NSFetchRequest *req = [NSFetchRequest fetchRequestWithEntityName:[[self entity] name]];
-//    [req setPredicate:[NSPredicate predicateWithFormat:@"name = %@", parentName]];
-//    NSArray *result = [self.managedObjectContext executeFetchRequest:req error:nil];
-//    if (result && 1 == result.count)
-//        self.parent = [result objectAtIndex:0];
-//}
-
 @end
