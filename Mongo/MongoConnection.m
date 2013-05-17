@@ -30,8 +30,8 @@ NSInteger const CreateIndexError = 101;
 
 @interface MongoConnection ()
 // Use this to support implementation of public properties, which need custom setters
-@property (copy) MongoWriteConcern *writeConcern2;
-@property (assign) NSUInteger maxBSONSize2;
+@property (copy) MongoWriteConcern *privateWriteConcern;
+@property (assign) NSUInteger privateMaxBSONSize;
 @end
 
 @implementation MongoConnection {
@@ -66,7 +66,7 @@ NSInteger const CreateIndexError = 101;
     mongo_destroy(_conn);
     mongo_dealloc(_conn);
     _conn = NULL;
-    maybe_release(_writeConcern);
+    maybe_release(_privateWriteConcern);
     super_dealloc;
 }
 
@@ -74,22 +74,22 @@ NSInteger const CreateIndexError = 101;
 
 #pragma mark - Configuring the connection
 
-- (MongoWriteConcern *) writeConcern { return self.writeConcern2; }
+- (MongoWriteConcern *) writeConcern { return self.privateWriteConcern; }
 - (void) setWriteConcern:(MongoWriteConcern *) writeConcern {
     if (!writeConcern)
         [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
-    self.writeConcern2 = writeConcern;
-    mongo_set_write_concern(_conn, self.writeConcern2.nativeWriteConcern);
+    self.privateWriteConcern = writeConcern;
+    mongo_set_write_concern(_conn, self.privateWriteConcern.nativeWriteConcern);
 }
 
-- (NSUInteger) maxBSONSize { return self.maxBSONSize2; }
+- (NSUInteger) maxBSONSize { return self.privateMaxBSONSize; }
 - (void) setMaxBSONSize:(NSUInteger) maxBSONSize {
     if (maxBSONSize > INT_MAX) {
         [NSException raise:NSInvalidArgumentException
                     format:@"Value is larger than what the driver supports. Keep it to %i",
          INT_MAX];
     }
-    self.maxBSONSize2 = (int) maxBSONSize;
+    self.privateMaxBSONSize = (int) maxBSONSize;
     _conn->max_bson_size = (int) maxBSONSize;
 }
 
