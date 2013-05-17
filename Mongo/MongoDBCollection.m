@@ -41,8 +41,10 @@
 }
 
 - (void) dealloc {
-    maybe_release(_privateFullyQualifiedName);
     maybe_release(_connection);
+    maybe_release(_privateFullyQualifiedName);
+    maybe_release(_databaseName);
+    maybe_release(_namespaceName);
     super_dealloc;
 }
 
