@@ -70,13 +70,10 @@
 }
 
 + (BSONDocument *) documentForObject:(id) obj restrictingKeyNamesForMongoDB:(BOOL) restrictingKeyNamesForMongoDB {
-    BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
+    BSONEncoder *encoder = maybe_autorelease([[BSONEncoder alloc] initForWriting]);
     encoder.restrictsKeyNamesForMongoDB = restrictingKeyNamesForMongoDB;
     [encoder encodeObject:obj];
     BSONDocument *result = [encoder BSONDocument];
-#if !__has_feature(objc_arc)
-    [encoder release];
-#endif
     maybe_retain_autorelease_and_return(result);
 }
 
