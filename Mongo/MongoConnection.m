@@ -66,7 +66,7 @@ NSInteger const CreateIndexError = 101;
     mongo_destroy(_conn);
     mongo_dealloc(_conn);
     _conn = NULL;
-    maybe_release(self.writeConcern);
+    maybe_release(_writeConcern);
     super_dealloc;
 }
 

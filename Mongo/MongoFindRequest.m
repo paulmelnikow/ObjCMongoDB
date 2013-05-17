@@ -46,12 +46,12 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.predicate);
-    maybe_release(self.lowerIndexBound);
-    maybe_release(self.upperIndexBound);
-    maybe_release(self.fields);
-    maybe_release(self.sort);
-    maybe_release(self.hint);
+    maybe_release(_predicate);
+    maybe_release(_lowerIndexBound);
+    maybe_release(_upperIndexBound);
+    maybe_release(_fields);
+    maybe_release(_sort);
+    maybe_release(_hint);
     super_dealloc;
 }
 

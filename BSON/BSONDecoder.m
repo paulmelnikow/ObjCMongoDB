@@ -51,11 +51,11 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.delegate);
-    maybe_release(self.managedObjectContext);
-    maybe_release(self.iterator);
-    maybe_release(self.iteratorStack);
-    maybe_release(self.privateKeyPathComponents);
+    maybe_release(_delegate);
+    maybe_release(_managedObjectContext);
+    maybe_release(_iterator);
+    maybe_release(_iteratorStack);
+    maybe_release(_privateKeyPathComponents);
     super_dealloc;
 }
 

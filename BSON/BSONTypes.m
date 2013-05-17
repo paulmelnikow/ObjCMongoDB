@@ -201,8 +201,8 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @implementation BSONRegularExpression
 
 - (void) dealloc {
-    maybe_release(self.pattern);
-    maybe_release(self.options);
+    maybe_release(_pattern);
+    maybe_release(_options);
     super_dealloc;
 }
 
@@ -259,7 +259,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @implementation BSONCode
 
 - (void) dealloc {
-    maybe_release(self.code);
+    maybe_release(_code);
     super_dealloc;
 }
 
@@ -274,7 +274,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @implementation BSONCodeWithScope
 
 - (void) dealloc {
-    maybe_release(self.scope);
+    maybe_release(_scope);
     super_dealloc;
 }
 
@@ -290,7 +290,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 @implementation BSONSymbol
 
 - (void) dealloc {
-    maybe_release(self.symbol);
+    maybe_release(_symbol);
     super_dealloc;
 }
 

@@ -68,8 +68,8 @@ NSString * const BSONException = @"BSONException";
 
 - (void) dealloc {
     bson_iterator_dealloc(_iter);
-    maybe_release(self.dependentOn);
-    maybe_release(self.privateKeyPathComponents);
+    maybe_release(_dependentOn);
+    maybe_release(_privateKeyPathComponents);
     super_dealloc;
 }
 

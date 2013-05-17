@@ -48,8 +48,8 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.dictionary);
-    maybe_release(self.operator);
+    maybe_release(_dictionary);
+    maybe_release(_operator);
     super_dealloc;
 }
 

@@ -50,11 +50,11 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.name);
-    maybe_release(self.namespaceContext);
-    maybe_release(self.version);
-    maybe_release(self.fields);
-    maybe_release(self.dictionaryValue);
+    maybe_release(_name);
+    maybe_release(_namespaceContext);
+    maybe_release(_version);
+    maybe_release(_fields);
+    maybe_release(_dictionaryValue);
     super_dealloc;
 }
 

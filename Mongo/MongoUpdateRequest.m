@@ -42,10 +42,10 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.predicate);
-    maybe_release(self.writeConcern);
-    maybe_release(self.replacementDocument);
-    maybe_release(self.operationDictionary);
+    maybe_release(_predicate);
+    maybe_release(_writeConcern);
+    maybe_release(_replacementDocument);
+    maybe_release(_operationDictionary);
     super_dealloc;
 }
 

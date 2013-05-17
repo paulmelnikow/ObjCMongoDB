@@ -41,8 +41,8 @@
 }
 
 - (void) dealloc {
-    maybe_release(self.privateFullyQualifiedName);
-    maybe_release(self.connection);
+    maybe_release(_privateFullyQualifiedName);
+    maybe_release(_connection);
     super_dealloc;
 }
 

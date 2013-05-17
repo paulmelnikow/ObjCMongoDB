@@ -68,9 +68,9 @@
     gridfs_destroy(_gfs);
     gridfs_dealloc(_gfs);
     _gfs = NULL;
-    maybe_release(self.connection);
-    maybe_release(self.databaseName);
-    maybe_release(self.bucketName);
+    maybe_release(_connection);
+    maybe_release(_databaseName);
+    maybe_release(_bucketName);
     super_dealloc;
 }
 
