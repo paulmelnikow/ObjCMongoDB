@@ -22,7 +22,6 @@
 #import "BSON_PrivateInterfaces.h"
 #import "BSON_Helper.h"
 
-static id substitute_for_printf_lock_token = nil;
 static NSMutableString * target_for_substitute_for_printf = nil;
 
 int substitute_for_printf(const char *format, ...);
@@ -147,17 +146,17 @@ int substitute_for_printf(const char *format, ...) {
 
 - (NSString *) description {        
     NSMutableString *result =
-    [[NSString stringWithFormat:
+    [[NSMutableString alloc] initWithFormat:
       @"%@ <%p>  bson.data: %p  bson.cur: %p  bson.dataSize: %i  bson.stackPos: %i  bson.err: %@\n",
       [[self class] description], self,
       _bson->data,
       _bson->cur,
       _bson->dataSize,
       _bson->stackPos,
-      NSStringFromBSONError(_bson->err)] mutableCopy];
+      NSStringFromBSONError(_bson->err)];
     // Note: _bson->errstr has been omitted here, since as of driver v0.7.1 it's always NULL.
-    maybe_autorelease_void(result);
     
+    static id substitute_for_printf_lock_token;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         substitute_for_printf_lock_token = [[NSObject alloc] init];
@@ -171,6 +170,7 @@ int substitute_for_printf(const char *format, ...) {
         target_for_substitute_for_printf = nil;
     }
 
+    maybe_autorelease_void(result);
     return [result stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 }
 
