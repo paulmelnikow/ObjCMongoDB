@@ -296,7 +296,6 @@
 		9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSON.h; sourceTree = "<group>"; };
 		9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSON.m; sourceTree = "<group>"; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
-		9E72DC90150EBC7E00217439 /* PredicateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PredicateTest.h; sourceTree = "<group>"; };
 		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E74B2BF16F55CE000AFB1CA /* MongoTests_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTests_Helper.h; sourceTree = "<group>"; };
 		9E74B2C016F55EA200AFB1CA /* MongoTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTest.h; sourceTree = "<group>"; };
@@ -327,7 +326,6 @@
 		9EBE7A031500463F000E767D /* BSONDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDecoder.m; sourceTree = "<group>"; };
 		9EBE7A06150056FD000E767D /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
 		9EBE7A07150056FD000E767D /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
-		9EE59A6615837B5800040FE7 /* FindTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindTest.h; sourceTree = "<group>"; };
 		9EE59A6715837B5800040FE7 /* FindTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindTest.m; sourceTree = "<group>"; };
 		9EE605E516FFD78100427BD8 /* GridFSBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFSBucket.h; sourceTree = "<group>"; };
 		9EE605E616FFD78100427BD8 /* GridFSBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFSBucket.m; sourceTree = "<group>"; };
@@ -335,9 +333,7 @@
 		9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFileHandle.m; sourceTree = "<group>"; };
 		9EE605F416FFF23300427BD8 /* GridFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFileWriter.h; sourceTree = "<group>"; };
 		9EE605F516FFF23300427BD8 /* GridFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFileWriter.m; sourceTree = "<group>"; };
-		9EE605FB16FFFB1200427BD8 /* GridFSTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFSTest.h; sourceTree = "<group>"; };
 		9EE605FC16FFFB1200427BD8 /* GridFSTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFSTest.m; sourceTree = "<group>"; };
-		9EF20B03151678FF009D9402 /* GetLastErrorTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetLastErrorTest.h; sourceTree = "<group>"; };
 		9EF20B04151678FF009D9402 /* GetLastErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLastErrorTest.m; sourceTree = "<group>"; };
 		9EF20B141516892A009D9402 /* BSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF20B171516892A009D9402 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -356,13 +352,11 @@
 		9EF8FF4916C5C055004BBD11 /* MongoTests-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoTests-iOS-Info.plist"; sourceTree = "<group>"; };
 		9EF8FF4B16C5C055004BBD11 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EF8FF5016C5C056004BBD11 /* MongoTests-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-iOS-Prefix.pch"; sourceTree = "<group>"; };
-		9EF8FF7416C9DEE9004BBD11 /* CommandTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommandTest.h; sourceTree = "<group>"; };
 		9EF8FF7516C9DEE9004BBD11 /* CommandTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommandTest.m; sourceTree = "<group>"; };
 		9EF8FF7A16C9E874004BBD11 /* MongoConnection+Diagnostics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MongoConnection+Diagnostics.h"; sourceTree = "<group>"; };
 		9EF8FF7B16C9E874004BBD11 /* MongoConnection+Diagnostics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MongoConnection+Diagnostics.m"; sourceTree = "<group>"; };
 		9EF8FF8016CA9AA3004BBD11 /* NSDictionary+BSONAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+BSONAdditions.h"; sourceTree = "<group>"; };
 		9EF8FF8116CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+BSONAdditions.m"; sourceTree = "<group>"; };
-		9EFA29D7152CC65A004F50D2 /* UpdateTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateTest.h; sourceTree = "<group>"; };
 		9EFA29D8152CC65A004F50D2 /* UpdateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateTest.m; sourceTree = "<group>"; };
 		9EFA29DC152CCD70004F50D2 /* env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = env.h; sourceTree = "<group>"; };
 		9EFA29EC152D0649004F50D2 /* MongoUpdateRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoUpdateRequest.h; sourceTree = "<group>"; };
@@ -724,17 +718,11 @@
 				9E74B2BF16F55CE000AFB1CA /* MongoTests_Helper.h */,
 				9E74B2C016F55EA200AFB1CA /* MongoTest.h */,
 				9E74B2C116F55EA200AFB1CA /* MongoTest.m */,
-				9E72DC90150EBC7E00217439 /* PredicateTest.h */,
 				9E72DC91150EBC7E00217439 /* PredicateTest.m */,
-				9EFA29D7152CC65A004F50D2 /* UpdateTest.h */,
 				9EFA29D8152CC65A004F50D2 /* UpdateTest.m */,
-				9EF20B03151678FF009D9402 /* GetLastErrorTest.h */,
 				9EF20B04151678FF009D9402 /* GetLastErrorTest.m */,
-				9EE59A6615837B5800040FE7 /* FindTest.h */,
 				9EE59A6715837B5800040FE7 /* FindTest.m */,
-				9EF8FF7416C9DEE9004BBD11 /* CommandTest.h */,
 				9EF8FF7516C9DEE9004BBD11 /* CommandTest.m */,
-				9EE605FB16FFFB1200427BD8 /* GridFSTest.h */,
 				9EE605FC16FFFB1200427BD8 /* GridFSTest.m */,
 				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
 			);
