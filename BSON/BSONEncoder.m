@@ -87,9 +87,7 @@
     encoder.restrictsKeyNamesForMongoDB = restrictingKeyNamesForMongoDB;
     [encoder encodeDictionary:dictionary];
     BSONDocument *result = [encoder BSONDocument];
-#if !__has_feature(objc_arc)
-    [encoder release];
-#endif
+    maybe_release(encoder);
     maybe_retain_autorelease_and_return(result);
 }
 

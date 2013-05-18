@@ -62,10 +62,7 @@
 + (MongoFindRequest *) findRequestWithPredicate:(MongoPredicate *) predicate {
     MongoFindRequest *result = [[self alloc] init];
     result.predicate = predicate;
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 #pragma mark - Manipulating the request

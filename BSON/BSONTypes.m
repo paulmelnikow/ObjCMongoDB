@@ -70,9 +70,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 #pragma mark - Overriding OID generation
 
 + (void) generateFuzzUsingBlock:(int (^)(void)) block {
-#if !__has_feature(objc_arc)
-    [fuzzGenerator release];
-#endif
+    maybe_release(fuzzGenerator);
     if (block == nil) {
         bson_set_oid_fuzz(NULL);
     } else {
@@ -82,9 +80,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 }
 
 + (void) generateIncrementUsingBlock:(int (^)(void)) block {
-#if !__has_feature(objc_arc)
-    [incrementGenerator release];
-#endif
+    maybe_release(incrementGenerator);
     if (block == nil) {
         bson_set_oid_inc(NULL);
     } else {
@@ -104,9 +100,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 
 - (id) initWithString:(NSString *) s {
     if (s.length != 24) {
-#if !__has_feature(objc_arc)
-        [self release];
-#endif
+        maybe_release(self);
         [NSException raise:NSInvalidArgumentException format:@"String should be 24 characters long"];
     }
     if (self = [super init]) {

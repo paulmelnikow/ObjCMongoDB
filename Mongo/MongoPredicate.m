@@ -55,10 +55,7 @@
 
 + (MongoPredicate *) predicate {
     id result = [[self alloc] init];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 #pragma mark - Getting the result
@@ -86,10 +83,7 @@
 
 + (MongoPredicate *) orPredicateWithArray:(NSArray *) array {
     id result = [[self alloc] initWithOperator:@"$or" subPredicates:array];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 + (MongoPredicate *) norPredicateWithSubPredicate:(MongoPredicate *) predicate {
@@ -104,10 +98,7 @@
 
 + (MongoPredicate *) norPredicateWithArray:(NSArray *) array {
     id result = [[self alloc] initWithOperator:@"$nor" subPredicates:array];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 + (MongoPredicate *) andPredicateWithSubPredicate:(MongoPredicate *) predicate {
@@ -122,10 +113,7 @@
 
 + (MongoPredicate *) andPredicateWithArray:(NSArray *) array {
     id result = [[self alloc] initWithOperator:@"$and" subPredicates:array];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 #pragma mark - And and Or predicates - Mutability and convenience
@@ -151,10 +139,7 @@
 
 + (MongoPredicate *) wherePredicateWithExpression:(BSONCode *) whereExpression {
     id result = [[self alloc] initWithWhereExpression:whereExpression];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 @end

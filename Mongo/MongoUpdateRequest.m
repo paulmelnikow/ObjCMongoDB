@@ -164,11 +164,7 @@
     else if (self.operationDictionary)
         return [self.operationDictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO];
     else
-#if __has_feature(objc_arc)
-        return [[BSONDocument alloc] init];
-#else
-        return [[[BSONDocument alloc] init] autorelease];
-#endif
+        return [BSONDocument document];
 }
 
 - (int) flags {

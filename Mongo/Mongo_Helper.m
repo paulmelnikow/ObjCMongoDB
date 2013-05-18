@@ -64,11 +64,7 @@ __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_
         mongo_error_case(MONGO_CURSOR_BSON_ERROR, @"Something is wrong with the BSON provided. See conn->err for details.");
     }
     NSString *result = description ? desc : name;
-#if __has_feature(objc_arc)
     return result;
-#else
-    return [result autorelease];
-#endif
 }
 
 __autoreleasing NSString * NSStringFromMongoErrorCode(mongo_error_t err) {

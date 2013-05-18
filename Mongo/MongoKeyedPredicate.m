@@ -23,6 +23,7 @@
 #import "ObjCBSON.h"
 #import "OrderedDictionary.h"
 #import "Mongo_PrivateInterfaces.h"
+#import "BSON_Helper.h"
 
 @implementation MongoKeyedPredicate
 
@@ -34,10 +35,7 @@
 
 + (MongoKeyedPredicate *) predicate {
     id result = [[self alloc] init];
-#if !__has_feature(objc_arc)
-    [result autorelease];
-#endif
-    return result;
+    maybe_autorelease_and_return(result);
 }
 
 #pragma mark - Predicate building

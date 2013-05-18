@@ -54,9 +54,7 @@ NSInteger const CreateIndexError = 101;
     MongoConnection *result = [[self alloc] init];
     BOOL success = [result connectToServer:hostWithPort error:error];
     if (!success) {
-#if !__has_feature(objc_arc)
-        [result release];
-#endif
+        maybe_release(result);
         return nil;
     }
     maybe_autorelease_and_return(result);

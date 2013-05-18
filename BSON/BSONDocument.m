@@ -37,9 +37,7 @@ int substitute_for_printf(const char *format, ...) {
     
     [target_for_substitute_for_printf appendString:stringToAppend];
     
-#if !__has_feature(objc_arc)
-    [stringToAppend release];
-#endif
+    maybe_release(stringToAppend);
     return 0;
 }
 
