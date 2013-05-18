@@ -158,7 +158,7 @@ int substitute_for_printf(const char *format, ...) {
       _bson->stackPos,
       NSStringFromBSONError(_bson->err)] mutableCopy];
     // Note: _bson->errstr has been omitted here, since as of driver v0.7.1 it's always NULL.
-    maybe_autorelease(result);
+    maybe_autorelease_void(result);
     
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
