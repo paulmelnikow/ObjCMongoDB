@@ -162,7 +162,7 @@ int block_based_inc_func(void) { return incrementGenerator(); }
 }
 
 - (NSString *) description {
-    return self.privateStringValue;
+    return [self stringValue];
 }
 
 - (NSString *) stringValue {
