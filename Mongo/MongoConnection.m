@@ -143,6 +143,12 @@ NSInteger const CreateIndexError = 101;
     return [MongoDBCollection collectionWithConnection:self fullyQualifiedName:name];
 }
 
+- (GridFSBucket *) gridFSBucketWithDatabaseName:(NSString *) databaseName bucketName:(NSString *) bucketName {
+    return [GridFSBucket bucketWithConnection:self
+                                 databaseName:databaseName
+                                   bucketName:bucketName];
+}
+
 #pragma mark - Database administration
 
 - (BOOL) dropDatabaseWithName:(NSString *) database {

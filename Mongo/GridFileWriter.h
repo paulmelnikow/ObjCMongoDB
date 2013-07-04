@@ -1,9 +1,8 @@
 //
-//  ObjCMongoDB.h
+//  GridFileWriter.h
 //  ObjCMongoDB
 //
-//  Created by Paul Melnikow on 3/18/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright 2013 Paul Melnikow and other contributors
 //
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -18,22 +17,13 @@
 //  limitations under the License.
 //
 
-
-/*
- Convenience header for the library's public interface
- */
-
-
-#import "ObjCBSON.h"
-#import "MongoTypes.h"
-#import "MongoConnection.h"
-#import "MongoConnection+Diagnostics.h"
-#import "MongoDBCollection.h"
-#import "MongoPredicate.h"
-#import "MongoKeyedPredicate.h"
-#import "MongoFindRequest.h"
-#import "MongoUpdateRequest.h"
-#import "MongoWriteConcern.h"
-#import "GridFSBucket.h"
 #import "GridFileHandle.h"
-#import "OrderedDictionary.h"
+
+@interface GridFileWriter : GridFileHandle
+
+- (void) writeData:(NSData *) data;
+- (BOOL) finish;
+
+@property (nonatomic, assign, readonly) BOOL finished;
+
+@end

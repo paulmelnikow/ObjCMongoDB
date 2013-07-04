@@ -137,6 +137,23 @@
 		9EBE7A08150056FE000E767D /* BSONIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE7A06150056FD000E767D /* BSONIterator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE7A09150056FE000E767D /* BSONIterator.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE7A07150056FD000E767D /* BSONIterator.m */; };
 		9EE59A6815837B5800040FE7 /* FindTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE59A6715837B5800040FE7 /* FindTest.m */; };
+		9EE605E716FFD78100427BD8 /* GridFSBucket.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EE605E516FFD78100427BD8 /* GridFSBucket.h */; };
+		9EE605E816FFD78100427BD8 /* GridFSBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605E616FFD78100427BD8 /* GridFSBucket.m */; };
+		9EE605E916FFD78100427BD8 /* GridFSBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605E616FFD78100427BD8 /* GridFSBucket.m */; };
+		9EE605EA16FFD78100427BD8 /* GridFSBucket.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605E616FFD78100427BD8 /* GridFSBucket.m */; };
+		9EE605ED16FFDCC900427BD8 /* GridFileHandle.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EE605EB16FFDCC800427BD8 /* GridFileHandle.h */; };
+		9EE605EE16FFDCC900427BD8 /* GridFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */; };
+		9EE605EF16FFDCC900427BD8 /* GridFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */; };
+		9EE605F016FFDCC900427BD8 /* GridFileHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */; };
+		9EE605F116FFEA8100427BD8 /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
+		9EE605F216FFEA8200427BD8 /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
+		9EE605F316FFEA8300427BD8 /* gridfs.c in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79B1150006DF000E767D /* gridfs.c */; };
+		9EE605F616FFF23400427BD8 /* GridFileWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EE605F416FFF23300427BD8 /* GridFileWriter.h */; };
+		9EE605F716FFF23400427BD8 /* GridFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605F516FFF23300427BD8 /* GridFileWriter.m */; };
+		9EE605F816FFF23400427BD8 /* GridFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605F516FFF23300427BD8 /* GridFileWriter.m */; };
+		9EE605F916FFF23400427BD8 /* GridFileWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605F516FFF23300427BD8 /* GridFileWriter.m */; };
+		9EE605FD16FFFB1200427BD8 /* GridFSTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605FC16FFFB1200427BD8 /* GridFSTest.m */; };
+		9EE605FE16FFFB1200427BD8 /* GridFSTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE605FC16FFFB1200427BD8 /* GridFSTest.m */; };
 		9EED177F1746B5A900CEC6AA /* BSONHelperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */; };
 		9EED17801746EF6600CEC6AA /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
 		9EED17811746EF9E00CEC6AA /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
@@ -310,6 +327,13 @@
 		9EBE7A06150056FD000E767D /* BSONIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONIterator.h; sourceTree = "<group>"; };
 		9EBE7A07150056FD000E767D /* BSONIterator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONIterator.m; sourceTree = "<group>"; };
 		9EE59A6715837B5800040FE7 /* FindTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FindTest.m; sourceTree = "<group>"; };
+		9EE605E516FFD78100427BD8 /* GridFSBucket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFSBucket.h; sourceTree = "<group>"; };
+		9EE605E616FFD78100427BD8 /* GridFSBucket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFSBucket.m; sourceTree = "<group>"; };
+		9EE605EB16FFDCC800427BD8 /* GridFileHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFileHandle.h; sourceTree = "<group>"; };
+		9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFileHandle.m; sourceTree = "<group>"; };
+		9EE605F416FFF23300427BD8 /* GridFileWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GridFileWriter.h; sourceTree = "<group>"; };
+		9EE605F516FFF23300427BD8 /* GridFileWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFileWriter.m; sourceTree = "<group>"; };
+		9EE605FC16FFFB1200427BD8 /* GridFSTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GridFSTest.m; sourceTree = "<group>"; };
 		9EF20B04151678FF009D9402 /* GetLastErrorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetLastErrorTest.m; sourceTree = "<group>"; };
 		9EF20B141516892A009D9402 /* BSON.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = BSON.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF20B171516892A009D9402 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -545,6 +569,19 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		9EE605FA16FFF59400427BD8 /* GridFS */ = {
+			isa = PBXGroup;
+			children = (
+				9EE605E516FFD78100427BD8 /* GridFSBucket.h */,
+				9EE605E616FFD78100427BD8 /* GridFSBucket.m */,
+				9EE605EB16FFDCC800427BD8 /* GridFileHandle.h */,
+				9EE605EC16FFDCC800427BD8 /* GridFileHandle.m */,
+				9EE605F416FFF23300427BD8 /* GridFileWriter.h */,
+				9EE605F516FFF23300427BD8 /* GridFileWriter.m */,
+			);
+			name = GridFS;
+			sourceTree = "<group>";
+		};
 		9EF20B161516892A009D9402 /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -670,6 +707,7 @@
 				9EFA29ED152D0649004F50D2 /* MongoUpdateRequest.m */,
 				9E0A7C6316BF10A000832C86 /* MongoWriteConcern.h */,
 				9E0A7C6416BF10A000832C86 /* MongoWriteConcern.m */,
+				9EE605FA16FFF59400427BD8 /* GridFS */,
 			);
 			path = Mongo;
 			sourceTree = "<group>";
@@ -685,6 +723,7 @@
 				9EF20B04151678FF009D9402 /* GetLastErrorTest.m */,
 				9EE59A6715837B5800040FE7 /* FindTest.m */,
 				9EF8FF7516C9DEE9004BBD11 /* CommandTest.m */,
+				9EE605FC16FFFB1200427BD8 /* GridFSTest.m */,
 				9EFF2B60150D5B7B00EDC285 /* Supporting Files */,
 			);
 			path = MongoTests;
@@ -750,6 +789,9 @@
 				9EF8FF7C16C9E875004BBD11 /* MongoConnection+Diagnostics.h in Headers */,
 				9EF8FF8216CA9AA4004BBD11 /* NSDictionary+BSONAdditions.h in Headers */,
 				9E1694C116F0F99B00AD96C1 /* MongoTypes.h in Headers */,
+				9EE605E716FFD78100427BD8 /* GridFSBucket.h in Headers */,
+				9EE605ED16FFDCC900427BD8 /* GridFileHandle.h in Headers */,
+				9EE605F616FFF23400427BD8 /* GridFileWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1062,6 +1104,10 @@
 				9EF8FF7D16C9E875004BBD11 /* MongoConnection+Diagnostics.m in Sources */,
 				9EF8FF8416CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
 				9E1694C216F0F99B00AD96C1 /* MongoTypes.m in Sources */,
+				9EE605E816FFD78100427BD8 /* GridFSBucket.m in Sources */,
+				9EE605EE16FFDCC900427BD8 /* GridFileHandle.m in Sources */,
+				9EE605F116FFEA8100427BD8 /* gridfs.c in Sources */,
+				9EE605F716FFF23400427BD8 /* GridFileWriter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1180,6 +1226,11 @@
 				9EF8FF8916CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
 				9E1694C416F0F99B00AD96C1 /* MongoTypes.m in Sources */,
 				9E74B2C316F55EA200AFB1CA /* MongoTest.m in Sources */,
+				9EE605EA16FFD78100427BD8 /* GridFSBucket.m in Sources */,
+				9EE605F016FFDCC900427BD8 /* GridFileHandle.m in Sources */,
+				9EE605F316FFEA8300427BD8 /* gridfs.c in Sources */,
+				9EE605F916FFF23400427BD8 /* GridFileWriter.m in Sources */,
+				9EE605FE16FFFB1200427BD8 /* GridFSTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1222,6 +1273,11 @@
 				9EF8FF8716CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m in Sources */,
 				9E1694C316F0F99B00AD96C1 /* MongoTypes.m in Sources */,
 				9E74B2C216F55EA200AFB1CA /* MongoTest.m in Sources */,
+				9EE605E916FFD78100427BD8 /* GridFSBucket.m in Sources */,
+				9EE605EF16FFDCC900427BD8 /* GridFileHandle.m in Sources */,
+				9EE605F216FFEA8200427BD8 /* gridfs.c in Sources */,
+				9EE605F816FFF23400427BD8 /* GridFileWriter.m in Sources */,
+				9EE605FD16FFFB1200427BD8 /* GridFSTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
