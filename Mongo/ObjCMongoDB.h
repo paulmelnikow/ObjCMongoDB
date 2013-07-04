@@ -34,6 +34,4 @@
 #import "MongoFindRequest.h"
 #import "MongoUpdateRequest.h"
 #import "MongoWriteConcern.h"
-#import "GridFSBucket.h"
-#import "GridFileHandle.h"
 #import "OrderedDictionary.h"
