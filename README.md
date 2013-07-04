@@ -63,9 +63,9 @@ in this repository as APACHE-2.0.txt.
 [MongoDB]: http://www.mongodb.org/
 [mongo-c-driver]: https://github.com/mongodb/mongo-c-driver
 [History]: HISTORY.md
-[Wiki]: https://github.com/noa--/ObjCMongoDB/wiki
-[GettingStarted]: https://github.com/noa--/ObjCMongoDB/wiki/GettingStarted
-[TheBasics]: https://github.com/noa--/ObjCMongoDB/wiki/TheBasics
+[Wiki]: https://github.com/paulmelnikow/ObjCMongoDB/wiki
+[GettingStarted]: https://github.com/paulmelnikow/ObjCMongoDB/wiki/GettingStarted
+[TheBasics]: https://github.com/paulmelnikow/ObjCMongoDB/wiki/TheBasics
 [NuMongoDB]: https://github.com/timburks/NuMongoDB
 [Diederik Hoogenboom]: https://github.com/dhoogenb/NuMongoDB
 [Rob Elkin]: https://github.com/robelkin/NuMongoDB
