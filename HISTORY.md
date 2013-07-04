@@ -1,5 +1,24 @@
 # ObjCMongoDB Release History
 
+## v0.9.7
+July 4, 2013
+
+The submodule URL changed from an unofficial fork to the official 10gen
+repository. After pulling these changes, run:
+
+```
+git submodule sync
+git submodule update
+```
+
+Changes:
+
+ -  Fix memory leaks under manual retain–release
+ -  Switch from the unofficial fork of the C driver to the official 10gen
+    repository
+ -  Update memory ownership based on improvements in the C driver
+ -  Minor refactoring, compilation fixes, and bug fixes
+
 ## v0.9.6
 March 16, 2013
 
