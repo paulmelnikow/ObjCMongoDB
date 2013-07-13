@@ -35,6 +35,9 @@
     NSString *version = [result objectForKey:@"version"];
     STAssertNotNil(version, nil);
     NSLog(@"result: %@", result);
+#if __APPLE__
+    NSLog(@"__APPLE__ is defined");
+#endif
     STAssertTrue(version.length > 3, nil);
 }
 
