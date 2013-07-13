@@ -34,6 +34,7 @@
                                                     error:&error];
     NSString *version = [result objectForKey:@"version"];
     STAssertNotNil(version, nil);
+    NSLog(@"version: %@", version);
     STAssertTrue(version.length > 3, nil);
 }
 
