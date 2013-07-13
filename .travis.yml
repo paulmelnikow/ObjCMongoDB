@@ -1,0 +1,6 @@
+language: objective-c
+services: mongodb
+before_install:
+    - brew update
+    - brew install xctool --HEAD
+script: rake test
