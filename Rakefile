@@ -4,7 +4,7 @@ namespace :test do
     $bson_osx_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'BSONTests' test -test-sdk macosx -sdk macosx")
   end
 
-  desc "Run the BSON Tests for Mac OS X under manual retain–release"
+  desc "Run the BSON Tests for Mac OS X under manual retain-release"
   task :bson_osx_no_arc do
     $bson_osx_no_arc_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'BSONTests-no-arc' test -test-sdk macosx -sdk macosx")
   end
@@ -19,7 +19,7 @@ namespace :test do
     $mongo_osx_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'MongoTests' test -test-sdk macosx -sdk macosx")
   end
 
-  desc "Run the Mongo Tests for Mac OS X under manual retain–release"
+  desc "Run the Mongo Tests for Mac OS X under manual retain-release"
   task :mongo_osx_no_arc do
     $mongo_osx_no_arc_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'MongoTests-no-arc' test -test-sdk macosx -sdk macosx")
   end
