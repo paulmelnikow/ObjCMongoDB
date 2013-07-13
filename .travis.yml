@@ -3,4 +3,6 @@ services: mongodb
 before_install:
     - brew update
     - brew install xctool --HEAD
+before_script:
+    - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script: rake test:mongo_osx
