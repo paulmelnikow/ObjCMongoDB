@@ -26,6 +26,7 @@
 -(void) setUp {
     NSError *error = nil;
     self.mongo = [MongoConnection connectionForServer:@"127.0.0.1" error:&error];
+    STAssertNotNil(self.mongo, nil);
     STAssertNil(error, error.localizedDescription);
 }
 
