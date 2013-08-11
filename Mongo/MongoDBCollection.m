@@ -281,7 +281,7 @@
         if (error) {
             NSString *message = [resultDict objectForKey:@"err"];
             *error = [NSError errorWithDomain:MongoDBErrorDomain
-                                         code:CreateIndexError
+                                         code:MongoCreateIndexError
                                      userInfo:message ? @{ NSLocalizedDescriptionKey : message } : nil];
         }
         return NO;

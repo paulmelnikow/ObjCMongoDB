@@ -22,7 +22,7 @@
 
 FOUNDATION_EXPORT NSString * const MongoDBErrorDomain;
 FOUNDATION_EXPORT NSString * const MongoDBServerErrorDomain;
-FOUNDATION_EXPORT NSInteger const CreateIndexError;
+FOUNDATION_EXPORT NSInteger const MongoCreateIndexError;
 
 @class MongoWriteConcern;
 
