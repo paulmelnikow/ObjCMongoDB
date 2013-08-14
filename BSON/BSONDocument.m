@@ -61,7 +61,7 @@ int substitute_for_printf(const char *format, ...) {
 }
 
 - (id) initWithNativeDocument:(bson *) b dependentOn:(id) dependentOn {
-    if (!b) nullify_self_and_return;
+    if (!b || !bson_has_data(b)) nullify_self_and_return;
     if (self = [super init]) {
         _bson = b;
         self.dependentOn = dependentOn;
