@@ -266,8 +266,8 @@
 }
 
 - (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error {
-    NSParameterAssert(index != nil);
-    NSParameterAssert(index.fields.allKeys.count > 0);
+    if (!index) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
+    if (!index.fields.allKeys.count) [NSException raise:NSInvalidArgumentException format:@"No fields in index"];
     bson *tempBson = bson_alloc();
     int result = mongo_create_index(self.connection.connValue,
                                     self.fullyQualifiedName.bsonString,
