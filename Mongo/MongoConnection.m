@@ -103,6 +103,17 @@ NSInteger const MongoCreateIndexError = 101;
         set_error_and_return_NO;
 }
 
+- (BOOL) authenticate:(NSString *) dbName
+             username:(NSString *) username
+             password:(NSString *) password
+                error:(NSError * __autoreleasing *) error {
+    
+    if (MONGO_OK == mongo_cmd_authenticate(_conn, dbName.bsonString, username.bsonString, password.bsonString))
+        return YES;
+    else
+        set_error_and_return_NO;
+}
+
 - (BOOL) connectToReplicaSet:(NSString *) replicaSet
                    seedArray:(NSArray *) seedArray
                        error:(NSError * __autoreleasing *) error {
