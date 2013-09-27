@@ -74,7 +74,7 @@
     [coll insertDictionary:[NSDictionary dictionary] writeConcern:nil error:&error];
 
     NSArray *list = [self.mongo allDatabases];
-    STAssertTrue([list containsObject:@"admin"], nil);
+    STAssertTrue([list containsObject:coll.databaseName], nil);
     STAssertTrue([list containsObject:@"local"], nil);
 }
 
