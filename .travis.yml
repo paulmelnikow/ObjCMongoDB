@@ -2,7 +2,9 @@ language: objective-c
 services: mongodb
 before_install:
     - brew update
-    - brew uninstall xctool && brew install xctool --HEAD
+	- brew install mongodb
+	- ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
+	- launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
 before_script:
     - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script: rake test:mongo_osx
