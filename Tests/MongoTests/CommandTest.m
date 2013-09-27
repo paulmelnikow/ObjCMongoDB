@@ -69,7 +69,12 @@
 }
 
 - (void) testAllDatabases {
+    // Create a test collection, to ensure that admin exists
+    declare_coll_and_error;
+    [coll insertDictionary:[NSDictionary dictionary] writeConcern:nil error:&error];
+
     NSArray *list = [self.mongo allDatabases];
+    STAssertTrue([list containsObject:@"admin"], nil);
     STAssertTrue([list containsObject:@"local"], nil);
 }
 
