@@ -70,7 +70,6 @@
 
 - (void) testAllDatabases {
     NSArray *list = [self.mongo allDatabases];
-    STAssertTrue([list containsObject:@"admin"], nil);
     STAssertTrue([list containsObject:@"local"], nil);
 }
 
