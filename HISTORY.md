@@ -1,5 +1,10 @@
 # ObjCMongoDB Release History
 
+## v0.10.1
+September 29, 2013
+
+Actually upgrade to Mongo C Driver v0.8.1.
+
 ## v0.10.0
 September 29, 2013
 
