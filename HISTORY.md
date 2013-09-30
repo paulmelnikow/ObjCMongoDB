@@ -1,5 +1,22 @@
 # ObjCMongoDB Release History
 
+## v0.10.0
+September 29, 2013
+
+Changes:
+
+- [CocoaPods][] support
+- Continuous integration builds on [Travis][] for Mac and iOS
+- Upgraded to Mongo C Driver v0.8.1, which likely is the last official
+  release before 10gen transitions to libmongoc
+- Use -[NSException raise:] instead of NSParameterAssert
+- Prefixed constant in MongoConnection.h
+
+Thanks for the assistance @alloy and @henrikhodne!
+
+[CocoaPods]: http://cocoapods.org/
+[Travis]: https://travis-ci.org/paulmelnikow/ObjCMongoDB
+
 ## v0.9.7
 July 4, 2013
 

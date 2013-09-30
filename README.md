@@ -1,16 +1,19 @@
 ObjCMongoDB is a Mac OS and iOS library for [MongoDB][] and [BSON][] based on
 the [10gen C driver][mongo-c-driver].
 
+[![Build Status](https://travis-ci.org/paulmelnikow/ObjCMongoDB.png)](https://travis-ci.org/paulmelnikow/ObjCMongoDB)
+
 ## Latest release
 
-The latest release is v0.9.7.
+The latest release is v0.10.0.
 
- -   Based on the unreleased development branch of the driver (post 0.7.1)
+ -   Supports [CocoaPods][]
+ -   Based on version 0.8.1 of the C driver
  -   Works under OS X 10.6+ and iOS 5+
  -   Works both with and without support for ARC
  
 ```sh
-git checkout v0.9.7     # since master may be a work in process
+git checkout v0.10.0     # since master may be a work in process
 git submodule update --init
 ```
 
@@ -18,8 +21,7 @@ See what's changed in [History][].
 
 ## Getting started
 
-Refer to the installation instructions and sample code on the
-[wiki][]:
+Refer to the installation instructions and sample code on the [wiki][]:
 
  -   [Getting started using ObjCMongoDB in your Mac OS project][GettingStarted]
  -   [The basics of using ObjCMongoDB][TheBasics]
@@ -70,4 +72,4 @@ in this repository as APACHE-2.0.txt.
 [Diederik Hoogenboom]: https://github.com/dhoogenb/NuMongoDB
 [Rob Elkin]: https://github.com/robelkin/NuMongoDB
 [OrderedDictionary]: http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html
-
+[CocoaPods]: http://cocoapods.org/
