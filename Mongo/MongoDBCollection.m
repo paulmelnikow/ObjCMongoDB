@@ -274,7 +274,7 @@
                                     index.fields.BSONDocument.bsonValue,
                                     index.name ? index.name.bsonString : NULL,
                                     index.options,
-                                    0,
+                                    -1,
                                     tempBson);
     // BSON object is destroyed and deallocated when document is autoreleased
     NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
