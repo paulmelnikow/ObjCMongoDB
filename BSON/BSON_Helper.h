@@ -46,4 +46,4 @@
 #define NSStringize_helper(x) #x
 #define NSStringize(x) @NSStringize_helper(x)
 
-__autoreleasing NSString * NSStringFromBSONError(int err);
+NSString * NSStringFromBSONError(int err);

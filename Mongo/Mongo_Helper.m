@@ -26,8 +26,8 @@
         desc = descParam; \
     break;
 
-__autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
-__autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
+NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description);
+NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
@@ -52,8 +52,8 @@ __autoreleasing NSString * nameOrDescForMongoErrorCode(mongo_error_t err, BOOL d
     NSString *result = description ? desc : name;
     return result;
 }
-__autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description);
-__autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
+NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description);
+NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_t err, BOOL description) {
     NSString *name = nil;
     NSString *desc = nil;
     switch(err) {
@@ -67,18 +67,18 @@ __autoreleasing NSString * nameOrDescForMongoCursorErrorCode(mongo_cursor_error_
     return result;
 }
 
-__autoreleasing NSString * NSStringFromMongoErrorCode(mongo_error_t err) {
+NSString * NSStringFromMongoErrorCode(mongo_error_t err) {
     return nameOrDescForMongoErrorCode(err, 0);
 }
 
-__autoreleasing NSString * MongoErrorCodeDescription(mongo_error_t err) {
+NSString * MongoErrorCodeDescription(mongo_error_t err) {
     return nameOrDescForMongoErrorCode(err, 1);
 }
 
-__autoreleasing NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err) {
+NSString * NSStringFromMongoCursorErrorCode(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 0);
 }
 
-__autoreleasing NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
+NSString * MongoCursorErrorCodeDescription(mongo_cursor_error_t err) {
     return nameOrDescForMongoCursorErrorCode(err, 1);
 }

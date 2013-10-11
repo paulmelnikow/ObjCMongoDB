@@ -24,7 +24,7 @@
 
 #define bson_type_case(type) case type: name = NSStringize(type); break
 
-__autoreleasing NSString * NSStringFromBSONType (BSONType t) {
+NSString * NSStringFromBSONType (BSONType t) {
     NSString *name = nil;
     switch(t) {
             bson_type_case(BSONTypeEndOfObject);

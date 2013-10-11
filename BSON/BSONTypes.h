@@ -47,7 +47,7 @@ typedef enum {
  @param t A native BSON type
  @return A string representation of the BSON type
  */
-__autoreleasing NSString * NSStringFromBSONType (BSONType t);
+NSString * NSStringFromBSONType (BSONType t);
 
 /**
  Encapsulates an immutable BSON object ID, as a wrapper around a <code>bson_oid_t</code>

@@ -20,7 +20,7 @@
 #import "BSON_Helper.h"
 #import "BSON_PrivateInterfaces.h"
 
-__autoreleasing NSString * NSStringFromBSONError(int err) {
+NSString * NSStringFromBSONError(int err) {
     NSMutableArray *errors = [NSMutableArray array];
     if (err & BSON_NOT_UTF8) [errors addObject:@"BSON_NOT_UTF8"];
     if (err & BSON_FIELD_HAS_DOT) [errors addObject:@"BSON_FIELD_HAS_DOT"];
