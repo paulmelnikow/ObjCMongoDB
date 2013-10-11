@@ -4,6 +4,7 @@ before_install:
     - brew install mongodb
     - ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
     - launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+    - sleep 5
 before_script:
     - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script: rake test
