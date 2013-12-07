@@ -1,5 +1,18 @@
 # ObjCMongoDB Release History
 
+## v0.10.2
+December 7, 2013
+
+Update module paths for mongo-c-driver
+
+The submodule URL of the 10gen official repository changed. Even worse, the
+old URL points to a new, unrelated library. After pulling this version, run:
+
+```
+git submodule sync
+git submodule update
+```
+
 ## v0.10.1
 September 29, 2013
 

@@ -5,15 +5,15 @@ the [10gen legacy C driver][mongo-c-driver].
 
 ## Latest release
 
-The latest release is v0.10.1.
+The latest release is v0.10.2.
 
  -   Supports [CocoaPods][]
- -   Based on version 0.8.1 of the C driver
+ -   Based on version 0.8.1 of the legacy C driver
  -   Works under OS X 10.6+ and iOS 5+
  -   Works both with and without support for ARC
  
 ```sh
-git checkout v0.10.1     # since master may be a work in process
+git checkout v0.10.2     # since master may be a work in process
 git submodule update --init
 ```
 
