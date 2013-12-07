@@ -2,8 +2,7 @@ language: objective-c
 before_install:
     - brew update
     - brew install mongodb
-    - ln -sfv /usr/local/opt/mongodb/*.plist ~/Library/LaunchAgents
-    - launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mongodb.plist
+    - launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist
 before_script:
     - mongo mydb_test --eval 'db.addUser("travis", "test");'
 script: rake test
