@@ -1,5 +1,5 @@
 ObjCMongoDB is a Mac OS and iOS library for [MongoDB][] and [BSON][] based on
-the [10gen C driver][mongo-c-driver].
+the [10gen legacy C driver][mongo-c-driver].
 
 [![Build Status](https://travis-ci.org/paulmelnikow/ObjCMongoDB.png)](https://travis-ci.org/paulmelnikow/ObjCMongoDB)
 
@@ -63,7 +63,7 @@ in this repository as APACHE-2.0.txt.
 
 [BSON]: http://bsonspec.org/
 [MongoDB]: http://www.mongodb.org/
-[mongo-c-driver]: https://github.com/mongodb/mongo-c-driver
+[mongo-c-driver]: https://github.com/mongodb/mongo-c-driver-legacy
 [History]: HISTORY.md
 [Wiki]: https://github.com/paulmelnikow/ObjCMongoDB/wiki
 [GettingStarted]: https://github.com/paulmelnikow/ObjCMongoDB/wiki/GettingStarted
