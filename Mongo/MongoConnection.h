@@ -44,6 +44,12 @@ FOUNDATION_EXPORT NSInteger const MongoCreateIndexError;
 - (BOOL) reconnectWithError:(NSError * __autoreleasing *) error;
 - (void) disconnect;
 
+// Implement authentication
+- (BOOL) authenticate:(NSString *) dbName
+             username:(NSString *) username
+             password:(NSString *) password
+                error:(NSError * __autoreleasing *) error;
+
 /*! Write concern for this connection. May be overridden for each insert, update, or
     delete. The default is acknowledged writes – MongoWriteAcknowledged.
  */
