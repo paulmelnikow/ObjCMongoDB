@@ -1,5 +1,13 @@
 # ObjCMongoDB Release History
 
+## v0.11.0
+March 24, 2014
+
+Changes:
+
+- Added authentication method `-[MongoConnection authenticate:username:password:error]`
+- Clear warnings under iOS
+
 ## v0.10.2
 December 7, 2013
 
