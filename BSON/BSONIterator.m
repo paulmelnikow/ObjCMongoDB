@@ -44,7 +44,7 @@ NSString * const BSONException = @"BSONException";
         _b = [document bsonValue];
         _iter = bson_iterator_alloc();
         bson_iterator_init(_iter, _b);
-        self.type = bson_iterator_type(_iter);
+        self.type = (BSONType)bson_iterator_type(_iter);
     }
     return self;
 }
@@ -60,7 +60,7 @@ NSString * const BSONException = @"BSONException";
         self.dependentOn = dependentOn;
         self.privateKeyPathComponents = keyPathComponents;
         _iter = bsonIter;
-        self.type = bson_iterator_type(_iter);
+        self.type = (BSONType)bson_iterator_type(_iter);
         
     }
     return self;
@@ -80,7 +80,7 @@ NSString * const BSONException = @"BSONException";
 - (BSONType) valueTypeForKey:(NSString *) key {
     [self _assertSupportsKeyedSearching];
     NSParameterAssert(key != nil);
-    return self.type = bson_find(_iter, _b, key.bsonString);
+    return self.type = (BSONType)bson_find(_iter, _b, key.bsonString);
 }
 
 - (BOOL) containsValueForKey:(NSString *) key {
@@ -110,7 +110,7 @@ NSString * const BSONException = @"BSONException";
 - (BOOL) hasMore { return bson_iterator_more(_iter); }
 
 - (BSONType) next {
-    return self.type = bson_iterator_next(_iter);
+    return self.type = (BSONType)bson_iterator_next(_iter);
 }
 
 #pragma mark - Information about the current key
