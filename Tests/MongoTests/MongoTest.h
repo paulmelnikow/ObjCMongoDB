@@ -17,10 +17,10 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "MongoConnection.h"
 
-@interface MongoTest : SenTestCase
+@interface MongoTest : XCTestCase
 
 @property (retain) MongoConnection *mongo;
 

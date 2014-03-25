@@ -38,10 +38,10 @@
                            nil];
     
     [coll insertDictionary:entry writeConcern:nil error:&error];
-    STAssertTrue([coll lastOperationWasSuccessful:&error], @"shouldn't be an error");
+    XCTAssertTrue([coll lastOperationWasSuccessful:&error], @"shouldn't be an error");
 
     [coll insertDictionary:entry writeConcern:nil error:&error];
-    STAssertFalse([coll lastOperationWasSuccessful:&error], @"should be a duplicate key");
+    XCTAssertFalse([coll lastOperationWasSuccessful:&error], @"should be a duplicate key");
 }
 
 - (void) testUpdateCount {
@@ -54,7 +54,7 @@
                            nil];
     
     [coll insertDictionary:entry writeConcern:nil error:&error];
-    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
+    XCTAssertTrue([coll lastOperationWasSuccessful:&error]);
 
     MongoKeyedPredicate *matchingPredicate = [MongoKeyedPredicate predicate];
     [matchingPredicate keyPath:@"_id" matches:objectID];
@@ -62,12 +62,12 @@
     [request1 keyPath:@"addedValue" setValue:@"more test"];
     
     [coll updateWithRequest:request1 error:&error];
-    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
+    XCTAssertTrue([coll lastOperationWasSuccessful:&error]);
     
     NSDictionary *dict = [coll lastOperationDictionary];
-    STAssertNotNil(dict, nil);
+    XCTAssertNotNil(dict);
     if (dict) {
-        STAssertEqualObjects([NSNumber numberWithInt:1], [dict objectForKey:@"n"], nil);
+        XCTAssertEqualObjects([NSNumber numberWithInt:1], [dict objectForKey:@"n"]);
     }
     
     BSONObjectID *noMatchObjectID = [BSONObjectID objectID];
@@ -77,12 +77,12 @@
     [request2 keyPath:@"addedValue" setValue:@"more test"];
     
     [coll updateWithRequest:request2 error:&error];
-    STAssertTrue([coll lastOperationWasSuccessful:&error], nil);
+    XCTAssertTrue([coll lastOperationWasSuccessful:&error]);
     
     dict = [coll lastOperationDictionary];
-    STAssertNotNil(dict, nil);
+    XCTAssertNotNil(dict);
     if (dict) {
-        STAssertEqualObjects([NSNumber numberWithInt:0], [dict objectForKey:@"n"], nil);
+        XCTAssertEqualObjects([NSNumber numberWithInt:0], [dict objectForKey:@"n"]);
     }
 }
 

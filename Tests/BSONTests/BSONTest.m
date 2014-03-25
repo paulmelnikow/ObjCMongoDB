@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "BSON_Helper.h"
 #import "BSONEncoder.h"
 #import "BSONDecoder.h"
@@ -368,7 +368,7 @@
 }
 @end
 
-@interface BSONTest : SenTestCase
+@interface BSONTest : XCTestCase
 
 @property (retain) NSDateFormatter *df;
 
@@ -420,10 +420,10 @@
     NSCountedSet *twoOnly = [two copy];
     [twoOnly minusSet:intersection];
     
-    STAssertEquals(twoOnly.count,
+    XCTAssertEqual(twoOnly.count,
                    (NSUInteger)0,
                    @"Expected %@ missing from result", name);
-    STAssertEquals(oneOnly.count,
+    XCTAssertEqual(oneOnly.count,
                    (NSUInteger)0,
                    @"Unexpected %@ found in result", name);
     
@@ -458,38 +458,38 @@
     
     encoder = [[BSONEncoder alloc] init];
     
-    STAssertThrows([sample encodeWithCoder:encoder], nil);
+    XCTAssertThrows([sample encodeWithCoder:encoder]);
     
     NSDictionary *badSample1 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"this.is.a.bad.key",
                                 nil];
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
-    STAssertThrows([encoder encodeDictionary:badSample1], nil);
+    XCTAssertThrows([encoder encodeDictionary:badSample1]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.restrictsKeyNamesForMongoDB = NO;
-    STAssertNoThrow([encoder encodeDictionary:badSample1], nil);
+    XCTAssertNoThrow([encoder encodeDictionary:badSample1]);
     
     NSDictionary *badSample2 = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"$bad$key",
                                 nil];
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
-    STAssertThrows([encoder encodeDictionary:badSample2], nil);
+    XCTAssertThrows([encoder encodeDictionary:badSample2]);
     
     NSDictionary *goodSample = [NSDictionary dictionaryWithObjectsAndKeys:
                                 @"pickles", @"good$key",
                                 nil];
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
-    STAssertNoThrow([encoder encodeDictionary:goodSample], nil);
+    XCTAssertNoThrow([encoder encodeDictionary:goodSample]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.restrictsKeyNamesForMongoDB = NO;
-    STAssertNoThrow([encoder encodeDictionary:badSample2], nil);
+    XCTAssertNoThrow([encoder encodeDictionary:badSample2]);
     
     maybe_release(encoder);
 }
@@ -508,11 +508,11 @@
     BSONEncoder *encoder2 = [[BSONEncoder alloc] init];
     [encoder2 encodeDictionary:sample];
     
-    STAssertEqualObjects([[encoder1 BSONDocument] dataValue],
+    XCTAssertEqualObjects([[encoder1 BSONDocument] dataValue],
                          [[encoder2 BSONDocument] dataValue],
                          @"Encoded same dictionary but got different data values.");
 
-    STAssertEqualObjects([encoder1 BSONDocument],
+    XCTAssertEqualObjects([encoder1 BSONDocument],
                          [encoder2 BSONDocument],
                          @"Encoded same dictionary but documents were not equal.");
     
@@ -540,7 +540,7 @@
     BSONEncoder *encoder2 = [[BSONEncoder alloc] init];
     [encoder2 encodeDictionary:sample2];
     
-    STAssertFalse([[encoder1 BSONDocument] isEqual:[encoder2 BSONDocument]],
+    XCTAssertFalse([[encoder1 BSONDocument] isEqual:[encoder2 BSONDocument]],
                   @"Documents had different data and should not be equal");    
 
     maybe_release(encoder1);
@@ -558,7 +558,7 @@
     BSONEncoder *encoder = [[BSONEncoder alloc] init];
     [encoder encodeDictionary:sample1];
     [encoder BSONDocument];
-    STAssertThrowsSpecificNamed([encoder encodeBool:NO forKey:@"testKey"],
+    XCTAssertThrowsSpecificNamed([encoder encodeBool:NO forKey:@"testKey"],
                                 NSException,
                                 NSInvalidArchiveOperationException,
                                 @"Attempted encoding after finishEncoding but didn't throw exception");
@@ -567,44 +567,44 @@
 
 - (void) testEncodeNilKeys {
     BSONEncoder *encoder = [[BSONEncoder alloc] init];
-    NSString *reason = @"Nil key should throw an exception";
-    STAssertThrows([encoder encodeObject:@"test" forKey:nil], reason);
+    // Nil key should throw an exception
+    XCTAssertThrows([encoder encodeObject:@"test" forKey:nil]);
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:@"asdf", @"asdf", nil];
-    STAssertThrows([encoder encodeDictionary:dict forKey:nil], reason);
-    STAssertThrows([encoder encodeArray:[NSArray arrayWithObject:@"test"] forKey:nil], reason);
-    STAssertThrows([encoder encodeBSONDocument:[BSONDocument document] forKey:nil], reason);
-    STAssertThrows([encoder encodeNullForKey:nil], reason);
-    STAssertThrows([encoder encodeUndefinedForKey:nil], reason);
-    STAssertThrows([encoder encodeObjectID:[BSONObjectID objectID] forKey:nil], reason);
-    STAssertThrows([encoder encodeInt:1 forKey:nil], reason);
-    STAssertThrows([encoder encodeInt64:1 forKey:nil], reason);
-    STAssertThrows([encoder encodeBool:YES forKey:nil], reason);
-    STAssertThrows([encoder encodeDouble:3.25 forKey:nil], reason);
-    STAssertThrows([encoder encodeNumber:[NSNumber numberWithInt:3] forKey:nil], reason);
-    STAssertThrows([encoder encodeString:@"test" forKey:nil], reason);
-    STAssertThrows([encoder encodeSymbol:[BSONSymbol symbol:@"test"] forKey:nil], reason);
-    STAssertThrows([encoder encodeDate:[NSDate date] forKey:nil], reason);
+    XCTAssertThrows([encoder encodeDictionary:dict forKey:nil]);
+    XCTAssertThrows([encoder encodeArray:[NSArray arrayWithObject:@"test"] forKey:nil]);
+    XCTAssertThrows([encoder encodeBSONDocument:[BSONDocument document] forKey:nil]);
+    XCTAssertThrows([encoder encodeNullForKey:nil]);
+    XCTAssertThrows([encoder encodeUndefinedForKey:nil]);
+    XCTAssertThrows([encoder encodeObjectID:[BSONObjectID objectID] forKey:nil]);
+    XCTAssertThrows([encoder encodeInt:1 forKey:nil]);
+    XCTAssertThrows([encoder encodeInt64:1 forKey:nil]);
+    XCTAssertThrows([encoder encodeBool:YES forKey:nil]);
+    XCTAssertThrows([encoder encodeDouble:3.25 forKey:nil]);
+    XCTAssertThrows([encoder encodeNumber:[NSNumber numberWithInt:3] forKey:nil]);
+    XCTAssertThrows([encoder encodeString:@"test" forKey:nil]);
+    XCTAssertThrows([encoder encodeSymbol:[BSONSymbol symbol:@"test"] forKey:nil]);
+    XCTAssertThrows([encoder encodeDate:[NSDate date] forKey:nil]);
 #if TARGET_OS_IPHONE
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(36, 36), NO, 0.0);
     UIImage *testImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    STAssertNotNil(testImage, nil);
-    STAssertThrows([encoder encodeImage:testImage forKey:nil], reason);
+    XCTAssertNotNil(testImage);
+    XCTAssertThrows([encoder encodeImage:testImage forKey:nil]);
 #else
-    STAssertThrows([encoder encodeImage:[NSImage imageNamed:NSImageNameBonjour] forKey:nil], reason);
+    XCTAssertThrows([encoder encodeImage:[NSImage imageNamed:NSImageNameBonjour] forKey:nil]);
 #endif
-    STAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:@"test" forKey:nil], reason);
-    STAssertThrows([encoder encodeRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"test" options:@"test"]
-                                              forKey:nil], reason);
-    STAssertThrows([encoder encodeCode:[BSONCode code:@"test"] forKey:nil], reason);
-    STAssertThrows([encoder encodeCodeString:@"test" forKey:nil], reason);
-    STAssertThrows([encoder encodeCodeWithScope:[BSONCodeWithScope code:@"test" withScope:[BSONDocument document]]
-                                          forKey:nil], reason);
-    STAssertThrows([encoder encodeCodeString:@"test" withScope:[BSONDocument document]
-                                          forKey:nil], reason);
-    STAssertThrows([encoder encodeData:[NSData data] forKey:nil], reason);
-    STAssertThrows([encoder encodeTimestamp:[BSONTimestamp timestampWithIncrement:10 timeInSeconds:10]
-                                      forKey:nil], reason);
+    XCTAssertThrows([encoder encodeRegularExpressionPattern:@"test" options:@"test" forKey:nil]);
+    XCTAssertThrows([encoder encodeRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"test" options:@"test"]
+                                              forKey:nil]);
+    XCTAssertThrows([encoder encodeCode:[BSONCode code:@"test"] forKey:nil]);
+    XCTAssertThrows([encoder encodeCodeString:@"test" forKey:nil]);
+    XCTAssertThrows([encoder encodeCodeWithScope:[BSONCodeWithScope code:@"test" withScope:[BSONDocument document]]
+                                          forKey:nil]);
+    XCTAssertThrows([encoder encodeCodeString:@"test" withScope:[BSONDocument document]
+                                          forKey:nil]);
+    XCTAssertThrows([encoder encodeData:[NSData data] forKey:nil]);
+    XCTAssertThrows([encoder encodeTimestamp:[BSONTimestamp timestampWithIncrement:10 timeInSeconds:10]
+                                      forKey:nil]);
     
     maybe_release(encoder);
 }
@@ -613,49 +613,48 @@
     BSONEncoder *encoder = [[BSONEncoder alloc] init];
     NSString *reason = nil;
     
-    reason = @"Nil regex options should be OK";
-    STAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
+    XCTAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     
-    reason = @"Half-nil values should throw an exception";
-    STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"], reason);
+    // Half-nil values should throw an exception
+    XCTAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"]);
     
-    reason = @"With default behavior DoNothingOnNil, no exception should be raised for nil values";
-    STAssertNoThrow([encoder encodeObject:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeDictionary:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeArray:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeBSONDocument:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeObjectID:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeNumber:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeString:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeSymbol:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeDate:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeImage:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeRegularExpression:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeCode:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeCodeString:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeCodeWithScope:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeData:nil forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeTimestamp:nil forKey:@"testKey"], reason);
+    // With default behavior DoNothingOnNil, no exception should be raised for nil values
+    XCTAssertNoThrow([encoder encodeObject:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeDictionary:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeArray:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeBSONDocument:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeObjectID:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeNumber:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeString:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeSymbol:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeDate:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeImage:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeRegularExpression:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeCode:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeCodeString:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeCodeWithScope:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeData:nil forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeTimestamp:nil forKey:@"testKey"]);
     
-    STAssertEqualObjects([encoder BSONDocument],
+    XCTAssertEqualObjects([encoder BSONDocument],
                          [BSONDocument document],
                          @"With default behavior, encoding nil values should result in an empty document");
 
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     
-    reason = @"Zero value on primitive types should not throw an exception";
-    STAssertNoThrow([encoder encodeInt:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeInt64:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeDouble:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeBool:NO forKey:@"testKey"], reason);
+    // Zero value on primitive types should not throw an exception
+    XCTAssertNoThrow([encoder encodeInt:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeInt64:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeDouble:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeBool:NO forKey:@"testKey"]);
     
-    STAssertFalse([[encoder BSONDocument] isEqual:[BSONDocument document]],
+    XCTAssertFalse([[encoder BSONDocument] isEqual:[BSONDocument document]],
                          @"With default behavior, encoding zero-value primitives should fill up the document");
     
     maybe_release(encoder);
@@ -663,154 +662,154 @@
     encoder.behaviorOnNil = BSONRaiseExceptionOnNil;
     
     reason = @"Nil regex options should be OK";
-    STAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"], reason);
+    XCTAssertNoThrow([encoder encodeRegularExpressionPattern:@"test" options:nil forKey:@"testKey"]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONRaiseExceptionOnNil;
     
-    reason = @"Half-nil values should throw an exception";
-    STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"], reason);
+    // Half-nil values should throw an exception
+    XCTAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"]);
  
-    reason = @"Nil value should throw an exception";
-    STAssertThrows([encoder encodeObject:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeDictionary:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeArray:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeBSONDocument:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeObjectID:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeNumber:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeString:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeSymbol:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeDate:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeImage:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeRegularExpression:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCode:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeWithScope:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeData:nil forKey:@"testKey"], reason);
-    STAssertThrows([encoder encodeTimestamp:nil forKey:@"testKey"], reason);
+    // Nil value should throw an exception
+    XCTAssertThrows([encoder encodeObject:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeDictionary:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeArray:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeBSONDocument:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeObjectID:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeNumber:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeString:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeSymbol:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeDate:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeImage:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeRegularExpressionPattern:nil options:@"test" forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeRegularExpression:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCode:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeWithScope:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:nil withScope:[BSONDocument document] forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeCodeString:@"test" withScope:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeData:nil forKey:@"testKey"]);
+    XCTAssertThrows([encoder encodeTimestamp:nil forKey:@"testKey"]);
     
-    reason = @"Zero value on primitive types should not throw an exception";
-    STAssertNoThrow([encoder encodeInt:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeInt64:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeDouble:0 forKey:@"testKey"], reason);
-    STAssertNoThrow([encoder encodeBool:NO forKey:@"testKey"], reason);
+    // Zero value on primitive types should not throw an exception
+    XCTAssertNoThrow([encoder encodeInt:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeInt64:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeDouble:0 forKey:@"testKey"]);
+    XCTAssertNoThrow([encoder encodeBool:NO forKey:@"testKey"]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     
     [encoder encodeObject:nil forKey:@"testKey"];
-    reason = @"Inserted nil and should have encoded null, but did not";
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
-    STAssertThrows([encoder encodeDictionary:nil forKey:@"testKey"], @"Encoding finished");
+    // Inserted nil and should have encoded null, but did not
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
+    XCTAssertThrows([encoder encodeDictionary:nil forKey:@"testKey"], @"Encoding finished");
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeDictionary:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeArray:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
 
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeBSONDocument:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeObjectID:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeNumber:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeString:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeSymbol:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeDate:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeImage:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeRegularExpressionPattern:nil options:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeRegularExpression:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeCode:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeCodeString:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeCodeWithScope:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeCodeString:nil withScope:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeData:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
     encoder.behaviorOnNil = BSONEncodeNullOnNil;
     [encoder encodeTimestamp:nil forKey:@"testKey"];
-    STAssertEquals([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null], reason);
+    XCTAssertEqual([encoder.BSONDocument.iterator objectForKey:@"testKey"], [NSNull null]);
 
     maybe_release(encoder);
 }
@@ -825,7 +824,7 @@
     lucy.children = [NSMutableArray array];
     
     encoder = [[BSONEncoder alloc] init];
-    STAssertThrows([encoder encodeObject:lucy],
+    XCTAssertThrows([encoder encodeObject:lucy],
                    @"Should have called our bogus encodeWithCoder: and raised an exception, but didn't");
 
     maybe_release(lucy);
@@ -851,14 +850,14 @@
     
     maybe_release(encoder);
     encoder = [[BSONEncoder alloc] init];
-    STAssertNoThrow([encoder encodeObject:lucy],
+    XCTAssertNoThrow([encoder encodeObject:lucy],
                    @"Should have called our functional encodeWithCoder:, no exception");
     
     BSONDecoder *decoder = nil;
     decoder = [[BSONDecoder alloc] initWithDocument:encoder.BSONDocument];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
-    STAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
+    XCTAssertEqualObjects(lucy, lucy2, @"Encoded and decoded objects should be the same");
     
     lucy.children = nil;
     littleRicky.children = nil;
@@ -907,22 +906,22 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.encodedKeyPaths];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
 
-    STAssertEquals(delegate.encodedNilKeyPath,
+    XCTAssertEqual(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
-    STAssertFalse(delegate.willFinish, @"Delegate received -encoderWillFinish before encoding finished");
-    STAssertFalse(delegate.didFinish, @"Delegate received -encoderDidFinish before encoding finished");
+    XCTAssertFalse(delegate.willFinish, @"Delegate received -encoderWillFinish before encoding finished");
+    XCTAssertFalse(delegate.didFinish, @"Delegate received -encoderDidFinish before encoding finished");
     
     // Do this twice; the delegate throws an exception if it receives two sets of notifications
     BSONDocument *document = encoder1.BSONDocument;
@@ -930,8 +929,8 @@
     document = nil;
     document2 = nil;
 
-    STAssertTrue(delegate.willFinish, @"Delegate did not receive -encoderWillFinish");
-    STAssertTrue(delegate.didFinish, @"Delegate did not receive -encoderDidFinish");
+    XCTAssertTrue(delegate.willFinish, @"Delegate did not receive -encoderWillFinish");
+    XCTAssertTrue(delegate.didFinish, @"Delegate did not receive -encoderDidFinish");
     
     maybe_release(delegate);
     maybe_release(encoder1);
@@ -987,10 +986,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    STAssertEquals(delegate.encodedNilKeyPath,
+    XCTAssertEqual(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
         
@@ -998,15 +997,15 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     lucy.children = nil;
     littleRicky.children = nil;
@@ -1049,7 +1048,7 @@
     decoder = [[BSONDecoder alloc] initWithDocument:encoder.BSONDocument];
     NSDictionary *lucyAsDictionary = [decoder decodeDictionary];
     
-    STAssertEqualObjects([lucyAsDictionary objectForKey:@"dob"],
+    XCTAssertEqualObjects([lucyAsDictionary objectForKey:@"dob"],
                          [TestEncoderDelegateRedactDates redactedDate],
                          @"Date should have been redacted");
     
@@ -1077,10 +1076,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    STAssertEquals(delegate.encodedNilKeyPath,
+    XCTAssertEqual(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
@@ -1088,15 +1087,15 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     resultSet = [NSCountedSet setWithArray:delegate.willEncodeKeyPaths];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     NSCountedSet *replacedKeyPaths = [NSCountedSet set];
     [replacedKeyPaths addObject:[NSArray arrayWithObject:@"dob"]];
@@ -1113,15 +1112,15 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:replacedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
 
     resultSet = [NSCountedSet setWithArray:delegate.replacedObjects];
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:replacedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:replacedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
     lucy.children = nil;
     littleRicky.children = nil;
@@ -1157,12 +1156,12 @@
     [lucy.children addObject:littleRicky];
     [littleRicky.children addObject:littlerRicky];
     
-    STAssertNoThrow([BSONEncoder documentForObject:lucy],
+    XCTAssertNoThrow([BSONEncoder documentForObject:lucy],
                     @"Encoding a loop should raise an exception");
 
     [littlerRicky.children addObject:lucy];
     
-    STAssertThrows([BSONEncoder documentForObject:lucy],
+    XCTAssertThrows([BSONEncoder documentForObject:lucy],
                    @"Encoding a loop should raise an exception");
     
     lucy.children = nil;
@@ -1210,10 +1209,10 @@
     PersonWithCoding *littleRicky2 = [lucy2.children objectAtIndex:0];
     PersonWithCoding *littlerRicky2 = [littleRicky2.children objectAtIndex:0];
     
-    STAssertEqualObjects(littleRicky2.parent,
+    XCTAssertEqualObjects(littleRicky2.parent,
                          lucy.name,
                          @"Parent encoded by name should match");
-    STAssertEqualObjects(littlerRicky2.parent,
+    XCTAssertEqualObjects(littlerRicky2.parent,
                          littleRicky.name,
                          @"Parent encoded by name should match");
     
@@ -1254,10 +1253,10 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
-    STAssertEqualObjects(lucy2.name,
+    XCTAssertEqualObjects(lucy2.name,
                          lucy.name,
                          @"Encoded name should match");
-    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+    XCTAssertEqualObjects([lucy2.children objectAtIndex:0],
                          ((Person *)[lucy.children objectAtIndex:0]).name,
                          @"Encoded child should match child's name");
     
@@ -1298,10 +1297,10 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:document];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
-    STAssertEqualObjects(lucy2.name,
+    XCTAssertEqualObjects(lucy2.name,
                          lucy.name,
                          @"Encoded name should match");
-    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+    XCTAssertEqualObjects([lucy2.children objectAtIndex:0],
                          ((Person *)[lucy.children objectAtIndex:0]).name,
                          @"Encoded child should match child's name");
     
@@ -1364,10 +1363,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    STAssertEquals(delegate.encodedNilKeyPath,
+    XCTAssertEqual(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
@@ -1381,10 +1380,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
-    STAssertEquals(delegate2.decodedNilKeyPath,
+    XCTAssertEqual(delegate2.decodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
@@ -1393,8 +1392,8 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     lucy.children = nil;
     littleRicky.children = nil;
@@ -1442,10 +1441,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedObjects];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing objects in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing objects in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected objects in result set");
     
-    STAssertEquals(delegate.encodedNilKeyPath,
+    XCTAssertEqual(delegate.encodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
@@ -1459,10 +1458,10 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
-    STAssertEquals(delegate2.decodedNilKeyPath,
+    XCTAssertEqual(delegate2.decodedNilKeyPath,
                    (NSUInteger)1,
                    @"Delegate did not receive exactly one notification for nil key path");
     
@@ -1471,8 +1470,8 @@
     missing = [BSONTest missingValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     unexpected = [BSONTest unexpectedValuesInResultSet:resultSet expectedSet:allEncodedKeyPaths];
     
-    STAssertEquals(missing.count, (NSUInteger)0, @"Missing key paths in result set");
-    STAssertEquals(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
+    XCTAssertEqual(missing.count, (NSUInteger)0, @"Missing key paths in result set");
+    XCTAssertEqual(unexpected.count, (NSUInteger)0, @"Unexpected key paths in result set");
     
     maybe_release(delegate);
     maybe_release(delegate2);
@@ -1498,12 +1497,12 @@
 
     NSArray *sample2_4 = [sample2 objectForKey:@"four"];
     NSArray *expectedResult = [NSArray arrayWithObjects:@"zero", @"uno", @"dos", @"tres", nil];
-    STAssertEqualObjects(sample2_4,
+    XCTAssertEqualObjects(sample2_4,
                          expectedResult, @"Values should have been translated");
     
     NSArray *substitutedObjects = [NSArray arrayWithObjects:@"one", @"two", @"three", nil];
 
-    STAssertEqualObjects(delegate2.replacedObjects,
+    XCTAssertEqualObjects(delegate2.replacedObjects,
                          substitutedObjects,
                          @"Should have been notified of translated values");
     
@@ -1540,11 +1539,11 @@
     TestDecoderDelegate *delegate2 = [[TestDecoderDelegate alloc] init];
     decoder.delegate = delegate2;
     
-    STAssertFalse(delegate2.willFinish, @"Delegate received -decoderWillFinish before encoding finished");
+    XCTAssertFalse(delegate2.willFinish, @"Delegate received -decoderWillFinish before encoding finished");
     
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
-    STAssertTrue(delegate2.willFinish, @"Delegate did not receive -decoderWillFinish");
+    XCTAssertTrue(delegate2.willFinish, @"Delegate did not receive -decoderWillFinish");
     
     NSArray *createdPersonObjects = [NSArray arrayWithObjects:
                                      lucy2,
@@ -1556,7 +1555,7 @@
     for (PersonWithCoding *person in createdPersonObjects)
         if (person.awakeAfterCoder) awakenedPersonObjects = awakenedPersonObjects + 1;
     
-    STAssertEquals(awakenedPersonObjects,
+    XCTAssertEqual(awakenedPersonObjects,
                    createdPersonObjects.count,
                    @"Person objects should have received awakeAfterUsingCoder");
     
@@ -1598,7 +1597,7 @@
     BSONEncoder *encoder = [[BSONEncoder alloc] initForWriting];
     EncodesObjectIDForChildren *delegate = [[EncodesObjectIDForChildren alloc] init];
     encoder.delegate = delegate;
-    STAssertThrows([encoder encodeObject:lucy],
+    XCTAssertThrows([encoder encodeObject:lucy],
                    @"Attempting to encode a nil objectID for a non-nil object should throw an exception");
     
     littleRicky.BSONObjectID = [BSONObjectID objectID];
@@ -1611,13 +1610,13 @@
     BSONDecoder *decoder = [[BSONDecoder alloc] initWithDocument:[encoder BSONDocument]];
     PersonWithCoding *lucy2 = [decoder decodeObjectWithClass:[PersonWithCoding class]];
     
-    STAssertEqualObjects(lucy2.name,
+    XCTAssertEqualObjects(lucy2.name,
                          lucy.name,
                          @"Encoded name should match");
-    STAssertEquals([lucy2.children count],
+    XCTAssertEqual([lucy2.children count],
                    (NSUInteger)1,
                    @"Lucy should still have one child");
-    STAssertEqualObjects([lucy2.children objectAtIndex:0],
+    XCTAssertEqualObjects([lucy2.children objectAtIndex:0],
                    littleRicky.BSONObjectID,
                    @"Lucy's child should be the object id");
     
@@ -1679,16 +1678,16 @@ BSONDocument <0x106236cd0>   bson.data: 0x10623c440   bson.owned: 1
             if (NSNotFound != [line rangeOfString:term].location)
                 [occurrences addObject:term];
     
-    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:0]],
+    XCTAssertEqual([occurrences countForObject:[searchTerms objectAtIndex:0]],
                     (NSUInteger)3,
                     @"'name' should appear three times");
-    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:1]],
+    XCTAssertEqual([occurrences countForObject:[searchTerms objectAtIndex:1]],
                    (NSUInteger)3,
                    @"'dob' should appear three times");
-    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:2]],
+    XCTAssertEqual([occurrences countForObject:[searchTerms objectAtIndex:2]],
                    (NSUInteger)3,
                    @"'numberOfVisits' should appear three times");
-    STAssertEquals([occurrences countForObject:[searchTerms objectAtIndex:3]],
+    XCTAssertEqual([occurrences countForObject:[searchTerms objectAtIndex:3]],
                    (NSUInteger)3,
                    @"'children' should appear three times");
     

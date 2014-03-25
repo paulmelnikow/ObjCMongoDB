@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import <CoreData/CoreData.h>
 #import "CDPerson.h"
 #import "BSONEncoder.h"
@@ -27,7 +27,7 @@
 #import "BSONCoding.h"
 #import "BSON_Helper.h"
 
-@interface BSONCoreDataTest : SenTestCase
+@interface BSONCoreDataTest : XCTestCase
 
 @property (retain) NSManagedObjectModel *mom;
 @property (retain) NSPersistentStoreCoordinator *psc;
@@ -86,9 +86,9 @@
     CDPerson *littleRicky2 = [[[lucy2 children] allObjects] objectAtIndex:0];
     CDPerson *littlerRicky2 = [[[littleRicky2 children] allObjects] objectAtIndex:0];
     
-    STAssertTrue([littlerRicky2 isEqualForTesting:littlerRicky], @"Objects should be equal");
-    STAssertTrue([littleRicky2 isEqualForTesting:littleRicky], @"Objects should be equal");
-    STAssertTrue([lucy2 isEqualForTesting:lucy], @"Objects should be equal");
+    XCTAssertTrue([littlerRicky2 isEqualForTesting:littlerRicky], @"Objects should be equal");
+    XCTAssertTrue([littleRicky2 isEqualForTesting:littleRicky], @"Objects should be equal");
+    XCTAssertTrue([lucy2 isEqualForTesting:lucy], @"Objects should be equal");
     
     maybe_release(encoder);
     maybe_release(decoder);

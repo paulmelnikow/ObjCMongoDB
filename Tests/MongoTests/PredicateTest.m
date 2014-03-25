@@ -35,13 +35,13 @@
     id dict = [NSDictionary dictionaryWithObject:value forKey:key];
     NSError *error = nil;
     [collection insertDictionary:dict writeConcern:nil error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
 }
 
 - (BOOL) collectionWithName:(MongoDBCollection *) collection boolForPredicate:(MongoPredicate *) predicate {
     NSError *error = nil;
     NSUInteger result = [collection countWithPredicate:predicate error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
     return result > 0;
 }
 
@@ -53,11 +53,11 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isGreaterThan:[NSNumber numberWithInt:-1]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isGreaterThan:[NSNumber numberWithInt:0]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testGreaterThanOrEqualTo {
@@ -68,15 +68,15 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isGreaterThanOrEqualTo:[NSNumber numberWithInt:0]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isGreaterThanOrEqualTo:[NSNumber numberWithInt:-1]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key isGreaterThanOrEqualTo:[NSNumber numberWithInt:1]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");    
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);    
 }
 
 - (void) testLessThan {
@@ -87,11 +87,11 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isLessThan:[NSNumber numberWithInt:1]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isLessThan:[NSNumber numberWithInt:0]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testLessThanOrEqualTo {
@@ -102,15 +102,15 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isLessThanOrEqualTo:[NSNumber numberWithInt:1]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isLessThanOrEqualTo:[NSNumber numberWithInt:0]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key isLessThanOrEqualTo:[NSNumber numberWithInt:-1]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");    
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);    
 }
 
 - (void) testMatches {
@@ -121,11 +121,11 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key matches:@"test"];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key matches:@"test1"];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 
     coll = [self.mongo collectionWithName:[NSString stringWithFormat:@"%@2", coll.fullyQualifiedName]];
     
@@ -134,11 +134,11 @@
     
     pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key matches:@"c"];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key matches:@"f"];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testIsNotEqualTo {
@@ -149,11 +149,11 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isNotEqualTo:@"test1"];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isNotEqualTo:@"test"];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testModulus {
@@ -164,11 +164,11 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isEquivalentTo:1 modulo:2];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isEquivalentTo:0 modulo:2];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testMatchesAny {
@@ -179,19 +179,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key matchesAnyObjects:@"c", @"b", @"a", nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
 
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key matchesAnyFromArray:[NSArray arrayWithObjects:@"c", @"b", @"a", nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key matchesAnyObjects:@"d", @"f", @"g", nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
 
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key matchesAnyFromArray:[NSArray arrayWithObjects:@"d", @"f", @"g", nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testDoesNotMatchAny {
@@ -202,19 +202,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key doesNotMatchAnyObjects:@"c", @"b", @"a", nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key doesNotMatchAnyFromArray:[NSArray arrayWithObjects:@"c", @"b", @"a", nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key doesNotMatchAnyObjects:@"d", @"f", @"g", nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key doesNotMatchAnyFromArray:[NSArray arrayWithObjects:@"d", @"f", @"g", nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testArrayContainsAll {
@@ -226,19 +226,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayContainsAllObjects:@"c", @"b", @"a", nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayContainsAllFromArray:[NSArray arrayWithObjects:@"c", @"b", @"a", nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayContainsAllObjects:@"c", @"d", nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key arrayContainsAllFromArray:[NSArray arrayWithObjects:@"c", @"d", nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testArrayDoesNotContainAll {
@@ -250,19 +250,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayDoesNotContainAllObjects:@"c", @"b", @"a", nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayDoesNotContainAllFromArray:[NSArray arrayWithObjects:@"c", @"b", @"a", nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayDoesNotContainAllObjects:@"c", @"d", nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key arrayDoesNotContainAllFromArray:[NSArray arrayWithObjects:@"c", @"d", nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testArraySize {
@@ -274,27 +274,27 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayCountIsEqualTo:2];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayCountIsEqualTo:3];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayCountIsEqualTo:4];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayCountIsNotEqualTo:2];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayCountIsNotEqualTo:3];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
     
     pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayCountIsNotEqualTo:4];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred3]);
 }
 
 - (void) testRegexMatches {
@@ -305,19 +305,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key matchesRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"\\w*$" options:nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key matchesRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"nomatch" options:nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key doesNotMatchRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"\\w*$" options:nil]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key doesNotMatchRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"nomatch" options:nil]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testRange {
@@ -329,12 +329,12 @@
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key isGreaterThan:[NSNumber numberWithInt:0]];
     [pred1 keyPath:key isLessThan:[NSNumber numberWithInt:5]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key isGreaterThan:[NSNumber numberWithInt:0]];
     [pred2 keyPath:key isLessThan:[NSNumber numberWithInt:3]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");    
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);    
 }
 
 - (void) testMultipleKeys {
@@ -354,7 +354,7 @@
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key2 isEquivalentTo:1 modulo:2];
     [pred1 keyPath:key1 matches:value];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");    
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);    
 }
 
 - (void) testArrayMultiCond {
@@ -367,17 +367,17 @@
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key arrayContainsAllObjects:@"c", @"b", @"a", nil];
     [pred1 keyPath:key arrayCountIsEqualTo:3];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key arrayContainsAllObjects:@"c", @"b", @"a", nil];
     [pred2 keyPath:key arrayCountIsEqualTo:4];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key arrayContainsAllObjects:@"d", @"b", @"a", nil];
     [pred3 keyPath:key arrayCountIsEqualTo:3];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testArrayElemMatch {
@@ -399,37 +399,37 @@
     MongoKeyedPredicate *pred1a = [pred1 arrayElementMatchingSubPredicateForKeyPath:key];
     [pred1a keyPath:@"item" matches:@"apple"];
     [pred1a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:4]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     MongoKeyedPredicate *pred2a = [pred2 arrayElementMatchingSubPredicateForKeyPath:key];
     [pred2a keyPath:@"item" matches:@"apple"];
     [pred2a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:1]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred2]);
 
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     MongoKeyedPredicate *pred3a = [pred3 arrayElementMatchingSubPredicateForKeyPath:key];
     [pred3a keyPath:@"item" matches:@"orange"];
     [pred3a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:4]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     MongoKeyedPredicate *pred4a = [pred4 arrayElementMatchingSubPredicateForKeyPath:key negated:YES];
     [pred4a keyPath:@"item" matches:@"apple"];
     [pred4a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:4]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
     
     MongoKeyedPredicate *pred5 = [MongoKeyedPredicate predicate];
     MongoKeyedPredicate *pred5a = [pred5 arrayElementMatchingSubPredicateForKeyPath:key negated:YES];
     [pred5a keyPath:@"item" matches:@"apple"];
     [pred5a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:1]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred5], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred5]);
     
     MongoKeyedPredicate *pred6 = [MongoKeyedPredicate predicate];
     MongoKeyedPredicate *pred6a = [pred6 arrayElementMatchingSubPredicateForKeyPath:key negated:YES];
     [pred6a keyPath:@"item" matches:@"orange"];
     [pred6a keyPath:@"count" isGreaterThan:[NSNumber numberWithInt:4]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred6], @"");    
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred6]);    
 }
 
 - (void) testType {
@@ -440,19 +440,19 @@
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key nativeValueTypeIsEqualTo:BSON_STRING];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key nativeValueTypeIsEqualTo:BSON_INT];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
     [pred3 keyPath:key nativeValueTypeIsNotEqualTo:BSON_STRING];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred3], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
     [pred4 keyPath:key nativeValueTypeIsNotEqualTo:BSON_INT];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred4], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
 - (void) testOr {
@@ -478,16 +478,16 @@
     [pred4 keyPath:key2 matches:[NSNumber numberWithInt:7]];
 
     MongoPredicate *predTrueTrue = [MongoPredicate orPredicateWithSubPredicates:pred1, pred2, nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:predTrueTrue], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:predTrueTrue]);
     
     MongoPredicate *predTrueFalse = [MongoPredicate orPredicateWithSubPredicates:pred1, pred4, nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:predTrueFalse], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:predTrueFalse]);
 
     MongoPredicate *predFalseTrue = [MongoPredicate orPredicateWithSubPredicates:pred3, pred2, nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:predFalseTrue], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:predFalseTrue]);
 
     MongoPredicate *predFalseFalse = [MongoPredicate orPredicateWithSubPredicates:pred3, pred4, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predFalseFalse], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predFalseFalse]);
 }
 
 - (void) testNor {
@@ -513,16 +513,16 @@
     [pred4 keyPath:key2 matches:[NSNumber numberWithInt:7]];
     
     MongoPredicate *predTrueTrue = [MongoPredicate norPredicateWithSubPredicates:pred1, pred2, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predTrueTrue], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predTrueTrue]);
     
     MongoPredicate *predTrueFalse = [MongoPredicate norPredicateWithSubPredicates:pred1, pred4, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predTrueFalse], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predTrueFalse]);
     
     MongoPredicate *predFalseTrue = [MongoPredicate norPredicateWithSubPredicates:pred3, pred2, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predFalseTrue], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predFalseTrue]);
     
     MongoPredicate *predFalseFalse = [MongoPredicate norPredicateWithSubPredicates:pred3, pred4, nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:predFalseFalse], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:predFalseFalse]);
 }
 
 - (void) testAnd {
@@ -548,16 +548,16 @@
     [pred4 keyPath:key2 matches:[NSNumber numberWithInt:7]];
     
     MongoPredicate *predTrueTrue = [MongoPredicate andPredicateWithSubPredicates:pred1, pred2, nil];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:predTrueTrue], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:predTrueTrue]);
     
     MongoPredicate *predTrueFalse = [MongoPredicate andPredicateWithSubPredicates:pred1, pred4, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predTrueFalse], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predTrueFalse]);
     
     MongoPredicate *predFalseTrue = [MongoPredicate andPredicateWithSubPredicates:pred3, pred2, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predFalseTrue], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predFalseTrue]);
     
     MongoPredicate *predFalseFalse = [MongoPredicate andPredicateWithSubPredicates:pred3, pred4, nil];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:predFalseFalse], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:predFalseFalse]);
 }
 
 - (void) testWhere {
@@ -573,10 +573,10 @@
     [coll insertDictionary:dict writeConcern:nil error:&error];
     
     MongoPredicate *pred1 = [MongoPredicate wherePredicateWithExpression:[BSONCode code:@"this.x + this.y == 9"]];
-    STAssertTrue([self collectionWithName:coll boolForPredicate:pred1], @"");
+    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
 
     MongoPredicate *pred2 = [MongoPredicate wherePredicateWithExpression:[BSONCode code:@"this.x + this.y == 10"]];
-    STAssertFalse([self collectionWithName:coll boolForPredicate:pred2], @"");
+    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testObjectIDMatches {

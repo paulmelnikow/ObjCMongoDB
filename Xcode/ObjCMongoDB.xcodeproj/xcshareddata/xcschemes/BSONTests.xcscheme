@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9EBE79E7150040D4000E767D"
-               BuildableName = "BSONTests.octest"
+               BuildableName = "BSONTests.xctest"
                BlueprintName = "BSONTests"
                ReferencedContainer = "container:ObjCMongoDB.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9EBE79E7150040D4000E767D"
-               BuildableName = "BSONTests.octest"
+               BuildableName = "BSONTests.xctest"
                BlueprintName = "BSONTests"
                ReferencedContainer = "container:ObjCMongoDB.xcodeproj">
             </BuildableReference>

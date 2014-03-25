@@ -38,7 +38,7 @@
       };
     NSError *error = nil;
     [collection insertDictionary:testDoc writeConcern:nil error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
 }
 
 - (void) testFindOne {
@@ -54,7 +54,7 @@
                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                              nil];
     [coll insertDictionary:testDoc1 writeConcern:nil error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
     
     error = nil;
     NSDictionary *testDoc2 = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -65,7 +65,7 @@
                              [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                              nil];
     [coll insertDictionary:testDoc2 writeConcern:nil error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
 
     error = nil;
     NSDictionary *testDoc3 = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -76,33 +76,33 @@
                               [NSArray arrayWithObjects:[NSNumber numberWithInt:16], [NSNumber numberWithInt:32], [NSNumber numberWithInt:48], nil], @"sizes",
                               nil];
     [coll insertDictionary:testDoc3 writeConcern:nil error:&error];
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNil(error);
     
     error = nil;
     resultDoc = [coll findOneWithError:&error];
-    STAssertNotNil(resultDoc, nil); STAssertNil(error, error.localizedDescription);
+    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
     resultDict = [resultDoc dictionaryValue];
-    STAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"], nil);
+    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
 
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:@"description" matches:@"pickles2"];
     error = nil;
     resultDoc = [coll findOneWithPredicate:pred1 error:&error];
-    STAssertNotNil(resultDoc, nil); STAssertNil(error, error.localizedDescription);
+    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
     resultDict = [resultDoc dictionaryValue];
-    STAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"], nil);
-    STAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"], nil);
+    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
+    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
     
     MongoFindRequest *req1 = [MongoFindRequest findRequestWithPredicate:pred1];
     [req1 includeKey:@"description"];
     [req1 includeKey:@"price"];
     error = nil;
     resultDoc = [coll findOneWithRequest:req1 error:&error];
-    STAssertNotNil(resultDoc, nil); STAssertNil(error, error.localizedDescription);
+    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
     resultDict = [resultDoc dictionaryValue];
-    STAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"], nil);
-    STAssertEqualObjects([NSNumber numberWithFloat:2.99], [resultDict objectForKey:@"price"], nil);
-    STAssertNil([resultDict objectForKey:@"quantity"], nil);
+    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
+    XCTAssertEqualObjects([NSNumber numberWithFloat:2.99], [resultDict objectForKey:@"price"]);
+    XCTAssertNil([resultDict objectForKey:@"quantity"]);
 }
 
 @end

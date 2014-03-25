@@ -131,7 +131,6 @@
 		9E828F8F1791240900E2A475 /* BSONCoreDataTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C1150B16EB009CBE47 /* BSONCoreDataTest.m */; };
 		9E828F901791240900E2A475 /* CDPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E2725C8150B17C4009CBE47 /* CDPerson.m */; };
 		9E828F911791240900E2A475 /* BSONHelperTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E0A7C6A16BF353900832C86 /* BSONHelperTest.m */; };
-		9E828F931791240900E2A475 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9E828F941791240900E2A475 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9E828F951791240900E2A475 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E2725E2150B2301009CBE47 /* CoreData.framework */; };
 		9E828F971791240900E2A475 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EBE79F4150040D5000E767D /* InfoPlist.strings */; };
@@ -170,7 +169,6 @@
 		9E828FC01791241200E2A475 /* NSDictionary+BSONAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF8FF8116CA9AA4004BBD11 /* NSDictionary+BSONAdditions.m */; };
 		9E828FC11791241200E2A475 /* MongoTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E1694C016F0F99B00AD96C1 /* MongoTypes.m */; };
 		9E828FC21791241200E2A475 /* MongoTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E74B2C116F55EA200AFB1CA /* MongoTest.m */; };
-		9E828FC41791241200E2A475 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9E828FC51791241200E2A475 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9E828FC71791241200E2A475 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EFF2B62150D5B7B00EDC285 /* InfoPlist.strings */; };
 		9E901BE01508195E00CFAC85 /* BSONCoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E901BDF1508195E00CFAC85 /* BSONCoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -190,7 +188,6 @@
 		9EBE79C0150013B6000E767D /* BSONEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79BE150013B6000E767D /* BSONEncoder.m */; };
 		9EBE79C3150028D1000E767D /* BSONDocument.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EBE79C1150028D1000E767D /* BSONDocument.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EBE79C4150028D1000E767D /* BSONDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79C2150028D1000E767D /* BSONDocument.m */; };
-		9EBE79EA150040D4000E767D /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EBE79EC150040D4000E767D /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EBE79F6150040D5000E767D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EBE79F4150040D5000E767D /* InfoPlist.strings */; };
 		9EBE79F9150040D5000E767D /* BSONTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EBE79F8150040D5000E767D /* BSONTest.m */; };
@@ -206,7 +203,6 @@
 		9EF20B0815167949009D9402 /* GetLastErrorTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF20B04151678FF009D9402 /* GetLastErrorTest.m */; };
 		9EF20B151516892A009D9402 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EF20B1F1516892A009D9402 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EF20B1D1516892A009D9402 /* InfoPlist.strings */; };
-		9EF8FF1916C58370004BBD11 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EF8FF1B16C58370004BBD11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EF8FF1A16C58370004BBD11 /* UIKit.framework */; };
 		9EF8FF1C16C58370004BBD11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		9EF8FF2216C58370004BBD11 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EF8FF2016C58370004BBD11 /* InfoPlist.strings */; };
@@ -228,7 +224,6 @@
 		9EF8FF3A16C58BF8004BBD11 /* bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B3C11DF1A7200410529 /* bson.c */; };
 		9EF8FF3B16C58BFA004BBD11 /* encoding.c in Sources */ = {isa = PBXBuildFile; fileRef = C2891A44150AB6D40065E2E9 /* encoding.c */; };
 		9EF8FF3C16C58BFE004BBD11 /* numbers.c in Sources */ = {isa = PBXBuildFile; fileRef = 22ED5B4311DF1A7200410529 /* numbers.c */; };
-		9EF8FF4416C5C055004BBD11 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EF8FF4516C5C055004BBD11 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EF8FF1A16C58370004BBD11 /* UIKit.framework */; };
 		9EF8FF4616C5C055004BBD11 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0867D69BFE84028FC02AAC07 /* Foundation.framework */; };
 		9EF8FF4C16C5C055004BBD11 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EF8FF4A16C5C055004BBD11 /* InfoPlist.strings */; };
@@ -286,7 +281,6 @@
 		9EFF2B4F150C455D00EDC285 /* Mongo_Helper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */; };
 		9EFF2B55150D081E00EDC285 /* MongoKeyedPredicate.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9EFF2B56150D081E00EDC285 /* MongoKeyedPredicate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B54150D081E00EDC285 /* MongoKeyedPredicate.m */; };
-		9EFF2B5D150D5B7B00EDC285 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79E9150040D4000E767D /* SenTestingKit.framework */; };
 		9EFF2B5E150D5B7B00EDC285 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EBE79EB150040D4000E767D /* Cocoa.framework */; };
 		9EFF2B64150D5B7B00EDC285 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 9EFF2B62150D5B7B00EDC285 /* InfoPlist.strings */; };
 		9EFF2B71150D6B3600EDC285 /* OrderedDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFF2B6F150D6B3600EDC285 /* OrderedDictionary.m */; };
@@ -340,6 +334,7 @@
 		9E3A0C48150D9C1000BD3933 /* MongoCursor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoCursor.m; sourceTree = "<group>"; };
 		9E3E92AF1516A11A00A6F66B /* ObjCBSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ObjCBSON.h; sourceTree = "<group>"; };
 		9E3E92B51516A1BC00A6F66B /* ObjCBSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ObjCBSON.m; sourceTree = "<group>"; };
+		9E45CF8318E1157200289DBA /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		9E46E9D01504221600F13A36 /* ObjCMongoDB_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCMongoDB_Prefix.pch; sourceTree = "<group>"; };
 		9E72DC91150EBC7E00217439 /* PredicateTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PredicateTest.m; sourceTree = "<group>"; };
 		9E74B2BF16F55CE000AFB1CA /* MongoTests_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTests_Helper.h; sourceTree = "<group>"; };
@@ -364,8 +359,7 @@
 		9EBE79BE150013B6000E767D /* BSONEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONEncoder.m; sourceTree = "<group>"; };
 		9EBE79C1150028D1000E767D /* BSONDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONDocument.h; sourceTree = "<group>"; };
 		9EBE79C2150028D1000E767D /* BSONDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BSONDocument.m; sourceTree = "<group>"; };
-		9EBE79E8150040D4000E767D /* BSONTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSONTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
-		9EBE79E9150040D4000E767D /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
+		9EBE79E8150040D4000E767D /* BSONTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BSONTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EBE79EB150040D4000E767D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
 		9EBE79F3150040D5000E767D /* BSONTest-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSONTest-Info.plist"; sourceTree = "<group>"; };
 		9EBE79F5150040D5000E767D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -434,7 +428,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E828F931791240900E2A475 /* SenTestingKit.framework in Frameworks */,
 				9E828F941791240900E2A475 /* Cocoa.framework in Frameworks */,
 				9E828F951791240900E2A475 /* CoreData.framework in Frameworks */,
 			);
@@ -444,7 +437,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E828FC41791241200E2A475 /* SenTestingKit.framework in Frameworks */,
 				9E828FC51791241200E2A475 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -453,7 +445,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EBE79EA150040D4000E767D /* SenTestingKit.framework in Frameworks */,
 				9EBE79EC150040D4000E767D /* Cocoa.framework in Frameworks */,
 				9E2725E4150B2315009CBE47 /* CoreData.framework in Frameworks */,
 			);
@@ -472,7 +463,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9EF8FF2F16C58B21004BBD11 /* CoreData.framework in Frameworks */,
-				9EF8FF1916C58370004BBD11 /* SenTestingKit.framework in Frameworks */,
 				9EF8FF1B16C58370004BBD11 /* UIKit.framework in Frameworks */,
 				9EF8FF1C16C58370004BBD11 /* Foundation.framework in Frameworks */,
 			);
@@ -482,7 +472,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EF8FF4416C5C055004BBD11 /* SenTestingKit.framework in Frameworks */,
 				9EF8FF4516C5C055004BBD11 /* UIKit.framework in Frameworks */,
 				9EF8FF4616C5C055004BBD11 /* Foundation.framework in Frameworks */,
 			);
@@ -492,7 +481,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EFF2B5D150D5B7B00EDC285 /* SenTestingKit.framework in Frameworks */,
 				9EFF2B5E150D5B7B00EDC285 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -504,7 +492,7 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */,
-				9EBE79E8150040D4000E767D /* BSONTests.octest */,
+				9EBE79E8150040D4000E767D /* BSONTests.xctest */,
 				9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */,
 				9EF20B141516892A009D9402 /* BSON.framework */,
 				9EF8FF1816C58370004BBD11 /* BSONTests-iOS.octest */,
@@ -598,11 +586,11 @@
 		9EBE79CB15003CF2000E767D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9E45CF8318E1157200289DBA /* XCTest.framework */,
 				9EF8FF2E16C58B21004BBD11 /* CoreData.framework */,
 				9E2725E2150B2301009CBE47 /* CoreData.framework */,
 				9EBE79B5150007C4000E767D /* AppKit.framework */,
 				0867D69BFE84028FC02AAC07 /* Foundation.framework */,
-				9EBE79E9150040D4000E767D /* SenTestingKit.framework */,
 				9EBE79EB150040D4000E767D /* Cocoa.framework */,
 				9EF8FF1A16C58370004BBD11 /* UIKit.framework */,
 				9EF20B161516892A009D9402 /* Other Frameworks */,
@@ -938,8 +926,8 @@
 			);
 			name = BSONTests;
 			productName = ObjCBSONTests;
-			productReference = 9EBE79E8150040D4000E767D /* BSONTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9EBE79E8150040D4000E767D /* BSONTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		9EF20B131516892A009D9402 /* BSON */ = {
 			isa = PBXNativeTarget;
@@ -1679,7 +1667,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1694,7 +1682,6 @@
 				INFOPLIST_FILE = "../Tests/BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1706,7 +1693,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/BSONTests/BSONTest-Prefix.pch";
@@ -1715,7 +1702,6 @@
 				INFOPLIST_FILE = "../Tests/BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1895,7 +1881,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1922,7 +1911,10 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/MongoTests/MongoTests-Prefix.pch";

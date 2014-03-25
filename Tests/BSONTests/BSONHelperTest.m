@@ -17,20 +17,18 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "BSON_Helper.h"
 
-@interface BSONHelperTest : SenTestCase
+@interface BSONHelperTest : XCTestCase
 
 @end
 
 @implementation BSONHelperTest
 
 - (void) testNSStringFromBSONType {
-    STAssertEqualObjects(@"BSONTypeLong",
-                         NSStringFromBSONType(BSONTypeLong),
-                         nil
-                         );
+    XCTAssertEqualObjects(@"BSONTypeLong",
+                         NSStringFromBSONType(BSONTypeLong));
 }
 
 @end

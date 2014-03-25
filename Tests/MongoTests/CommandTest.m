@@ -17,7 +17,7 @@
 //  limitations under the License.
 //
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 #import "MongoTest.h"
 #import "ObjCMongoDB.h"
 #import "MongoTests_Helper.h"
@@ -33,8 +33,8 @@
                                            onDatabaseName:@"admin"
                                                     error:&error];
     NSString *version = [result objectForKey:@"version"];
-    STAssertNotNil(version, nil);
-    STAssertTrue(version.length > 3, nil);
+    XCTAssertNotNil(version);
+    XCTAssertTrue(version.length > 3);
 }
 
 - (void) testServerVersion {
@@ -46,26 +46,26 @@
 
     NSString *version = [self.mongo serverVersion];
     
-    STAssertEqualObjects(myVersion, version, nil);
+    XCTAssertEqualObjects(myVersion, version);
 }
 
 - (void) testMaxBSONSize {
     NSUInteger maxSize = [self.mongo serverMaxBSONObjectSize];
     // Let's make sure it's in a realistic range - 4 MB to 1024 MB
-    STAssertTrue(maxSize > 4 * 1024 * 1024, nil);
-    STAssertTrue(maxSize < 1024 * 1024 * 1024, nil);
+    XCTAssertTrue(maxSize > 4 * 1024 * 1024);
+    XCTAssertTrue(maxSize < 1024 * 1024 * 1024);
 }
 
 - (void) testStorageStats {
     NSDictionary *result = [self.mongo storageStatisticsForDatabaseName:@"admin" scale:1024];
-    STAssertEqualObjects([result objectForKey:@"db"], @"admin", nil);
-    STAssertEqualObjects([result objectForKey:@"ok"], @(1), nil);    
+    XCTAssertEqualObjects([result objectForKey:@"db"], @"admin");
+    XCTAssertEqualObjects([result objectForKey:@"ok"], @(1));
 }
 
 - (void) testServerLog {
     NSArray *result = [self.mongo serverLogMessagesWithFilter:MongoLogFilterOptionGlobal];
     // There should be some stuff in this result
-    STAssertTrue(result.count > 10, nil);
+    XCTAssertTrue(result.count > 10);
 }
 
 - (void) testAllDatabases {
@@ -74,30 +74,30 @@
     [coll insertDictionary:[NSDictionary dictionary] writeConcern:nil error:&error];
 
     NSArray *list = [self.mongo allDatabases];
-    STAssertTrue([list containsObject:coll.databaseName], nil);
-    STAssertTrue([list containsObject:@"local"], nil);
+    XCTAssertTrue([list containsObject:coll.databaseName]);
+    XCTAssertTrue([list containsObject:@"local"]);
 }
 
 - (void) testPing {
-    STAssertTrue([self.mongo pingWithError:nil], nil);
+    XCTAssertTrue([self.mongo pingWithError:nil]);
 }
 
 - (void) testListCommands {
     id commands = [self.mongo allCommands];
-    STAssertTrue([[commands allKeys] containsObject:@"dropDatabase"], nil);
-    STAssertTrue([[commands allKeys] containsObject:@"getLastError"], nil);
+    XCTAssertTrue([[commands allKeys] containsObject:@"dropDatabase"]);
+    XCTAssertTrue([[commands allKeys] containsObject:@"getLastError"]);
 }
 
 - (void) testIsMaster {
     id result = [self.mongo serverReplicationInfo];
-    STAssertEqualObjects([result objectForKey:@"ok"], @(1), nil);
+    XCTAssertEqualObjects([result objectForKey:@"ok"], @(1));
 }
 
 - (void) testServerStatus {
     id result = [self.mongo serverStatus];
-    STAssertNotNil([result objectForKey:@"version"], nil);
-    STAssertNotNil([result objectForKey:@"host"], nil);
-    STAssertNotNil([result objectForKey:@"process"], nil);
+    XCTAssertNotNil([result objectForKey:@"version"]);
+    XCTAssertNotNil([result objectForKey:@"host"]);
+    XCTAssertNotNil([result objectForKey:@"process"]);
 }
 
 - (void) testDropCollection {
@@ -111,22 +111,22 @@
       @"sizes" : @[ @(16), @(32), @(48) ],
       };
     [coll insertDictionary:testDoc writeConcern:nil error:&error];
-    STAssertNil(error, nil);
+    XCTAssertNil(error);
     
     BSONDocument *resultDoc = [coll findOneWithError:&error];
-    STAssertNotNil(resultDoc, nil);
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertNotNil(resultDoc);
+    XCTAssertNil(error);
 
     error = nil;
-    STAssertTrue([coll dropCollectionWithError:&error], nil);
-    STAssertNil(error, error.localizedDescription);
+    XCTAssertTrue([coll dropCollectionWithError:&error]);
+    XCTAssertNil(error);
     
     resultDoc = [coll findOneWithError:&error];
-    STAssertNil(resultDoc, nil);
+    XCTAssertNil(resultDoc);
     
     error = nil;
-    STAssertFalse([coll dropCollectionWithError:&error], @"Shouldn't be able to drop the collection a second time");
-    STAssertNotNil(error, error.localizedDescription);
+    XCTAssertFalse([coll dropCollectionWithError:&error], @"Shouldn't be able to drop the collection a second time");
+    XCTAssertNotNil(error);
 }
 
 - (void) testGetIndexes {
@@ -142,18 +142,18 @@
       @"sizes" : @[ @(16), @(32), @(48) ],
       };
     [coll insertDictionary:testDoc writeConcern:nil error:&error];
-    STAssertNil(error, nil);
+    XCTAssertNil(error);
     
     NSArray *indexes = [coll allIndexesWithError:&error];
-    STAssertEquals([indexes count], (NSUInteger)1, nil);
+    XCTAssertEqual([indexes count], (NSUInteger)1);
     
     MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
     [index addField:@"foo" ascending:YES];
-    STAssertTrue([coll ensureIndex:index error:&error], nil);
-    STAssertNil(error, nil);
+    XCTAssertTrue([coll ensureIndex:index error:&error]);
+    XCTAssertNil(error);
     
     indexes = [coll allIndexesWithError:&error];
-    STAssertEquals([indexes count], (NSUInteger)2, nil);
+    XCTAssertEqual([indexes count], (NSUInteger)2);
 }
 
 - (void) testEnsureIndex {
@@ -169,16 +169,16 @@
       @"sizes" : @[ @(16), @(32), @(48) ],
       };
     [coll insertDictionary:testDoc writeConcern:nil error:&error];
-    STAssertNil(error, nil);
+    XCTAssertNil(error);
 
     MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
     index.name = @"desc";
     [index addField:@"description" ascending:YES];
-    STAssertTrue([coll ensureIndex:index error:&error], nil);
-    STAssertNil(error, nil);
+    XCTAssertTrue([coll ensureIndex:index error:&error]);
+    XCTAssertNil(error);
 
     NSArray *indexes = [coll allIndexesWithError:&error];
-    STAssertEquals([indexes count], (NSUInteger)2, nil);
+    XCTAssertEqual([indexes count], (NSUInteger)2);
     BOOL ok = NO;
     for (MongoIndex *item in indexes) {
         if ([@"_id_" isEqual:item.name] &&
@@ -188,7 +188,7 @@
             break;
         }
     }
-    STAssertTrue(ok, nil);
+    XCTAssertTrue(ok);
     ok = NO;
     for (MongoIndex *item in indexes) {
         if ([@"desc" isEqual:item.name] &&
@@ -198,7 +198,7 @@
             break;
         }
     }
-    STAssertTrue(ok, nil);
+    XCTAssertTrue(ok);
 }
 
 - (void) testEnsureIndexFailure {
@@ -206,7 +206,7 @@
     [coll dropCollectionWithError:nil];
 
     MongoMutableIndex *nullIndex = [MongoMutableIndex mutableIndex];
-    STAssertThrows([coll ensureIndex:nullIndex error:&error], nil);
+    XCTAssertThrows([coll ensureIndex:nullIndex error:&error]);
     
     // Attempt to create 64 indexes, which should cause the database to throw an error, since indexes are limited
     // to 64 per collection. They start with one on _id.
@@ -214,11 +214,11 @@
         MongoMutableIndex *index = [MongoMutableIndex mutableIndex];
         [index addField:[NSString stringWithFormat:@"field%lu", (unsigned long) i] ascending:YES];
         if (i < 64)
-            STAssertTrue([coll ensureIndex:index error:&error], nil);
+            XCTAssertTrue([coll ensureIndex:index error:&error]);
         else {
             error = nil;
-            STAssertFalse([coll ensureIndex:index error:&error], nil);
-            STAssertNotNil(error, nil);
+            XCTAssertFalse([coll ensureIndex:index error:&error]);
+            XCTAssertNotNil(error);
         }
     }
 }
