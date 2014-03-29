@@ -340,9 +340,9 @@
 		9E74B2BF16F55CE000AFB1CA /* MongoTests_Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTests_Helper.h; sourceTree = "<group>"; };
 		9E74B2C016F55EA200AFB1CA /* MongoTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoTest.h; sourceTree = "<group>"; };
 		9E74B2C116F55EA200AFB1CA /* MongoTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoTest.m; sourceTree = "<group>"; };
-		9E828F9C1791240900E2A475 /* BSONTests copy.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BSONTests copy.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E828F9C1791240900E2A475 /* BSONTests copy.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BSONTests copy.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E828F9D1791240A00E2A475 /* BSONTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "BSONTests copy-Info.plist"; path = "/Users/pnm/code/ObjCMongoDB/Xcode/BSONTests copy-Info.plist"; sourceTree = "<absolute>"; };
-		9E828FCC1791241200E2A475 /* MongoTests copy.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MongoTests copy.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9E828FCC1791241200E2A475 /* MongoTests copy.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MongoTests copy.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E828FCD1791241300E2A475 /* MongoTests copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "MongoTests copy-Info.plist"; path = "/Users/pnm/code/ObjCMongoDB/Xcode/MongoTests copy-Info.plist"; sourceTree = "<absolute>"; };
 		9E901BDF1508195E00CFAC85 /* BSONCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BSONCoding.h; sourceTree = "<group>"; };
 		9E97CC9916B0629A0035480E /* BSON_PrivateInterfaces.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BSON_PrivateInterfaces.h; sourceTree = "<group>"; };
@@ -378,13 +378,13 @@
 		9EF20B1C1516892A009D9402 /* BSON-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSON-Info.plist"; sourceTree = "<group>"; };
 		9EF20B1E1516892A009D9402 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EF20B201516892A009D9402 /* BSON-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BSON-Prefix.pch"; sourceTree = "<group>"; };
-		9EF8FF1816C58370004BBD11 /* BSONTests-iOS.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BSONTests-iOS.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EF8FF1816C58370004BBD11 /* BSONTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BSONTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF8FF1A16C58370004BBD11 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		9EF8FF1F16C58370004BBD11 /* BSONTests-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "BSONTests-iOS-Info.plist"; sourceTree = "<group>"; };
 		9EF8FF2116C58370004BBD11 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EF8FF2616C58370004BBD11 /* BSONTests-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BSONTests-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		9EF8FF2E16C58B21004BBD11 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS6.1.sdk/System/Library/Frameworks/CoreData.framework; sourceTree = DEVELOPER_DIR; };
-		9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MongoTests-iOS.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MongoTests-iOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EF8FF4916C5C055004BBD11 /* MongoTests-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoTests-iOS-Info.plist"; sourceTree = "<group>"; };
 		9EF8FF4B16C5C055004BBD11 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EF8FF5016C5C056004BBD11 /* MongoTests-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -401,7 +401,7 @@
 		9EFF2B4D150C455D00EDC285 /* Mongo_Helper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Mongo_Helper.m; sourceTree = "<group>"; };
 		9EFF2B53150D081D00EDC285 /* MongoKeyedPredicate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MongoKeyedPredicate.h; sourceTree = "<group>"; };
 		9EFF2B54150D081E00EDC285 /* MongoKeyedPredicate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MongoKeyedPredicate.m; sourceTree = "<group>"; };
-		9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongoTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		9EFF2B5C150D5B7B00EDC285 /* MongoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MongoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EFF2B61150D5B7B00EDC285 /* MongoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MongoTests-Info.plist"; sourceTree = "<group>"; };
 		9EFF2B63150D5B7B00EDC285 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		9EFF2B68150D5B7B00EDC285 /* MongoTests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MongoTests-Prefix.pch"; sourceTree = "<group>"; };
@@ -493,12 +493,12 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* ObjCMongoDB.framework */,
 				9EBE79E8150040D4000E767D /* BSONTests.xctest */,
-				9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */,
+				9EFF2B5C150D5B7B00EDC285 /* MongoTests.xctest */,
 				9EF20B141516892A009D9402 /* BSON.framework */,
-				9EF8FF1816C58370004BBD11 /* BSONTests-iOS.octest */,
-				9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.octest */,
-				9E828F9C1791240900E2A475 /* BSONTests copy.octest */,
-				9E828FCC1791241200E2A475 /* MongoTests copy.octest */,
+				9EF8FF1816C58370004BBD11 /* BSONTests-iOS.xctest */,
+				9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.xctest */,
+				9E828F9C1791240900E2A475 /* BSONTests copy.xctest */,
+				9E828FCC1791241200E2A475 /* MongoTests copy.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -890,8 +890,8 @@
 			);
 			name = "BSONTests-no-arc";
 			productName = ObjCBSONTests;
-			productReference = 9E828F9C1791240900E2A475 /* BSONTests copy.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9E828F9C1791240900E2A475 /* BSONTests copy.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		9E828F9E1791241200E2A475 /* MongoTests-no-arc */ = {
 			isa = PBXNativeTarget;
@@ -908,8 +908,8 @@
 			);
 			name = "MongoTests-no-arc";
 			productName = MongoTests;
-			productReference = 9E828FCC1791241200E2A475 /* MongoTests copy.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9E828FCC1791241200E2A475 /* MongoTests copy.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		9EBE79E7150040D4000E767D /* BSONTests */ = {
 			isa = PBXNativeTarget;
@@ -962,8 +962,8 @@
 			);
 			name = "BSONTests-iOS";
 			productName = "BSONTests-iOS";
-			productReference = 9EF8FF1816C58370004BBD11 /* BSONTests-iOS.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9EF8FF1816C58370004BBD11 /* BSONTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		9EF8FF4216C5C055004BBD11 /* MongoTests-iOS */ = {
 			isa = PBXNativeTarget;
@@ -980,8 +980,8 @@
 			);
 			name = "MongoTests-iOS";
 			productName = "MongoTests-iOS";
-			productReference = 9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9EF8FF4316C5C055004BBD11 /* MongoTests-iOS.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		9EFF2B5B150D5B7B00EDC285 /* MongoTests */ = {
 			isa = PBXNativeTarget;
@@ -998,8 +998,8 @@
 			);
 			name = MongoTests;
 			productName = MongoTests;
-			productReference = 9EFF2B5C150D5B7B00EDC285 /* MongoTests.octest */;
-			productType = "com.apple.product-type.bundle";
+			productReference = 9EFF2B5C150D5B7B00EDC285 /* MongoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1539,7 +1539,7 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1555,7 +1555,7 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CLANG_ENABLE_OBJC_ARC = NO;
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -1573,7 +1573,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1588,7 +1588,6 @@
 				INFOPLIST_FILE = "BSONTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "BSONTests copy";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1600,7 +1599,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/BSONTests/BSONTest-Prefix.pch";
@@ -1609,7 +1608,6 @@
 				INFOPLIST_FILE = "BSONTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "BSONTests copy";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1620,7 +1618,7 @@
 				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1635,7 +1633,6 @@
 				INFOPLIST_FILE = "MongoTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "MongoTests copy";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1647,7 +1644,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/MongoTests/MongoTests-Prefix.pch";
@@ -1656,7 +1653,6 @@
 				INFOPLIST_FILE = "MongoTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "MongoTests copy";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1664,7 +1660,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -1689,7 +1684,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -1752,7 +1746,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -1760,8 +1753,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1773,11 +1768,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests-iOS/BSONTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1787,7 +1781,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -1795,18 +1788,19 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/BSONTests-iOS/BSONTests-iOS-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests-iOS/BSONTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1816,7 +1810,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -1824,8 +1817,10 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1837,11 +1832,10 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests-iOS/MongoTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1851,7 +1845,6 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -1859,18 +1852,19 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"\"$(SDKROOT)/Developer/Library/Frameworks\"",
-					"\"$(DEVELOPER_LIBRARY_DIR)/Frameworks\"",
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "../Tests/MongoTests-iOS/MongoTests-iOS-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests-iOS/MongoTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
@@ -1878,12 +1872,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -1899,7 +1892,6 @@
 				INFOPLIST_FILE = "../Tests/MongoTests/MongoTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Debug;
 		};
@@ -1907,13 +1899,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ENABLE_OBJC_ARC = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_LIBRARY_DIR)/Frameworks",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
 				);
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -1923,7 +1914,6 @@
 				INFOPLIST_FILE = "../Tests/MongoTests/MongoTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				WRAPPER_EXTENSION = octest;
 			};
 			name = Release;
 		};
