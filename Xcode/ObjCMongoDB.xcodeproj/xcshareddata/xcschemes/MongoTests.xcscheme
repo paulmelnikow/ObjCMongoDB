@@ -17,7 +17,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "9EFF2B5B150D5B7B00EDC285"
-               BuildableName = "MongoTests.octest"
+               BuildableName = "MongoTests.xctest"
                BlueprintName = "MongoTests"
                ReferencedContainer = "container:ObjCMongoDB.xcodeproj">
             </BuildableReference>
