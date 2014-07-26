@@ -78,6 +78,11 @@
     } else {
         _nativeWriteConcern = mongo_write_concern_alloc();
     }
+	
+	self.previousReplicationTimeout = self.replicationTimeout;
+	self.previousSynchronizeToDisk = self.synchronizeToDisk;
+	self.previousWriteAcknowledgementBehavior = self.writeAcknowledgementBehavior;
+	
     mongo_write_concern_init(_nativeWriteConcern);
     _nativeWriteConcern->w = self.writeAcknowledgementBehavior;
     _nativeWriteConcern->wtimeout = self.replicationTimeout;
