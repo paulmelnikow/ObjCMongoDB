@@ -106,6 +106,10 @@
     [self _setField:fieldName value:@"2d"];
 }
 
+- (void) addGeospatialSphericalField:(NSString *) fieldName {
+    [self _setField:fieldName value:@"2dsphere"];
+}
+
 - (NSDictionary *) dictionaryValue {
     return nil;
 }
