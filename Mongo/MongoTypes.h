@@ -43,5 +43,6 @@
 - (void) addField:(NSString *) fieldName;
 - (void) addField:(NSString *) fieldName ascending:(BOOL) ascending;
 - (void) addGeospatialField:(NSString *) fieldName;
+- (void) addGeospatialSphericalField:(NSString *) fieldName;
 
 @end
