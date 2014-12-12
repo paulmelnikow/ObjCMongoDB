@@ -25,6 +25,8 @@
 #import <Foundation/Foundation.h>
 #import "BSONTypes.h"
 
+FOUNDATION_EXPORT NSString * const MongoDBCommandDictKey;
+
 typedef enum {
     BSONDoNothingOnNil,
     BSONEncodeNullOnNil,
