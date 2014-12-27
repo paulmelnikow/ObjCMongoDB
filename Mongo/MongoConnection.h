@@ -62,9 +62,13 @@ FOUNDATION_EXPORT NSInteger const MongoCreateIndexError;
 
 - (BOOL) dropDatabaseWithName:(NSString *) database;
 
+// Run the command { commandName: 1 }
 - (NSDictionary *) runCommandWithName:(NSString *) commandName
                        onDatabaseName:(NSString *) databaseName
                                 error:(NSError * __autoreleasing *) error;
+// Run the command { commandName: value }.
+// If arguments is non-nil, runs the command
+//    { commandName: value, arg1: argv1, arg2: argv2, ... }
 - (NSDictionary *) runCommandWithName:(NSString *) commandName
                                 value:(id) value
                             arguments:(NSDictionary *) arguments
