@@ -296,9 +296,11 @@
 - (NSDictionary *) _runCommandWithName:(NSString *) commandName
                                  error:(NSError * __autoreleasing *) outError {
     if (commandName == nil) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
-    return [self.connection runCommandWithDictionary:@{ commandName : self.namespaceName }
-                                      onDatabaseName:self.databaseName
-                                               error:outError];
+    return [self.connection runCommandWithName:commandName
+                                         value:self.namespaceName
+                                     arguments:nil
+                                onDatabaseName:self.databaseName
+                                         error:outError];
 }
 
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError {

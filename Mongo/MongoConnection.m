@@ -165,19 +165,50 @@ NSInteger const MongoCreateIndexError = 101;
 - (NSDictionary *) runCommandWithName:(NSString *) commandName
                        onDatabaseName:(NSString *) databaseName
                                 error:(NSError * __autoreleasing *) error {
+    return [self runCommandWithName:commandName
+                              value:@1
+                          arguments:nil
+                     onDatabaseName:databaseName
+                              error:error];
+}
+
+- (NSDictionary *) runCommandWithName:(NSString *) commandName
+                                value:(id) value
+                            arguments:(NSDictionary *) arguments
+                       onDatabaseName:(NSString *) databaseName
+                                error:(NSError * __autoreleasing *) error {
     if (!commandName)
         [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
-    NSDictionary *dictionary = @{ commandName : @(1) };
-    return [self runCommandWithDictionary:dictionary onDatabaseName:databaseName error:error];
+    
+    OrderedDictionary *command = [OrderedDictionary dictionary];
+    [command setObject:value forKey:commandName];
+    
+    for (id key in arguments)
+        [command setObject:[arguments objectForKey:key] forKey:key];
+    
+    return [self runCommandWithOrderedDictionary:command
+                                  onDatabaseName:databaseName
+                                           error:error];
 }
 
 - (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
                                       error:(NSError * __autoreleasing *) error {
+    // MongoDB requires the first key in a command dictionary to contain the command
+    // name, so it's important to use an ordered dictionary. This method is deprecated
+    // in favor of -runCommandWithName:arguments:onDatabaseName:error.
+    return [self runCommandWithOrderedDictionary:(OrderedDictionary *) dictionary
+                                  onDatabaseName:databaseName
+                                           error:error];
+}
+
+- (NSDictionary *) runCommandWithOrderedDictionary:(OrderedDictionary *) orderedDictionary
+                                    onDatabaseName:(NSString *) databaseName
+                                             error:(NSError * __autoreleasing *) error {
     bson *tempBson = bson_alloc();
     int result = mongo_run_command(self.connValue,
                                    databaseName.bsonString,
-                                   [[dictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO] bsonValue],
+                                   [[orderedDictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO] bsonValue],
                                    tempBson);
     if (BSON_OK != result) {
         bson_dealloc(tempBson);

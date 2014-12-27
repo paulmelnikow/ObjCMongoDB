@@ -37,6 +37,32 @@
     XCTAssertTrue(version.length > 3);
 }
 
+- (void) testCommandDictionary {
+    declare_coll_and_error;
+    
+    NSDictionary *testDoc1 = @{@"foo": @1};
+    [coll insertDictionary:testDoc1 writeConcern:nil error:&error];
+    XCTAssertNil(error);
+
+    NSDictionary *testDoc2 = @{@"foo": @2};
+    [coll insertDictionary:testDoc2 writeConcern:nil error:&error];
+    XCTAssertNil(error);
+    
+    OrderedDictionary *command = [OrderedDictionary dictionary];
+    [command setObject:coll.namespaceName forKey:@"distinct"];
+    [command setObject:@"foo" forKey:@"key"];
+    
+    NSDictionary *result = [self.mongo runCommandWithOrderedDictionary:command
+                                                        onDatabaseName:TEST_DATABASE
+                                                                 error:&error];
+    XCTAssertNotNil(result);
+    XCTAssertEqualObjects([result objectForKey:@"ok"], @1);
+    
+    NSArray *values = [result objectForKey:@"values"];
+    XCTAssertTrue([values containsObject:@1]);
+    XCTAssertTrue([values containsObject:@2]);
+}
+
 - (void) testServerVersion {
     NSError *error = nil;
     NSDictionary *result = [self.mongo runCommandWithName:@"buildInfo"

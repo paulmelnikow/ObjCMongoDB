@@ -43,8 +43,11 @@
 
 - (NSDictionary *) storageStatisticsForDatabaseName:(NSString *) databaseName
                                               scale:(NSUInteger) scale {
-    NSDictionary *command = @{ @"dbStats" : @(1), @"scale" : @(scale) };
-    return [self runCommandWithDictionary:command onDatabaseName:databaseName error:nil];
+    OrderedDictionary *command = [OrderedDictionary dictionary];
+    [command setObject:@1 forKey:@"dbStats"];
+    [command setObject:@(scale) forKey:@"scale"];
+    
+    return [self runCommandWithOrderedDictionary:command onDatabaseName:databaseName error:nil];
 }
 
 + (NSString *) _stringForFilterOption:(MongoLogFilterOption) filterOption {
@@ -60,8 +63,12 @@
     NSString *filterOptionString = [self.class _stringForFilterOption:filterOption];
     if (!filterOptionString)
         [NSException raise:NSInvalidArgumentException format:@"Invalid filter option"];
-    NSDictionary *command = @{ @"getLog" : filterOptionString };
-    NSDictionary *response = [self runCommandWithDictionary:command onDatabaseName:@"admin" error:nil];
+    
+    NSDictionary *response = [self runCommandWithName:@"getLog"
+                                                value:filterOptionString
+                                            arguments:nil
+                                       onDatabaseName:@"admin"
+                                                error:nil];
     return [response objectForKey:@"log"];
 }
 

@@ -65,9 +65,22 @@ FOUNDATION_EXPORT NSInteger const MongoCreateIndexError;
 - (NSDictionary *) runCommandWithName:(NSString *) commandName
                        onDatabaseName:(NSString *) databaseName
                                 error:(NSError * __autoreleasing *) error;
+- (NSDictionary *) runCommandWithName:(NSString *) commandName
+                                value:(id) value
+                            arguments:(NSDictionary *) arguments
+                       onDatabaseName:(NSString *) databaseName
+                                error:(NSError * __autoreleasing *) error;
+- (NSDictionary *) runCommandWithOrderedDictionary:(OrderedDictionary *) orderedDictionary
+                                    onDatabaseName:(NSString *) databaseName
+                                             error:(NSError * __autoreleasing *) error;
+
+// MongoDB requires the first key in a command dictionary to contain the command
+// name, so it's important to use an ordered dictionary. This method is deprecated
+// in favor of -runCommandWithName:arguments:onDatabaseName:error.
 - (NSDictionary *) runCommandWithDictionary:(NSDictionary *) dictionary
                              onDatabaseName:(NSString *) databaseName
-                                      error:(NSError * __autoreleasing *) error;
+                                      error:(NSError * __autoreleasing *) error
+    __deprecated_msg("Use -runCommandWithName:arguments:onDatabaseName:error instead");
 
 - (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
 - (NSDictionary *) lastOperationDictionary;
