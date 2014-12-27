@@ -1,5 +1,17 @@
 # ObjCMongoDB Release History
 
+## v0.12.0
+December 26, 2014
+
+Changes:
+
+- Deprecated `-[MongoDBCollection runCommandWithDictionary:onDatabaseName:error]`.
+  Instead, use one of the following:
+   - `-runCommandWithName:value:arguments:onDatabaseName:`
+   - `-runCommandWithOrderedDictionary:onDatabaseName:error:`
+- Add support for creating indexes on geospatial spherical fields.
+- Minor optimization to cache C write concern objects as intended.
+
 ## v0.11.0
 March 24, 2014
 
