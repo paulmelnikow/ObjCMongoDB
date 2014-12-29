@@ -38,7 +38,7 @@
 #pragma mark - Predicate building
 
 - (void) objectIDMatches:(BSONObjectID *) objectID {
-    [self keyPath:MongoDBObjectIDKey matches:objectID];
+    [self keyPath:@"_id" matches:objectID];
 }
 
 - (void) keyPath:(NSString *) keyPath matches:(id) object {
