@@ -53,8 +53,8 @@
 - (void) keyPath:(NSString *) keyPath arrayCountIsEqualTo:(NSUInteger) arrayCount;
 - (void) keyPath:(NSString *) keyPath arrayCountIsNotEqualTo:(NSUInteger) arrayCount;
 
-- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType;
-- (void) keyPath:(NSString *) keyPath nativeValueTypeIsNotEqualTo:(bson_type) nativeValueType;
+- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type_t) nativeValueType;
+- (void) keyPath:(NSString *) keyPath nativeValueTypeIsNotEqualTo:(bson_type_t) nativeValueType;
 
 - (void) keyPath:(NSString *) keyPath isEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;
 - (void) keyPath:(NSString *) keyPath isNotEquivalentTo:(NSUInteger) remainder modulo:(NSUInteger) modulus;

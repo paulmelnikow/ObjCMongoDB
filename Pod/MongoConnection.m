@@ -173,7 +173,7 @@ NSInteger const MongoCreateIndexError = 101;
     if (!commandName)
         [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
     
-    OrderedDictionary *command = [OrderedDictionary dictionary];
+    MutableOrderedDictionary *command = [MutableOrderedDictionary dictionary];
     [command setObject:value forKey:commandName];
     
     for (id key in arguments)

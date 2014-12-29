@@ -62,7 +62,7 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.fields = [OrderedDictionary dictionary];
+        self.fields = [MutableOrderedDictionary dictionary];
     }
     return self;
 }
@@ -71,8 +71,8 @@
     return [[self alloc] init];
 }
 
-- (OrderedDictionary *) mutableFields {
-    return (OrderedDictionary *) self.fields;
+- (MutableOrderedDictionary *) mutableFields {
+    return (MutableOrderedDictionary *) self.fields;
 }
 
 - (void) _setField:(NSString *) fieldName value:(id) value {

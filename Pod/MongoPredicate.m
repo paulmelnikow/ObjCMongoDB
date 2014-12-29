@@ -22,7 +22,7 @@
 #import "Helper-private.h"
 
 @interface MongoPredicate ()
-@property (retain) OrderedDictionary *dictionary;
+@property (retain) MutableOrderedDictionary *dictionary;
 @property (retain) NSString *operator;
 @end
 
@@ -30,7 +30,7 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.dictionary = [OrderedDictionary dictionary];
+        self.dictionary = [MutableOrderedDictionary dictionary];
     }
     return self;
 }

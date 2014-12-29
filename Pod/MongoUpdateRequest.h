@@ -19,7 +19,6 @@
 
 #import <Foundation/Foundation.h>
 #import "MongoPredicate.h"
-#import <OrderedDictionary.h>
 
 @class MongoWriteConcern;
 

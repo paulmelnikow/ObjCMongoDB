@@ -48,7 +48,7 @@
     [coll insertDictionary:testDoc2 writeConcern:nil error:&error];
     XCTAssertNil(error);
     
-    OrderedDictionary *command = [OrderedDictionary dictionary];
+    MutableOrderedDictionary *command = [MutableOrderedDictionary dictionary];
     [command setObject:coll.namespaceName forKey:@"distinct"];
     [command setObject:@"foo" forKey:@"key"];
     

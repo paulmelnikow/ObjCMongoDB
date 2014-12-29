@@ -67,7 +67,7 @@
 @end
 
 @interface MongoPredicate (Project)
-@property (retain) OrderedDictionary *dictionary;
+@property (retain) MutableOrderedDictionary *dictionary;
 @end
 
 @interface MongoWriteConcern (Project)

@@ -250,11 +250,11 @@
 }
 
 - (void) _keyPath:(NSString *) keyPath addOperation:(NSString *) oper object:(id) object negated:(BOOL) negated {
-    OrderedDictionary *dictForKeyPath = [self.dictionary objectForKey:keyPath];
+    MutableOrderedDictionary *dictForKeyPath = [self.dictionary objectForKey:keyPath];
     if (!dictForKeyPath) {
-        dictForKeyPath = [OrderedDictionary dictionary];
+        dictForKeyPath = [MutableOrderedDictionary dictionary];
         [self.dictionary setObject:dictForKeyPath forKey:keyPath];
-    } else if (![dictForKeyPath isKindOfClass:[OrderedDictionary class]])
+    } else if (![dictForKeyPath isKindOfClass:[MutableOrderedDictionary class]])
         [NSException raise:NSInvalidArgumentException
                     format:@"Match object alreay set for key path %@", keyPath];
     

@@ -24,7 +24,7 @@
 
 @interface MongoUpdateRequest ()
 @property (retain) BSONDocument *replacementDocument;
-@property (retain) OrderedDictionary *operationDictionary;
+@property (retain) MutableOrderedDictionary *operationDictionary;
 @end
 
 @implementation MongoUpdateRequest
@@ -135,12 +135,12 @@
 }
 
 - (OrderedDictionary *) conditionDictionaryValue {
-    OrderedDictionary *result;
+    MutableOrderedDictionary *result;
     
     if (self.predicate)
-        result = [OrderedDictionary dictionaryWithDictionary:[self.predicate dictionary]];
+        result = [MutableOrderedDictionary dictionaryWithDictionary:[self.predicate dictionary]];
     else
-        result = [OrderedDictionary dictionary];
+        result = [MutableOrderedDictionary dictionary];
     
     if (self.blocksDuringMultiUpdates)
         [result setObject:[NSNumber numberWithBool:YES] forKey:@"$atomic"];
@@ -188,17 +188,17 @@
     
     // Can have an operation dictionary or a replacement document, but not both
     if (!self.replacementDocument)
-        self.operationDictionary = [OrderedDictionary dictionary];
+        self.operationDictionary = [MutableOrderedDictionary dictionary];
     else
         [NSException raise:NSInvalidArgumentException
                     format:@"Operation can't be combined with replacement document"];
 }
 
-- (OrderedDictionary *) dictForOperation:(NSString *) operation {
+- (MutableOrderedDictionary *) dictForOperation:(NSString *) operation {
     [self _ensureOperDict];
-    OrderedDictionary *dictForThisOper = [self.operationDictionary objectForKey:operation];
+    MutableOrderedDictionary *dictForThisOper = [self.operationDictionary objectForKey:operation];
     if (!dictForThisOper) {
-        dictForThisOper = [OrderedDictionary dictionary];
+        dictForThisOper = [MutableOrderedDictionary dictionary];
         [self.operationDictionary setObject:dictForThisOper forKey:operation];
     }
     return dictForThisOper;
@@ -209,10 +209,10 @@
              subKey:(NSString *) subKey
              object:(id) object {
     
-    OrderedDictionary *dictForOperation = [self dictForOperation:operation];
-    OrderedDictionary *dictForKeyPath = [dictForOperation objectForKey:keyPath];
+    MutableOrderedDictionary *dictForOperation = [self dictForOperation:operation];
+    MutableOrderedDictionary *dictForKeyPath = [dictForOperation objectForKey:keyPath];
     if (!dictForKeyPath) {
-        dictForKeyPath = [OrderedDictionary dictionary];
+        dictForKeyPath = [MutableOrderedDictionary dictionary];
         [dictForOperation setObject:dictForKeyPath forKey:keyPath];        
     }
     [dictForKeyPath setObject:object forKey:subKey];

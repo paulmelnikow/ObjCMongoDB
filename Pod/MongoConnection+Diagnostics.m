@@ -43,7 +43,7 @@
 
 - (NSDictionary *) storageStatisticsForDatabaseName:(NSString *) databaseName
                                               scale:(NSUInteger) scale {
-    OrderedDictionary *command = [OrderedDictionary dictionary];
+    MutableOrderedDictionary *command = [MutableOrderedDictionary dictionary];
     [command setObject:@1 forKey:@"dbStats"];
     [command setObject:@(scale) forKey:@"scale"];
     

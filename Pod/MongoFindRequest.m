@@ -25,9 +25,9 @@
 
 @interface MongoFindRequest ()
 
-@property (retain) OrderedDictionary *fields;
-@property (retain) OrderedDictionary *sort;
-@property (retain) OrderedDictionary *hint;
+@property (retain) MutableOrderedDictionary *fields;
+@property (retain) MutableOrderedDictionary *sort;
+@property (retain) MutableOrderedDictionary *hint;
 
 @end
 
@@ -37,9 +37,9 @@
 
 - (id) init {
     if (self = [super init]) {
-        self.fields = [OrderedDictionary dictionary];
-        self.sort = [OrderedDictionary dictionary];
-        self.hint = [OrderedDictionary dictionary];
+        self.fields = [MutableOrderedDictionary dictionary];
+        self.sort = [MutableOrderedDictionary dictionary];
+        self.hint = [MutableOrderedDictionary dictionary];
         self.timeoutEnabled = YES;
     }
     return self;
@@ -103,7 +103,7 @@
 }
 
 - (OrderedDictionary *) queryDictionaryValue {
-    OrderedDictionary *result = [OrderedDictionary dictionary];
+    MutableOrderedDictionary *result = [MutableOrderedDictionary dictionary];
     
     if (self.predicate)
         [result setObject:[self.predicate dictionary] forKey:@"$query"];

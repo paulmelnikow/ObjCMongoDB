@@ -59,7 +59,6 @@ in this repository as APACHE-2.0.txt.
  -  Originally based on [NuMongoDB][] by Tim Burks: Copyright 2010 Neon Design Technology, Inc.
  -  Includes enhancements by [Diederik Hoogenboom][] and [Rob Elkin][]
  -  [Official MongoDB C driver][mongo-c-driver]: Copyright 2009, 2010 10gen Inc.
- -  [OrderedDictionary][] by Matt Gallagher: Copyright 2008 Matt Gallagher
 
 [BSON]: http://bsonspec.org/
 [MongoDB]: http://www.mongodb.org/
@@ -71,5 +70,4 @@ in this repository as APACHE-2.0.txt.
 [NuMongoDB]: https://github.com/timburks/NuMongoDB
 [Diederik Hoogenboom]: https://github.com/dhoogenb/NuMongoDB
 [Rob Elkin]: https://github.com/robelkin/NuMongoDB
-[OrderedDictionary]: http://cocoawithlove.com/2008/12/ordereddictionary-subclassing-cocoa.html
 [CocoaPods]: http://cocoapods.org/
