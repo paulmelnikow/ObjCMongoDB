@@ -19,6 +19,7 @@
 
 #import "MongoTypes.h"
 #import "Interfaces-private.h"
+#import <OrderedDictionary.h>
 
 @interface MongoIndex ()
 @property (nonatomic, retain, readwrite) NSString *name;
@@ -76,7 +77,6 @@
 }
 
 - (void) _setField:(NSString *) fieldName value:(id) value {
-    NSParameterAssert([fieldName isValidKeyNameForMongoDB:nil]);
     if ([self.mutableFields objectForKey:fieldName])
         [NSException raise:NSInvalidArgumentException format:@"Duplicate field name"];
     [self.mutableFields setObject:value forKey:fieldName];
@@ -102,13 +102,18 @@
     return nil;
 }
 
-- (int) options {
-    int result = 0;
-    if (self.unique) result |= MONGO_INDEX_UNIQUE;
-    if (self.sparse) result |= MONGO_INDEX_SPARSE;
-    if (self.createInBackground) result |= MONGO_INDEX_BACKGROUND;
-    if (self.createDroppingDuplicates) result |= MONGO_INDEX_DROP_DUPS;
-    return result;
+- (mongoc_index_opt_t) options {
+    mongoc_index_opt_t options;
+    mongoc_index_opt_init(&options);
+    
+    options.unique = self.unique;
+    options.sparse = self.sparse;
+    options.background = self.createInBackground;
+    options.drop_dups = self.createDroppingDuplicates;
+    
+    // TODO more options
+    
+    return options;
 }
 
 @end

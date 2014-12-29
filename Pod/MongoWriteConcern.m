@@ -21,16 +21,8 @@
 #import "Helper-private.h"
 #import <mongoc.h>
 
-@interface MongoWriteConcern ()
-
-@property (assign) MongoWriteAcknowledgementMode previousWriteAcknowledgementBehavior;
-@property (assign) NSTimeInterval previousReplicationTimeout;
-@property (assign) BOOL previousSynchronizeToDisk;
-
-@end
-
 @implementation MongoWriteConcern {
-    mongo_write_concern *_nativeWriteConcern;
+    mongoc_write_concern_t *_writeConcern;
 }
 
 - (id) init {
@@ -38,23 +30,22 @@
         self.writeAcknowledgementBehavior = MongoWriteAcknowledged;
         self.replicationTimeout = 0.f;
         self.synchronizeToDisk = NO;
+
+        _writeConcern = mongoc_write_concern_new();
     }
     return self;
 }
 
 - (void) dealloc {
-    if (_nativeWriteConcern ) {
-        mongo_write_concern_destroy(_nativeWriteConcern);
-        mongo_write_concern_dealloc(_nativeWriteConcern);
-        _nativeWriteConcern = NULL;
-    }
+    mongoc_write_concern_destroy(_writeConcern);
+    _writeConcern = NULL;
 }
 
 + (MongoWriteConcern *) writeConcern {
     return [[self alloc] init];
 }
 
--(id)copyWithZone:(NSZone *) zone {
+- (id) copyWithZone:(NSZone *) zone {
     MongoWriteConcern *result = [[self.class allocWithZone:zone] init];
     result.writeAcknowledgementBehavior = self.writeAcknowledgementBehavior;
     result.replicationTimeout = self.replicationTimeout;
@@ -62,31 +53,18 @@
     return result;
 }
 
-/* Result is owned by receiver. If receiver is subsequently mutated, this object may also be mutated.
-   If you need it to stay the same, copy the receiver, retain it, and invoke on that instead. */
-- (mongo_write_concern *) nativeWriteConcern {
-    if (_nativeWriteConcern) {
-        if (self.writeAcknowledgementBehavior == self.previousWriteAcknowledgementBehavior &&
-            self.replicationTimeout == self.previousReplicationTimeout &&
-            self.synchronizeToDisk == self.previousSynchronizeToDisk) {
-            return _nativeWriteConcern;
-        } else {
-            mongo_write_concern_destroy(_nativeWriteConcern);
-        }
-    } else {
-        _nativeWriteConcern = mongo_write_concern_alloc();
-    }
-	
-	self.previousReplicationTimeout = self.replicationTimeout;
-	self.previousSynchronizeToDisk = self.synchronizeToDisk;
-	self.previousWriteAcknowledgementBehavior = self.writeAcknowledgementBehavior;
-	
-    mongo_write_concern_init(_nativeWriteConcern);
-    _nativeWriteConcern->w = self.writeAcknowledgementBehavior;
-    _nativeWriteConcern->wtimeout = self.replicationTimeout;
-    _nativeWriteConcern->fsync = (int) self.synchronizeToDisk;
-    mongo_write_concern_finish(_nativeWriteConcern);
-    return _nativeWriteConcern;
+/**
+ Result is owned by receiver. If receiver is subsequently mutated, this object may
+ also be mutated.
+ 
+ If you need it to stay the same, copy the receiver, and invoke on the copy.
+ */
+- (mongoc_write_concern_t *) nativeWriteConcern {
+    mongoc_write_concern_set_w(_writeConcern, self.writeAcknowledgementBehavior);
+    mongoc_write_concern_set_wtimeout(_writeConcern, self.replicationTimeout);
+    mongoc_write_concern_set_fsync(_writeConcern, self.synchronizeToDisk);
+    
+    return _writeConcern;
 }
 
 @end

@@ -22,114 +22,110 @@
 #import <mongoc.h>
 #import "Helper-private.h"
 #import "Interfaces-private.h"
+#import <BSONSerializer.h>
 
-@interface MongoDBCollection ()
-@property (copy, nonatomic) NSString * privateFullyQualifiedName;
+@interface MongoDBCollection (Private)
+@property (weak) MongoConnection *connection;
 @end
 
-@implementation MongoDBCollection
+@implementation MongoDBCollection {
+    mongoc_collection_t *_collection;
+}
 
 #pragma mark - Initialization
 
-- (id) initWithConnection:(MongoConnection *) connectionParam fullyQualifiedName:(NSString *) nameParam {
+- (id) initWithConnection:(MongoConnection *) connection
+         nativeCollection:(mongoc_collection_t *) nativeCollection {
     if (self = [super init]) {
-        self.connection = connectionParam;
-        self.fullyQualifiedName = nameParam;
+        self.connection = connection;
+        _collection = nativeCollection;
     }
     return self;
-}
-
-+ (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
-                              fullyQualifiedName:(NSString *) name {
-    MongoDBCollection *result = [[self alloc] initWithConnection:connection fullyQualifiedName:name];
-    return result;
-}
-
-- (void) setFullyQualifiedName:(NSString *) value {
-    self.privateFullyQualifiedName = value;
-    NSRange firstDot = [value rangeOfString:@"."];
-    
-    if (NSNotFound == firstDot.location)
-        [NSException raise:NSInvalidArgumentException
-                    format:@"Collection name must have a database prefix – mydb.mycollection, or mydb.somecollections.mycollection"];
-    
-    self.databaseName = [value substringToIndex:firstDot.location];
-    self.namespaceName = [value substringFromIndex:1+firstDot.location];
-}
-
-- (NSString *) fullyQualifiedName {
-    return self.privateFullyQualifiedName;
 }
 
 #pragma mark - Insert
 
 - (BOOL) insertDocument:(BSONDocument *) document
            writeConcern:(MongoWriteConcern *) writeConcern
-                  error:(NSError * __autoreleasing *) error {
-    if (MONGO_OK == mongo_insert(self.connection.connValue,
-                                 self.fullyQualifiedName.bsonString,
-                                 document.bsonValue,
-                                 [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]))
+                  error:(NSError * __autoreleasing *) outError {
+    
+    bson_error_t error;
+    
+    if (mongoc_collection_insert(_collection,
+                                 0,
+                                 document.nativeValue,
+                                 [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
+                                 &error))
         return YES;
     else
-        set_error_and_return_NO;
+        // TODO set outError
+        return NO;
+//        set_error_and_return_NO;
 }
 
 - (BOOL) insertDictionary:(NSDictionary *) dictionary
              writeConcern:(MongoWriteConcern *) writeConcern
                     error:(NSError * __autoreleasing *) error {
-    return [self insertDocument:[dictionary BSONDocument] writeConcern:writeConcern error:error];
-}
-
-- (BOOL) insertObject:(id) object
-         writeConcern:(MongoWriteConcern *) writeConcern
-                error:(NSError * __autoreleasing *) error {
-    return [self insertDocument:[BSONEncoder documentForObject:object] writeConcern:writeConcern error:error];
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (! [serializer serializeDictionary:dictionary error:error])
+        return NO;
+    return [self insertDocument:[serializer document] writeConcern:writeConcern error:error];
 }
 
 - (BOOL) insertDocuments:(NSArray *) documentArray
          continueOnError:(BOOL) continueOnError
             writeConcern:(MongoWriteConcern *) writeConcern
-                   error:(NSError * __autoreleasing *) error {
-    if (documentArray.count > INT_MAX)
+                   error:(NSError * __autoreleasing *) outError {
+    if (documentArray.count > UINT32_MAX)
         [NSException raise:NSInvalidArgumentException
                     format:@"That's a lot of documents! Keep it to %i",
-         INT_MAX];
+         UINT32_MAX];
 
-    int documentsToInsert = (int) documentArray.count;
-    const bson *bsonArray[documentsToInsert];
-    const bson **current = bsonArray;
+    int documentCount = (int) documentArray.count;
+    const bson_t *bsonArray[documentCount];
+    const bson_t **current = bsonArray;
     for (__strong BSONDocument *document in documentArray) {
         if(![document isKindOfClass:[BSONDocument class]]) {
-            document = [BSONEncoder documentForObject:document];
+            BSONSerializer *serializer = [BSONSerializer serializer];
+            if (![serializer serializeDictionary:(NSDictionary *) document error:outError]) return NO;
+            document = [serializer document];
         }
-        *current++ = document.bsonValue;
+        *current++ = document.nativeValue;
     }
-    int flags = continueOnError ? MONGO_CONTINUE_ON_ERROR : 0;
-    if (MONGO_OK == mongo_insert_batch(self.connection.connValue,
-                                       self.fullyQualifiedName.bsonString,
-                                       bsonArray,
-                                       documentsToInsert,
-                                       [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
-                                       flags))
+    mongoc_insert_flags_t flags = continueOnError ? MONGOC_INSERT_CONTINUE_ON_ERROR : MONGOC_INSERT_NONE;
+    
+    bson_error_t error;
+    
+    if (mongoc_collection_insert_bulk(_collection,
+                                      flags,
+                                      bsonArray,
+                                      documentCount,
+                                      [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
+                                      &error))
         return YES;
     else
-        set_error_and_return_NO;
+        // TODO set outError
+//        set_error_and_return_NO;
+        return NO;
 }
 
 #pragma mark - Update
 
 - (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest
-                     error:(NSError * __autoreleasing *) error {
-    if (MONGO_OK == mongo_update(self.connection.connValue,
-                                 self.fullyQualifiedName.bsonString,
-                                 updateRequest.conditionDocumentValue.bsonValue,
-                                 updateRequest.operationDocumentValue.bsonValue,
+                     error:(NSError * __autoreleasing *) outError {
+    bson_error_t error;
+    
+    if (mongoc_collection_update(_collection,
                                  updateRequest.flags,
-                                 [[self _coalesceWriteConcern:updateRequest.writeConcern] nativeWriteConcern]))
+                                 updateRequest.conditionDocumentValue.nativeValue,
+                                 updateRequest.operationDocumentValue.nativeValue,
+                                 [[self _coalesceWriteConcern:updateRequest.writeConcern] nativeWriteConcern],
+                                 &error))
         return YES;
     else
-        set_error_and_return_NO;
+        // TODO set outError
+        //        set_error_and_return_NO;
+        return NO;
 }
 
 #pragma mark - Remove
@@ -154,15 +150,19 @@
 
 - (BOOL) _removeWithCond:(BSONDocument *) cond
             writeConcern:(MongoWriteConcern *) writeConcern
-                   error:(NSError * __autoreleasing *) error {
-    int result = mongo_remove(self.connection.connValue,
-                              self.fullyQualifiedName.bsonString,
-                              cond.bsonValue,
-                              [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern]);
-    if (MONGO_OK == result)
+                   error:(NSError * __autoreleasing *) outError {
+    bson_error_t error;
+    
+    if (mongoc_collection_remove(_collection,
+                                 0, // TODO MONGOC_REMOVE_SINGLE_REMOVE
+                                 cond.nativeValue,
+                                 [[self _coalesceWriteConcern:writeConcern] nativeWriteConcern],
+                                 &error))
         return YES;
     else
-        set_error_and_return_NO;
+        // TODO set outError
+//        set_error_and_return_NO;
+        return NO;
 }
 
 #pragma mark - Find
@@ -172,131 +172,165 @@
     return [[self cursorForFindRequest:findRequest error:error] allObjects];
 }
 
-- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest
-                                 error:(NSError * __autoreleasing *) error {
-    mongo_cursor *cursor = mongo_find(self.connection.connValue,
-                                      self.fullyQualifiedName.bsonString,
-                                      findRequest.queryDocument.bsonValue,
-                                      findRequest.fieldsDocument.bsonValue,
-                                      findRequest.limitResults,
-                                      findRequest.skipResults,
-                                      findRequest.options);
-    if (!cursor) set_error_and_return_nil;
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest {
+    mongoc_cursor_t *cursor = mongoc_collection_find(_collection,
+                                                     findRequest.flags,
+                                                     findRequest.skipResults,
+                                                     findRequest.limitResults,
+                                                     20, // TODO batch_size
+                                                     findRequest.queryDocument.nativeValue,
+                                                     findRequest.fieldsDocument.nativeValue,
+                                                     0); // TODO read_prefs
+                                                    
     return [MongoCursor cursorWithNativeCursor:cursor];
 }
 
-- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
-                                error:(NSError * __autoreleasing *) error {
-    bson *newBson = bson_alloc();
-    int result = mongo_find_one(self.connection.connValue,
-                                self.fullyQualifiedName.bsonString,
-                                findRequest.queryDocument.bsonValue,
-                                findRequest.fieldsDocument.bsonValue,
-                                newBson);
-    if (BSON_OK != result) {
-        bson_dealloc(newBson);
-        set_error_and_return_nil;
-    }
-    // newBson contains a copy of the data
-    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) findRequest
+                                 error:(NSError * __autoreleasing *) error {
+    return [self cursorForFindRequest:findRequest];
 }
+
+// TODO
+//- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) findRequest
+//                                error:(NSError * __autoreleasing *) error {
+//    bson *newBson = bson_alloc();
+//    int result = mongo_find_one(self.connection.connValue,
+//                                self.fullyQualifiedName.bsonString,
+//                                findRequest.queryDocument.bsonValue,
+//                                findRequest.fieldsDocument.bsonValue,
+//                                newBson);
+//    if (BSON_OK != result) {
+//        bson_dealloc(newBson);
+//        set_error_and_return_nil;
+//    }
+//    // newBson contains a copy of the data
+//    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
+//}
 
 - (NSArray *) findWithPredicate:(MongoPredicate *) predicate
                           error:(NSError * __autoreleasing *) error {
     return [[self cursorForFindWithPredicate:predicate error:error] allObjects];
 }
 
-- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate
-                                       error:(NSError * __autoreleasing *) error {
-    return [self cursorForFindRequest:[MongoFindRequest findRequestWithPredicate:predicate] error:error];
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate {
+    return [self cursorForFindRequest:[MongoFindRequest findRequestWithPredicate:predicate]];
 }
 
-- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
-                                  error:(NSError * __autoreleasing *) error {
-    return [self findOneWithRequest:[MongoFindRequest findRequestWithPredicate:predicate] error:error];
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate
+                                       error:(NSError * __autoreleasing *) error {
+    return [self cursorForFindRequest:[MongoFindRequest findRequestWithPredicate:predicate]];
 }
+
+//TODO
+//- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
+//                                  error:(NSError * __autoreleasing *) error {
+//    return [self findOneWithRequest:[MongoFindRequest findRequestWithPredicate:predicate] error:error];
+//}
 
 - (NSArray *) findAllWithError:(NSError * __autoreleasing *) error {
     return [[self cursorForFindAllWithError:error] allObjects];
 }
 
+- (MongoCursor *) cursorForFindAll {
+    return [self cursorForFindWithPredicate:[MongoPredicate predicate]];
+}
+
 - (MongoCursor *) cursorForFindAllWithError:(NSError * __autoreleasing *) error {
-    return [self cursorForFindWithPredicate:[MongoPredicate predicate] error:error];
+    return [self cursorForFindWithPredicate:[MongoPredicate predicate]];
 }
 
-- (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error {
-    return [self findOneWithPredicate:[MongoPredicate predicate] error:error];
-}
+// TODO
+//- (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error {
+//    return [self findOneWithPredicate:[MongoPredicate predicate] error:error];
+//}
 
-- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate
-                            error:(NSError * __autoreleasing *) error {
+- (int64_t) countWithPredicate:(MongoPredicate *) predicate
+                         error:(NSError * __autoreleasing *) error {
     if (!predicate) predicate = [MongoPredicate predicate];
-    NSUInteger result = mongo_count(self.connection.connValue,
-                                    self.databaseName.bsonString, self.namespaceName.bsonString,
-                                    predicate.BSONDocument.bsonValue);
-    if (BSON_ERROR == result) set_error_and_return_BSON_ERROR;
+    
+    bson_error_t bsonError;
+    
+    int64_t result = mongoc_collection_count(_collection,
+                                             0, // TODO flags
+                                             predicate.BSONDocument.nativeValue,
+                                             0, // TODO skip
+                                             0, // TODO limit
+                                             0, // TODO read_prefs
+                                             &bsonError);
+    
+    if (-1 == result); // TODO set error
+
     return result;
 }
 
 #pragma mark - Create indexes
 
-- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error {
-    MongoDBCollection *indexesCollection =
-    [self.connection collectionWithName:[self.databaseName stringByAppendingString:@".system.indexes"]];
-    MongoKeyedPredicate *predicate = [MongoKeyedPredicate predicate];
-    [predicate keyPath:@"ns" matches:self.fullyQualifiedName];
-    NSArray *indexDocuments = [indexesCollection findWithPredicate:predicate error:error];
-    
-    if (indexDocuments) {
-        NSMutableArray *result = [NSMutableArray array];
-        for (BSONDocument *indexDocument in indexDocuments)
-            [result addObject:[MongoIndex indexWithDictionary:[indexDocument dictionaryValue]]];
-        return result;
-    } else
-        return nil;
-}
+// TODO
+//- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error {
+//    MongoDBCollection *indexesCollection =
+//    [self.connection collectionWithName:[self.databaseName stringByAppendingString:@".system.indexes"]];
+//    MongoKeyedPredicate *predicate = [MongoKeyedPredicate predicate];
+//    [predicate keyPath:@"ns" matches:self.fullyQualifiedName];
+//    NSArray *indexDocuments = [indexesCollection findWithPredicate:predicate error:error];
+//    
+//    if (indexDocuments) {
+//        NSMutableArray *result = [NSMutableArray array];
+//        for (BSONDocument *indexDocument in indexDocuments)
+//            [result addObject:[MongoIndex indexWithDictionary:[indexDocument dictionaryValue]]];
+//        return result;
+//    } else
+//        return nil;
+//}
 
-- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error {
-    if (!index) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
-    if (!index.fields.allKeys.count) [NSException raise:NSInvalidArgumentException format:@"No fields in index"];
-    bson *tempBson = bson_alloc();
-    int result = mongo_create_index(self.connection.connValue,
-                                    self.fullyQualifiedName.bsonString,
-                                    index.fields.BSONDocument.bsonValue,
-                                    index.name ? index.name.bsonString : NULL,
-                                    index.options,
-                                    -1,
-                                    tempBson);
-    // BSON object is destroyed and deallocated when document is autoreleased
-    NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
-    if (MONGO_OK != result) {
-        if (error) {
-            NSString *message = [resultDict objectForKey:@"err"];
-            *error = [NSError errorWithDomain:MongoDBErrorDomain
-                                         code:MongoCreateIndexError
-                                     userInfo:message ? @{ NSLocalizedDescriptionKey : message } : nil];
-        }
-        return NO;
-    }
-    return YES;
-}
+// TODO
+//- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error {
+//    if (!index) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
+//    if (!index.fields.allKeys.count) [NSException raise:NSInvalidArgumentException format:@"No fields in index"];
+//    bson *tempBson = bson_alloc();
+//    int result = mongo_create_index(self.connection.connValue,
+//                                    self.fullyQualifiedName.bsonString,
+//                                    index.fields.BSONDocument.bsonValue,
+//                                    index.name ? index.name.bsonString : NULL,
+//                                    index.options,
+//                                    -1,
+//                                    tempBson);
+//    // BSON object is destroyed and deallocated when document is autoreleased
+//    NSDictionary *resultDict = [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
+//    if (MONGO_OK != result) {
+//        if (error) {
+//            NSString *message = [resultDict objectForKey:@"err"];
+//            *error = [NSError errorWithDomain:MongoDBErrorDomain
+//                                         code:MongoCreateIndexError
+//                                     userInfo:message ? @{ NSLocalizedDescriptionKey : message } : nil];
+//        }
+//        return NO;
+//    }
+//    return YES;
+//}
 
 #pragma mark - Administration
 
+// TODO
 // Handle commands of the form { "commandName" : "namespace.collection" }
-- (NSDictionary *) _runCommandWithName:(NSString *) commandName
-                                 error:(NSError * __autoreleasing *) outError {
-    if (commandName == nil) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
-    return [self.connection runCommandWithName:commandName
-                                         value:self.namespaceName
-                                     arguments:nil
-                                onDatabaseName:self.databaseName
-                                         error:outError];
-}
+//- (NSDictionary *) _runCommandWithName:(NSString *) commandName
+//                                 error:(NSError * __autoreleasing *) outError {
+//    if (commandName == nil) [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
+//    return [self.connection runCommandWithName:commandName
+//                                         value:self.namespaceName
+//                                     arguments:nil
+//                                onDatabaseName:self.databaseName
+//                                         error:outError];
+//}
 
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError {
-    id result = [self _runCommandWithName:@"drop" error:outError];
-    return result ? YES : NO;
+    bson_error_t bsonError;
+    
+    if (mongoc_collection_drop(_collection, &bsonError)) {
+        return YES;
+    } else {
+        // TODO set error
+        return NO;
+    }
 }
 
 #pragma mark - Helper methods
@@ -305,17 +339,18 @@
     return writeConcern ? writeConcern : self.connection.writeConcern;
 }
 
-- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
-    return [self.connection lastOperationWasSuccessful:error];
-}
-- (NSDictionary *) lastOperationDictionary {
-    return [self.connection lastOperationDictionary];
-}
-- (NSError *) error {
-    return [self.connection error];
-}
-- (NSError *) serverError {
-    return [self.connection serverError];
-}
+// TODO
+//- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
+//    return [self.connection lastOperationWasSuccessful:error];
+//}
+//- (NSDictionary *) lastOperationDictionary {
+//    return [self.connection lastOperationDictionary];
+//}
+//- (NSError *) error {
+//    return [self.connection error];
+//}
+//- (NSError *) serverError {
+//    return [self.connection serverError];
+//}
 
 @end

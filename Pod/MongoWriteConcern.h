@@ -24,19 +24,27 @@ typedef enum {
     MongoWriteUnacknowledged = 0,
     MongoWriteAcknowledged = 1,
     MongoWriteReplicaAcknowledged = 2
+    // TODO MONGOC_WRITE_CONCERN_W_DEFAULT MONGOC_WRITE_CONCERN_W_MAJORITY MONGOC_WRITE_CONCERN_W_TAG
 } MongoWriteAcknowledgementMode;
 
 @interface MongoWriteConcern : NSObject <NSCopying>
 
 + (MongoWriteConcern *) writeConcern;
 
-/*! Default is MongoWriteAcknowledged */
+/**
+ Default is MongoWriteAcknowledged
+ */
 @property (assign) MongoWriteAcknowledgementMode writeAcknowledgementBehavior;
 
-/*! Default is 0, meaning do not timeout. Value in seconds, will be rounded to the nearest millisecond. */
+/**
+ Default is 0, meaning do not timeout. Value in seconds, will be rounded to
+ the nearest millisecond.
+ */
 @property (assign) NSTimeInterval replicationTimeout;
 
-/*! Default is NO */
+/**
+ Default is NO
+ */
 @property (assign) BOOL synchronizeToDisk;
 
 @end

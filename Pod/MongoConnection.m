@@ -22,6 +22,8 @@
 #import <mongoc.h>
 #import "Helper-private.h"
 #import "Interfaces-private.h"
+#import <BSONSerializer.h>
+#import <BSONDeserializer.h>
 
 NSString * const MongoDBErrorDomain = @"MongoDB";
 NSString * const MongoDBServerErrorDomain = @"MongoDB_getlasterror";
@@ -30,38 +32,55 @@ NSInteger const MongoCreateIndexError = 101;
 @interface MongoConnection ()
 // Use this to support implementation of public properties, which need custom setters
 @property (copy) MongoWriteConcern *privateWriteConcern;
-@property (assign) NSUInteger privateMaxBSONSize;
 @end
 
 @implementation MongoConnection {
-    mongo *_conn;
+    mongoc_client_t *_client;
 }
 
 #pragma mark - Initialization
 
-- (id) init {
+- (id) initWithURL:(NSURL *) url {
     if (self = [super init]) {
-        _conn = mongo_alloc();
-        mongo_init(_conn);
+        _client = mongoc_client_new([[url absoluteString] UTF8String]);
+        if (_client == NULL)
+            return self = nil;
         self.writeConcern = [MongoWriteConcern writeConcern];
-        self.maxBSONSize = MONGO_DEFAULT_MAX_BSON_SIZE;
     }
     return self;
 }
 
-+ (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError * __autoreleasing *) error {
-    MongoConnection *result = [[self alloc] init];
-    BOOL success = [result connectToServer:hostWithPort error:error];
-    return success ? result : nil;
++ (MongoConnection *) connectionWithURL:(NSURL *) url {
+    return [[MongoConnection alloc] initWithURL:url];
 }
+
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort
+                                    error:(NSError * __autoreleasing *) error {
+    NSString *urlString = [NSString stringWithFormat:@"mongodb://%@", hostWithPort];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [[MongoConnection alloc] initWithURL:url];
+}
+
++ (MongoConnection *) connectionForServer:(NSString *) hostWithPort
+                                 username:(NSString *) username
+                                 password:(NSString *) password
+                               authSource:(NSString *) dbName {
+    NSString *urlString = [NSString stringWithFormat:@"mongodb://%@:%@@%@?authSource=%@", username, password, hostWithPort, dbName];
+    NSURL *url = [NSURL URLWithString:urlString];
+    return [[MongoConnection alloc] initWithURL:url];
+}
+
 
 - (void) dealloc {
-    mongo_destroy(_conn);
-    mongo_dealloc(_conn);
-    _conn = NULL;
+    mongoc_client_destroy(_client);
+    _client = NULL;
 }
 
-- (mongo *) connValue { return _conn; }
+- (mongoc_client_t *) clientValue {
+    if (_client == NULL)
+        [NSException raise:NSInvalidArgumentException format:@"-disconnect was invoked"];
+    return _client;
+}
 
 #pragma mark - Configuring the connection
 
@@ -70,88 +89,55 @@ NSInteger const MongoCreateIndexError = 101;
     if (!writeConcern)
         [NSException raise:NSInvalidArgumentException format:@"Nil parameter"];
     self.privateWriteConcern = writeConcern;
-    mongo_set_write_concern(_conn, self.privateWriteConcern.nativeWriteConcern);
+    mongoc_client_set_write_concern(_client, self.privateWriteConcern.nativeWriteConcern);
 }
 
-- (NSUInteger) maxBSONSize { return self.privateMaxBSONSize; }
-- (void) setMaxBSONSize:(NSUInteger) maxBSONSize {
-    if (maxBSONSize > INT_MAX) {
-        [NSException raise:NSInvalidArgumentException
-                    format:@"Value is larger than what the driver supports. Keep it to %i",
-         INT_MAX];
+//TODO
+//mongoc_client_get_uri
+
+- (NSUInteger) maxBSONSize {
+    return mongoc_client_get_max_bson_size(_client);
+}
+
+- (void) disconnect {
+    if (_client) {
+        mongoc_client_destroy(_client);
+        _client = NULL;
     }
-    self.privateMaxBSONSize = (int) maxBSONSize;
-    _conn->max_bson_size = (int) maxBSONSize;
 }
-
-#pragma mark - Connecting to a single server or a replica set
-
-- (BOOL) connectToServer:(NSString *) hostWithPort
-                   error:(NSError * __autoreleasing *) error {
-    mongo_host_port host_port;
-    mongo_parse_host(hostWithPort.bsonString, &host_port);
-    if (MONGO_OK == mongo_client(_conn, host_port.host, host_port.port))
-        return YES;
-    else
-        set_error_and_return_NO;
-}
-
-- (BOOL) authenticate:(NSString *) dbName
-             username:(NSString *) username
-             password:(NSString *) password
-                error:(NSError * __autoreleasing *) error {
-    
-    if (MONGO_OK == mongo_cmd_authenticate(_conn, dbName.bsonString, username.bsonString, password.bsonString))
-        return YES;
-    else
-        set_error_and_return_NO;
-}
-
-- (BOOL) connectToReplicaSet:(NSString *) replicaSet
-                   seedArray:(NSArray *) seedArray
-                       error:(NSError * __autoreleasing *) error {
-    mongo_replica_set_init(_conn, replicaSet.bsonString);
-    mongo_host_port host_port;
-    for (NSString *hostWithPort in seedArray) {
-        mongo_parse_host(hostWithPort.bsonString, &host_port);
-        mongo_replica_set_add_seed(_conn, host_port.host, host_port.port);
-    }
-    if (MONGO_OK == mongo_replica_set_client(_conn))
-        return YES;
-    else
-        set_error_and_return_NO;
-}
-
-// FIXME see if this is implemented
-// int mongo_set_op_timeout( mongo *conn, int millis );
-
-- (BOOL) checkConnectionWithError:(NSError * __autoreleasing *) error {
-    if (MONGO_OK == mongo_check_connection(_conn))
-        return YES;
-    else
-        set_error_and_return_NO;
-}
-
-- (BOOL) reconnectWithError:(NSError * __autoreleasing *) error {
-    if (MONGO_OK == mongo_reconnect(_conn))
-        return YES;
-    else
-        set_error_and_return_NO;
-}
-
-- (void) disconnect { mongo_disconnect(_conn); }
 
 #pragma mark - Collection access
 
-- (MongoDBCollection *) collectionWithName:(NSString *) name {
-    return [MongoDBCollection collectionWithConnection:self fullyQualifiedName:name];
+- (MongoDBCollection *) collectionWithName:(NSString *) name inDatabase:(NSString *) databaseName {
+    mongoc_collection_t *collection =
+    mongoc_client_get_collection(_client,
+                                 databaseName.UTF8String,
+                                 name.UTF8String);
+    
+    if (collection == NULL) return nil;
+    
+    return [[MongoDBCollection alloc] initWithConnection:self nativeCollection:collection];
+}
+
+- (MongoDBCollection *) collectionWithName:(NSString *) fullyQualifiedName {
+    NSRange firstDot = [fullyQualifiedName rangeOfString:@"."];
+    
+    if (NSNotFound == firstDot.location)
+        [NSException raise:NSInvalidArgumentException
+                    format:@"Collection name must have a database prefix – mydb.mycollection, or mydb.somecollections.mycollection"];
+    
+    NSString *databaseName = [fullyQualifiedName substringToIndex:firstDot.location];
+    NSString *collectionName = [fullyQualifiedName substringFromIndex:1+firstDot.location];
+    
+    return [self collectionWithName:collectionName inDatabase:databaseName];
 }
 
 #pragma mark - Database administration
 
-- (BOOL) dropDatabaseWithName:(NSString *) database {
-    return mongo_cmd_drop_db(_conn, database.bsonString);
-}
+// TODO
+//- (BOOL) dropDatabaseWithName:(NSString *) database {
+//    return mongo_cmd_drop_db(_conn, database.bsonString);
+//}
 
 #pragma mark - Run commands
 
@@ -197,66 +183,83 @@ NSInteger const MongoCreateIndexError = 101;
 
 - (NSDictionary *) runCommandWithOrderedDictionary:(OrderedDictionary *) orderedDictionary
                                     onDatabaseName:(NSString *) databaseName
-                                             error:(NSError * __autoreleasing *) error {
-    bson *tempBson = bson_alloc();
-    int result = mongo_run_command(self.connValue,
-                                   databaseName.bsonString,
-                                   [[orderedDictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO] bsonValue],
-                                   tempBson);
-    if (BSON_OK != result) {
-        bson_dealloc(tempBson);
-        set_error_and_return_nil;
+                                             error:(NSError * __autoreleasing *) outError {
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (! [serializer serializeDictionary:orderedDictionary error:outError]) return nil;
+
+    bson_t *reply = bson_new();
+    bson_error_t error;
+    
+    bool result = mongoc_client_command_simple(_client,
+                                               databaseName.UTF8String,
+                                               serializer.document.nativeValue,
+                                               NULL,
+                                               reply,
+                                               &error);
+    
+    if (! result) {
+        bson_destroy(reply);
+        // Either the command couldn't be sent or command execution failed.
+        // Should return bson_error
+        // set outError
+        return nil;
     }
+
     // BSON object is destroyed and deallocated when document is autoreleased
-    return [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
+    NSDictionary *ret = [BSONDeserializer dictionaryWithNativeDocument:reply error:outError];
+    bson_destroy(reply);
+    return ret;
 }
 
 #pragma mark - Error handling
 
-- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
-    int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
-    if (error) *error = [self serverError];
-    return MONGO_OK == status;
-}
+// TODO
+//- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error {
+//    int status = mongo_cmd_get_last_error(_conn, "bogusdb", 0);
+//    if (error) *error = [self serverError];
+//    return MONGO_OK == status;
+//}
 
-- (NSDictionary *) lastOperationDictionary {
-    bson *tempBson = bson_alloc();
-    bson_init_empty(tempBson);
-    int emptySize = bson_size(tempBson);
-    mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
-    if (emptySize == bson_size(tempBson)) {
-        bson_dealloc(tempBson);
-        return nil;
-    }
-    // BSON object is destroyed and deallocated when document is autoreleased
-    return [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
-}
+// TODO
+//- (NSDictionary *) lastOperationDictionary {
+//    bson *tempBson = bson_alloc();
+//    bson_init_empty(tempBson);
+//    int emptySize = bson_size(tempBson);
+//    mongo_cmd_get_last_error(_conn, "bogusdb", tempBson);
+//    if (emptySize == bson_size(tempBson)) {
+//        bson_dealloc(tempBson);
+//        return nil;
+//    }
+//    // BSON object is destroyed and deallocated when document is autoreleased
+//    return [[BSONDocument documentWithNativeDocument:tempBson dependentOn:nil] dictionaryValue];
+//}
 
-- (NSError *) error {
-    if (!_conn->err) return nil;
-    NSString *description = [NSString stringWithFormat:@"%@: %@",
-                             NSStringFromMongoErrorCode(_conn->err),
-                             MongoErrorCodeDescription(_conn->err)];
-    NSString *driverString = [NSString stringWithBSONString:_conn->errstr];
-    if (driverString.length) description = [description stringByAppendingFormat:@": %@",
-                                            driverString];
-    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-                              description, NSLocalizedDescriptionKey,
-                              nil];
-    return [NSError errorWithDomain:MongoDBErrorDomain
-                               code:_conn->err
-                           userInfo:userInfo];
-}
-
-- (NSError *) serverError {
-    if (!_conn->lasterrcode) return nil;
-    NSString *message = [NSString stringWithBSONString:_conn->lasterrstr];
-    NSDictionary *userInfo = nil;
-    if (message)
-        userInfo = @{ NSLocalizedDescriptionKey : message };
-    return [NSError errorWithDomain:MongoDBServerErrorDomain
-                               code:_conn->lasterrcode
-                           userInfo:userInfo];
-}
+// TODO
+//- (NSError *) error {
+//    if (!_conn->err) return nil;
+//    NSString *description = [NSString stringWithFormat:@"%@: %@",
+//                             NSStringFromMongoErrorCode(_conn->err),
+//                             MongoErrorCodeDescription(_conn->err)];
+//    NSString *driverString = [NSString stringWithBSONString:_conn->errstr];
+//    if (driverString.length) description = [description stringByAppendingFormat:@": %@",
+//                                            driverString];
+//    NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+//                              description, NSLocalizedDescriptionKey,
+//                              nil];
+//    return [NSError errorWithDomain:MongoDBErrorDomain
+//                               code:_conn->err
+//                           userInfo:userInfo];
+//}
+//
+//- (NSError *) serverError {
+//    if (!_conn->lasterrcode) return nil;
+//    NSString *message = [NSString stringWithBSONString:_conn->lasterrstr];
+//    NSDictionary *userInfo = nil;
+//    if (message)
+//        userInfo = @{ NSLocalizedDescriptionKey : message };
+//    return [NSError errorWithDomain:MongoDBServerErrorDomain
+//                               code:_conn->lasterrcode
+//                           userInfo:userInfo];
+//}
 
 @end

@@ -195,7 +195,7 @@
     [self keyPath:keyPath nativeValueTypeIsEqualTo:nativeValueType negated:NO];
 }
 
-- (void) keyPath:(NSString *) keyPath nativeValueTypeIsNotEqualTo:(bson_type) nativeValueType {
+- (void) keyPath:(NSString *) keyPath nativeValueTypeIsNotEqualTo:(bson_type_t) nativeValueType {
     [self keyPath:keyPath nativeValueTypeIsEqualTo:nativeValueType negated:YES];
 }
 

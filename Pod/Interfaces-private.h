@@ -31,9 +31,16 @@
 #import "MongoPredicate.h"
 #import "MongoWriteConcern.h"
 
+@class MutableOrderedDictionary;
+
+@interface BSONDocument (Module)
+- (const bson_t *) nativeValue;
+- (id) initWithNativeValue:(bson_t *) bson;
+@end
+
 @interface MongoDBCollection (Project)
-+ (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
-                              fullyQualifiedName:(NSString *) name;
+- (id) initWithConnection:(MongoConnection *) connection
+         nativeCollection:(mongoc_collection_t *) nativeCollection;
 @end
 
 @interface MongoIndex (Project)
@@ -41,28 +48,28 @@
 @end
 
 @interface MongoMutableIndex (Projec)
-- (int) options;
+- (mongoc_index_opt_t) options;
 @end
 
 @interface MongoConnection (Project)
-- (mongo *) connValue NS_RETURNS_INNER_POINTER;
+- (mongoc_client_t *) clientValue NS_RETURNS_INNER_POINTER;
 @end
 
 @interface MongoFindRequest (Project)
 - (BSONDocument *) fieldsDocument;
 - (BSONDocument *) queryDocument;
-- (int) options;
+- (mongoc_query_flags_t) flags;
 - (OrderedDictionary *) queryDictionaryValue;
 @end
 
 @interface MongoCursor (Project)
-+ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor;
++ (MongoCursor *) cursorWithNativeCursor:(mongoc_cursor_t *) cursor;
 @end
 
 @interface MongoUpdateRequest (Project)
 - (BSONDocument *) conditionDocumentValue;
 - (BSONDocument *) operationDocumentValue;
-- (int) flags;
+- (mongoc_update_flags_t) flags;
 - (OrderedDictionary *) conditionDictionaryValue;
 @end
 
@@ -71,5 +78,5 @@
 @end
 
 @interface MongoWriteConcern (Project)
-- (mongo_write_concern *) nativeWriteConcern NS_RETURNS_INNER_POINTER;
+- (mongoc_write_concern_t *) nativeWriteConcern NS_RETURNS_INNER_POINTER;
 @end

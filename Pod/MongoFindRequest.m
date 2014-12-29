@@ -22,6 +22,7 @@
 #import <mongoc.h>
 #import "Helper-private.h"
 #import "Interfaces-private.h"
+#import <BSONSerializer.h>
 
 @interface MongoFindRequest ()
 
@@ -99,7 +100,12 @@
 
 - (BSONDocument *) fieldsDocument {
     if (![self.fields count]) return nil;
-    return [self.fields BSONDocumentRestrictingKeyNamesForMongoDB:NO];
+    
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (![serializer serializeDictionary:self.fields error:nil])
+        [NSException raise:NSInternalInconsistencyException format:@"Couldn't serialize fields dictionary"];
+    
+    return [serializer document];
 }
 
 - (OrderedDictionary *) queryDictionaryValue {
@@ -140,17 +146,21 @@
 }
 
 - (BSONDocument *) queryDocument {
-    return [self.queryDictionaryValue BSONDocumentRestrictingKeyNamesForMongoDB:NO];
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (![serializer serializeDictionary:self.queryDictionaryValue error:nil])
+        [NSException raise:NSInternalInconsistencyException format:@"Error serializing query dictionary"];
+    return [serializer document];
 }
 
-- (int) options {
-    int options = 0;
-    if (self.fetchAllResultsImmediately) options |= MONGO_EXHAUST;
-    if (!self.timeoutEnabled) options |= MONGO_NO_CURSOR_TIMEOUT;
-    if (self.tailable) options |= MONGO_TAILABLE;
-    if (self.tailableQueryBlocksAwaitingData) options |= MONGO_AWAIT_DATA;
-    if (self.allowQueryOfNonPrimaryServer) options |= MONGO_SLAVE_OK;
-    if (self.allowPartialResults) options |= MONGO_PARTIAL;
+- (mongoc_query_flags_t) flags {
+    mongoc_query_flags_t options = 0;
+    if (self.fetchAllResultsImmediately) options |= MONGOC_QUERY_EXHAUST;
+    if (!self.timeoutEnabled) options |= MONGOC_QUERY_NO_CURSOR_TIMEOUT;
+    if (self.tailable) options |= MONGOC_QUERY_TAILABLE_CURSOR;
+    if (self.tailableQueryBlocksAwaitingData) options |= MONGOC_QUERY_AWAIT_DATA;
+    if (self.allowQueryOfNonPrimaryServer) options |= MONGOC_QUERY_SLAVE_OK;
+    if (self.allowPartialResults) options |= MONGOC_QUERY_PARTIAL;
+    // TODO MONGOC_QUERY_OPLOG_REPLAY
     return options;
 }
 
@@ -173,7 +183,7 @@
                       nil];
     for (NSString *key in optionKeys)
         [result appendFormat:@"    %@ = %@\n", key, [self valueForKey:key]];
-    [result appendFormat:@"    intValue = %i\n}\n", [self options]];
+    [result appendFormat:@"    intValue = %i\n}\n", self.flags];
     [result appendString:@"specials = {\n"];
     static NSArray *specialKeys;
     if (!specialKeys)

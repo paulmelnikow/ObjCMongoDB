@@ -20,6 +20,7 @@
 #import "MongoPredicate.h"
 #import "ObjCMongoDB.h"
 #import "Helper-private.h"
+#import <BSONSerializer.h>
 
 @interface MongoPredicate ()
 @property (retain) MutableOrderedDictionary *dictionary;
@@ -53,7 +54,11 @@
 #pragma mark - Getting the result
 
 - (BSONDocument *) BSONDocument {
-    return [self.dictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO];
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (! [serializer serializeDictionary:self.dictionary error:nil])
+        [NSException raise:NSInternalInconsistencyException format:@"Unable to serialize predicate dictionary"];
+    
+    return [serializer document];
 }
 
 - (NSString *) description {

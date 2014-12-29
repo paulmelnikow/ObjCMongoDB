@@ -19,44 +19,45 @@
 
 #import "MongoCursor.h"
 #import "Helper-private.h"
+#import "Interfaces-private.h"
 
 @implementation MongoCursor {
-    mongo_cursor *_cursor;
+    mongoc_cursor_t *_cursor;
 }
 
 #pragma mark - Initialization
 
-- (id) initWithNativeCursor:(mongo_cursor *) cursor {
+- (id) initWithNativeCursor:(mongoc_cursor_t *) cursor {
     if (self = [super init]) {
         _cursor = cursor;
     }
     return self;
 }
 
-+ (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor {
++ (MongoCursor *) cursorWithNativeCursor:(mongoc_cursor_t *) cursor {
     return [[self alloc] initWithNativeCursor:cursor];
 }
 
 - (void) dealloc {
-    mongo_cursor_destroy(_cursor);
+    mongoc_cursor_destroy(_cursor);
     _cursor = NULL;
 }
 
 #pragma mark - Enumeration
 
 - (BSONDocument *) nextObjectNoCopy {
-    if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
-    bson *newBson = bson_alloc();
-    // ownsData = 0 means this is effectively const
-    bson_init_finished_data(newBson, (char *) mongo_cursor_data(_cursor), 0);
-    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
+    // TODO check this
+    const bson_t *next = NULL;
+    if (! mongoc_cursor_next(_cursor, &next)) return nil;
+    return [[BSONDocument alloc] initWithNativeValue:(bson_t *)next];
 }
 
 - (BSONDocument *) nextObject {
-    if (MONGO_OK != mongo_cursor_next(_cursor)) return nil;
-    bson *newBson = bson_alloc();
-    bson_copy(newBson, mongo_cursor_bson(_cursor));
-    return [BSONDocument documentWithNativeDocument:newBson dependentOn:nil];
+    // TODO check this
+    const bson_t *next = NULL;
+    if (! mongoc_cursor_next(_cursor, &next)) return nil;
+    bson_t *copy = bson_copy(next);
+    return [[BSONDocument alloc] initWithNativeValue:(bson_t *)copy];
 }
 
 - (NSArray *) allObjects {
@@ -65,5 +66,9 @@
     while (document = [self nextObject]) [result addObject:document];
     return result;
 }
+
+// TODO
+//mongoc_cursor_error
+//mongoc_cursor_get_id
 
 @end

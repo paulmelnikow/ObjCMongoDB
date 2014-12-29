@@ -21,6 +21,7 @@
 #import "ObjCMongoDB.h"
 #import <mongoc.h>
 #import "Interfaces-private.h"
+#import <BSONSerializer.h>
 
 @interface MongoUpdateRequest ()
 @property (retain) BSONDocument *replacementDocument;
@@ -60,8 +61,13 @@
     self.replacementDocument = replacementDocument;
 }
 
+// TODO propagate this error
 - (void) replaceDocumentWithDictionary:(NSDictionary *) replacementDictionary {
-    [self replaceDocumentWithDocument:[replacementDictionary BSONDocument]];
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (! [serializer serializeDictionary:replacementDictionary error:nil])
+        [NSException raise:NSInvalidArgumentException format:@"Unable to serialize replacementDictionary"];
+    
+    [self replaceDocumentWithDocument:[serializer document]];
 }
 
 - (void) keyPath:(NSString *) keyPath setValue:(id) value {
@@ -131,7 +137,11 @@
 #pragma mark - Getting the result
 
 - (BSONDocument *) conditionDocumentValue {
-    return [self.conditionDictionaryValue BSONDocumentRestrictingKeyNamesForMongoDB:NO];
+    BSONSerializer *serializer = [BSONSerializer serializer];
+    if (! [serializer serializeDictionary:self.conditionDictionaryValue error:nil])
+        [NSException raise:NSInternalInconsistencyException format:@"Unable to serialize condition dictionary"];
+    
+    return [serializer document];
 }
 
 - (OrderedDictionary *) conditionDictionaryValue {
@@ -149,19 +159,23 @@
 }
 
 - (BSONDocument *) operationDocumentValue {
-    if (self.replacementDocument)
+    if (self.replacementDocument) {
         return self.replacementDocument;
-    else if (self.operationDictionary)
-        return [self.operationDictionary BSONDocumentRestrictingKeyNamesForMongoDB:NO];
-    else
+    } else if (self.operationDictionary) {
+        BSONSerializer *serializer = [BSONSerializer serializer];
+        if (! [serializer serializeDictionary:self.operationDictionary error:nil])
+            [NSException raise:NSInternalInconsistencyException format:@"Unable to serialize operation dictionary"];
+        
+        return [serializer document];
+    } else {
         return [BSONDocument document];
+    }
 }
 
-- (int) flags {
-    int result = 0;
-    if (!self.updatesFirstMatchOnly) result += MONGO_UPDATE_MULTI;
-    if (self.insertsIfNoMatches) result += MONGO_UPDATE_UPSERT;
-    if (!result) result += MONGO_UPDATE_BASIC;
+- (mongoc_update_flags_t) flags {
+    mongoc_update_flags_t result = MONGOC_UPDATE_NONE;
+    if (!self.updatesFirstMatchOnly) result |= MONGOC_UPDATE_MULTI_UPDATE;
+    if (self.insertsIfNoMatches) result |= MONGOC_UPDATE_UPSERT;
     return result;
 }
 

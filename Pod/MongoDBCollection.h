@@ -39,15 +39,12 @@
 - (BOOL) insertDictionary:(NSDictionary *) dictionary
              writeConcern:(MongoWriteConcern *) writeConcern
                     error:(NSError * __autoreleasing *) error;
-- (BOOL) insertObject:(id) object
-         writeConcern:(MongoWriteConcern *) writeConcern
-                error:(NSError * __autoreleasing *) error;
 
 - (BOOL) updateWithRequest:(MongoUpdateRequest *) updateRequest
                      error:(NSError * __autoreleasing *) error;
 
-- (NSUInteger) countWithPredicate:(MongoPredicate *) predicate
-                            error:(NSError * __autoreleasing *) error;
+- (int64_t) countWithPredicate:(MongoPredicate *) predicate
+                         error:(NSError * __autoreleasing *) error;
 
 // Returns an array of BSONDocument objects
 - (NSArray *) findWithRequest:(MongoFindRequest *) fetchRequest
@@ -56,19 +53,28 @@
                           error:(NSError * __autoreleasing *) error;
 - (NSArray *) findAllWithError:(NSError * __autoreleasing *) error;
 
-- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) fetchRequest
-                                error:(NSError * __autoreleasing *) error;
-- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
-                                  error:(NSError * __autoreleasing *) error;
-- (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error;
+//- (BSONDocument *) findOneWithRequest:(MongoFindRequest *) fetchRequest
+//                                error:(NSError * __autoreleasing *) error;
+//- (BSONDocument *) findOneWithPredicate:(MongoPredicate *) predicate
+//                                  error:(NSError * __autoreleasing *) error;
+//- (BSONDocument *) findOneWithError:(NSError * __autoreleasing *) error;
 
-// Designed for high-volume fetches when you don't want to fetch all the documents before you start
-// working with them.
+/**
+ Designed for high-volume fetches when you don't want to fetch all the documents
+ before you start working with them.
+ */
+- (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) fetchRequest;
+- (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate;
+- (MongoCursor *) cursorForFindAll;
+
+/**
+ Note: error is ignored. Examine the cursor to see the error.
+ */
 - (MongoCursor *) cursorForFindRequest:(MongoFindRequest *) fetchRequest
-                                 error:(NSError * __autoreleasing *) error;
+                                 error:(NSError * __autoreleasing *) error __deprecated_msg("Use -cursorForFindRequest:");
 - (MongoCursor *) cursorForFindWithPredicate:(MongoPredicate *) predicate
-                                       error:(NSError * __autoreleasing *) error;
-- (MongoCursor *) cursorForFindAllWithError:(NSError * __autoreleasing *) error;
+                                       error:(NSError * __autoreleasing *) error __deprecated_msg("Use -cursorForFindWithPredicate:");
+- (MongoCursor *) cursorForFindAllWithError:(NSError * __autoreleasing *) error __deprecated_msg("Use -cursorForFindAll");
 
 - (BOOL) removeWithPredicate:(MongoPredicate *) predicate
                 writeConcern:(MongoWriteConcern *) writeConcern
@@ -76,20 +82,18 @@
 - (BOOL) removeAllWithWriteConcern:(MongoWriteConcern *) writeConcern
                              error:(NSError * __autoreleasing *) error;
 
-- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error;
-- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error;
+// TODO
+//- (NSArray *) allIndexesWithError:(NSError * __autoreleasing *) error;
+// TODO
+//- (BOOL) ensureIndex:(MongoMutableIndex *) index error:(NSError * __autoreleasing *) error;
 
 - (BOOL) dropCollectionWithError:(NSError *__autoreleasing *) outError;
 
 // These are shared across all collections for the connection
-- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
-- (NSDictionary *) lastOperationDictionary;
-- (NSError *) error;
-- (NSError *) serverError;
-
-@property (retain) MongoConnection * connection;
-@property (copy, nonatomic) NSString * fullyQualifiedName;
-@property (copy, nonatomic) NSString * databaseName;
-@property (copy, nonatomic) NSString * namespaceName;
+// TODO
+//- (BOOL) lastOperationWasSuccessful:(NSError * __autoreleasing *) error;
+//- (NSDictionary *) lastOperationDictionary;
+//- (NSError *) error;
+//- (NSError *) serverError;
 
 @end
