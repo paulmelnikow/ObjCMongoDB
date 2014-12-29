@@ -207,37 +207,37 @@
     [self keyPath:keyPath isEquivalentTo:remainder modulo:modulus negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point {
-    [self keyPath:keyPath isNearPoint:point negated:NO];
-}
-
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point {
-    [self keyPath:keyPath isNearPoint:point negated:YES];
-}
-
-- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
-    [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:NO];
-}
-
-- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
-    [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:YES];
-}
-
-- (void) keyPath:(NSString *) keyPath isWithinRect:(CGRect) rect {
-    [self keyPath:keyPath isWithinRect:rect negated:NO];
-}
-
-- (void) keyPath:(NSString *) keyPath isOutsideRect:(CGRect) rect {
-    [self keyPath:keyPath isWithinRect:rect negated:YES];
-}
-
-- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
-    [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:NO];
-}
-
-- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
-    [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:YES];
-}
+//- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point {
+//    [self keyPath:keyPath isNearPoint:point negated:NO];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point {
+//    [self keyPath:keyPath isNearPoint:point negated:YES];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
+//    [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:NO];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isNotNearPoint:(CGPoint) point maxDistance:(CGFloat) maxDistance {
+//    [self keyPath:keyPath isNearPoint:point maxDistance:maxDistance negated:YES];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isWithinRect:(CGRect) rect {
+//    [self keyPath:keyPath isWithinRect:rect negated:NO];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isOutsideRect:(CGRect) rect {
+//    [self keyPath:keyPath isWithinRect:rect negated:YES];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isWithinCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
+//    [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:NO];
+//}
+//
+//- (void) keyPath:(NSString *) keyPath isOutsideCircleWithCenter:(CGPoint) center radius:(CGFloat) radius {
+//    [self keyPath:keyPath isWithinCircleWithCenter:center radius:radius negated:YES];
+//}
 
 - (MongoKeyedPredicate *) arrayElementMatchingSubPredicateForKeyPath:(NSString *) keyPath {
     return [self arrayElementMatchingSubPredicateForKeyPath:keyPath negated:NO];
