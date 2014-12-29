@@ -46,15 +46,8 @@
     return self;
 }
 
-- (void) dealloc {
-    maybe_release(_dictionary);
-    maybe_release(_operator);
-    super_dealloc;
-}
-
 + (MongoPredicate *) predicate {
-    id result = [[self alloc] init];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] init];
 }
 
 #pragma mark - Getting the result
@@ -81,8 +74,7 @@
 }
 
 + (MongoPredicate *) orPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:@"$or" subPredicates:array];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initWithOperator:@"$or" subPredicates:array];
 }
 
 + (MongoPredicate *) norPredicateWithSubPredicate:(MongoPredicate *) predicate {
@@ -96,8 +88,7 @@
 }
 
 + (MongoPredicate *) norPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:@"$nor" subPredicates:array];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initWithOperator:@"$nor" subPredicates:array];
 }
 
 + (MongoPredicate *) andPredicateWithSubPredicate:(MongoPredicate *) predicate {
@@ -111,8 +102,7 @@
 }
 
 + (MongoPredicate *) andPredicateWithArray:(NSArray *) array {
-    id result = [[self alloc] initWithOperator:@"$and" subPredicates:array];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initWithOperator:@"$and" subPredicates:array];
 }
 
 #pragma mark - And and Or predicates - Mutability and convenience
@@ -137,8 +127,7 @@
 }
 
 + (MongoPredicate *) wherePredicateWithExpression:(BSONCode *) whereExpression {
-    id result = [[self alloc] initWithWhereExpression:whereExpression];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initWithWhereExpression:whereExpression];
 }
 
 @end

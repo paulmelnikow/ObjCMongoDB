@@ -48,11 +48,10 @@
         mongo_write_concern_dealloc(_nativeWriteConcern);
         _nativeWriteConcern = NULL;
     }
-    super_dealloc;
 }
 
 + (MongoWriteConcern *) writeConcern {
-    maybe_autorelease_and_return([[self alloc] init]);
+    return [[self alloc] init];
 }
 
 -(id)copyWithZone:(NSZone *) zone {

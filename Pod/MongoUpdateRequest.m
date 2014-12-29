@@ -40,17 +40,8 @@
     return self;
 }
 
-- (void) dealloc {
-    maybe_release(_predicate);
-    maybe_release(_writeConcern);
-    maybe_release(_replacementDocument);
-    maybe_release(_operationDictionary);
-    super_dealloc;
-}
-
 + (MongoUpdateRequest *) updateRequestForFirstMatchOnly:(BOOL) firstMatchOnly {
-    MongoUpdateRequest *result = [[self alloc] initForFirstMatchOnly:firstMatchOnly];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initForFirstMatchOnly:firstMatchOnly];
 }
 
 + (MongoUpdateRequest *) updateRequestWithPredicate:(MongoPredicate *) predicate

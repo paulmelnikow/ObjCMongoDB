@@ -52,19 +52,13 @@ NSInteger const MongoCreateIndexError = 101;
 + (MongoConnection *) connectionForServer:(NSString *) hostWithPort error:(NSError * __autoreleasing *) error {
     MongoConnection *result = [[self alloc] init];
     BOOL success = [result connectToServer:hostWithPort error:error];
-    if (!success) {
-        maybe_release(result);
-        return nil;
-    }
-    maybe_autorelease_and_return(result);
+    return success ? result : nil;
 }
 
 - (void) dealloc {
     mongo_destroy(_conn);
     mongo_dealloc(_conn);
     _conn = NULL;
-    maybe_release(_privateWriteConcern);
-    super_dealloc;
 }
 
 - (mongo *) connValue { return _conn; }

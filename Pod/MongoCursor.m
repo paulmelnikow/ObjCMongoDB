@@ -34,14 +34,12 @@
 }
 
 + (MongoCursor *) cursorWithNativeCursor:(mongo_cursor *) cursor {
-    MongoCursor *result = [[self alloc] initWithNativeCursor:cursor];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] initWithNativeCursor:cursor];
 }
 
 - (void) dealloc {
     mongo_cursor_destroy(_cursor);
     _cursor = NULL;
-    super_dealloc;
 }
 
 #pragma mark - Enumeration

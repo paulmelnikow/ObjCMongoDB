@@ -44,17 +44,7 @@
 }
 
 + (MongoIndex *) indexWithDictionary:(NSDictionary *) dictionary {
-    MongoIndex *result = [[self alloc] initWithDictionary:dictionary];
-    maybe_autorelease_and_return(result);
-}
-
-- (void) dealloc {
-    maybe_release(_name);
-    maybe_release(_namespaceContext);
-    maybe_release(_version);
-    maybe_release(_fields);
-    maybe_release(_dictionaryValue);
-    super_dealloc;
+    return [[self alloc] initWithDictionary:dictionary];
 }
 
 - (NSString *) description {
@@ -78,8 +68,7 @@
 }
 
 + (MongoMutableIndex *) mutableIndex {
-    MongoMutableIndex *result = [[self alloc] init];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] init];
 }
 
 - (OrderedDictionary *) mutableFields {

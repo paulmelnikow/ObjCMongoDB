@@ -45,16 +45,6 @@
     return self;
 }
 
-- (void) dealloc {
-    maybe_release(_predicate);
-    maybe_release(_lowerIndexBound);
-    maybe_release(_upperIndexBound);
-    maybe_release(_fields);
-    maybe_release(_sort);
-    maybe_release(_hint);
-    super_dealloc;
-}
-
 + (MongoFindRequest *) findRequest {
     return [self findRequestWithPredicate:nil];
 }
@@ -62,7 +52,7 @@
 + (MongoFindRequest *) findRequestWithPredicate:(MongoPredicate *) predicate {
     MongoFindRequest *result = [[self alloc] init];
     result.predicate = predicate;
-    maybe_autorelease_and_return(result);
+    return result;
 }
 
 #pragma mark - Manipulating the request

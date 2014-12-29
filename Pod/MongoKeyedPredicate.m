@@ -32,8 +32,7 @@
 }
 
 + (MongoKeyedPredicate *) predicate {
-    id result = [[self alloc] init];
-    maybe_autorelease_and_return(result);
+    return [[self alloc] init];
 }
 
 #pragma mark - Predicate building

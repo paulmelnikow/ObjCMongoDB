@@ -39,18 +39,10 @@
     return self;
 }
 
-- (void) dealloc {
-    maybe_release(_connection);
-    maybe_release(_privateFullyQualifiedName);
-    maybe_release(_databaseName);
-    maybe_release(_namespaceName);
-    super_dealloc;
-}
-
 + (MongoDBCollection *) collectionWithConnection:(MongoConnection *) connection
                               fullyQualifiedName:(NSString *) name {
     MongoDBCollection *result = [[self alloc] initWithConnection:connection fullyQualifiedName:name];
-    maybe_autorelease_and_return(result);
+    return result;
 }
 
 - (void) setFullyQualifiedName:(NSString *) value {

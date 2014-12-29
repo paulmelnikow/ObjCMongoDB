@@ -31,7 +31,6 @@
 
 - (void) tearDown {
     [self.mongo disconnect];
-    maybe_release(_mongo);
 }
 
 @end
