@@ -1,0 +1,14 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
+target 'ObjCMongoDB', :exclusive => true do
+  # Temporary. See podspec.
+  pod 'libbson', :git => 'https://github.com/paulmelnikow/libbson', :branch => 'podspec-1'
+  pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => 'podspec'
+  pod 'ObjCBSON', :git => 'https://github.com/paulmelnikow/ObjCBSON'
+
+  pod "ObjCMongoDB", :path => "../"
+
+  pod 'Specta', :git => 'https://github.com/specta/specta.git', :tag =>
+'v0.3.0.beta1'
+  pod 'Expecta'
+end

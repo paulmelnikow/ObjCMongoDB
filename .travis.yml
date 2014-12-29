@@ -1,12 +1,10 @@
+# origin: https://github.com/paulmelnikow/pod-template-rake
+#
+# references:
+# * http://www.objc.io/issue-6/travis-ci.html
+
 language: objective-c
-before_install:
-#    - brew update
-#    - brew upgrade xctool
-    - brew install mongodb
-    - launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist
-    - sleep 5
-before_script:
-    - mongo mydb_test --eval 'db.addUser("travis", "test");'
+# cache: cocoapods
+# podfile: Example/Podfile
+install: rake install_for_ci
 script: rake test
-after_failure:
-    - cat /usr/local/var/mongodb/mongo.log

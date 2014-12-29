@@ -1,3 +1,22 @@
+#
+# IMPORTANT
+#
+# This development branch depends on unreleased development versions of
+# mongo-c-driver and libbson.
+#
+# CocoaPods does not allow pods to depend on pods from git, so you need
+# to pull them in from your Podfile instead:
+# 
+# pod 'ObjCMongoDB', :git => 'https://github.com/paulmelnikow/ObjCMongoDB', :branch => 'libmongoc'
+# pod 'ObjCBSON', :git => 'https://github.com/paulmelnikow/ObjCBSON'
+# pod 'libbson', :git => 'https://github.com/paulmelnikow/libbson', :branch => 'podspec-1'
+# pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => 'podspec'
+#
+# Note the libbson and mongo-c-driver forks, which you need to use
+# because the 10gen repositories do not contain podspecs at this time.
+# These forks are unstable and are for development purposes only.
+#
+
 Pod::Spec.new do |s|
   s.name         = 'ObjCMongoDB'
   s.version      = '1.0.0-dev'
@@ -18,26 +37,11 @@ Pod::Spec.new do |s|
   
   s.ios.deployment_target = '5.0'
   s.osx.deployment_target = '10.6'
-  s.requires_arc = false
+  s.requires_arc = true
 
-  s.subspec 'BSON' do |sp|
-    sp.source_files = 'BSON'
-    sp.private_header_files = 'BSON/BSON_Helper.h', 'BSON/BSON_PrivateInterfaces.h'
-    sp.dependency 'ObjCMongoDB/OrderedDictionary', "~> #{s.version}"
-  end
+  s.source_files = 'Pod'
+  s.private_header_files = 'Pod/*-private.h'
 
-  s.subspec 'Mongo' do |sp|
-    sp.source_files = 'Mongo'
-    sp.private_header_files = 'Mongo/Mongo_Helper.h', 'Mongo/Mongo_PrivateInterfaces.h'
-    sp.dependency 'ObjCMongoDB/BSON', "~> #{s.version}"
-    sp.dependency 'ObjCMongoDB/OrderedDictionary', "~> #{s.version}"
-  end
-
-  s.subspec 'OrderedDictionary' do |sp|
-    sp.source_files = 'OrderedDictionary'
-    sp.license      = { :type => 'MIT',
-                        :file => 'OrderedDictionary/OrderedDictionary.h' }
-  end
-
-  s.dependency 'mongo-c-driver', '~> 0.8.1'
+#  s.dependency 'ObjCBSON', '~> 0.1'
+#  s.dependency 'mongo-c-driver', '~> 1.1.0'
 end

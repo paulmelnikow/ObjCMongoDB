@@ -1,6 +1,0 @@
-//
-// Prefix header for all source files of the 'BSONTests-iOS' target in the 'BSONTests-iOS' project
-//
-
-#ifdef __OBJC__
-#endif
