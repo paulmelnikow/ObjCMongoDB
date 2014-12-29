@@ -23,6 +23,7 @@
 #import "MongoKeyedPredicate.h"
 #import <BSONTypes.h>
 #import "MongoTests_Helper.h"
+#import <OrderedDictionary.h>
 
 @interface PredicateTest : MongoTest
 
@@ -126,19 +127,21 @@
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
     [pred2 keyPath:key matches:@"test1"];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
+    
+    XCTFail(@"TODO");
 
-    coll = [self.mongo collectionWithName:[NSString stringWithFormat:@"%@2", coll.fullyQualifiedName]];
-    
-    id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
-    [self insertTestDocument:coll key:key value:value];
-    
-    pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:key matches:@"c"];
-    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
-    
-    pred2 = [MongoKeyedPredicate predicate];
-    [pred2 keyPath:key matches:@"f"];
-    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
+//    coll = [self.mongo collectionWithName:[NSString stringWithFormat:@"%@2", coll.fullyQualifiedName]];
+//    
+//    id value = [NSArray arrayWithObjects:@"a", @"b", @"c", nil];
+//    [self insertTestDocument:coll key:key value:value];
+//    
+//    pred1 = [MongoKeyedPredicate predicate];
+//    [pred1 keyPath:key matches:@"c"];
+//    XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
+//    
+//    pred2 = [MongoKeyedPredicate predicate];
+//    [pred2 keyPath:key matches:@"f"];
+//    XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 
 - (void) testIsNotEqualTo {
@@ -303,20 +306,26 @@
     
     [self insertTestDocument:coll key:key value:@"test"];
     
+    BSONRegularExpression *matchingRegex = [[BSONRegularExpression alloc] init];
+    matchingRegex.pattern = @"\\w*$";
+
+    BSONRegularExpression *noMatchRegex = [[BSONRegularExpression alloc] init];
+    matchingRegex.pattern = @"nomatch";
+
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:key matchesRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"\\w*$" options:nil]];
+    [pred1 keyPath:key matchesRegularExpression:matchingRegex];
     XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
-    [pred2 keyPath:key matchesRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"nomatch" options:nil]];
+    [pred2 keyPath:key matchesRegularExpression:noMatchRegex];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
     
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
-    [pred3 keyPath:key doesNotMatchRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"\\w*$" options:nil]];
+    [pred3 keyPath:key doesNotMatchRegularExpression:matchingRegex];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
-    [pred4 keyPath:key doesNotMatchRegularExpression:[BSONRegularExpression regularExpressionWithPattern:@"nomatch" options:nil]];
+    [pred4 keyPath:key doesNotMatchRegularExpression:noMatchRegex];
     XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
@@ -439,19 +448,19 @@
     [self insertTestDocument:coll key:key value:@"test"];
     
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:key nativeValueTypeIsEqualTo:BSON_STRING];
+    [pred1 keyPath:key nativeValueTypeIsEqualTo:BSON_TYPE_UTF8];
     XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
     
     MongoKeyedPredicate *pred2 = [MongoKeyedPredicate predicate];
-    [pred2 keyPath:key nativeValueTypeIsEqualTo:BSON_INT];
+    [pred2 keyPath:key nativeValueTypeIsEqualTo:BSON_TYPE_INT32];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 
     MongoKeyedPredicate *pred3 = [MongoKeyedPredicate predicate];
-    [pred3 keyPath:key nativeValueTypeIsNotEqualTo:BSON_STRING];
+    [pred3 keyPath:key nativeValueTypeIsNotEqualTo:BSON_TYPE_UTF8];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred3]);
     
     MongoKeyedPredicate *pred4 = [MongoKeyedPredicate predicate];
-    [pred4 keyPath:key nativeValueTypeIsNotEqualTo:BSON_INT];
+    [pred4 keyPath:key nativeValueTypeIsNotEqualTo:BSON_TYPE_INT32];
     XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred4]);
 }
 
@@ -572,10 +581,14 @@
     NSError *error = nil;
     [coll insertDictionary:dict writeConcern:nil error:&error];
     
-    MongoPredicate *pred1 = [MongoPredicate wherePredicateWithExpression:[BSONCode code:@"this.x + this.y == 9"]];
+    BSONCode *code1 = [[BSONCode alloc] init];
+    code1.code = @"this.x + this.y == 9";
+    MongoPredicate *pred1 = [MongoPredicate wherePredicateWithExpression:code1];
     XCTAssertTrue([self collectionWithName:coll boolForPredicate:pred1]);
 
-    MongoPredicate *pred2 = [MongoPredicate wherePredicateWithExpression:[BSONCode code:@"this.x + this.y == 10"]];
+    BSONCode *code2 = [[BSONCode alloc] init];
+    code2.code = @"this.x + this.y == 10";
+    MongoPredicate *pred2 = [MongoPredicate wherePredicateWithExpression:code2];
     XCTAssertFalse([self collectionWithName:coll boolForPredicate:pred2]);
 }
 

@@ -78,31 +78,32 @@
     [coll insertDictionary:testDoc3 writeConcern:nil error:&error];
     XCTAssertNil(error);
     
-    error = nil;
-    resultDoc = [coll findOneWithError:&error];
-    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
-    resultDict = [resultDoc dictionaryValue];
-    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
-
-    MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
-    [pred1 keyPath:@"description" matches:@"pickles2"];
-    error = nil;
-    resultDoc = [coll findOneWithPredicate:pred1 error:&error];
-    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
-    resultDict = [resultDoc dictionaryValue];
-    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
-    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
-    
-    MongoFindRequest *req1 = [MongoFindRequest findRequestWithPredicate:pred1];
-    [req1 includeKey:@"description"];
-    [req1 includeKey:@"price"];
-    error = nil;
-    resultDoc = [coll findOneWithRequest:req1 error:&error];
-    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
-    resultDict = [resultDoc dictionaryValue];
-    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
-    XCTAssertEqualObjects([NSNumber numberWithFloat:2.99], [resultDict objectForKey:@"price"]);
-    XCTAssertNil([resultDict objectForKey:@"quantity"]);
+    XCTFail(@"TODO");
+//    error = nil;
+//    resultDoc = [coll findOneWithError:&error];
+//    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
+//    resultDict = [resultDoc dictionaryValue];
+//    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
+//
+//    MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
+//    [pred1 keyPath:@"description" matches:@"pickles2"];
+//    error = nil;
+//    resultDoc = [coll findOneWithPredicate:pred1 error:&error];
+//    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
+//    resultDict = [resultDoc dictionaryValue];
+//    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
+//    XCTAssertEqualObjects([NSNumber numberWithInt:5], [resultDict objectForKey:@"quantity"]);
+//    
+//    MongoFindRequest *req1 = [MongoFindRequest findRequestWithPredicate:pred1];
+//    [req1 includeKey:@"description"];
+//    [req1 includeKey:@"price"];
+//    error = nil;
+//    resultDoc = [coll findOneWithRequest:req1 error:&error];
+//    XCTAssertNotNil(resultDoc); XCTAssertNil(error);
+//    resultDict = [resultDoc dictionaryValue];
+//    XCTAssertEqualObjects(@"pickles2", [resultDict objectForKey:@"description"]);
+//    XCTAssertEqualObjects([NSNumber numberWithFloat:2.99], [resultDict objectForKey:@"price"]);
+//    XCTAssertNil([resultDict objectForKey:@"quantity"]);
 }
 
 @end
