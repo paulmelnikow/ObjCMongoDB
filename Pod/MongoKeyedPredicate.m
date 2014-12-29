@@ -107,7 +107,7 @@
     [self _keyPath:keyPath addOperation:@"$size" object:@(arrayCount) negated:negated];
 }
 
-- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType negated:(BOOL) negated {
+- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type_t) nativeValueType negated:(BOOL) negated {
     [self _keyPath:keyPath addOperation:@"$type" object:@(nativeValueType) negated:negated];
 }
 
@@ -191,7 +191,7 @@
     [self keyPath:keyPath arrayCountIsEqualTo:arraySize negated:YES];
 }
 
-- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type) nativeValueType {
+- (void) keyPath:(NSString *) keyPath nativeValueTypeIsEqualTo:(bson_type_t) nativeValueType {
     [self keyPath:keyPath nativeValueTypeIsEqualTo:nativeValueType negated:NO];
 }
 
