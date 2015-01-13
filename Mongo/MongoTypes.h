@@ -39,6 +39,8 @@
 @property (assign) BOOL sparse;
 @property (assign) BOOL createInBackground;
 @property (assign) BOOL createDroppingDuplicates;
+/** The default is -1, which means "never expires". */
+@property (assign) int expiringAfterSeconds;
 
 - (void) addField:(NSString *) fieldName;
 - (void) addField:(NSString *) fieldName ascending:(BOOL) ascending;

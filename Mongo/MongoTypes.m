@@ -74,6 +74,7 @@
 - (id) init {
     if (self = [super init]) {
         self.fields = [OrderedDictionary dictionary];
+        self.expiringAfterSeconds = -1;
     }
     return self;
 }
