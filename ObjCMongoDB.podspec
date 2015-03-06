@@ -8,9 +8,7 @@
 # to pull them in from your Podfile instead:
 # 
 # pod 'ObjCMongoDB', :git => 'https://github.com/paulmelnikow/ObjCMongoDB', :branch => 'libmongoc'
-# pod 'ObjCBSON', :git => 'https://github.com/paulmelnikow/ObjCBSON'
-# pod 'libbson', :git => 'https://github.com/paulmelnikow/libbson', :branch => 'podspec-1'
-# pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => 'podspec'
+# pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => '1.1.0+podspec'
 #
 # Note the libbson and mongo-c-driver forks, which you need to use
 # because the 10gen repositories do not contain podspecs at this time.
@@ -42,6 +40,6 @@ Pod::Spec.new do |s|
   s.source_files = 'Pod'
   s.private_header_files = 'Pod/*-private.h'
 
-#  s.dependency 'ObjCBSON', '~> 0.1'
+  s.dependency 'ObjCBSON', '~> 0.2'
 #  s.dependency 'mongo-c-driver', '~> 1.1.0'
 end
