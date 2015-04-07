@@ -24,7 +24,7 @@
 
 -(void) setUp {
     NSError *error = nil;
-    self.mongo = [MongoConnection connectionForServer:@"127.0.0.1:27017" error:&error];
+    self.mongo = [MongoConnection connectionWithURL:[NSURL URLWithString:@"mongodb://127.0.0.1:27017"]];
     XCTAssertNotNil(self.mongo);
     XCTAssertNil(error);
 }

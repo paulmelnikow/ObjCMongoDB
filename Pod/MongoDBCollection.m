@@ -24,8 +24,8 @@
 #import "Interfaces-private.h"
 #import <BSONSerializer.h>
 
-@interface MongoDBCollection (Private)
-@property (weak) MongoConnection *connection;
+@interface MongoDBCollection ()
+@property (strong) MongoConnection *connection;
 @end
 
 @implementation MongoDBCollection {

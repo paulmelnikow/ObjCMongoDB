@@ -310,7 +310,7 @@
     matchingRegex.pattern = @"\\w*$";
 
     BSONRegularExpression *noMatchRegex = [[BSONRegularExpression alloc] init];
-    matchingRegex.pattern = @"nomatch";
+    noMatchRegex.pattern = @"nomatch";
 
     MongoKeyedPredicate *pred1 = [MongoKeyedPredicate predicate];
     [pred1 keyPath:key matchesRegularExpression:matchingRegex];

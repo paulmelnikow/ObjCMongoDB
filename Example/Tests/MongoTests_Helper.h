@@ -21,8 +21,8 @@
 #define ObjCMongoDB_MongoTests_Helper_h
 
 #define TEST_DATABASE @"objcmongodbtest"
-#define _coll_name [NSString stringWithFormat:@"%@.%@.%@", TEST_DATABASE, NSStringFromClass([self class]), NSStringFromSelector(_cmd)]
-#define declare_coll MongoDBCollection *coll = [self.mongo collectionWithName:_coll_name]
+#define _coll_name [NSString stringWithFormat:@"%@.%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd)]
+#define declare_coll MongoDBCollection *coll = [self.mongo collectionWithName:_coll_name inDatabase:TEST_DATABASE]
 #define declare_coll_and_error declare_coll; NSError *error = nil
 
 #endif
