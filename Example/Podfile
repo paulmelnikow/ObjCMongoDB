@@ -1,9 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'ObjCMongoDB', :exclusive => true do
-  # Temporary. See podspec.
-  pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => '1.1.0+podspec'
-
   pod "ObjCMongoDB", :path => "../"
 
   pod 'Specta', '~> 0.3.2'

@@ -1,20 +1,3 @@
-#
-# IMPORTANT
-#
-# This development branch depends on unreleased development versions of
-# mongo-c-driver and libbson.
-#
-# CocoaPods does not allow pods to depend on pods from git, so you need
-# to pull them in from your Podfile instead:
-# 
-# pod 'ObjCMongoDB', :git => 'https://github.com/paulmelnikow/ObjCMongoDB', :branch => 'libmongoc'
-# pod 'mongo-c-driver', :git => 'https://github.com/paulmelnikow/mongo-c-driver-1', :branch => '1.1.0+podspec'
-#
-# Note the libbson and mongo-c-driver forks, which you need to use
-# because the 10gen repositories do not contain podspecs at this time.
-# These forks are unstable and are for development purposes only.
-#
-
 Pod::Spec.new do |s|
   s.name         = 'ObjCMongoDB'
   s.version      = '1.0.0-dev'
@@ -41,5 +24,5 @@ Pod::Spec.new do |s|
   s.private_header_files = 'Pod/*-private.h'
 
   s.dependency 'ObjCBSON', '~> 0.2'
-#  s.dependency 'mongo-c-driver', '~> 1.1.0'
+  s.dependency 'mongo-c-driver', '~> 1.1.4'
 end
