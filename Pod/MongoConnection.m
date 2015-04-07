@@ -40,6 +40,10 @@ NSInteger const MongoCreateIndexError = 101;
 
 #pragma mark - Initialization
 
++ (void) initialize {
+    mongoc_init();
+}
+
 - (id) initWithURL:(NSURL *) url {
     if (self = [super init]) {
         _client = mongoc_client_new([[url absoluteString] UTF8String]);
