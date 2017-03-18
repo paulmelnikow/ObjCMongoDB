@@ -1,32 +1,32 @@
 namespace :test do
   desc "Run the BSON Tests for Mac OS X"
   task :bson_osx do
-    $bson_osx_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'BSONTests' test -test-sdk macosx -sdk macosx")
+    $bson_osx_success = system("xcodebuild test -workspace Xcode/ObjCMongoDB.xcworkspace -scheme BSONTests")
   end
 
   desc "Run the BSON Tests for Mac OS X under manual retain-release"
   task :bson_osx_no_arc do
-    $bson_osx_no_arc_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'BSONTests-no-arc' test -test-sdk macosx -sdk macosx")
+    $bson_osx_no_arc_success = system("xcodebuild test -workspace Xcode/ObjCMongoDB.xcworkspace -scheme BSONTests-no-arc")
   end
 
   desc "Run the BSON Tests for iOS"
   task :bson_ios do
-    $bson_ios_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'BSONTests-iOS' test -test-sdk iphonesimulator -sdk iphonesimulator")
+    $bson_ios_success = system("xcodebuild test -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.2' -workspace Xcode/ObjCMongoDB.xcworkspace -scheme BSONTests-iOS")
   end
 
   desc "Run the Mongo Tests for Mac OS X"
   task :mongo_osx do
-    $mongo_osx_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'MongoTests' test -test-sdk macosx -sdk macosx")
+    $mongo_osx_success = system("xcodebuild test -workspace Xcode/ObjCMongoDB.xcworkspace -scheme MongoTests")
   end
 
   desc "Run the Mongo Tests for Mac OS X under manual retain-release"
   task :mongo_osx_no_arc do
-    $mongo_osx_no_arc_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'MongoTests-no-arc' test -test-sdk macosx -sdk macosx")
+    $mongo_osx_no_arc_success = system("xcodebuild test -workspace Xcode/ObjCMongoDB.xcworkspace -scheme MongoTests-no-arc")
   end
 
   desc "Run the Mongo Tests for iOS"
   task :mongo_ios do
-    $mongo_ios_success = system("xctool -workspace Xcode/ObjCMongoDB.xcworkspace -scheme 'MongoTests-iOS' test -test-sdk iphonesimulator -sdk iphonesimulator")
+    $mongo_ios_success = system("xcodebuild test -destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.2' -workspace Xcode/ObjCMongoDB.xcworkspace -scheme MongoTests-iOS")
   end
 end
 

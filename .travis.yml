@@ -1,12 +1,24 @@
 language: objective-c
+osx_image: xcode8.2
+
 before_install:
-#    - brew update
-#    - brew upgrade xctool
-    - brew install mongodb
-    - launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist
-    - sleep 5
-before_script:
-    - mongo mydb_test --eval 'db.addUser("travis", "test");'
-script: rake test
+  - test $CI && curl -sSL https://raw.githubusercontent.com/paulmelnikow/simon-says/master/simon-says -o simon-says && chmod +x simon-says
+  - ./simon-says prepare
+  - ./simon-says appledoc install
+  - brew install mongodb
+  - launchctl load /usr/local/opt/mongodb/homebrew.mxcl.mongodb.plist
+  - sleep 5
+
+# before_script:
+#     - mongo mydb_test --eval "db.createUser({user: \"travis\", pwd: \"test\"});"
+
+script:
+  - rake test
+
 after_failure:
-    - cat /usr/local/var/mongodb/mongo.log
+  - cat /usr/local/var/mongodb/mongo.log
+
+notifications:
+  slack:
+    on_success: change
+    secure: cLB1mEo/29CyyBCLaOWpCj34GYGIeK+X6g+W9QEQDwC/EXG9Uo9XZ1geCj/ljOkIxxCUa01CkWmwvAzsZGaM8SQWxth3Rph7/XVk1WQSj6HTkTGlsIip3qZTuCWzBttVWsHQnf4dDrS0pm1Szm8BxBbEbWX4+F/2OOTgbVsu8bI=

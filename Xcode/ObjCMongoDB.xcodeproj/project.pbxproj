@@ -882,7 +882,6 @@
 				9E828F7D1791240900E2A475 /* Sources */,
 				9E828F921791240900E2A475 /* Frameworks */,
 				9E828F961791240900E2A475 /* Resources */,
-				9E828F981791240900E2A475 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -900,7 +899,6 @@
 				9E828F9F1791241200E2A475 /* Sources */,
 				9E828FC31791241200E2A475 /* Frameworks */,
 				9E828FC61791241200E2A475 /* Resources */,
-				9E828FC81791241200E2A475 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -918,7 +916,6 @@
 				9EBE79E3150040D4000E767D /* Sources */,
 				9EBE79E4150040D4000E767D /* Frameworks */,
 				9EBE79E5150040D4000E767D /* Resources */,
-				9EBE79E6150040D4000E767D /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -954,7 +951,6 @@
 				9EF8FF1316C58370004BBD11 /* Sources */,
 				9EF8FF1416C58370004BBD11 /* Frameworks */,
 				9EF8FF1516C58370004BBD11 /* Resources */,
-				9EF8FF1616C58370004BBD11 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -972,7 +968,6 @@
 				9EF8FF3E16C5C055004BBD11 /* Sources */,
 				9EF8FF3F16C5C055004BBD11 /* Frameworks */,
 				9EF8FF4016C5C055004BBD11 /* Resources */,
-				9EF8FF4116C5C055004BBD11 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -990,7 +985,6 @@
 				9EFF2B57150D5B7B00EDC285 /* Sources */,
 				9EFF2B58150D5B7B00EDC285 /* Frameworks */,
 				9EFF2B59150D5B7B00EDC285 /* Resources */,
-				9EFF2B5A150D5B7B00EDC285 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1008,7 +1002,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastTestingUpgradeCheck = 0510;
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0820;
 			};
 			buildConfigurationList = 1DEB91B108733DA50010E9CD /* Build configuration list for PBXProject "ObjCMongoDB" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1103,87 +1097,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		9E828F981791240900E2A475 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		9E828FC81791241200E2A475 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		9EBE79E6150040D4000E767D /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		9EF8FF1616C58370004BBD11 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		9EF8FF4116C5C055004BBD11 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		9EFF2B5A150D5B7B00EDC285 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8DC2EF540486A6940098B216 /* Sources */ = {
@@ -1512,6 +1425,7 @@
 				GCC_PREFIX_HEADER = ObjCMongoDB/ObjCMongoDB_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "ObjCMongoDB/ObjCMongoDB-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = ObjCMongoDB;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1531,6 +1445,7 @@
 				GCC_PREFIX_HEADER = ObjCMongoDB/ObjCMongoDB_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "ObjCMongoDB/ObjCMongoDB-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034Identifier}";
 				PRODUCT_NAME = ObjCMongoDB;
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1539,11 +1454,28 @@
 		1DEB91B208733DA50010E9CD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				ONLY_ACTIVE_ARCH = YES;
@@ -1555,10 +1487,26 @@
 		1DEB91B308733DA50010E9CD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				SDKROOT = macosx;
@@ -1587,6 +1535,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "BSONTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "BSONTests copy";
 			};
 			name = Debug;
@@ -1607,6 +1556,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "BSONTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "BSONTests copy";
 			};
 			name = Release;
@@ -1632,6 +1582,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "MongoTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "MongoTests copy";
 			};
 			name = Debug;
@@ -1652,6 +1603,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "MongoTests copy-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "MongoTests copy";
 			};
 			name = Release;
@@ -1676,6 +1628,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1695,6 +1648,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests/BSONTest-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -1716,6 +1670,7 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "BSON/BSON-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1735,6 +1690,7 @@
 				GCC_PREFIX_HEADER = "BSON/BSON-Prefix.pch";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				INFOPLIST_FILE = "BSON/BSON-Info.plist";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourcompany.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = framework;
 			};
@@ -1768,8 +1724,9 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests-iOS/BSONTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paulmelnikow.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 			};
@@ -1797,7 +1754,8 @@
 				GCC_PREFIX_HEADER = "../Tests/BSONTests-iOS/BSONTests-iOS-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/BSONTests-iOS/BSONTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paulmelnikow.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -1832,8 +1790,9 @@
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests-iOS/MongoTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paulmelnikow.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 			};
@@ -1861,7 +1820,8 @@
 				GCC_PREFIX_HEADER = "../Tests/MongoTests-iOS/MongoTests-iOS-Prefix.pch";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests-iOS/MongoTests-iOS-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.paulmelnikow.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -1891,6 +1851,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests/MongoTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1913,6 +1874,7 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				INFOPLIST_FILE = "../Tests/MongoTests/MongoTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.midstatespring.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
