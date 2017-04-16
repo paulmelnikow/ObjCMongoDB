@@ -23,6 +23,8 @@
 #import "bson.h"
 #import "BSON_PrivateInterfaces.h"
 
+NSString * const MongoDBCommandDictKey = @"MongoDBCommandDictKey";
+
 @interface BSONEncoder ()
 @property (retain) NSMutableArray *encodingObjectStack;
 @property (retain) NSMutableArray *privateKeyPathComponents;
@@ -314,11 +316,42 @@
 }
 
 - (void) _encodeExposedDictionary:(NSDictionary *) dictionary {
-    for (id key in [dictionary allKeys])
+    
+    // Encode command key dictionary
+    [self _checkForAndEncodeCommandKey:dictionary];
+    
+    // Encode remaining keys
+    NSSet *nonCommandKeys = [dictionary keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+        if ([key isKindOfClass:[NSString class]]) {
+            NSString *keyAsString = (NSString *)key;
+            
+            if (![keyAsString isEqualToString:MongoDBCommandDictKey]) {
+                return YES;
+            }
+        }
+        
+        return NO;
+    }];
+    
+    for (id key in nonCommandKeys)
+        
         [self _encodeObject:[dictionary objectForKey:key]
                      forKey:key
           withSubstitutions:YES
    withObjectIDSubstitution:NO];
+}
+
+- (void) _checkForAndEncodeCommandKey:(NSDictionary *) dictionary {
+    
+    NSDictionary *commandDict = [dictionary objectForKey:MongoDBCommandDictKey];
+    
+    if (commandDict) {
+        for (id key in [commandDict allKeys])
+            [self _encodeObject:[commandDict objectForKey:key]
+                         forKey:key
+              withSubstitutions:YES
+       withObjectIDSubstitution:NO];
+    }
 }
 
 #pragma mark - Encoding supported types - trampoline methods
