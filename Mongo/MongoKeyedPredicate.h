@@ -20,6 +20,7 @@
 #import "MongoPredicate.h"
 #import "bson.h"
 #import "BSONTypes.h"
+#import <CoreGraphics/CoreGraphics.h>
 
 @interface MongoKeyedPredicate : MongoPredicate
 
